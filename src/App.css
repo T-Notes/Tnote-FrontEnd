@@ -1,3 +1,10 @@
 body {
   text-align: center;
 }
+.policyText {
+  color: blueviolet;
+  cursor: pointer;
+}
+button {
+  cursor: pointer;
+}
