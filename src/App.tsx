@@ -1,15 +1,15 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Main from './pages/Main';
 import Login from './pages/Login';
+import Join from './pages/Join';
 import './App.css';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/login" element={<Login name={'임하나'} />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/EnterInfo" element={<Join name={'임하나'} />} />
       </Routes>
     </BrowserRouter>
   );
