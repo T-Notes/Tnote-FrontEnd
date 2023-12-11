@@ -5,9 +5,16 @@ import PolicyModal from '../components/PolicyModal';
 const Login = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPolicyCheck, setIsPolicyCheck] = useState(false);
 
   const handleLoginPage = () => {
-    navigate('/EnterInfo');
+    if (isPolicyCheck) {
+      navigate('/EnterInfo');
+      console.log('isPolicyCheck', isPolicyCheck);
+    } else {
+      alert('개인 정보 보호 정책에 동의 후 로그인이 가능합니다.');
+      console.log('alert', isPolicyCheck);
+    }
   };
 
   const openPolicyModal = () => {
@@ -17,6 +24,10 @@ const Login = () => {
   const closePolicyModal = () => {
     setIsModalOpen(false);
   };
+
+  const handlePolicyCheckChange = () => {
+    setIsPolicyCheck(!isPolicyCheck);
+  };
   return (
     <div>
       <h1>교사 업무 관리 앱 이용하기 </h1>
@@ -24,7 +35,7 @@ const Login = () => {
       <p>교사 업무 관리 앱입니다.</p>
       <button onClick={handleLoginPage}>Google로 로그인</button>
       <div>
-        <input type="checkbox"></input>
+        <input type="checkbox" onClick={handlePolicyCheckChange}></input>
         <span className="policyText" onClick={openPolicyModal}>
           개인 정보 보호 정책
         </span>
