@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import DateCalendar from '../components/DateCalendar';
+import Calendar from '../components/Calendar';
 
 const Home = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -12,10 +13,11 @@ const Home = () => {
   return (
     <div>
       <h1>My Calendar App</h1>
-      <DateCalendar
+      <Calendar />
+      {/* <DateCalendar
         selectedDate={selectedDate}
         onSelectDate={handleDateSelect}
-      />
+      /> */}
       {/* <select>
 //         <option>2023년 3학년 2학기</option>
 //         <option>2023년 3학년 1학기</option>

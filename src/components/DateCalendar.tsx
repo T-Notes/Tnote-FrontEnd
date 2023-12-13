@@ -1,19 +1,17 @@
 // src/Calendar.tsx
+import '../App.css';
 import React, { useState } from 'react';
-
 import { ko } from 'date-fns/locale';
+import useCurrentDate from '../hooks/useCurrentDate';
 
 import {
   format,
-  addMonths,
-  subMonths,
   startOfMonth,
   endOfMonth,
   eachDayOfInterval,
   isSameMonth,
   isToday,
 } from 'date-fns';
-import '../App.css';
 
 interface DateCalendarProps {
   selectedDate: Date;
@@ -21,16 +19,8 @@ interface DateCalendarProps {
 }
 
 const DateCalendar = ({ selectedDate, onSelectDate }: DateCalendarProps) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const { currentDate, handlePrevMonth, handleNextMonth } = useCurrentDate();
 
-  //현재 달에서 -1
-  const handlePrevMonth = () => {
-    setCurrentDate(subMonths(currentDate, 1));
-  };
-  //현재 달에서 +1
-  const handleNextMonth = () => {
-    setCurrentDate(addMonths(currentDate, 1));
-  };
   // eachDayOfInterval: start와 end 사이 날짜 배열을 반환, startOfMonth : 현재 달의 시작일, endOfMonth : 현재 달의 끝일
   const daysInMonth = eachDayOfInterval({
     start: startOfMonth(currentDate),
