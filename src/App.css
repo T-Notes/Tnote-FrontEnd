@@ -5,6 +5,63 @@ body {
   color: blueviolet;
   cursor: pointer;
 }
+.classSchedule {
+  display: flex;
+
+  height: 200px;
+}
+.todayClass {
+  padding: 10px 30px 10px 30px;
+
+  border: 1px solid black;
+}
+
 button {
   cursor: pointer;
+}
+
+/* //달력 만들기 css */
+.calendar {
+  width: 300px;
+  margin: auto;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 10px;
+}
+
+.header button {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.day {
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+}
+
+.today {
+  background-color: #3498db;
+  color: #fff;
+}
+
+.inactive {
+  color: #ccc;
 }
