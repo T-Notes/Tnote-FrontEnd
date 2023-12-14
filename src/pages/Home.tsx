@@ -10,10 +10,12 @@ const Home = () => {
     setSelectedDate(date);
     // 선택된 날짜에 대한 추가 동작 수행 가능
   };
+
   return (
     <div>
       <h1>My Calendar App</h1>
       <Calendar />
+
       {/* <DateCalendar
         selectedDate={selectedDate}
         onSelectDate={handleDateSelect}

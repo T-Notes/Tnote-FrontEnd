@@ -17,7 +17,7 @@ const useCurrentDate = () => {
   useEffect(() => {
     // 예를 들어 컴포넌트가 처음 마운트될 때 또는 currentDate가 변경될 때 실행할 코드 작성
   }, [currentDate]);
-  return { currentDate, handlePrevMonth, handleNextMonth };
+  return { currentDate, handlePrevMonth, handleNextMonth, setCurrentDate };
 };
 
 export default useCurrentDate;
