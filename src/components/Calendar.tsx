@@ -18,37 +18,37 @@ import {
 
 const SCalendarHeader = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   width: 20%;
   align-items: center;
-  padding: 10px;
+  margin-bottom: 10px;
 `;
 const SCalendarDate = styled.div`
-  display: flex;
-  flex-direction: column;
+  padding-left: 20px;
 `;
+
 const SWeekBox = styled.div`
   display: flex;
-  justify-content: space-between;
+  width: 70%;
+  padding: 10px 0px;
+  justify-content: space-around;
+  border-bottom: 5px solid gray;
 `;
 const SWeek = styled.div`
-  text-align: center;
-  padding: 10px;
   font-weight: bold;
   width: 100%;
-  border: 1px solid blue;
 `;
 const SDaysBox = styled.div`
   display: flex;
+  width: 70%;
   flex-wrap: wrap;
-  width: 100%;
 `;
 const SDays = styled.div`
-  flex: 1 0 14.2857%;
-  text-align: center;
-  padding: 10x;
-
   border: 1px solid #ccc;
+  border-top: none;
+  flex: 1 0 14%; // 한 줄에 요소 아이템이 7개씩 들어가도록 간격 맞추기
+  padding-bottom: 100px;
+  padding-top: 5px;
 `;
 
 const Calendar = () => {
@@ -64,8 +64,7 @@ const Calendar = () => {
     days.push(day);
     day = addDays(day, 1);
   }
-  console.log('currentDate:', currentDate);
-  console.log('result:', startOfWeek(currentDate));
+
   return (
     <div>
       <h1>일정 관리 캘린더</h1>
