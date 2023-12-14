@@ -54,12 +54,13 @@ const SDays = styled.div`
 const Calendar = () => {
   const { currentDate, handlePrevMonth, handleNextMonth } = useCurrentDate();
 
-  const startWeek = startOfWeek(startOfMonth(currentDate));
-  const endWeek = endOfWeek(endOfMonth(currentDate));
+  const startWeek = startOfWeek(startOfMonth(currentDate)); // 이번 달 첫 주 날짜 (전월일 포함)
+  const endWeek = endOfWeek(endOfMonth(currentDate)); //이번 달 말일 날짜 (다음 달 포함)
 
   const days = [];
   let day = startWeek;
 
+  // 한달 안에 들어가야 하는 날짜들을 days[]에 push
   while (day <= endWeek) {
     days.push(day);
     day = addDays(day, 1);
@@ -87,7 +88,9 @@ const Calendar = () => {
               key={index}
               className={isSameMonth(day, currentDate) ? 'white' : 'lightGray'}
             >
-              {format(day, 'd')}
+              <div className={isToday(day) ? 'todayColor' : ''}>
+                {format(day, 'd')}
+              </div>
             </SDays>
           ))}
         </SDaysBox>

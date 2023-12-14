@@ -67,7 +67,9 @@ button {
 }
 
 /* 일정관리 캘린더 css */
-
+.todayColor {
+  background-color: skyblue;
+}
 .white {
   background-color: #fff;
 }
@@ -75,16 +77,3 @@ button {
   background-color: #fff;
   color: #a9a9a9;
 }
-/* .week {
-  border: 1px solid black;
-} */
-/* .weeks {
-  display: flex;
-  justify-content: space-around;
-}
-.week {
-  margin: 30px;
-}
-.month {
-  display: flex;
-} */
