@@ -15,6 +15,8 @@ import {
   isWeekend,
 } from 'date-fns';
 import TodayBtn from './TodayBtn';
+import AddScheduleBtn from './AddScheduleBtn';
+import AddScheduleFormArea from './AddScheduleFormArea';
 
 const SCalendarHeader = styled.div`
   display: flex;
@@ -102,6 +104,7 @@ const Calendar = () => {
           ))}
         </SDaysBox>
       </SCalendarDate>
+      <AddScheduleBtn />
     </div>
   );
 };
