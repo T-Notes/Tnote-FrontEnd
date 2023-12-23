@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { modalState } from '../recoil/atoms/modalState';
 import { useState } from 'react';
+import DateSelector from './DateSelector';
 
 const SClassLogBackground = styled.div`
   position: fixed;
@@ -24,6 +25,15 @@ const SClassLogContent = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 `;
 
+const SClassLogHeader = styled.div`
+  border: 1px solid black;
+`;
+
+const SClassLogTop = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const ClassLogModal = () => {
   const [modal, setModal] = useRecoilState(modalState);
 
@@ -34,8 +44,27 @@ const ClassLogModal = () => {
   return (
     <SClassLogBackground>
       <SClassLogContent>
-        <button onClick={handleCloseBtn}>&times;</button>
-        <p>학급일지</p>
+        <SClassLogHeader>
+          <button onClick={handleCloseBtn}>&times;</button>
+          <p>학급일지</p>
+          <select></select>
+        </SClassLogHeader>
+        <SClassLogTop>
+          <div className="title">
+            <label htmlFor="title">
+              제목
+              <input
+                type="text"
+                id="title"
+                placeholder="제목을 입력하세요."
+                maxLength={30}
+              ></input>
+            </label>
+          </div>
+          <div className="date">
+            <DateSelector />
+          </div>
+        </SClassLogTop>
       </SClassLogContent>
     </SClassLogBackground>
   );
