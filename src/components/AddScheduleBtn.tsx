@@ -1,23 +1,20 @@
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { modalState } from '../recoil/atoms/modalState';
+import { modalState, toggleModalState } from '../recoil/atoms/modalState';
+
 import AddScheduleFormArea from './AddScheduleFormArea';
 
 const AddScheduleBtn = () => {
-  const [modal, setModal] = useRecoilState(modalState);
-  const [clickWriting, setClickWriting] = useState<boolean>(false);
-  const handleClickWriting = () => {
-    setClickWriting(!clickWriting);
+  const [isOpen, setIsOpen] = useRecoilState(toggleModalState);
+
+  const handleToggleBtn = () => {
+    setIsOpen(!isOpen);
   };
-  //Recoil을 통한 모달 관리 방법
-  //   const handleOpenModal = () => {
-  //     setModal({ isOpen: true, content: <AddScheduleFormArea /> });
-  //   };
+
   return (
     <div>
-      <button onClick={handleClickWriting}>글쓰기</button>
-      {clickWriting ? <AddScheduleFormArea /> : null}
-      {/* {modal.isOpen && modal.content} */}
+      <button onClick={handleToggleBtn}>글쓰기</button>
+      {isOpen ? <AddScheduleFormArea /> : null}
     </div>
   );
 };

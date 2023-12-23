@@ -13,3 +13,13 @@ export const modalState = atom<ModalState>({
     content: null,
   },
 });
+
+export const toggleModalState = atom<boolean>({
+  key: 'toggleModalState',
+  default: false,
+});
+
+// export const formModalState = atom<string | null>({
+//   key: 'formModalState',
+//   default: null,
+// });

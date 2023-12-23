@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import DateCalendar from '../components/DateCalendar';
 import Calendar from '../components/Calendar';
+import AddScheduleBtn from '../components/AddScheduleBtn';
 
 const Home = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -15,6 +16,7 @@ const Home = () => {
     <div>
       <h1>My Calendar App</h1>
       <Calendar />
+      <AddScheduleBtn />
 
       {/* <DateCalendar
         selectedDate={selectedDate}

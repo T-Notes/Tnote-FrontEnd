@@ -104,7 +104,7 @@ const Calendar = () => {
           ))}
         </SDaysBox>
       </SCalendarDate>
-      <AddScheduleBtn />
+      {/* <AddScheduleBtn /> */}
     </div>
   );
 };
