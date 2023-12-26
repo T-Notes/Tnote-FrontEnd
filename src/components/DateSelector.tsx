@@ -6,6 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 const DateSelector = () => {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
+  const [isAllDay, setIsAllDay] = useState<boolean>(false);
 
   const handleDateChange = (start: Date, end: Date) => {
     setStartDate(start);
@@ -16,8 +17,8 @@ const DateSelector = () => {
     }
   };
 
-  //종일 버튼 클릭
-  const handleAllDayClick = () => {
+  //종일 버튼 토글
+  const handleAllDayToggle = () => {
     const today = new Date();
     const startOfDay = new Date(
       today.getFullYear(),
@@ -33,9 +34,16 @@ const DateSelector = () => {
       23,
       59,
     );
-
-    setStartDate(startOfDay);
-    setEndDate(endOfDay);
+    if (isAllDay) {
+      //종일 버튼 해제 시
+      setStartDate(new Date());
+      setEndDate(new Date());
+    } else {
+      // 종일 버튼 선택 시
+      setStartDate(startOfDay);
+      setEndDate(endOfDay);
+    }
+    setIsAllDay(!isAllDay);
   };
   return (
     <>
@@ -60,7 +68,14 @@ const DateSelector = () => {
         dateFormat="yyyy-MM-dd (eee) HH:mm"
       />
 
-      <button onClick={handleAllDayClick}>종일</button>
+      <label>
+        종일
+        <input
+          type="checkbox"
+          checked={isAllDay}
+          onChange={handleAllDayToggle}
+        />
+      </label>
     </>
   );
 };
