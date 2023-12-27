@@ -18,8 +18,3 @@ export const toggleModalState = atom<boolean>({
   key: 'toggleModalState',
   default: false,
 });
-
-// export const formModalState = atom<string | null>({
-//   key: 'formModalState',
-//   default: null,
-// });

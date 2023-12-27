@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
+import { useRecoilState } from 'recoil';
+import { startDateState, endDateState } from '../recoil/atoms/dateState';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
 const DateSelector = () => {
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [startDate, setStartDate] = useRecoilState(startDateState);
+  const [endDate, setEndDate] = useRecoilState(endDateState);
   const [isAllDay, setIsAllDay] = useState<boolean>(false);
 
   const handleDateChange = (start: Date, end: Date) => {
@@ -43,8 +45,10 @@ const DateSelector = () => {
       setStartDate(startOfDay);
       setEndDate(endOfDay);
     }
+    // 종일 여부도 부모 컴포넌트로 전달
     setIsAllDay(!isAllDay);
   };
+
   return (
     <>
       <label>시작일: </label>

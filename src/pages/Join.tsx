@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import axiosInstance from '../api/InstanceAxios';
+import instanceAxios from '../api/InstanceAxios';
 
 interface InfoDate {
   name: string;
@@ -31,7 +31,7 @@ const Join = (props: { name: string }) => {
       infoFormData.school
     ) {
       navigate('/home'); // 아래 코드 주석 풀면 삭제하기
-      //   axiosInstance
+      //   instanceAxios
       //     .post('/api/endpoint', infoFormData)
       //     .then(() => {
       //       navigate('/home');

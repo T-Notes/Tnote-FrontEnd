@@ -1,11 +1,13 @@
 import React, { useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { modalState } from '../recoil/atoms/modalState';
+import { startDateState, endDateState } from '../recoil/atoms/dateState';
 import DateSelector from './DateSelector';
 import ConsultationRecordsModal from './ConsultationRecordsModal';
 import StudentRecordsModal from './StudentRecordsModal';
 import WorkLogModal from './WorkLogModal';
+import instanceAxios from '../api/InstanceAxios';
 
 const SClassLogBackground = styled.div`
   position: fixed;
@@ -45,6 +47,7 @@ interface SaveContents {
 
 const ClassLogModal = () => {
   const [modal, setModal] = useRecoilState(modalState);
+  const [title, setTitle] = useState<string>('');
   const [selectedOption, setSelectedOption] = useState<string>(''); // 드롭다운에서 선택된 옵션(학급일지, 업무일지, 상담기록, 학생 관찰 일지)을 저장
   const [contentType, setContentType] =
     useState<keyof SaveContents>('학습계획'); //현재 모달에서 어떤 종류의 탭을 입력하고 있는지를 나타낸다.
@@ -54,6 +57,9 @@ const ClassLogModal = () => {
     제출과제: '',
     진도표: '',
   }); //각 탭의 타입에 따른 입력된 내용을 저장하는 객체
+
+  const startDate = useRecoilValue(startDateState);
+  const endDate = useRecoilValue(endDateState);
 
   // 닫기 버튼 클릭 시 모달 창 닫기
   const handleCloseBtn = () => {
@@ -88,6 +94,20 @@ const ClassLogModal = () => {
     }));
   };
 
+  const handleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
+  const handleClickSubmit = () => {
+    // 등록 api 연결 후 주석 풀기
+    // instanceAxios.post('/api/endpoint', {
+    //   title,
+    //   startDate :startDate, //recoil 상태활용
+    //   endDate : endDate, //recoil 상태활용
+    //   saveContents,
+    // });
+  };
+
   return (
     <SClassLogBackground>
       <SClassLogContent>
@@ -111,6 +131,8 @@ const ClassLogModal = () => {
                 id="title"
                 placeholder="제목을 입력하세요."
                 maxLength={30}
+                value={title}
+                onChange={handleChangeTitle}
               ></input>
             </label>
           </div>
@@ -153,7 +175,7 @@ const ClassLogModal = () => {
           </>
         )}
 
-        <button>등록</button>
+        <button onClick={handleClickSubmit}>등록</button>
       </SClassLogContent>
     </SClassLogBackground>
   );
