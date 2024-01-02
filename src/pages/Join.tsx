@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
 import instanceAxios from '../api/InstanceAxios';
 
 interface InfoDate {
@@ -9,15 +9,25 @@ interface InfoDate {
   year: number | string;
   school: string;
 }
+interface SearchSchoolResult {
+  address: string;
+  name: string;
+}
 
 const Join = (props: { name: string }) => {
   const navigate = useNavigate();
+  const [selectedGubun, setSelectedGubun] = useState(''); // 초등학교, 중학교, 고등학교 중 선택된 값
+
   const [infoFormData, setInfoFormData] = useState<InfoDate>({
     name: '',
     subject: '',
     year: '',
     school: '',
   });
+
+  const apiKey: string | undefined = process.env.REACT_APP_API_KEY;
+  const apiUrl: string | undefined =
+    'http://www.career.go.kr/cnet/openapi/getOpenApi.json';
 
   const handleCancelBtn = () => {
     navigate(-1);
@@ -55,6 +65,39 @@ const Join = (props: { name: string }) => {
       // } else {
       //   alert('내용을 모두 입력해주세요');
     }
+  };
+  //학교정보 받아오기
+  const handleSchoolSearch = async () => {
+    const schoolSearchApiUrl = `${apiUrl}?apiKey=${apiKey}`;
+    if (infoFormData.school && selectedGubun) {
+      try {
+        const response = await axios.get(schoolSearchApiUrl, {
+          params: {
+            apiKey: apiKey,
+            svcType: 'api',
+            svcCode: 'SCHOOL',
+            gubun: selectedGubun,
+            searchSchulNm: infoFormData.school,
+          },
+        });
+
+        // 학교 검색 결과 콘솔에 출력 (실제로는 이 결과를 UI에 표시하거나 활용해야 합니다.)
+        console.log('School Search Result:', response.data);
+
+        // 결과에서 주소와 학교명 추출
+        const schoolAddress = response.data.address;
+        const schoolName = response.data.name;
+
+        // 필요한 로직 추가 (예: state 업데이트, UI에 표시 등)
+      } catch (error) {
+        console.error('Error searching school information:', error);
+      }
+    }
+  };
+
+  const handleGubunButtonClick = (selectedValue: string) => {
+    // 사용자가 버튼을 클릭할 때 해당 버튼의 값을 설정
+    setSelectedGubun(selectedValue);
   };
 
   const handleInfoChange = (
@@ -122,6 +165,36 @@ const Join = (props: { name: string }) => {
           placeholder="학교를 입력해주세요."
           onChange={handleInfoChange}
         ></input>
+        <button type="button" onClick={handleSchoolSearch}>
+          학교 검색
+        </button>
+        <div>
+          {/* 초등학교 버튼 */}
+          <button
+            type="button"
+            onClick={() => handleGubunButtonClick('elem_list')}
+          >
+            초등학교
+          </button>
+          {/* 중학교 버튼 */}
+          <button
+            type="button"
+            onClick={() => handleGubunButtonClick('midd_list')}
+          >
+            중학교
+          </button>
+          {/* 고등학교 버튼 */}
+          <button
+            type="button"
+            onClick={() => handleGubunButtonClick('high_list')}
+          >
+            고등학교
+          </button>
+        </div>
+      </div>
+      {/* 검색 결과 표시 */}
+      <div>
+        <h2>검색 결과</h2>
       </div>
       <div>
         <button type="submit" onClick={handleInfoConfirmBtn}>
