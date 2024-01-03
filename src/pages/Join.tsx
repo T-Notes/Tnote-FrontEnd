@@ -21,8 +21,8 @@ const Join = (props: { name: string }) => {
     year: '',
     school: '',
   });
-  const [schoolSearchClick, setSchoolSearchClick] = useState<Boolean>(false); //학교 검색 모달 열기용
-
+  const [schoolSearchClick, setSchoolSearchClick] = useState<boolean>(false); //학교 검색 모달 열기용
+  const [schoolName, setSchoolName] = useState<string>(''); // 학교이름 가져오기
   //**이벤트 핸들러**//
 
   const handleCancelBtn = () => {
@@ -83,6 +83,19 @@ const Join = (props: { name: string }) => {
       [name]: value,
     }));
   };
+  // 학교 이름 가져오기
+  // useEffect(() => {
+  //   const schoolNameDate = async () => {
+  //     try {
+  //       const res = await instanceAxios.get('/학교이름 가져오기 엔드포인트');
+  //       setSchoolName(res.data);
+  //     } catch (err) {
+  //       console.log('err', err);
+  //     }
+  //   };
+  //   schoolNameDate();
+  // });
+
   return (
     <div>
       <h1>가입이 완료되었어요!</h1>
@@ -132,7 +145,9 @@ const Join = (props: { name: string }) => {
       <div>
         {' '}
         <p>학교</p>
-        <button onClick={handleSchoolSearchClick}>학교를 입력해주세요</button>
+        <div onClick={handleSchoolSearchClick}>
+          {schoolName || '학교를 입력해주세요'}
+        </div>
         {schoolSearchClick ? (
           <SchoolSearchModal onCloseModal={handleCloseModal} />
         ) : null}

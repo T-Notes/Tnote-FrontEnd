@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import _debounce from 'lodash/debounce';
 import axios from 'axios';
+import instanceAxios from '../api/InstanceAxios';
 
 const SSchoolSearchModalBackground = styled.div`
   position: fixed;
@@ -168,6 +169,19 @@ const SchoolSearchModal = ({ onCloseModal }: SchoolSearchModalProps) => {
       setSchoolNameInput(searchValue);
     }
   }, [searchValue]);
+
+  //**서버에 전송**/
+
+  const handleSearchValueSend = () => {
+    handleCloseModal();
+    // instanceAxios
+    //   .post('/학교검색결과post', {
+    //     region: regionalOption,
+    //     gubun: selectedGubun,
+    //     schoolName: searchValue,
+    //   })
+    //   .then((res)=> handleCloseModal());
+  };
   return (
     <SSchoolSearchModalBackground>
       <SSchoolSearchModal>
@@ -324,7 +338,7 @@ const SchoolSearchModal = ({ onCloseModal }: SchoolSearchModalProps) => {
           )}
         </div>
         <div>
-          <button>확인</button>
+          <button onClick={handleSearchValueSend}>확인</button>
         </div>
       </SSchoolSearchModal>
     </SSchoolSearchModalBackground>
