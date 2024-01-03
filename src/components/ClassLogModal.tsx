@@ -25,9 +25,9 @@ const SClassLogContent = styled.div`
   border: 1px solid black;
   background: #fff;
   padding: 20px;
-  border-radius: 8px;
-  width: 50%;
-  height: 50%;
+  border-radius: 20px;
+  width: 1100px;
+  height: 800px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 `;
 
@@ -46,8 +46,8 @@ interface SaveContents {
 }
 
 const ClassLogModal = () => {
-  const [modal, setModal] = useRecoilState(modalState);
-  const [title, setTitle] = useState<string>('');
+  const [modal, setModal] = useRecoilState(modalState); // isOpen, content 값이 있는 모달 전역상태
+  const [title, setTitle] = useState<string>(''); //제목 상태
   const [selectedOption, setSelectedOption] = useState<string>(''); // 드롭다운에서 선택된 옵션(학급일지, 업무일지, 상담기록, 학생 관찰 일지)을 저장
   const [contentType, setContentType] =
     useState<keyof SaveContents>('학습계획'); //현재 모달에서 어떤 종류의 탭을 입력하고 있는지를 나타낸다.
@@ -58,8 +58,8 @@ const ClassLogModal = () => {
     진도표: '',
   }); //각 탭의 타입에 따른 입력된 내용을 저장하는 객체
 
-  const startDate = useRecoilValue(startDateState);
-  const endDate = useRecoilValue(endDateState);
+  const startDate = useRecoilValue(startDateState); // 첫시작일
+  const endDate = useRecoilValue(endDateState); //마지막일
 
   // 닫기 버튼 클릭 시 모달 창 닫기
   const handleCloseBtn = () => {
@@ -136,7 +136,7 @@ const ClassLogModal = () => {
               ></input>
             </label>
           </div>
-          <div className="date">
+          <div>
             <DateSelector />
           </div>
         </SClassLogTop>

@@ -13,12 +13,11 @@ const SSchoolSearchModalBackground = styled.div`
   background-color: rgba(0, 0, 0, 0.6);
 `;
 const SSchoolSearchModal = styled.div`
-  border-radius: 8px;
+  border-radius: 20px;
   border: 1px solid var(--Black-Black50, #d5d5d5);
   background-color: #fff;
-
-  width: 420px;
-  height: 391px;
+  width: 800px;
+  height: 600px;
   position: absolute;
   top: 50%;
   left: 50%;

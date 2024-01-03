@@ -1,10 +1,28 @@
+import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import { useRecoilState } from 'recoil';
 import { startDateState, endDateState } from '../recoil/atoms/dateState';
-
 import 'react-datepicker/dist/react-datepicker.css';
 
+const SDatePicker = styled.div`
+  display: flex;
+  .dateInput {
+    border: none;
+    width: 280px;
+    height: 24px;
+    color: var(--Black-Black_60, #a6a6a6);
+    text-align: center;
+    font-family: Pretendard; //font 적용확인할것.
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+  .wave {
+    color: #5b5b5b;
+  }
+`;
 const DateSelector = () => {
   const [startDate, setStartDate] = useRecoilState(startDateState);
   const [endDate, setEndDate] = useRecoilState(endDateState);
@@ -50,8 +68,7 @@ const DateSelector = () => {
   };
 
   return (
-    <>
-      <label>시작일: </label>
+    <SDatePicker>
       <DatePicker
         selected={startDate} //선택된 날짜를 나타내는 속성
         onChange={(date) => handleDateChange(date as Date, endDate)} //날짜가 선택되었을때 호출되는 콜백 함수
@@ -60,9 +77,10 @@ const DateSelector = () => {
         timeIntervals={30} // 시간 선택 옵션에서 표시할 분 간격
         dateFormat="yyyy-MM-dd (eee) HH:mm" // 날짜 표시 형식
         timeCaption="시간"
+        className="dateInput"
       />
+      <div className="wave">{'~'}</div>
 
-      <label>종료일: </label>
       <DatePicker
         selected={endDate}
         onChange={(date) => handleDateChange(startDate, date as Date)}
@@ -70,17 +88,18 @@ const DateSelector = () => {
         timeFormat="HH:mm"
         timeIntervals={30}
         dateFormat="yyyy-MM-dd (eee) HH:mm"
+        className="dateInput"
       />
 
       <label>
-        종일
         <input
           type="checkbox"
           checked={isAllDay}
           onChange={handleAllDayToggle}
         />
+        종일
       </label>
-    </>
+    </SDatePicker>
   );
 };
 
