@@ -1,0 +1,37 @@
+import { ReactEventHandler } from 'react';
+import styled from 'styled-components';
+
+interface SubmitProps {
+  onClick: ReactEventHandler;
+  label: string;
+}
+
+// ** style **//
+const SSubmitBtn = styled.button`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 270px;
+  height: 60px;
+  border-radius: 8px;
+  background-color: #632cfa;
+  color: #ffffff;
+
+  //text
+  color: var(--Inverse-Content-contentInversePrimary, #fff);
+  text-align: center;
+
+  /* Font/Web_Body */
+  font-family: 'Pretendard';
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 133.333% */
+`;
+const SubmitBtn = ({ onClick, label }: SubmitProps) => {
+  return <SSubmitBtn onClick={onClick}>{label}</SSubmitBtn>;
+};
+
+export default SubmitBtn;

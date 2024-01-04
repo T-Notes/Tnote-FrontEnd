@@ -6,10 +6,15 @@ import ModalPortal from '../helpers/ModalPortal';
 import { ReactComponent as ImgDropdownOpen } from '../assets/imgDropdownOpen.svg';
 import { ReactComponent as ImgDropdownClose } from '../assets/imgDropdownClose.svg';
 import { ReactComponent as ImgCloseBtn } from '../assets/imgCloseBtn.svg';
+import { ReactComponent as ImgPlaceLogo } from '../assets/imgPlaceLogo.svg';
+import { ReactComponent as ImgContentLogo } from '../assets/imgContentLogo.svg';
+import { ReactComponent as ImgInsert } from '../assets/imgInsert.svg';
 import ClassLogModal from './ClassLogModal';
 import ConsultationRecordsModal from './ConsultationRecordsModal';
 import StudentRecordsModal from './StudentRecordsModal';
 import WritingModalTop from '../components/WritingModalTop';
+import SubmitBtn from '../components/SubmitBtn';
+import { useNavigate } from 'react-router-dom';
 
 //** styled **/
 const SWorkLogModalBackground = styled.div`
@@ -37,12 +42,20 @@ const SWorkLogModal = styled.div`
     margin-left: 10%;
     margin-top: 20px;
   }
+  .contentTextarea {
+    width: 940px;
+    height: 220px;
+    resize: none;
+    padding: 20px 0px 20px 20px; //상 우 하 좌
+  }
 `;
 const WorkLogModal = () => {
+  const navigation = useNavigate();
   const [modal, setModal] = useRecoilState(modalState);
   const [dropdown, setDropdown] = useState<boolean>(false);
-  //장소 content 저장
+  //장소, 내용 입력값 저장
   const [place, setPlace] = useState<string>('');
+  const [content, setContent] = useState<string>('');
 
   const handleClickDropdown = () => {
     setDropdown(!dropdown);
@@ -69,6 +82,14 @@ const WorkLogModal = () => {
   const handlePlaceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPlace(e.target.value);
   };
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    handleCloseModal(); //현재 모달 닫기
+  };
   return (
     <ModalPortal>
       <SWorkLogModalBackground>
@@ -94,17 +115,42 @@ const WorkLogModal = () => {
           <div>
             <div>회의록</div>
             <div>
+              <ImgPlaceLogo />
               <label>장소</label>
               <input
                 type="text"
                 name="place"
                 aria-labelledby="place"
                 placeholder="장소를 입력하세요"
+                maxLength={30}
                 onChange={handlePlaceInputChange}
               />
               ({place.length} / 30)
             </div>
-            <div>내용</div>
+            <div>
+              <ImgContentLogo />
+              <label>내용*</label>
+              <textarea
+                className="contentTextarea"
+                name="content"
+                placeholder="텍스트를 입력하세요."
+                maxLength={3000}
+                onChange={handleContentChange}
+              />
+              ({content.length}/3000)
+            </div>
+            <div>
+              <ImgInsert />
+              <label>파일첨부</label>
+              <input
+                placeholder="2MB 이하의 jpg,gif 파일 업로드 가능합니다."
+                readOnly
+              ></input>
+              <button>업로드</button>
+            </div>
+            <div>
+              <SubmitBtn onClick={handleSubmit} label={'등록'} />
+            </div>
           </div>
         </SWorkLogModal>
       </SWorkLogModalBackground>
