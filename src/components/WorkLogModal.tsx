@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { modalState } from '../recoil/atoms/modalState';
 import ModalPortal from '../helpers/ModalPortal';
-import { ReactComponent as DropdownOpen } from '../assets/dropdownOpen.svg';
-import { ReactComponent as DropdownClose } from '../assets/dropdownClose.svg';
-import { ReactComponent as CloseBtn } from '../assets/closeBtn.svg';
+import { ReactComponent as ImgDropdownOpen } from '../assets/imgDropdownOpen.svg';
+import { ReactComponent as ImgDropdownClose } from '../assets/imgDropdownClose.svg';
+import { ReactComponent as ImgCloseBtn } from '../assets/imgCloseBtn.svg';
 import ClassLogModal from './ClassLogModal';
 import ConsultationRecordsModal from './ConsultationRecordsModal';
 import StudentRecordsModal from './StudentRecordsModal';
@@ -15,21 +15,23 @@ import WritingModalTop from '../components/WritingModalTop';
 const SWorkLogModalBackground = styled.div`
   position: fixed;
   top: 0;
-  right: 0;
-  bottom: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const SWorkLogModal = styled.div`
-  border-radius: 20px;
   border: 1px solid var(--Black-Black50, #d5d5d5);
   background-color: #fff;
+  padding: 20px;
+  border-radius: 20px;
   width: 1100px;
   height: 800px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
   .modalTop {
     display: flex;
     margin-left: 10%;
@@ -39,6 +41,8 @@ const SWorkLogModal = styled.div`
 const WorkLogModal = () => {
   const [modal, setModal] = useRecoilState(modalState);
   const [dropdown, setDropdown] = useState<boolean>(false);
+  //장소 content 저장
+  const [place, setPlace] = useState<string>('');
 
   const handleClickDropdown = () => {
     setDropdown(!dropdown);
@@ -60,15 +64,20 @@ const WorkLogModal = () => {
     }
     setModal({ isOpen: true, content: modalContent });
   };
+
+  //장소 input value 받기 함수
+  const handlePlaceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPlace(e.target.value);
+  };
   return (
     <ModalPortal>
       <SWorkLogModalBackground>
         <SWorkLogModal>
           <div className="modalTop">
-            <CloseBtn onClick={handleCloseModal} />
+            <ImgCloseBtn onClick={handleCloseModal} />
             <div>업무일지</div>
             <div onClick={handleClickDropdown}>
-              {dropdown ? <DropdownClose /> : <DropdownOpen />}
+              {dropdown ? <ImgDropdownClose /> : <ImgDropdownOpen />}
             </div>
           </div>
           {dropdown ? (
@@ -80,7 +89,23 @@ const WorkLogModal = () => {
               </li>
             </ul>
           ) : null}
+          {/* 글쓰기 모달 제목/시간 공통 컴포넌트 */}
           <WritingModalTop />
+          <div>
+            <div>회의록</div>
+            <div>
+              <label>장소</label>
+              <input
+                type="text"
+                name="place"
+                aria-labelledby="place"
+                placeholder="장소를 입력하세요"
+                onChange={handlePlaceInputChange}
+              />
+              ({place.length} / 30)
+            </div>
+            <div>내용</div>
+          </div>
         </SWorkLogModal>
       </SWorkLogModalBackground>
     </ModalPortal>

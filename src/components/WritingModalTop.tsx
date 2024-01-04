@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import React, { useState } from 'react';
 import DateSelector from './DateSelector';
 
-import { ReactComponent as WritingTitle } from '../assets/writingTitle.svg';
-import { ReactComponent as WritingPeriod } from '../assets/writingPeriod.svg';
+import { ReactComponent as ImgWritingTitle } from '../assets/imgWritingTitle.svg';
+import { ReactComponent as ImgWritingPeriod } from '../assets/imgWritingPeriod.svg';
 
 const STitle = styled.div`
   display: flex;
@@ -29,7 +29,7 @@ const WritingModalTop = () => {
   return (
     <div>
       <STitle>
-        <WritingTitle />
+        <ImgWritingTitle />
         {'  '}제목*
         <input
           type="text"
@@ -41,7 +41,7 @@ const WritingModalTop = () => {
         <div>({title.length} / 30)</div>
       </STitle>
       <SPeriod>
-        <WritingPeriod />
+        <ImgWritingPeriod />
         {'  '} 기간*
         <div>
           <DateSelector />

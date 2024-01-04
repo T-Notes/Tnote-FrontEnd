@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { ReactComponent as TnoteLogo } from '../assets/tnoteLogo.svg';
+import { ReactComponent as ImgTnoteLogo } from '../assets/imgTnoteLogo.svg';
 
 //** styled **//
 const SLeftSidebar = styled.div`
@@ -22,7 +22,7 @@ const LeftSidebar = () => {
   };
   return (
     <SLeftSidebar>
-      <TnoteLogo />
+      <ImgTnoteLogo />
       <div onClick={handleHomeNav}>홈화면</div>
       <div>아카이브</div>
       <div>시간표</div>
