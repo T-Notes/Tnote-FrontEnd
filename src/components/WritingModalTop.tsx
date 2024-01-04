@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import React, { useState } from 'react';
 import DateSelector from './DateSelector';
 
-import { ReactComponent as WritingTitle } from '../image/writingTitle.svg';
-import { ReactComponent as WritingPeriod } from '../image/writingPeriod.svg';
+import { ReactComponent as WritingTitle } from '../assets/writingTitle.svg';
+import { ReactComponent as WritingPeriod } from '../assets/writingPeriod.svg';
 
 const STitle = styled.div`
   display: flex;
