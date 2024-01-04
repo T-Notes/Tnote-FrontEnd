@@ -2,9 +2,10 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { modalState } from '../recoil/atoms/modalState';
-import { ReactComponent as DropdownOpen } from '../image/dropdownOpen.svg';
-import { ReactComponent as DropdownClose } from '../image/dropdownClose.svg';
-import { ReactComponent as CloseBtn } from '../image/closeBtn.svg';
+import ModalPortal from '../helpers/ModalPortal';
+import { ReactComponent as DropdownOpen } from '../assets/dropdownOpen.svg';
+import { ReactComponent as DropdownClose } from '../assets/dropdownClose.svg';
+import { ReactComponent as CloseBtn } from '../assets/closeBtn.svg';
 import ClassLogModal from './ClassLogModal';
 import ConsultationRecordsModal from './ConsultationRecordsModal';
 import StudentRecordsModal from './StudentRecordsModal';
@@ -60,27 +61,29 @@ const WorkLogModal = () => {
     setModal({ isOpen: true, content: modalContent });
   };
   return (
-    <SWorkLogModalBackground>
-      <SWorkLogModal>
-        <div className="modalTop">
-          <CloseBtn onClick={handleCloseModal} />
-          <div>업무일지</div>
-          <div onClick={handleClickDropdown}>
-            {dropdown ? <DropdownClose /> : <DropdownOpen />}
+    <ModalPortal>
+      <SWorkLogModalBackground>
+        <SWorkLogModal>
+          <div className="modalTop">
+            <CloseBtn onClick={handleCloseModal} />
+            <div>업무일지</div>
+            <div onClick={handleClickDropdown}>
+              {dropdown ? <DropdownClose /> : <DropdownOpen />}
+            </div>
           </div>
-        </div>
-        {dropdown ? (
-          <ul className="listStyleNone">
-            <li onClick={() => handleDropdownChange('학급일지')}>학급일지</li>
-            <li onClick={() => handleDropdownChange('상담기록')}>상담기록</li>
-            <li onClick={() => handleDropdownChange('학생 관찰 일지')}>
-              학생 관찰 일지
-            </li>
-          </ul>
-        ) : null}
-        <WritingModalTop />
-      </SWorkLogModal>
-    </SWorkLogModalBackground>
+          {dropdown ? (
+            <ul className="listStyleNone">
+              <li onClick={() => handleDropdownChange('학급일지')}>학급일지</li>
+              <li onClick={() => handleDropdownChange('상담기록')}>상담기록</li>
+              <li onClick={() => handleDropdownChange('학생 관찰 일지')}>
+                학생 관찰 일지
+              </li>
+            </ul>
+          ) : null}
+          <WritingModalTop />
+        </SWorkLogModal>
+      </SWorkLogModalBackground>
+    </ModalPortal>
   );
 };
 
