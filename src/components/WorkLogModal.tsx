@@ -3,18 +3,18 @@ import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { modalState } from '../recoil/atoms/modalState';
 import ModalPortal from '../helpers/ModalPortal';
-import { ReactComponent as ImgDropdownOpen } from '../assets/imgDropdownOpen.svg';
-import { ReactComponent as ImgDropdownClose } from '../assets/imgDropdownClose.svg';
-import { ReactComponent as ImgCloseBtn } from '../assets/imgCloseBtn.svg';
-import { ReactComponent as ImgPlaceLogo } from '../assets/imgPlaceLogo.svg';
-import { ReactComponent as ImgContentLogo } from '../assets/imgContentLogo.svg';
-import { ReactComponent as ImgInsert } from '../assets/imgInsert.svg';
+import { ReactComponent as ImgDropdownOpen } from '../assets/images/imgDropdownOpen.svg';
+import { ReactComponent as ImgDropdownClose } from '../assets/images/imgDropdownClose.svg';
+import { ReactComponent as ImgCloseBtn } from '../assets/images/imgCloseBtn.svg';
+import { ReactComponent as ImgPlaceLogo } from '../assets/images/imgPlaceLogo.svg';
+import { ReactComponent as ImgContentLogo } from '../assets/images/imgContentLogo.svg';
+import { ReactComponent as ImgInsert } from '../assets/images/imgInsert.svg';
 import ClassLogModal from './ClassLogModal';
 import ConsultationRecordsModal from './ConsultationRecordsModal';
 import StudentRecordsModal from './StudentRecordsModal';
 import WritingModalTop from '../components/WritingModalTop';
 import SubmitBtn from '../components/SubmitBtn';
-import { useNavigate } from 'react-router-dom';
+import instanceAxios from '../api/InstanceAxios';
 
 //** styled **/
 const SWorkLogModalBackground = styled.div`
@@ -50,12 +50,23 @@ const SWorkLogModal = styled.div`
   }
 `;
 const WorkLogModal = () => {
-  const navigation = useNavigate();
   const [modal, setModal] = useRecoilState(modalState);
   const [dropdown, setDropdown] = useState<boolean>(false);
   //장소, 내용 입력값 저장
   const [place, setPlace] = useState<string>('');
   const [content, setContent] = useState<string>('');
+
+  // modalTop 컴포넌트 상태
+  const [title, setTitle] = useState<string>('');
+  const [date, setDate] = useState<string>('');
+
+  const handleTitleChange = (newTitle: string) => {
+    setTitle(newTitle);
+  };
+
+  const handleDateChange = (newDate: string) => {
+    setDate(newDate);
+  };
 
   const handleClickDropdown = () => {
     setDropdown(!dropdown);
@@ -88,6 +99,7 @@ const WorkLogModal = () => {
   };
 
   const handleSubmit = () => {
+    instanceAxios.post('');
     handleCloseModal(); //현재 모달 닫기
   };
   return (
@@ -111,7 +123,10 @@ const WorkLogModal = () => {
             </ul>
           ) : null}
           {/* 글쓰기 모달 제목/시간 공통 컴포넌트 */}
-          <WritingModalTop />
+          <WritingModalTop
+            onTitleChange={handleTitleChange}
+            onDateChange={handleDateChange}
+          />
           <div>
             <div>회의록</div>
             <div>

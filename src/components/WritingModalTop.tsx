@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import React, { useState } from 'react';
 import DateSelector from './DateSelector';
-
-import { ReactComponent as ImgWritingTitle } from '../assets/imgWritingTitle.svg';
-import { ReactComponent as ImgWritingPeriod } from '../assets/imgWritingPeriod.svg';
+import { useRecoilValue } from 'recoil';
+import { startDateState, endDateState } from '../recoil/atoms/dateState';
+import { ReactComponent as ImgWritingTitle } from '../assets/images/imgWritingTitle.svg';
+import { ReactComponent as ImgWritingPeriod } from '../assets/images/imgWritingPeriod.svg';
 
 const STitle = styled.div`
   display: flex;
@@ -20,12 +21,24 @@ const SPeriod = styled.div`
   display: flex;
   margin-left: 95px;
 `;
-const WritingModalTop = () => {
-  const [title, setTitle] = useState<string>('');
 
+interface ModalTopProps {
+  onTitleChange: (newTitle: string) => void;
+  onDateChange: (newDate: string) => void;
+}
+const WritingModalTop = ({ onTitleChange, onDateChange }: ModalTopProps) => {
+  const [title, setTitle] = useState<string>('');
+  const startDate = useRecoilValue(startDateState);
+  console.log('startDate:', startDate);
+
+  const endDate = useRecoilValue(endDateState);
+  console.log('endDate:', endDate);
   const handleTitleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+    // setTitle(e.target.value);
+    const newTitle = e.target.value;
+    onTitleChange(newTitle);
   };
+
   return (
     <div>
       <STitle>
