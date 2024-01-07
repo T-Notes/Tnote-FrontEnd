@@ -68,6 +68,9 @@ const SchoolSearchModal = ({ onCloseModal }: SchoolSearchModalProps) => {
   const [schoolClassificationClick, setSchoolClassificationClick] =
     useState<boolean>(false); // 학교 분류 옵션 열고 닫기
   const [searchValue, setSearchValue] = useState<string>(''); // 결과값 드롭다운 목록에서 유저가 선택한 값 저장
+  const [schoolN, setSchoolN] = useState<string>(
+    undefined as unknown as string,
+  );
   //**이벤트 핸들러**//
 
   // 학교 지역 열고닫기 함수
@@ -104,10 +107,13 @@ const SchoolSearchModal = ({ onCloseModal }: SchoolSearchModalProps) => {
   //유저가 입력한 학교이름값 받아오기 함수
   const handleSchoolNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSchoolNameInput(e.target.value);
+    console.log('schoolNameInput', schoolNameInput);
   };
 
   // 유저가 선택한 결과값 받아오기 함수
-  const handleSearchValue = (result: string) => {
+  const handleSearchValue = (result: string, results: any) => {
+    console.log('results:', results);
+    setSchoolN(result);
     setSearchValue(result);
   };
 
@@ -146,7 +152,13 @@ const SchoolSearchModal = ({ onCloseModal }: SchoolSearchModalProps) => {
             };
           },
         );
-        setSearchResults(schools);
+
+        if (schoolN) {
+          setSearchResults([]);
+          setSchoolN(undefined as unknown as string);
+        } else {
+          setSearchResults(schools);
+        }
       } catch (error) {
         console.error('학교 정보 검색 중 오류가 발생했습니다.', error);
       }
@@ -326,7 +338,7 @@ const SchoolSearchModal = ({ onCloseModal }: SchoolSearchModalProps) => {
               {searchResults.map((result) => (
                 <li key={result.seq}>
                   <SSearchValue
-                    onClick={() => handleSearchValue(result.schoolName)}
+                    onClick={() => handleSearchValue(result.schoolName, result)}
                   >
                     <span>{result.schoolName}</span>
                     <p>{result.adres}</p>
