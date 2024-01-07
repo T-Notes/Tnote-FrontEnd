@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { ReactComponent as ImgTnoteLogo } from '../assets/imgTnoteLogo.svg';
+import { ReactComponent as ImgTnoteLogo } from '../assets/images/imgTnoteLogo.svg';
 
 //** styled **//
 const SLeftSidebar = styled.div`

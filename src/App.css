@@ -1,10 +1,15 @@
+/* 화면 전체 다 채우기 */
+html,
 body {
-  text-align: center;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
-.policyText {
-  color: blueviolet;
-  cursor: pointer;
+
+#root {
+  height: 100%;
 }
+
 .classSchedule {
   display: flex;
 
