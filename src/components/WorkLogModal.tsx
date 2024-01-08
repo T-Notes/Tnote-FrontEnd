@@ -164,7 +164,7 @@ const WorkLogModal = () => {
               <button>업로드</button>
             </div>
             <div>
-              <SubmitBtn onClick={handleSubmit} label={'등록'} />
+              <SubmitBtn size="small" onClick={handleSubmit} label={'등록'} />
             </div>
           </div>
         </SWorkLogModal>

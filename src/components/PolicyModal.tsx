@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-
-import React, { useState, useEffect, useRef } from 'react';
+import ModalPortal from '../helpers/ModalPortal';
+import { useState, useEffect, useRef } from 'react';
+import SubmitBtn from '../components/SubmitBtn';
 
 interface PolicyModalProps {
   isOpen: boolean;
@@ -16,15 +17,62 @@ const SModalBackground = styled.div`
   background-color: rgba(0, 0, 0, 0.6);
 `;
 const SLoginModal = styled.div`
-  width: 90%;
-  height: 90%;
+  width: 664px;
+  height: 627px;
   position: absolute;
+  padding: 30px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 5px;
   border: 1px solid #aaaaaa;
   background-color: #ffffff;
+
+  .text24 {
+    color: var(--Black-Black, #000);
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0px;
+  }
+  .text16 {
+    color: var(--Black-Black70, #5b5b5b);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin: 7px 0px 30px 0px;
+  }
+`;
+const SPolicyContent = styled.div`
+  width: 654px;
+  height: 432px;
+  overflow: scroll;
+
+  display: flex;
+  padding: 10px 0px 10px 10px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--Black-Black50, #d5d5d5);
+  background-color: var(--Black-Black20, #f7f9fc);
+  .policy-text {
+    color: var(--Black-Black, #000);
+
+    /* Font/Web_Body3 */
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 27px; /* 168.75% */
+  }
+`;
+const SSubmitBtnBox = styled.div`
+  display: flex;
+  margin-top: 30px;
+  padding: 0px 152px;
 `;
 
 const PolicyModal = ({ isOpen, onClose }: PolicyModalProps) => {
@@ -47,8 +95,12 @@ const PolicyModal = ({ isOpen, onClose }: PolicyModalProps) => {
     };
   }, [isOpen, onClose]);
 
+  const handlePolicyAgree = () => {
+    onClose();
+  };
+
   const PolicyContent = (
-    <div>
+    <div className="policy-text">
       [Tnote]은(는) 사용자의 개인정보를 중요하게 다루고 있습니다. 이에 대한
       안전한 보호를 위해 [Tnote]의 구글 계정으로 로그인하는 경우 다음과 같은
       개인정보처리방침이 적용됩니다.
@@ -92,18 +144,30 @@ const PolicyModal = ({ isOpen, onClose }: PolicyModalProps) => {
   if (!isOpen) return null;
 
   return (
-    <div>
+    <ModalPortal>
       <div>
         {isOpen ? (
           <SModalBackground>
             <SLoginModal ref={modalRef}>
-              <div onClick={onClose}>&times;</div>
-              {PolicyContent}
+              <div>
+                <h1 className="text24">개인 정보 보호 정책</h1>
+                <p className="text16">
+                  아래 약관에 동의하시고, 다음 단계로 이동하세요!
+                </p>
+                <SPolicyContent>{PolicyContent}</SPolicyContent>
+              </div>
+              <SSubmitBtnBox>
+                <SubmitBtn
+                  size="large"
+                  label="동의함"
+                  onClick={handlePolicyAgree}
+                />
+              </SSubmitBtnBox>
             </SLoginModal>
           </SModalBackground>
         ) : null}
       </div>
-    </div>
+    </ModalPortal>
   );
 };
 

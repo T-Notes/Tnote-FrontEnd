@@ -13,9 +13,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/signup" element={<Signup />} />
-        <Route element={<MainLayout />}>
-          <Route path="/home" element={<Home />} />
-        </Route>
+        {/* <Route element={<MainLayout />}> */}
+        <Route path="/home" element={<Home />} />
+        {/* </Route> */}
       </Routes>
     </BrowserRouter>
   );
