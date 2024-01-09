@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import PolicyModal from '../components/PolicyModal';
+import PolicyModal from '../components/modals/PolicyModal';
 import { ReactComponent as ImgTnoteLogo } from '../assets/images/imgTnoteLogo.svg';
 import { ReactComponent as ImgCloud } from '../assets/images/imgCloud.svg';
 import { ReactComponent as ImgDownArrow } from '../assets/images/imgDownArrow.svg';

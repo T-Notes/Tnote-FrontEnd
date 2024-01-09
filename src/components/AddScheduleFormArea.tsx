@@ -1,10 +1,10 @@
 import { useRef, useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { modalState } from '../recoil/atoms/modalState';
-import ClassLogModal from './ClassLogModal';
-import ConsultationRecordsModal from './ConsultationRecordsModal';
-import StudentRecordsModal from './StudentRecordsModal';
-import WorkLogModal from './WorkLogModal';
+import ClassLogModal from './modals/ClassLogModal';
+import ConsultationRecordsModal from './modals/ConsultationRecordsModal';
+import StudentRecordsModal from './modals/StudentRecordsModal';
+import WorkLogModal from './modals/WorkLogModal';
 
 const AddScheduleFormArea = () => {
   const [modal, setModal] = useRecoilState(modalState);

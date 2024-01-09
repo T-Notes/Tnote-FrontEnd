@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import _debounce from 'lodash/debounce';
 import instanceAxios from '../api/InstanceAxios';
-import SchoolSearchModal from '../components/SchoolSearchModal';
+import { ReactComponent as ImgDropdownOpen } from '../assets/images/imgDropdownOpen.svg';
+import { ReactComponent as ImgDropdownClose } from '../assets/images/imgDropdownClose.svg';
+import SchoolSearchModal from '../components/modals/SchoolSearchModal';
 import Header from '../components/Header';
-import SignUpBtn from '../components/SignUpBtn';
+import SubmitBtn from '../components/SubmitBtn';
 
 //styled //
 const SSignupContainer = styled.div`
@@ -86,6 +88,8 @@ const Signup = () => {
   });
   const [schoolSearchClick, setSchoolSearchClick] = useState<boolean>(false); //학교 검색 모달 열기용
   const [schoolName, setSchoolName] = useState<string>(''); // 학교이름 가져오기
+  const [dropdown, setDropdown] = useState<boolean>(false);
+
   //**이벤트 핸들러**//
 
   const handleCancelBtn = () => {
@@ -101,6 +105,9 @@ const Signup = () => {
     setSchoolSearchClick(false);
   };
 
+  const handleClickDropdown = () => {
+    setDropdown(!dropdown);
+  };
   // 서버에 보내줄 값 함수
   const handleInfoConfirmBtn = () => {
     if (
@@ -179,7 +186,25 @@ const Signup = () => {
         <>
           {' '}
           <p>과목</p>
-          <select
+          <div className="infoInput">
+            과목을 선택해주세요{' '}
+            {dropdown ? (
+              <ImgDropdownClose onClick={handleClickDropdown} />
+            ) : (
+              <ImgDropdownOpen onClick={handleClickDropdown} />
+            )}
+          </div>
+          {dropdown ? (
+            <ul>
+              <li>과학</li>
+              <li>생물</li>
+              <li>사회</li>
+              <li>체육</li>
+              <li>세계지리</li>
+              <li>선택안함</li>
+            </ul>
+          ) : null}
+          {/* <select
             className="infoInput"
             name="subject"
             value={infoFormData.subject}
@@ -195,7 +220,7 @@ const Signup = () => {
             <option value="physical education">체육</option>
             <option value="world Geography">세계지리</option>
             <option value="">선택안함</option>
-          </select>
+          </select> */}
         </>
         <>
           {' '}
@@ -219,8 +244,20 @@ const Signup = () => {
           ) : null}
         </>
         <SignUpBtnBox>
-          <SignUpBtn text={'취소'} onClick={handleCancelBtn} />
-          <SignUpBtn text={'확인'} onClick={handleInfoConfirmBtn} />
+          <SubmitBtn
+            backgroundcolor="gray"
+            textcolor="black"
+            size="small"
+            onClick={handleCancelBtn}
+            label={'취소'}
+          ></SubmitBtn>
+          <SubmitBtn
+            backgroundcolor="lightGray"
+            textcolor="gray"
+            size="small"
+            onClick={handleInfoConfirmBtn}
+            label={'확인'}
+          ></SubmitBtn>
         </SignUpBtnBox>
       </SInfoBox>
     </SSignupContainer>

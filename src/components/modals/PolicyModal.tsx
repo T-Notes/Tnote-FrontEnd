@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import ModalPortal from '../helpers/ModalPortal';
+import ModalPortal from '../../helpers/ModalPortal';
 import { useState, useEffect, useRef } from 'react';
-import SubmitBtn from '../components/SubmitBtn';
+import SubmitBtn from '../SubmitBtn';
 
 interface PolicyModalProps {
   isOpen: boolean;
@@ -160,6 +160,8 @@ const PolicyModal = ({ isOpen, onClose }: PolicyModalProps) => {
                 <SubmitBtn
                   size="large"
                   label="동의함"
+                  backgroundcolor="purple"
+                  textcolor="white"
                   onClick={handlePolicyAgree}
                 />
               </SSubmitBtnBox>

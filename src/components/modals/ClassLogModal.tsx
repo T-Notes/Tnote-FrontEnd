@@ -1,13 +1,14 @@
 import React, { useState, ChangeEvent } from 'react';
+import ModalPortal from '../../helpers/ModalPortal';
 import styled from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { modalState } from '../recoil/atoms/modalState';
-import { startDateState, endDateState } from '../recoil/atoms/dateState';
-import DateSelector from './DateSelector';
+import { modalState } from '../../recoil/atoms/modalState';
+import { startDateState, endDateState } from '../../recoil/atoms/dateState';
+import DateSelector from '../DateSelector';
 import ConsultationRecordsModal from './ConsultationRecordsModal';
 import StudentRecordsModal from './StudentRecordsModal';
 import WorkLogModal from './WorkLogModal';
-import instanceAxios from '../api/InstanceAxios';
+import instanceAxios from '../../api/InstanceAxios';
 
 const SClassLogBackground = styled.div`
   position: fixed;
@@ -109,75 +110,77 @@ const ClassLogModal = () => {
   };
 
   return (
-    <SClassLogBackground>
-      <SClassLogContent>
-        <SClassLogHeader>
-          <button onClick={handleCloseBtn}>&times;</button>
-          <select onChange={handleDropdownChange} value={selectedOption}>
-            <option disabled value="">
-              학급일지
-            </option>
-            <option value="업무일지">업무일지</option>
-            <option value="상담기록">상담기록</option>
-            <option value="학생 관찰 일지">학생 관찰 일지</option>
-          </select>
-        </SClassLogHeader>
-        <SClassLogTop>
-          <div className="title">
-            <label htmlFor="title">
-              제목
-              <input
-                type="text"
-                id="title"
-                placeholder="제목을 입력하세요."
-                maxLength={30}
-                value={title}
-                onChange={handleChangeTitle}
-              ></input>
-            </label>
-          </div>
+    <ModalPortal>
+      <SClassLogBackground>
+        <SClassLogContent>
+          <SClassLogHeader>
+            <button onClick={handleCloseBtn}>&times;</button>
+            <select onChange={handleDropdownChange} value={selectedOption}>
+              <option disabled value="">
+                학급일지
+              </option>
+              <option value="업무일지">업무일지</option>
+              <option value="상담기록">상담기록</option>
+              <option value="학생 관찰 일지">학생 관찰 일지</option>
+            </select>
+          </SClassLogHeader>
+          <SClassLogTop>
+            <div className="title">
+              <label htmlFor="title">
+                제목
+                <input
+                  type="text"
+                  id="title"
+                  placeholder="제목을 입력하세요."
+                  maxLength={30}
+                  value={title}
+                  onChange={handleChangeTitle}
+                ></input>
+              </label>
+            </div>
+            <div>
+              <DateSelector />
+            </div>
+          </SClassLogTop>
+
           <div>
-            <DateSelector />
+            <button onClick={() => handleContentTypeChange('학습계획')}>
+              학습계획
+            </button>
+            <button onClick={() => handleContentTypeChange('수업내용')}>
+              수업내용
+            </button>
+            <button onClick={() => handleContentTypeChange('제출과제')}>
+              제출과제
+            </button>
+            <button onClick={() => handleContentTypeChange('진도표')}>
+              진도표
+            </button>
           </div>
-        </SClassLogTop>
 
-        <div>
-          <button onClick={() => handleContentTypeChange('학습계획')}>
-            학습계획
-          </button>
-          <button onClick={() => handleContentTypeChange('수업내용')}>
-            수업내용
-          </button>
-          <button onClick={() => handleContentTypeChange('제출과제')}>
-            제출과제
-          </button>
-          <button onClick={() => handleContentTypeChange('진도표')}>
-            진도표
-          </button>
-        </div>
+          {contentType && (
+            <>
+              <div>내용</div>
+              <textarea
+                placeholder={`${
+                  contentType === '학습계획'
+                    ? '학습계획'
+                    : contentType === '수업내용'
+                      ? '수업내용'
+                      : contentType === '제출과제'
+                        ? '제출과제'
+                        : '진도표'
+                }을(를) 입력하세요`}
+                value={saveContents[contentType]}
+                onChange={handleContentChange}
+              />
+            </>
+          )}
 
-        {contentType && (
-          <>
-            <div>내용</div>
-            <textarea
-              placeholder={`${
-                contentType === '학습계획'
-                  ? '학습계획'
-                  : contentType === '수업내용'
-                    ? '수업내용'
-                    : contentType === '제출과제'
-                      ? '제출과제'
-                      : '진도표'
-              }을(를) 입력하세요`}
-              value={saveContents[contentType]}
-              onChange={handleContentChange}
-            />
-          </>
-        )}
-
-        <button onClick={handleClickSubmit}>등록</button>
-      </SClassLogContent>
-    </SClassLogBackground>
+          <button onClick={handleClickSubmit}>등록</button>
+        </SClassLogContent>
+      </SClassLogBackground>
+    </ModalPortal>
   );
 };
 

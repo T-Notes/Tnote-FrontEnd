@@ -1,20 +1,20 @@
 import styled from 'styled-components';
 import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { modalState } from '../recoil/atoms/modalState';
-import ModalPortal from '../helpers/ModalPortal';
-import { ReactComponent as ImgDropdownOpen } from '../assets/images/imgDropdownOpen.svg';
-import { ReactComponent as ImgDropdownClose } from '../assets/images/imgDropdownClose.svg';
-import { ReactComponent as ImgCloseBtn } from '../assets/images/imgCloseBtn.svg';
-import { ReactComponent as ImgPlaceLogo } from '../assets/images/imgPlaceLogo.svg';
-import { ReactComponent as ImgContentLogo } from '../assets/images/imgContentLogo.svg';
-import { ReactComponent as ImgInsert } from '../assets/images/imgInsert.svg';
+import { modalState } from '../../recoil/atoms/modalState';
+import ModalPortal from '../../helpers/ModalPortal';
+import { ReactComponent as ImgDropdownOpen } from '../../assets/images/imgDropdownOpen.svg';
+import { ReactComponent as ImgDropdownClose } from '../../assets/images/imgDropdownClose.svg';
+import { ReactComponent as ImgCloseBtn } from '../../assets/images/imgCloseBtn.svg';
+import { ReactComponent as ImgPlaceLogo } from '../../assets/images/imgPlaceLogo.svg';
+import { ReactComponent as ImgContentLogo } from '../../assets/images/imgContentLogo.svg';
+import { ReactComponent as ImgInsert } from '../../assets/images/imgInsert.svg';
 import ClassLogModal from './ClassLogModal';
 import ConsultationRecordsModal from './ConsultationRecordsModal';
 import StudentRecordsModal from './StudentRecordsModal';
-import WritingModalTop from '../components/WritingModalTop';
-import SubmitBtn from '../components/SubmitBtn';
-import instanceAxios from '../api/InstanceAxios';
+import WritingModalTop from '../WritingModalTop';
+import SubmitBtn from '../SubmitBtn';
+import instanceAxios from '../../api/InstanceAxios';
 
 //** styled **/
 const SWorkLogModalBackground = styled.div`
@@ -99,7 +99,12 @@ const WorkLogModal = () => {
   };
 
   const handleSubmit = () => {
-    instanceAxios.post('');
+    // instanceAxios.post('', {
+    //   title,
+    //   date,
+    //   place,
+    //   content,
+    // });
     handleCloseModal(); //현재 모달 닫기
   };
   return (
