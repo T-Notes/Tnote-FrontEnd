@@ -245,15 +245,15 @@ const Signup = () => {
         </>
         <SignUpBtnBox>
           <SubmitBtn
-            backgroundcolor="gray"
-            textcolor="black"
+            background="gray"
+            color="black"
             size="small"
             onClick={handleCancelBtn}
             label={'취소'}
           ></SubmitBtn>
           <SubmitBtn
-            backgroundcolor="lightGray"
-            textcolor="gray"
+            background="lightGray"
+            color="gray"
             size="small"
             onClick={handleInfoConfirmBtn}
             label={'확인'}
