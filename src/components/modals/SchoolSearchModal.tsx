@@ -382,8 +382,8 @@ const SchoolSearchModal = ({ onCloseModal }: SchoolSearchModalProps) => {
             </div>
             <div>
               <SubmitBtn
-                backgroundcolor="lightGray"
-                textcolor="gray"
+                background="lightGray"
+                color="gray"
                 size="large"
                 label="확인"
                 onClick={handleSearchValueSend}
