@@ -2,10 +2,6 @@ import styled from 'styled-components';
 import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { modalState } from '../../recoil/atoms/modalState';
-import ModalPortal from '../../helpers/ModalPortal';
-import { ReactComponent as ImgDropdownOpen } from '../../assets/images/imgDropdownOpen.svg';
-import { ReactComponent as ImgDropdownClose } from '../../assets/images/imgDropdownClose.svg';
-import { ReactComponent as ImgCloseBtn } from '../../assets/images/imgCloseBtn.svg';
 import { ReactComponent as ImgPlaceLogo } from '../../assets/images/imgPlaceLogo.svg';
 import { ReactComponent as ImgContentLogo } from '../../assets/images/imgContentLogo.svg';
 import { ReactComponent as ImgInsert } from '../../assets/images/imgInsert.svg';
@@ -15,61 +11,27 @@ import StudentRecordsModal from './StudentRecordsModal';
 import WritingModalTop from '../WritingModalTop';
 import SubmitBtn from '../SubmitBtn';
 import instanceAxios from '../../api/InstanceAxios';
+import { startDateState, endDateState } from '../../recoil/atoms/dateState';
+import MainModal from './MainModal';
+import WritingContent from '../WritingContent';
+import { workDiaryContents } from '../../recoil/atoms/contentState';
 
 //** styled **/
-const SWorkLogModalBackground = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-const SWorkLogModal = styled.div`
-  border: 1px solid var(--Black-Black50, #d5d5d5);
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 20px;
-  width: 1100px;
-  height: 800px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
-  .modalTop {
-    display: flex;
-    margin-left: 10%;
-    margin-top: 20px;
-  }
-  .contentTextarea {
-    width: 940px;
-    height: 220px;
-    resize: none;
-    padding: 20px 0px 20px 20px; //상 우 하 좌
-  }
-`;
 const WorkLogModal = () => {
   const [modal, setModal] = useRecoilState(modalState);
   const [dropdown, setDropdown] = useState<boolean>(false);
   //장소, 내용 입력값 저장
   const [place, setPlace] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-
-  // modalTop 컴포넌트 상태
+  const [content, setContent] = useRecoilState(workDiaryContents);
+  const [contentCount, setContentCount] = useState<number>(0);
   const [title, setTitle] = useState<string>('');
-  const [date, setDate] = useState<string>('');
+
+  const startDate = useRecoilValue(startDateState);
+  const endDate = useRecoilValue(endDateState);
 
   const handleTitleChange = (newTitle: string) => {
     setTitle(newTitle);
-  };
-
-  const handleDateChange = (newDate: string) => {
-    setDate(newDate);
-  };
-
-  const handleClickDropdown = () => {
-    setDropdown(!dropdown);
   };
 
   const handleCloseModal = () => {
@@ -77,16 +39,12 @@ const WorkLogModal = () => {
   };
   //드롭다운 클릭한 모달을 열리게 하는 함수
   const handleDropdownChange = (dropdown: string) => {
-    setDropdown(false); // 드롭다운 목록 클릭시 지금 모달 닫기
-    let modalContent = null;
-    if (dropdown === '학급일지') {
-      modalContent = <ClassLogModal />;
-    } else if (dropdown === '상담기록') {
-      modalContent = <ConsultationRecordsModal />;
-    } else if (dropdown === '학생 관찰 일지') {
-      modalContent = <StudentRecordsModal />;
-    }
-    setModal({ isOpen: true, content: modalContent });
+    const modalContentMap: Record<string, JSX.Element> = {
+      학급일지: <ClassLogModal />,
+      상담기록: <ConsultationRecordsModal />,
+      '학생 관찰 일지': <StudentRecordsModal />,
+    };
+    setModal({ isOpen: true, content: modalContentMap[dropdown] });
   };
 
   //장소 input value 받기 함수
@@ -95,86 +53,77 @@ const WorkLogModal = () => {
   };
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
+    const newContent = e.target.value;
+    setContent({ content: newContent });
+    setContentCount(newContent.length);
   };
 
-  const handleSubmit = () => {
-    // instanceAxios.post('', {
-    //   title,
-    //   date,
-    //   place,
-    //   content,
-    // });
-    handleCloseModal(); //현재 모달 닫기
+  const handleSubmit = async () => {
+    try {
+      await instanceAxios.post('', {
+        title,
+        startDate,
+        endDate,
+        place,
+        content: workDiaryContents,
+      });
+      handleCloseModal(); //현재 모달 닫기
+    } catch (err) {
+      console.log('err:', err);
+    }
   };
   return (
-    <ModalPortal>
-      <SWorkLogModalBackground>
-        <SWorkLogModal>
-          <div className="modalTop">
-            <ImgCloseBtn onClick={handleCloseModal} />
-            <div>업무일지</div>
-            <div onClick={handleClickDropdown}>
-              {dropdown ? <ImgDropdownClose /> : <ImgDropdownOpen />}
-            </div>
-          </div>
-          {dropdown ? (
-            <ul className="listStyleNone">
-              <li onClick={() => handleDropdownChange('학급일지')}>학급일지</li>
-              <li onClick={() => handleDropdownChange('상담기록')}>상담기록</li>
-              <li onClick={() => handleDropdownChange('학생 관찰 일지')}>
-                학생 관찰 일지
-              </li>
-            </ul>
-          ) : null}
-          {/* 글쓰기 모달 제목/시간 공통 컴포넌트 */}
-          <WritingModalTop
-            onTitleChange={handleTitleChange}
-            onDateChange={handleDateChange}
+    <MainModal
+      label="업무일지"
+      options={['학급일지', '상담기록', '학생 관찰 일지']}
+      handleDropdownChange={handleDropdownChange}
+    >
+      {/* 글쓰기 모달 제목/시간 공통 컴포넌트 */}
+      <WritingModalTop
+        onTitleChange={handleTitleChange}
+        // onDateChange={handleDateChange}
+      />
+      <div>
+        <div>회의록</div>
+        <div>
+          <ImgPlaceLogo />
+          <label>장소</label>
+          <input
+            type="text"
+            name="place"
+            aria-labelledby="place"
+            placeholder="장소를 입력하세요"
+            maxLength={30}
+            onChange={handlePlaceInputChange}
           />
-          <div>
-            <div>회의록</div>
-            <div>
-              <ImgPlaceLogo />
-              <label>장소</label>
-              <input
-                type="text"
-                name="place"
-                aria-labelledby="place"
-                placeholder="장소를 입력하세요"
-                maxLength={30}
-                onChange={handlePlaceInputChange}
-              />
-              ({place.length} / 30)
-            </div>
-            <div>
-              <ImgContentLogo />
-              <label>내용*</label>
-              <textarea
-                className="contentTextarea"
-                name="content"
-                placeholder="텍스트를 입력하세요."
-                maxLength={3000}
-                onChange={handleContentChange}
-              />
-              ({content.length}/3000)
-            </div>
-            <div>
-              <ImgInsert />
-              <label>파일첨부</label>
-              <input
-                placeholder="2MB 이하의 jpg,gif 파일 업로드 가능합니다."
-                readOnly
-              ></input>
-              <button>업로드</button>
-            </div>
-            <div>
-              <SubmitBtn size="small" onClick={handleSubmit} label={'등록'} />
-            </div>
-          </div>
-        </SWorkLogModal>
-      </SWorkLogModalBackground>
-    </ModalPortal>
+          ({place.length} / 30)
+        </div>
+        <WritingContent
+          size="large"
+          name="내용"
+          onChange={handleContentChange}
+          characterCount={contentCount}
+        />
+        <div>
+          <ImgInsert />
+          <label>파일첨부</label>
+          <input
+            placeholder="2MB 이하의 jpg,gif 파일 업로드 가능합니다."
+            readOnly
+          ></input>
+          <button>업로드</button>
+        </div>
+        <div>
+          <SubmitBtn
+            background="purple"
+            color="white"
+            size="small"
+            onClick={handleSubmit}
+            label={'등록'}
+          />
+        </div>
+      </div>
+    </MainModal>
   );
 };
 
