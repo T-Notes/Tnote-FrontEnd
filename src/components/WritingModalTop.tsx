@@ -24,18 +24,17 @@ const SPeriod = styled.div`
 
 interface ModalTopProps {
   onTitleChange: (newTitle: string) => void;
-  onDateChange: (newDate: string) => void;
+  // onDateChange: (newDate: string) => void;
 }
-const WritingModalTop = ({ onTitleChange, onDateChange }: ModalTopProps) => {
+const WritingModalTop = ({ onTitleChange }: ModalTopProps) => {
   const [title, setTitle] = useState<string>('');
   const startDate = useRecoilValue(startDateState);
-  console.log('startDate:', startDate);
 
   const endDate = useRecoilValue(endDateState);
-  console.log('endDate:', endDate);
+
   const handleTitleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // setTitle(e.target.value);
     const newTitle = e.target.value;
+    setTitle(newTitle); // title.length 보여주기 위함
     onTitleChange(newTitle);
   };
 
