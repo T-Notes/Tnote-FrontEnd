@@ -1,44 +1,36 @@
-import React, { useState, ChangeEvent } from 'react';
-import ModalPortal from '../../helpers/ModalPortal';
+import { useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { modalState } from '../../recoil/atoms/modalState';
 import { startDateState, endDateState } from '../../recoil/atoms/dateState';
-import DateSelector from '../DateSelector';
 import ConsultationRecordsModal from './ConsultationRecordsModal';
 import StudentRecordsModal from './StudentRecordsModal';
 import WorkLogModal from './WorkLogModal';
 import instanceAxios from '../../api/InstanceAxios';
+import WritingModalTop from '../WritingModalTop';
+import MainModal from './MainModal';
+import { ReactComponent as ImgContentLogo } from '../../assets/images/imgContentLogo.svg';
+import SubmitBtn from '../SubmitBtn';
 
-const SClassLogBackground = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const SClassLogContent = styled.div`
-  border: 1px solid black;
+// styled //
+const STextarea = styled.textarea`
+  max-height: 160px;
+  overflow-y: scroll;
+  padding: 20px 0px 20px 20px;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--Black-Black_60, #a6a6a6);
   background: #fff;
-  padding: 20px;
-  border-radius: 20px;
-  width: 1100px;
-  height: 800px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  height: 260px;
+  width: 940px;
 `;
-
-const SClassLogHeader = styled.div``;
-
-const SClassLogTop = styled.div`
+const SContentLine = styled.div`
   display: flex;
-  flex-direction: column;
 `;
 
+// interface //
 interface SaveContents {
   학습계획: string;
   수업내용: string;
@@ -49,7 +41,7 @@ interface SaveContents {
 const ClassLogModal = () => {
   const [modal, setModal] = useRecoilState(modalState); // isOpen, content 값이 있는 모달 전역상태
   const [title, setTitle] = useState<string>(''); //제목 상태
-  const [selectedOption, setSelectedOption] = useState<string>(''); // 드롭다운에서 선택된 옵션(학급일지, 업무일지, 상담기록, 학생 관찰 일지)을 저장
+
   const [contentType, setContentType] =
     useState<keyof SaveContents>('학습계획'); //현재 모달에서 어떤 종류의 탭을 입력하고 있는지를 나타낸다.
   const [saveContents, setSaveContents] = useState<SaveContents>({
@@ -59,30 +51,22 @@ const ClassLogModal = () => {
     진도표: '',
   }); //각 탭의 타입에 따른 입력된 내용을 저장하는 객체
 
+  const [dropdown, setDropdown] = useState<boolean>(false);
+
   const startDate = useRecoilValue(startDateState); // 첫시작일
   const endDate = useRecoilValue(endDateState); //마지막일
 
-  // 닫기 버튼 클릭 시 모달 창 닫기
-  const handleCloseBtn = () => {
-    setModal({ isOpen: false, content: null });
-  };
-
   // 드롭다운 값이 변경될 때 호출, 선택된 값에 따라 모달 컨텐츠를 업데이트
-  const handleDropdownChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = e.target.value;
-    let modalContent = null;
-    if (selectedValue === '업무일지') {
-      modalContent = <WorkLogModal />;
-    } else if (selectedValue === '상담기록') {
-      modalContent = <ConsultationRecordsModal />;
-    } else if (selectedValue === '학생 관찰 일지') {
-      modalContent = <StudentRecordsModal />;
-    }
+  const handleDropdownChange = (dropdown: string) => {
+    const modalContentMap: Record<string, JSX.Element> = {
+      업무일지: <WorkLogModal />,
+      상담기록: <ConsultationRecordsModal />,
+      '학생 관찰 일지': <StudentRecordsModal />,
+    };
 
-    setModal({ isOpen: true, content: modalContent });
-    //선택된 옵션 상태 업데이트
-    setSelectedOption(selectedValue);
+    setModal({ isOpen: true, content: modalContentMap[dropdown] });
   };
+
   // 모달의 컨텐츠 타입이 변경될 때 호출
   const handleContentTypeChange = (type: keyof SaveContents) => {
     setContentType(type);
@@ -95,92 +79,73 @@ const ClassLogModal = () => {
     }));
   };
 
-  const handleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+  const handleTitleChange = (newTitle: string) => {
+    setTitle(newTitle);
   };
 
-  const handleClickSubmit = () => {
-    // 등록 api 연결 후 주석 풀기
-    // instanceAxios.post('/api/endpoint', {
-    //   title,
-    //   startDate :startDate, //recoil 상태활용
-    //   endDate : endDate, //recoil 상태활용
-    //   saveContents,
-    // });
+  const handleClickSubmit = async () => {
+    try {
+      await instanceAxios.post('/api/endpoint', {
+        title,
+        startDate: startDate, //recoil 상태활용
+        endDate: endDate, //recoil 상태활용
+        saveContents,
+      });
+    } catch (err) {
+      console.log('err:', err);
+    }
   };
 
   return (
-    <ModalPortal>
-      <SClassLogBackground>
-        <SClassLogContent>
-          <SClassLogHeader>
-            <button onClick={handleCloseBtn}>&times;</button>
-            <select onChange={handleDropdownChange} value={selectedOption}>
-              <option disabled value="">
-                학급일지
-              </option>
-              <option value="업무일지">업무일지</option>
-              <option value="상담기록">상담기록</option>
-              <option value="학생 관찰 일지">학생 관찰 일지</option>
-            </select>
-          </SClassLogHeader>
-          <SClassLogTop>
-            <div className="title">
-              <label htmlFor="title">
-                제목
-                <input
-                  type="text"
-                  id="title"
-                  placeholder="제목을 입력하세요."
-                  maxLength={30}
-                  value={title}
-                  onChange={handleChangeTitle}
-                ></input>
-              </label>
-            </div>
-            <div>
-              <DateSelector />
-            </div>
-          </SClassLogTop>
+    <MainModal
+      label="학급일지"
+      options={['업무일지', '상담기록', '학생 관찰 일지']}
+      handleDropdownChange={handleDropdownChange}
+    >
+      {/* 글쓰기 모달 제목/시간 공통 컴포넌트 */}
+      <WritingModalTop
+        onTitleChange={handleTitleChange}
+        // onDateChange={handleDateChange}
+      />
 
-          <div>
-            <button onClick={() => handleContentTypeChange('학습계획')}>
-              학습계획
-            </button>
-            <button onClick={() => handleContentTypeChange('수업내용')}>
-              수업내용
-            </button>
-            <button onClick={() => handleContentTypeChange('제출과제')}>
-              제출과제
-            </button>
-            <button onClick={() => handleContentTypeChange('진도표')}>
-              진도표
-            </button>
-          </div>
+      <div>
+        <button onClick={() => handleContentTypeChange('학습계획')}>
+          학습계획
+        </button>
+        <button onClick={() => handleContentTypeChange('수업내용')}>
+          수업내용
+        </button>
+        <button onClick={() => handleContentTypeChange('제출과제')}>
+          제출과제
+        </button>
+        <button onClick={() => handleContentTypeChange('진도표')}>
+          진도표
+        </button>
+      </div>
 
-          {contentType && (
-            <>
-              <div>내용</div>
-              <textarea
-                placeholder={`${
-                  contentType === '학습계획'
-                    ? '학습계획'
-                    : contentType === '수업내용'
-                      ? '수업내용'
-                      : contentType === '제출과제'
-                        ? '제출과제'
-                        : '진도표'
-                }을(를) 입력하세요`}
-                value={saveContents[contentType]}
-                onChange={handleContentChange}
-              />
-            </>
-          )}
+      {contentType && (
+        <>
+          <SContentLine>
+            <ImgContentLogo />
+            <div>내용</div>
+            <div>({saveContents[contentType].length} / 3000)</div>
+          </SContentLine>
 
-          <button onClick={handleClickSubmit}>등록</button>
-        </SClassLogContent>
-      </SClassLogBackground>
-    </ModalPortal>
+          <STextarea
+            placeholder="텍스트를 입력해주세요"
+            value={saveContents[contentType]}
+            onChange={handleContentChange}
+          />
+        </>
+      )}
+      <SubmitBtn
+        background="purple"
+        color="white"
+        size="small"
+        onClick={handleClickSubmit}
+        label={'등록'}
+      />
+    </MainModal>
   );
 };
 
