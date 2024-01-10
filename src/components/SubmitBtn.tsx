@@ -1,10 +1,10 @@
 import { ReactEventHandler } from 'react';
 import styled from 'styled-components';
 
+// 스타일드 컴포넌트에서 사용되는 속성만 정의
 interface StyledButtonProps {
   size?: 'small' | 'large';
-  backgroundcolor?: string;
-  textcolor?: string;
+  color?: string;
 }
 
 // ** style **//
@@ -26,7 +26,7 @@ const SSubmitBtn = styled.button<StyledButtonProps>`
     }
   }};
   background-color: ${(props) => {
-    switch (props.backgroundcolor) {
+    switch (props.theme.background) {
       case 'lightGray':
         return '#E8E8E8';
       case 'gray':
@@ -36,7 +36,7 @@ const SSubmitBtn = styled.button<StyledButtonProps>`
     }
   }};
   color: ${(props) => {
-    switch (props.textcolor) {
+    switch (props.color) {
       case 'black':
         return '#000000';
       case 'white':
@@ -57,21 +57,21 @@ interface SubmitProps {
   onClick: ReactEventHandler;
   label: string;
   size?: 'small' | 'large';
-  backgroundcolor?: string;
-  textcolor?: string;
+  background?: string;
+  color?: string;
 }
 
 const SubmitBtn = ({
-  textcolor,
-  backgroundcolor,
+  color,
+  background,
   size,
   onClick,
   label,
 }: SubmitProps) => {
   return (
     <SSubmitBtn
-      backgroundcolor={backgroundcolor}
-      textcolor={textcolor}
+      theme={{ background }}
+      color={color}
       size={size}
       onClick={onClick}
     >

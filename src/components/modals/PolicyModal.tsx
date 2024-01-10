@@ -160,8 +160,8 @@ const PolicyModal = ({ isOpen, onClose }: PolicyModalProps) => {
                 <SubmitBtn
                   size="large"
                   label="동의함"
-                  backgroundcolor="purple"
-                  textcolor="white"
+                  background="purple"
+                  color="white"
                   onClick={handlePolicyAgree}
                 />
               </SSubmitBtnBox>

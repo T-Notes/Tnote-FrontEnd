@@ -84,6 +84,6 @@ button {
 }
 
 /* 드롭다운 */
-.listStyleNone {
+ul {
   list-style: none;
 }
