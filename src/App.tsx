@@ -1,11 +1,17 @@
-import React from 'react';
-import './App.css';
+import { RecoilRoot } from 'recoil';
+import { ThemeProvider } from 'styled-components';
+
+import GlobalStyle from './styles/GlobalStyle';
+import theme from './styles/theme';
+import Router from './components/Router';
 
 function App() {
   return (
-    <>
-      <div>APP</div>
-    </>
+    <RecoilRoot>
+      <ThemeProvider theme={theme}></ThemeProvider>
+      <GlobalStyle />
+      <Router />
+    </RecoilRoot>
   );
 }
 
