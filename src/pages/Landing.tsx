@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { isCheckedState } from '../lib/atom';
 import LandingIntro from '../components/Landing/LandingIntro';
 import PrivacyPolicyModal from '../components/Landing/PrivacyPolicyModal';
 import { privacyPolicyContent } from '../utils/privacyPolicyContent';
@@ -18,6 +20,7 @@ const SLandingWrapper = styled.div`
 
 const Landing = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isChecked, setIsChecked] = useRecoilState(isCheckedState);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -25,6 +28,10 @@ const Landing = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleChangeIsChecked = () => {
+    setIsChecked(true);
   };
   return (
     <SLandingWrapper>
@@ -36,6 +43,7 @@ const Landing = () => {
             onRequestClose={closeModal}
             title="개인 정보 보호 정책"
             content={privacyPolicyContent}
+            onClick={handleChangeIsChecked}
           />
         </>
       )}

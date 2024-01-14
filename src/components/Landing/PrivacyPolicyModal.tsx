@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import ReactModal from 'react-modal';
-import { ReactNode } from 'react';
+import { ReactEventHandler, ReactNode } from 'react';
 
 import { Button } from '../common/styled/Button';
 
@@ -57,20 +57,21 @@ const customStyles = {
   },
 };
 
-ReactModal.setAppElement('#root');
-
 interface PrivacyPolicyModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   title: string;
   content: ReactNode;
+  onClick: ReactEventHandler;
 }
 
+ReactModal.setAppElement('#root');
 const PrivacyPolicyModal = ({
   isOpen,
   onRequestClose,
   title,
   content,
+  onClick,
 }: PrivacyPolicyModalProps) => {
   return (
     <ReactModal
@@ -84,7 +85,9 @@ const PrivacyPolicyModal = ({
         아래 약관에 동의하시고, 다음단계로 이동하세요!
       </SPrivacyPolicyCation>
       <SPolicyContentBox>{content}</SPolicyContentBox>
-      <SPrivacyAgreementBtnBox>동의함</SPrivacyAgreementBtnBox>
+      <SPrivacyAgreementBtnBox onClick={onClick}>
+        동의함
+      </SPrivacyAgreementBtnBox>
     </ReactModal>
   );
 };

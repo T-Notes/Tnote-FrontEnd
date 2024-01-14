@@ -1,4 +1,5 @@
 import { RecoilRoot } from 'recoil';
+import ReactModal from 'react-modal';
 import { ThemeProvider } from 'styled-components';
 
 import GlobalStyle from './styles/GlobalStyle';

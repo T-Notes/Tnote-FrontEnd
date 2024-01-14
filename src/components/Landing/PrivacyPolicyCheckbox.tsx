@@ -2,16 +2,16 @@ import { IcCheckedBox, IcUncheckedBox } from '../../assets/icons';
 
 interface PrivacyPolicyCheckboxProps {
   isChecked: boolean;
-  onClick: () => void;
+  handleCheckboxChange: () => void;
 }
 const PrivacyPolicyCheckbox = ({
   isChecked,
-  onClick,
+  handleCheckboxChange,
 }: PrivacyPolicyCheckboxProps) => {
   return isChecked ? (
-    <IcCheckedBox onClick={onClick} />
+    <IcCheckedBox onClick={handleCheckboxChange} />
   ) : (
-    <IcUncheckedBox onClick={onClick} />
+    <IcUncheckedBox onClick={handleCheckboxChange} />
   );
 };
 

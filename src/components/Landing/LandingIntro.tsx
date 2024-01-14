@@ -1,5 +1,7 @@
 import styled from 'styled-components';
-import { ReactComponentElement, useState } from 'react';
+import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { isCheckedState } from '../../lib/atom';
 import KakaoLoginBtn from './KakaoLoginBtn';
 import PrivacyPolicyCheckbox from './PrivacyPolicyCheckbox';
 
@@ -51,7 +53,7 @@ interface PrivacyPolicyProps {
 }
 
 const LandingIntro = ({ onClick }: PrivacyPolicyProps) => {
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useRecoilState(isCheckedState);
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -81,7 +83,7 @@ const LandingIntro = ({ onClick }: PrivacyPolicyProps) => {
       <SPrivacyPolicyCheckboxSection>
         <PrivacyPolicyCheckbox
           isChecked={isChecked}
-          onClick={handleCheckboxChange}
+          handleCheckboxChange={handleCheckboxChange}
         />
         <SPrivacyPolicyPointText onClick={onClick}>
           개인 정보 보호 정책
