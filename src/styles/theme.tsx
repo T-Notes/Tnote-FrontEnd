@@ -27,16 +27,51 @@ const colors = {
   red100: '#FFD9DC',
   red200: '#DC2626',
   white: '#FFFFFF',
+  black: '#000000',
   green000: '#2DD4BF',
   green100: '#E6FEE7',
   yellow000: '#F59E0B',
   yellow100: '#FEF5E6',
+  yellow200: '#FEE500',
   pink000: '#FEE6F9',
   pink100: '#DC2DB5',
 };
 
+interface FontProps {
+  weight: 400 | 500 | 600 | 700 | 800;
+  size: number;
+  height: number;
+}
+interface TempFont extends Omit<FontProps, 'height'> {
+  height: number;
+}
+
+const fontHeight = {
+  normal: 1.2,
+  long: 1.5,
+} as const;
+
+const FONT = ({ weight, size, height }: FontProps) => {
+  return css`
+    font-family: Pretendard;
+    font-style: normal;
+    font-size: ${size}px;
+    font-weight: ${weight};
+    line-height: ${height}px;
+  `;
+};
+
+const fonts = {
+  h1: FONT({ weight: 700, size: 48, height: 70 }),
+  h2: FONT({ weight: 600, size: 24, height: 29 }),
+  button: FONT({ weight: 500, size: 24, height: 29 }),
+  button1: FONT({ weight: 500, size: 18, height: 24 }),
+  caption: FONT({ weight: 500, size: 16, height: 27 }),
+};
+
 const theme: DefaultTheme = {
   colors,
+  fonts,
 };
 
 export default theme;

@@ -29,10 +29,12 @@ declare module 'styled-components' {
       red100: string;
       red200: string;
       white: string;
+      black: string;
       green000: string;
       green100: string;
       yellow000: string;
       yellow100: string;
+      yellow200: string;
       pink000: string;
       pink100: string;
     };

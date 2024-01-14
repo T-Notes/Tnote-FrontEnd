@@ -8,9 +8,10 @@ import Router from './components/Router';
 function App() {
   return (
     <RecoilRoot>
-      <ThemeProvider theme={theme}></ThemeProvider>
-      <GlobalStyle />
-      <Router />
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <Router />
+      </ThemeProvider>
     </RecoilRoot>
   );
 }
