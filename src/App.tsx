@@ -6,6 +6,8 @@ import GlobalStyle from './styles/GlobalStyle';
 import theme from './styles/theme';
 import Router from './components/Router';
 
+ReactModal.setAppElement('#root');
+
 function App() {
   return (
     <RecoilRoot>

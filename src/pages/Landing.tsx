@@ -31,11 +31,12 @@ const Landing = () => {
   };
 
   const handleChangeIsChecked = () => {
+    closeModal();
     setIsChecked(true);
   };
   return (
     <SLandingWrapper>
-      <LandingIntro onClick={openModal} />
+      <LandingIntro onPrivacyPolicyModal={openModal} />
       {isModalOpen && (
         <>
           <PrivacyPolicyModal
@@ -43,7 +44,7 @@ const Landing = () => {
             onRequestClose={closeModal}
             title="개인 정보 보호 정책"
             content={privacyPolicyContent}
-            onClick={handleChangeIsChecked}
+            onPrivacyAgreement={handleChangeIsChecked}
           />
         </>
       )}

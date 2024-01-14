@@ -1,11 +1,12 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { isCheckedState } from '../../lib/atom';
 import KakaoLoginBtn from './KakaoLoginBtn';
 import PrivacyPolicyCheckbox from './PrivacyPolicyCheckbox';
 
 import { IcLogo } from '../../assets/icons';
+import { Button } from '../common/styled/Button';
 
 // styled //
 const SWrapper = styled.div`
@@ -49,16 +50,42 @@ const SPrivacyPolicyCheckboxSection = styled.div`
 `;
 
 interface PrivacyPolicyProps {
-  onClick: () => void;
+  onPrivacyPolicyModal: () => void;
 }
 
-const LandingIntro = ({ onClick }: PrivacyPolicyProps) => {
+const LandingIntro = ({ onPrivacyPolicyModal }: PrivacyPolicyProps) => {
   const [isChecked, setIsChecked] = useRecoilState(isCheckedState);
+  // 경고 모달 상태
+  const [isWarning, setIsWarning] = useState(false);
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
+  // 경고 상태로 변경해주는 함수
+  const warning = () => {
+    setIsWarning(true);
+  };
 
+  const handleGoLogin = () => {
+    if (isChecked) {
+      //유저의 로그인 정보를 받아오는 로직
+      console.log('로그인 되었다!');
+    } else {
+      // console.log('개인 정보 동의 후 로그인 하세요');
+      // 경고 모달 상태가 true로 바뀌는 함수 호출
+      warning();
+    }
+    //useEffect를 통해 경고 모달 상태가 바뀔때마다,
+    // 경고 모달 상태가 true라면, 모달 컴포넌트 렌더링
+  };
+
+  useEffect(() => {
+    if (isWarning) {
+      alert('개인정보에 동의하세요.');
+      console.log('경고모달 떴다!', isWarning, isChecked);
+      setIsWarning(false);
+    }
+  }, [isWarning]);
   return (
     <SWrapper>
       {/* 로고 */}
@@ -77,7 +104,7 @@ const LandingIntro = ({ onClick }: PrivacyPolicyProps) => {
         </article>
       </SContentWrapper>
       {/* 카카오 로그인 버튼 */}
-      <KakaoLoginBtn />
+      <KakaoLoginBtn onClickLogin={handleGoLogin} />
       <SDividingline />
       {/* 개인정보 동의 체크박스 */}
       <SPrivacyPolicyCheckboxSection>
@@ -85,7 +112,7 @@ const LandingIntro = ({ onClick }: PrivacyPolicyProps) => {
           isChecked={isChecked}
           handleCheckboxChange={handleCheckboxChange}
         />
-        <SPrivacyPolicyPointText onClick={onClick}>
+        <SPrivacyPolicyPointText onClick={onPrivacyPolicyModal}>
           개인 정보 보호 정책
         </SPrivacyPolicyPointText>
         <SPrivacyPolicyText>을 읽고 동의합니다.</SPrivacyPolicyText>

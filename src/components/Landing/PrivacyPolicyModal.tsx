@@ -62,16 +62,15 @@ interface PrivacyPolicyModalProps {
   onRequestClose: () => void;
   title: string;
   content: ReactNode;
-  onClick: ReactEventHandler;
+  onPrivacyAgreement: ReactEventHandler;
 }
 
-ReactModal.setAppElement('#root');
 const PrivacyPolicyModal = ({
   isOpen,
   onRequestClose,
   title,
   content,
-  onClick,
+  onPrivacyAgreement,
 }: PrivacyPolicyModalProps) => {
   return (
     <ReactModal
@@ -85,7 +84,7 @@ const PrivacyPolicyModal = ({
         아래 약관에 동의하시고, 다음단계로 이동하세요!
       </SPrivacyPolicyCation>
       <SPolicyContentBox>{content}</SPolicyContentBox>
-      <SPrivacyAgreementBtnBox onClick={onClick}>
+      <SPrivacyAgreementBtnBox onClick={onPrivacyAgreement}>
         동의함
       </SPrivacyAgreementBtnBox>
     </ReactModal>

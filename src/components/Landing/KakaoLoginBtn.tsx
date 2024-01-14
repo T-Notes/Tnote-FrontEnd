@@ -14,9 +14,12 @@ const SKakaoLoginBtn = styled.button`
   ${({ theme }) => theme.fonts.button}
   color: ${({ theme }) => theme.colors.black}; // active
 `;
-const KakaoLoginBtn = () => {
+interface KakaoLoginProps {
+  onClickLogin: React.MouseEventHandler;
+}
+const KakaoLoginBtn = ({ onClickLogin }: KakaoLoginProps) => {
   return (
-    <SKakaoLoginBtn>
+    <SKakaoLoginBtn onClick={onClickLogin}>
       <IcKakao />
       카카오로 시작하기
     </SKakaoLoginBtn>
