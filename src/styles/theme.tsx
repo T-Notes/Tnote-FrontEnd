@@ -23,6 +23,7 @@ const colors = {
   gray600: '#D5D5D5',
   gray700: '#2F2F2F',
   gray800: '#444444',
+  gray900: '#D9D9D9',
   red000: '#FF6F6F',
   red100: '#FFD9DC',
   red200: '#DC2626',
@@ -42,14 +43,6 @@ interface FontProps {
   size: number;
   height: number;
 }
-interface TempFont extends Omit<FontProps, 'height'> {
-  height: number;
-}
-
-const fontHeight = {
-  normal: 1.2,
-  long: 1.5,
-} as const;
 
 const FONT = ({ weight, size, height }: FontProps) => {
   return css`
@@ -67,11 +60,43 @@ const fonts = {
   button: FONT({ weight: 500, size: 24, height: 29 }),
   button1: FONT({ weight: 500, size: 18, height: 24 }),
   caption: FONT({ weight: 500, size: 16, height: 27 }),
+  caption1: FONT({ weight: 500, size: 20, height: 28 }),
+};
+
+interface SizeProps {
+  width: 'default' | 'medium' | 'large';
+  height: 'small' | 'medium' | 'large' | 'extraLarge';
+}
+
+const modalWidth = {
+  default: 350,
+  medium: 460,
+  large: 485,
+};
+
+const modalHeight = {
+  small: 300,
+  medium: 328,
+  large: 347,
+  extraLarge: 515,
+};
+
+const SIZE = ({ width, height }: SizeProps) => {
+  return css`
+    width: ${modalWidth[width]}px;
+    height: ${modalHeight[height]}px;
+  `;
+};
+
+const sizes = {
+  small: SIZE({ width: 'default', height: 'small' }),
+  basic: SIZE({ width: 'default', height: 'medium' }),
 };
 
 const theme: DefaultTheme = {
   colors,
   fonts,
+  sizes,
 };
 
 export default theme;

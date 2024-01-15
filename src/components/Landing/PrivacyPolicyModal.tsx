@@ -5,12 +5,20 @@ import { ReactEventHandler, ReactNode } from 'react';
 import { Button } from '../common/styled/Button';
 
 // styled //
+const SPrivacyPolicyBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
 const SPolicyContentBox = styled.section`
   width: auto;
   height: 380px;
   overflow: scroll;
+
   display: flex;
-  padding: 10px 0px 10px 10px;
+  padding: 10px 10px 10px 10px;
   justify-content: center;
   align-items: flex-start;
   gap: 10px;
@@ -25,6 +33,9 @@ const SPrivacyAgreementBtnBox = styled(Button)`
   margin-top: 30px;
   width: 420px;
   height: 60px;
+
+  background-color: ${({ theme }) => theme.colors.purple100}; // active
+  color: ${({ theme }) => theme.colors.white}; // active
 `;
 
 const SPrivacyPolicyTitle = styled.h1`
@@ -53,7 +64,7 @@ const customStyles = {
     transform: 'translate(-50%, -50%)',
     padding: '30px',
     border: '1px solid #aaaaaa',
-    borderRadius: '5px',
+    borderRadius: '20px',
   },
 };
 
@@ -83,10 +94,12 @@ const PrivacyPolicyModal = ({
       <SPrivacyPolicyCation>
         아래 약관에 동의하시고, 다음단계로 이동하세요!
       </SPrivacyPolicyCation>
-      <SPolicyContentBox>{content}</SPolicyContentBox>
-      <SPrivacyAgreementBtnBox onClick={onPrivacyAgreement}>
-        동의함
-      </SPrivacyAgreementBtnBox>
+      <SPrivacyPolicyBox>
+        <SPolicyContentBox>{content}</SPolicyContentBox>
+        <SPrivacyAgreementBtnBox onClick={onPrivacyAgreement}>
+          동의함
+        </SPrivacyAgreementBtnBox>
+      </SPrivacyPolicyBox>
     </ReactModal>
   );
 };

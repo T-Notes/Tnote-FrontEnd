@@ -5,7 +5,23 @@ const GlobalStyle = createGlobalStyle`
     ${reset}
     * {
         box-sizing: border-box;
-        
+      
+        &::-webkit-scrollbar {
+    background-color: transparent;
+    width: 0.6rem;
+    
+  }
+
+  &::-webkit-scrollbar-track {
+    height: auto;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    height: 10rem;
+    border-radius: 1.6rem;
+    background-color: ${({ theme }) => theme.colors.gray900};
+  }
+
     }
     html{
         font-family: Pretendard;
