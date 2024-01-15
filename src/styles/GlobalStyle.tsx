@@ -43,6 +43,9 @@ const GlobalStyle = createGlobalStyle`
             outline: none;
         }
     }
+    input[readOnly] {
+  /* background-color: #f0f0f0; */
+}
     textarea {
     border: none;
     background-color: transparent;
