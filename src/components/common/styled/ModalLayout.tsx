@@ -26,3 +26,42 @@ export const ModalLayout = styled.div`
   border-radius: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 `;
+
+// ReactModal styled
+export const policyCustomStyles = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  content: {
+    width: '664px',
+    height: '627px',
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    padding: '30px',
+    border: '1px solid #D5D5D5',
+    borderRadius: '20px',
+  },
+};
+
+export const searchCustomStyles = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  content: {
+    width: '460px',
+    height: '420px',
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    padding: '10px 20px 20px 20px',
+    border: '1px solid #D5D5D5',
+    borderRadius: '8px',
+  },
+};

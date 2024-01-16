@@ -4,5 +4,6 @@ export { ReactComponent as IcCheckedBox } from './checkboxChecked.svg';
 export { ReactComponent as IcUncheckedBox } from './checkboxUnchecked.svg';
 export { ReactComponent as IcWarning } from './warningIcon.svg';
 export { ReactComponent as IcSearch } from './searchIcon.svg';
-export { ReactComponent as IcOpen } from './openIcon.svg';
+export { ReactComponent as IcOpenDropdown } from './openDropdownIcon.svg';
+export { ReactComponent as IcCloseDropdown } from './closeDropdownIcon.svg';
 export { ReactComponent as IcClose } from './closeIcon.svg';

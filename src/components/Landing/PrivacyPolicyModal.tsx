@@ -3,6 +3,7 @@ import ReactModal from 'react-modal';
 import { ReactEventHandler, ReactNode } from 'react';
 
 import { Button } from '../common/styled/Button';
+import { policyCustomStyles } from '../common/styled/ModalLayout';
 
 // styled //
 const SPrivacyPolicyBox = styled.div`
@@ -48,26 +49,6 @@ const SPrivacyPolicyCation = styled.p`
   color: ${({ theme }) => theme.colors.gray000};
 `;
 
-// 모달 스타일 설정
-const customStyles = {
-  overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-  },
-  content: {
-    width: '664px',
-    height: '627px',
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-    padding: '30px',
-    border: '1px solid #aaaaaa',
-    borderRadius: '20px',
-  },
-};
-
 interface PrivacyPolicyModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
@@ -87,7 +68,7 @@ const PrivacyPolicyModal = ({
     <ReactModal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      style={customStyles}
+      style={policyCustomStyles}
       contentLabel={title}
     >
       <SPrivacyPolicyTitle>{title}</SPrivacyPolicyTitle>

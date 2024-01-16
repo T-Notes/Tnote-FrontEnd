@@ -8,6 +8,7 @@ export const Input = styled.input`
   align-items: center;
   gap: 10px;
   border: 1px solid #d5d5d5;
+  border-radius: 8px;
 
   background-color: ${({ theme }) => theme.colors.white};
   ${({ theme }) => theme.fonts.button1};
@@ -15,5 +16,25 @@ export const Input = styled.input`
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray100};
+  }
+`;
+
+export const SearchInput = styled.input`
+  display: flex;
+  width: 300px;
+  height: 44px;
+  padding: 10px 10px 10px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  border: 1px solid #d5d5d5;
+  border-radius: 4px;
+
+  background-color: ${({ theme }) => theme.colors.blue400};
+  ${({ theme }) => theme.fonts.caption};
+  color: ${({ theme }) => theme.colors.black};
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.gray600};
   }
 `;

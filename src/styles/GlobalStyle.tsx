@@ -30,7 +30,7 @@ const GlobalStyle = createGlobalStyle`
     input, button {
     outline: none; 
     border: none;
-    border-radius: 8px;
+    /* border-radius: 8px; */
     background-color: transparent;
   }
 
@@ -45,6 +45,17 @@ const GlobalStyle = createGlobalStyle`
     }
     input[readOnly] {
   /* background-color: #f0f0f0; */
+}
+// input type이 "number"일 때 브라우저가 기본적으로 제공하는 화살표 스타일 없애기
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+/* Chrome, Safari, Edge 등 웹킷 기반 브라우저에서도 적용 */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
     textarea {
     border: none;
