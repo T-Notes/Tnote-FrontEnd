@@ -20,6 +20,8 @@ const UserInputForm = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isUserInput, setIsUserInput] = useState<boolean>(false);
 
+  const [selectedSchool, setSelectedSchool] = useState<string | null>('');
+
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const openSchoolSearchModal = () => {
@@ -48,7 +50,12 @@ const UserInputForm = () => {
   const handleClickDropdown = () => {
     setIsDropdown(!isDropdown);
   };
-
+  // 자식 컴포넌트의 searchInput 값 받아오는 함수
+  const handleSubmit = (searchInput: string) => {
+    setIsModalOpen(false);
+    setSelectedSchool(searchInput);
+    console.log('searchInput', searchInput);
+  };
   useEffect(() => {
     if (isUserInput && inputRef.current) {
       inputRef.current.removeAttribute('readOnly');
@@ -90,11 +97,13 @@ const UserInputForm = () => {
           placeholder="학교를 입력해주세요"
           onClick={openSchoolSearchModal}
           readOnly
+          value={selectedSchool || ''}
         ></SInput>
         {isModalOpen && (
           <SchoolSearchModal
             isOpen={isModalOpen}
             onRequestClose={closeSchoolSearchModal}
+            onClickSubmit={handleSubmit}
           />
         )}
       </div>
