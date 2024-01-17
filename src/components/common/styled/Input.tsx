@@ -38,3 +38,15 @@ export const SearchInput = styled.input`
     color: ${({ theme }) => theme.colors.gray600};
   }
 `;
+
+export const SDateInput = styled.div`
+  display: flex;
+  border-bottom: #a6a6a6;
+  width: 320px;
+  height: 24px;
+  padding: 16px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+`;

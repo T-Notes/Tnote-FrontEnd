@@ -24,6 +24,7 @@ const colors = {
   gray700: '#2F2F2F',
   gray800: '#444444',
   gray900: '#D9D9D9',
+  gray1000: '#5E5E5E',
   red000: '#FF6F6F',
   red100: '#FFD9DC',
   red200: '#DC2626',
@@ -57,10 +58,12 @@ const FONT = ({ weight, size, height }: FontProps) => {
 const fonts = {
   h1: FONT({ weight: 700, size: 48, height: 70 }),
   h2: FONT({ weight: 600, size: 24, height: 29 }),
+  h3: FONT({ weight: 600, size: 32, height: 65 }),
   button: FONT({ weight: 500, size: 24, height: 29 }),
   button1: FONT({ weight: 500, size: 18, height: 24 }),
   caption: FONT({ weight: 500, size: 16, height: 27 }),
   caption1: FONT({ weight: 500, size: 20, height: 28 }),
+  caption2: FONT({ weight: 500, size: 20, height: 24 }),
 };
 
 interface SizeProps {

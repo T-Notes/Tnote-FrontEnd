@@ -30,7 +30,7 @@ const GlobalStyle = createGlobalStyle`
     input, button {
     outline: none; 
     border: none;
-    /* border-radius: 8px; */
+    border-radius: 8px;
     background-color: transparent;
   }
 
