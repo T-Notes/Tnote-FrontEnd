@@ -9,3 +9,8 @@ export const lastClassState = atom<string>({
   key: 'lastClassState',
   default: '',
 });
+
+export const semesterNameState = atom<string>({
+  key: 'semesterNameState',
+  default: '',
+});

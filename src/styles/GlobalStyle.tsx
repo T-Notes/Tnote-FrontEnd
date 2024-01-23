@@ -34,6 +34,11 @@ const GlobalStyle = createGlobalStyle`
     background-color: transparent;
   }
 
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
     button{
         cursor: pointer;
     }

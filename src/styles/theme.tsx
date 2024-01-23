@@ -64,6 +64,7 @@ const fonts = {
   caption: FONT({ weight: 500, size: 16, height: 27 }),
   caption1: FONT({ weight: 500, size: 20, height: 28 }),
   caption2: FONT({ weight: 500, size: 20, height: 24 }),
+  dateText: FONT({ weight: 700, size: 12, height: 14 }),
 };
 
 interface SizeProps {

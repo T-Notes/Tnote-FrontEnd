@@ -26,7 +26,10 @@ const LeftSidebar = () => {
       </Link>
 
       <div>아카이브</div>
-      <div>시간표</div>
+      <Link to="/timetable">
+        <div>시간표</div>
+      </Link>
+
       <div>{/* 구글로그인 정보 가져오기 */}</div>
     </SLeftSidebar>
   );

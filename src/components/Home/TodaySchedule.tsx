@@ -27,9 +27,7 @@ const TodaySchedule = ({ selectedHour }: any) => {
       // 유저가 마지막 교시를 선택했다면, 해당 교시까지의 시간표 출력.
 
       // 선택한 교시까지의 시간표 출력
-      for (let hour = 1; hour <= lastClassNumber; hour++) {
-        console.log(timetables[hour]);
-      }
+      for (let hour = 1; hour <= lastClassNumber; hour++) {}
     }
   }, [lastClass]);
 

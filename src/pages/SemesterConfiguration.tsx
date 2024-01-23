@@ -7,6 +7,8 @@ import SemesterSetupHeader from '../components/SemesterConfiguration/SemesterSet
 
 const SWrapper = styled.div`
   display: flex;
+  text-align: center;
+  justify-content: center;
 `;
 const SBody = styled.div`
   flex-direction: column;
