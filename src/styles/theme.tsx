@@ -25,6 +25,7 @@ const colors = {
   gray800: '#444444',
   gray900: '#D9D9D9',
   gray1000: '#5E5E5E',
+  gray1100: '#F8F8F8;',
   red000: '#FF6F6F',
   red100: '#FFD9DC',
   red200: '#DC2626',

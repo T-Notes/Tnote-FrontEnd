@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import LeftSidebar from '../components/common/LeftSidebar';
 import SemesterSetupBanner from '../components/SemesterConfiguration/SemesterSetupBanner';
-import SemesterSetupForm from '../components/SemesterConfiguration/SemesterSetupForm';
+import AddSemesterForm from '../components/SemesterConfiguration/AddSemesterForm';
 import SemesterSetupHeader from '../components/SemesterConfiguration/SemesterSetupHeader';
 
 const SWrapper = styled.div`
@@ -13,19 +13,19 @@ const SWrapper = styled.div`
 const SBody = styled.div`
   flex-direction: column;
 `;
-const SemesterConfiguration = () => {
+const AddSemesterSetup = () => {
   //학기 설정 배너,
   //학기 설정 헤더
   //폼
   return (
     <SWrapper>
-      <SemesterSetupBanner />
+      {/* <SemesterSetupBanner /> */}
       <SBody>
         <SemesterSetupHeader />
-        <SemesterSetupForm />
+        <AddSemesterForm />
       </SBody>
     </SWrapper>
   );
 };
 
-export default SemesterConfiguration;
+export default AddSemesterSetup;

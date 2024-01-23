@@ -20,7 +20,7 @@ const HomeHeader = () => {
         placeholder="학기를 추가해주세요"
         defaultValue={semesterName}
       ></input>
-      <Link to="/semesterConfiguration">
+      <Link to="/addSemester">
         <button>추가</button>
       </Link>
 
