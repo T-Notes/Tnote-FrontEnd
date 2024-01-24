@@ -22,7 +22,7 @@ const Router = () => {
             <Route path="/semesterSetup/:id" element={<SemesterSetup />} />
           </Route>
 
-          <Route path="/timetable" element={<Timetable />} />
+          <Route path="/timetable/:id" element={<Timetable />} />
         </Route>
         {/* left sidebar 없음 */}
         <Route path="/profileInfo" element={<ProfileInfo />} />

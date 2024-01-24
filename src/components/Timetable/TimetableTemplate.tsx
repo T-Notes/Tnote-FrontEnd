@@ -1,41 +1,56 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { lastClassState } from '../../lib/atom';
+import instanceAxios from '../../utils/InstanceAxios';
 
-const STimetableWrapper = styled.div`
-  border: 1px solid black;
-  display: grid;
-  grid-template-columns: 300px; /* 요일 열과 강의 시간 열 정의 */
-  /* grid-template-rows:  */
-  gap: 1px; /* 격자 사이의 간격 설정 */
-  /* border: 1px solid blue;
-  display: flex;
-  flex-direction: row;
-  width: 60%;
-  height: 40%; // 1rem은 16픽셀 */
-`;
-const SDaysWrapper = styled.div`
-  /* display: flex; */
+const STimetableWrapper = styled.table`
+  width: 50%;
+  border-collapse: collapse;
 `;
 
-const SDays = styled.div`
-  /* margin-right: 8rem; */
-  /* padding-right: 8rem;
-  border-right: 1px solid #e8e8e8;
-  height: 100vh;
-  width: 100%;
-  color: ${({ theme }) => theme.colors.gray000};
-  ${({ theme }) => theme.fonts.dateText}; */
-`;
-const STimeWrapper = styled.div`
-  /* width: 60%;
-
-  border: 1px solid red; */
+const SDaysWrapper = styled.td`
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
 `;
 
+const SThead = styled.td`
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+`;
 const TimetableTemplate = () => {
-  //임시방편으로 lastClass 값 가져오기
-  const lastClass = useRecoilValue(lastClassState);
+  const { id } = useParams();
+  const [lastClass, setLastClass] = useState('9');
+  const lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
+  // api 연결 후 주석 제거
+  useEffect(() => {
+    const getTimetable = async () => {
+      try {
+        await instanceAxios.get(`/schedule/week/${id}`).then((res) => {
+          const getData = res.data;
+          setLastClass(getData.lastClass);
+        });
+      } catch (err) {
+        console.log('시간표 조회에 실패했습니다.', err);
+      }
+    };
+    getTimetable();
+  }, [id]);
+
+  useEffect(() => {
+    if (lastClass === '') {
+      // 유저가 선택하기 전이라면 기본 값 9교시로 설정.
+      console.log('기본값 9교시');
+    } else {
+      // 유저가 마지막 교시를 선택했다면, 해당 교시까지의 시간표 출력.
+
+      // 선택한 교시까지의 시간표 출력
+      for (let hour = 1; hour <= lastClassNumber; hour++) {}
+    }
+  }, [lastClass]);
 
   const days = [
     { id: 1, day: '월요일' },
@@ -46,7 +61,7 @@ const TimetableTemplate = () => {
     { id: 6, day: '토요일' },
     { id: 7, day: '일요일' },
   ];
-  const timetables = [
+  const timetables: any = [
     { id: 1, class: '1교시', time: '09:00' },
     { id: 2, class: '2교시', time: '10:00' },
     { id: 3, class: '3교시', time: '11:00' },
@@ -57,26 +72,36 @@ const TimetableTemplate = () => {
     { id: 8, class: '8교시', time: '17:00' },
     { id: 9, class: '9교시', time: '18:00' },
   ];
+  // lastClass 값에 따라 필요한 시간표만 추출
+  const filteredTimetables = timetables.slice(0, lastClassNumber);
 
   // 1교시~9교시 까지의 리스트 만들기
   // 유저에게 넘어온 lastClass 에 맞게 보여주기
   return (
     <STimetableWrapper>
-      <STimeWrapper>
-        {timetables.map((t) => (
-          <div key={t.id}>
-            <div>{t.class}</div>
-            <p>{t.time}</p>
-          </div>
+      <thead>
+        <tr>
+          <td></td>
+          {days.map((d) => (
+            <SThead key={d.id}>
+              <p>{d.day}</p>
+            </SThead>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {filteredTimetables.map((t: any) => (
+          <tr key={t.id}>
+            <td>
+              <p>{t.class}</p>
+              <p>{t.time}</p>
+            </td>
+            {days.map((d) => (
+              <SDaysWrapper key={d.id}></SDaysWrapper>
+            ))}
+          </tr>
         ))}
-      </STimeWrapper>
-      <SDaysWrapper>
-        {days.map((d) => (
-          <SDays key={d.id}>
-            <div>{d.day}</div>
-          </SDays>
-        ))}
-      </SDaysWrapper>
+      </tbody>
     </STimetableWrapper>
   );
 };
