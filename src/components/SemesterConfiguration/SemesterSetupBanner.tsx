@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-import { IcAdd, IcGoBack } from '../../assets/icons';
+import { IcAddBlack, IcGoBack } from '../../assets/icons';
 import { useEffect, useState } from 'react';
 import instanceAxios from '../../utils/InstanceAxios';
 
@@ -55,7 +55,7 @@ const SemesterSetupBanner = () => {
         ))}
       </div>
       <div>
-        <IcAdd />
+        <IcAddBlack />
         <Link to="/addSemester">
           <SCaption>학기 추가하기</SCaption>
         </Link>

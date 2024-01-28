@@ -5,15 +5,15 @@ const RemainingDays = () => {
   const [remainingDay, setRemainingDay] = useState<string | null>(null);
 
   useEffect(() => {
-    // const remainingDayData = async () => {
-    //   try {
-    //     const res = await instanceAxios.get('/schedule/leftClassDays');
-    //     setRemainingDay(res.data.data);
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // };
-    // remainingDayData();
+    const remainingDayData = async () => {
+      try {
+        const res = await instanceAxios.get('/schedule/leftClassDays');
+        setRemainingDay(res.data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    remainingDayData();
   }, []);
 
   return (

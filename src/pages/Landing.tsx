@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { isCheckedState } from '../lib/atom';
+import { isCheckedState } from '../utils/lib/atom';
 import LandingIntro from '../components/Landing/LandingIntro';
 import PrivacyPolicyModal from '../components/Landing/PrivacyPolicyModal';
 import { privacyPolicyContent } from '../utils/privacyPolicyContent';

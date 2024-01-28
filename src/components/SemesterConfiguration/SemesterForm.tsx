@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import DateRangePicker from '../common/DateRangePicker';
 
-import { lastClassState, semesterNameState } from '../../lib/atom';
+import { lastClassState, semesterNameState } from '../../utils/lib/atom';
 import { Input } from '../common/styled/Input';
 import { Button } from '../common/styled/Button';
 import { IcCloseDropdown, IcOpenDropdown, IcSearch } from '../../assets/icons';

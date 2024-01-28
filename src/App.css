@@ -9,3 +9,14 @@ body {
 #root {
   height: 100%;
 }
+/* 일정관리 캘린더 css */
+.todayColor {
+  background-color: skyblue;
+}
+.white {
+  background-color: #fff;
+}
+.lightGray {
+  background-color: #fff;
+  color: #a9a9a9;
+}

@@ -1,13 +1,14 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { isCheckedState } from '../../lib/atom';
+import { isCheckedState } from '../../utils/lib/atom';
 import KakaoLoginBtn from './KakaoLoginBtn';
 import PrivacyPolicyCheckbox from './PrivacyPolicyCheckbox';
 
 import { IcLogo } from '../../assets/icons';
 import { Button } from '../common/styled/Button';
 import { WarningModal } from '../common/WarningModal';
+import instanceAxios from '../../utils/InstanceAxios';
 
 // styled //
 const SWrapper = styled.div`
@@ -59,7 +60,7 @@ const LandingIntro = ({ onPrivacyPolicyModal }: PrivacyPolicyProps) => {
   // 경고 모달 상태
   const [isWarning, setIsWarning] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
-
+  const [token, setToken] = useState('');
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
@@ -74,6 +75,14 @@ const LandingIntro = ({ onPrivacyPolicyModal }: PrivacyPolicyProps) => {
   const handleGoLogin = () => {
     if (isChecked) {
       //유저의 로그인 정보를 받아오는 로직
+      const goLogin = async () => {
+        try {
+          await instanceAxios.get('/oauth2/authorization/kakao').then((res) => {
+            setToken(res.data);
+          });
+        } catch {}
+      };
+      goLogin();
       console.log('로그인 되었다!');
     } else {
       // console.log('개인 정보 동의 후 로그인 하세요');
