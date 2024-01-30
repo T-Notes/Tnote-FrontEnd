@@ -5,7 +5,7 @@ import { IcAddWhite } from '../../assets/icons';
 import { useEffect, useState } from 'react';
 import { tr } from 'date-fns/locale';
 import TodoListInput from './TodoListInput';
-import { useCurrentDate } from '../../utils/useHooks';
+import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 
 const STaskSidebarWrapper = styled.div`
   display: flex;

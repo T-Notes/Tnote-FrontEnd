@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import instanceAxios from '../../utils/InstanceAxios';
-import { useCurrentDate } from '../../utils/useHooks';
+import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 
 import { IcUncheckedBox, IcCheckedBox, IcClose } from '../../assets/icons';
 import Home from '../../pages/Home';

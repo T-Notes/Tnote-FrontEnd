@@ -2,7 +2,7 @@ import '../../App.css';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { ko } from 'date-fns/locale';
-import { useCurrentDate } from '../../utils/useHooks';
+import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 import {
   format,
   startOfWeek,
