@@ -24,6 +24,7 @@ jobs:
         run: |
           npm run build
       - name: Deploy to S3
+        uses: Tnote-FrontEnd@atomic
         with:
           args: --acl public-read --delete
         env:
