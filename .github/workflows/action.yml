@@ -1,35 +1,30 @@
-name: Build React App
+name: Deploy to S3
+
 on:
   push:
     branches:
       - atomic
+
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x]
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3.6.0
+      - name: Checkout Repository
+        uses: actions/checkout@v2
         
-      - name: Check Node v
-        run: node -v
-
-      - name: setup-node
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16
 
-      - name: Npm Install
-        run: |
-          npm install
-      - name: Npm Build
-        run: |
-          npm run build
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
       - name: Deploy to S3
-        uses: T-Notes/Tnote-FrontEnd@atomic
+        uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read --delete
         env:
