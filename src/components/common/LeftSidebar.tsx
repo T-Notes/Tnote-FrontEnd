@@ -26,7 +26,7 @@ const LeftSidebar = () => {
       </Link>
 
       <div>아카이브</div>
-      <Link to="/timetable">
+      <Link to="/timetable/:id">
         <div>시간표</div>
       </Link>
 

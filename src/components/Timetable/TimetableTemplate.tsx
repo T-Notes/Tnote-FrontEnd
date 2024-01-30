@@ -15,21 +15,45 @@ const SDaysWrapper = styled.td`
   border-right: 1px solid #ddd;
   padding: 10px;
   text-align: center;
+  width: 145px;
+  height: 85px;
 `;
 
 const SThead = styled.td`
   border-bottom: 1px solid #ddd;
   border-right: 1px solid #ddd;
 `;
+
 const TimetableTemplate = () => {
   const { id } = useParams();
   const [lastClass, setLastClass] = useState('9');
   const lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
+  const data = [
+    {
+      id: 2,
+      semesterName: '3학년2학기',
+      lastClass: '9교시',
+      email: 'jh485200@gmail.com',
+      subjects: [
+        {
+          id: 2,
+          subjectName: '물리',
+          classTime: '3교시',
+          classDay: '수요일',
+          classLocation: '3학년 1반 교실',
+          memo: '힘내자',
+          semesterName: null,
+        },
+      ],
+      startDate: '2024-01-01',
+      endDate: '2024-03-01',
+    },
+  ];
   // api 연결 후 주석 제거
   useEffect(() => {
     const getTimetable = async () => {
       try {
-        await instanceAxios.get(`/schedule/week/${id}`).then((res) => {
+        await instanceAxios.get(`/tnote/schedule/week/${id}`).then((res) => {
           const getData = res.data;
           setLastClass(getData.lastClass);
         });
@@ -97,7 +121,26 @@ const TimetableTemplate = () => {
               <p>{t.time}</p>
             </td>
             {days.map((d) => (
-              <SDaysWrapper key={d.id}></SDaysWrapper>
+              <SDaysWrapper key={d.id}>
+                {/* 여기서 data의 정보를 넣어줌 */}
+                {data.map((userData) => (
+                  <div key={userData.id}>
+                    {userData.subjects
+                      .filter(
+                        (subject: any) =>
+                          subject.classTime === t.class &&
+                          subject.classDay === d.day,
+                      )
+                      .map((subject: any) => (
+                        <div key={subject.id}>
+                          <p>{subject.classLocation}</p>
+                          <p>{subject.subjectName}</p>
+                          {/* 원하는 다른 정보들을 추가할 수 있음 */}
+                        </div>
+                      ))}
+                  </div>
+                ))}
+              </SDaysWrapper>
             ))}
           </tr>
         ))}
