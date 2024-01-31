@@ -14,3 +14,8 @@ export const semesterNameState = atom<string>({
   key: 'semesterNameState',
   default: '',
 });
+
+export const userDataId = atom<number | null>({
+  key: 'userDataId',
+  default: null,
+});

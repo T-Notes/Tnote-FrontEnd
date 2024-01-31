@@ -11,3 +11,5 @@ export { ReactComponent as IcGoBack } from './backBtnIcon.svg';
 export { ReactComponent as IcAddBlack } from './addBtnBlackIcon.svg';
 export { ReactComponent as IcAddWhite } from './addBtnWhiteIcon.svg';
 export { ReactComponent as IcDatePicker } from './datePickerIcon.svg';
+export { ReactComponent as IcProfile } from './profileIcon.svg';
+export { ReactComponent as IcMoveRight } from './moveRightIcon.svg';

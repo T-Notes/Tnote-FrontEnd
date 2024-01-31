@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from '../common/styled/Input';
 import { Button } from '../common/styled/Button';
+import { useRecoilState } from 'recoil';
+import { userDataId } from '../../utils/lib/atom';
 
 import { IcCloseDropdown, IcOpenDropdown, IcSearch } from '../../assets/icons';
 import SubjectDropdownList from './SubjectDropdownList';
@@ -31,6 +33,8 @@ const SSubmit = styled(Button)`
 `;
 const UserInputForm = () => {
   const { id } = useParams();
+  const [userId, setUserId] = useRecoilState(userDataId);
+
   const [isDropdown, setIsDropdown] = useState<boolean>(false);
   const [subject, setSubject] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -102,6 +106,7 @@ const UserInputForm = () => {
       try {
         await instanceAxios.get(`/tnote/user/${id}`).then((res) => {
           setUserName(res.data.name);
+          setUserId(res.data.id);
         });
       } catch (err) {
         console.log('유저의 이름정보를 가져오는데 실패했습니다.', err);

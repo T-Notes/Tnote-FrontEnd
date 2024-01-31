@@ -1,6 +1,13 @@
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userDataId } from '../../utils/lib/atom';
+
 import styled from 'styled-components';
-import { IcLogo } from '../../assets/icons';
+import { IcLogo, IcProfile } from '../../assets/icons';
+import instanceAxios from '../../utils/InstanceAxios';
+import Setting from '../Setting/Setting';
+import { useToggle } from '../../utils/useHooks/useToggle';
 
 //** styled **//
 const SLeftSidebar = styled.div`
@@ -18,6 +25,35 @@ const SLeftSidebar = styled.div`
 `;
 
 const LeftSidebar = () => {
+  const id = useRecoilValue(userDataId);
+  const { isOpenToggle, handleToggle } = useToggle();
+  const [email, setEmail] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  //임시더미데이터
+  const data = {
+    id: 1,
+    email: 'j9972@naver.com',
+    name: '정수영',
+    school: '신갈고등학교',
+    subject: '체육',
+    career: 2,
+    alarm: true,
+  };
+  // 배포 후 연동하기
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     try {
+  //       await instanceAxios.get(`/tnote/user/${id}`).then((res) => {
+  //         setEmail(res.data.email);
+  //         setName(res.data.name);
+  //       });
+  //     } catch (err) {
+  //       console.log('err', err);
+  //     }
+  //   };
+  //   getData();
+  // }, []);
+
   return (
     <SLeftSidebar>
       <IcLogo />
@@ -30,7 +66,13 @@ const LeftSidebar = () => {
         <div>시간표</div>
       </Link>
 
-      <div>{/* 구글로그인 정보 가져오기 */}</div>
+      <div onClick={handleToggle}>
+        <IcProfile />
+        {`${data.name} 선생님`}
+        <br />
+        {data.email}
+      </div>
+      {isOpenToggle && <Setting />}
     </SLeftSidebar>
   );
 };
