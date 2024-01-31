@@ -68,7 +68,10 @@ input::-webkit-inner-spin-button {
     resize: none;
     outline: none;
   }
- 
+  
+ .pointer{
+  cursor: pointer;
+ }
 
 `;
 

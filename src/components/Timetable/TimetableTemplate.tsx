@@ -4,6 +4,8 @@ import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { lastClassState } from '../../utils/lib/atom';
 import instanceAxios from '../../utils/InstanceAxios';
+import { useToggle } from '../../utils/useHooks/useToggle';
+import ClassInfoPopup from './ClassInfoPopup';
 
 const STimetableWrapper = styled.table`
   width: 50%;
@@ -23,11 +25,18 @@ const SThead = styled.td`
   border-bottom: 1px solid #ddd;
   border-right: 1px solid #ddd;
 `;
+const SSubjectBox = styled.div`
+  cursor: pointer;
+  border: 1px solid red;
+`;
 
 const TimetableTemplate = () => {
+  const { isOpenToggle, handleToggle } = useToggle();
   const { id } = useParams();
   const [lastClass, setLastClass] = useState('9');
   const lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
+
+  //임시더미데이터
   const data = [
     {
       id: 2,
@@ -49,6 +58,7 @@ const TimetableTemplate = () => {
       endDate: '2024-03-01',
     },
   ];
+
   // api 연결 후 주석 제거
   useEffect(() => {
     const getTimetable = async () => {
@@ -132,11 +142,10 @@ const TimetableTemplate = () => {
                           subject.classDay === d.day,
                       )
                       .map((subject: any) => (
-                        <div key={subject.id}>
+                        <SSubjectBox key={subject.id} onClick={handleToggle}>
                           <p>{subject.classLocation}</p>
                           <p>{subject.subjectName}</p>
-                          {/* 원하는 다른 정보들을 추가할 수 있음 */}
-                        </div>
+                        </SSubjectBox>
                       ))}
                   </div>
                 ))}
@@ -144,6 +153,7 @@ const TimetableTemplate = () => {
             ))}
           </tr>
         ))}
+        {isOpenToggle && <ClassInfoPopup handleToggle={handleToggle} />}
       </tbody>
     </STimetableWrapper>
   );
