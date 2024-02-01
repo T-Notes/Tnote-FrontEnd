@@ -3,14 +3,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from '../common/styled/Input';
 import { Button } from '../common/styled/Button';
-import { useRecoilState } from 'recoil';
-import { userDataId } from '../../utils/lib/atom';
-
-import { IcCloseDropdown, IcOpenDropdown, IcSearch } from '../../assets/icons';
 import SubjectDropdownList from './SubjectDropdownList';
 import SchoolSearchModal from './SchoolSearchModal';
 import { useParams } from 'react-router-dom';
 import instanceAxios from '../../utils/InstanceAxios';
+import { useModal } from '../../utils/useHooks/useModal';
+import { useToggle } from '../../utils/useHooks/useToggle';
+
+import { IcCloseDropdown, IcOpenDropdown, IcSearch } from '../../assets/icons';
 
 const SLabel = styled.label`
   ${({ theme }) => theme.fonts.button1}
@@ -33,11 +33,9 @@ const SSubmit = styled(Button)`
 `;
 const UserInputForm = () => {
   const { id } = useParams();
-  const [userId, setUserId] = useRecoilState(userDataId);
 
-  const [isDropdown, setIsDropdown] = useState<boolean>(false);
   const [subject, setSubject] = useState<string>('');
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isUserInput, setIsUserInput] = useState<boolean>(false);
 
   const [schoolName, setSchoolName] = useState<string | null>('');
@@ -46,14 +44,10 @@ const UserInputForm = () => {
   // 이 값은 빼도 되지 않을까?
   const [alarm, setAlarm] = useState<boolean>(true);
 
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const { isToggle, setIsToggle, handleChangeToggle } = useToggle();
+  const { isOpen, openModal, closeModal } = useModal();
 
-  const openSchoolSearchModal = () => {
-    setIsModalOpen(true);
-  };
-  const closeSchoolSearchModal = () => {
-    setIsModalOpen(false);
-  };
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleClickOption = (selectedOption: string) => {
     if (selectedOption !== '직접입력') {
@@ -64,7 +58,7 @@ const UserInputForm = () => {
       setIsUserInput(true);
       setSubject('');
     }
-    setIsDropdown(false); // 옵션 선택하면 리스트 닫기
+    setIsToggle(false); // 옵션 선택하면 리스트 닫기
   };
 
   const handleUserInputSubject = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,14 +66,10 @@ const UserInputForm = () => {
     setSubject(userInputSubject);
   };
 
-  const handleClickDropdown = () => {
-    setIsDropdown(!isDropdown);
-  };
   // 자식 컴포넌트의 searchInput 값 받아오는 함수
   const handleSubmit = (searchInput: string) => {
-    setIsModalOpen(false);
+    closeModal;
     setSchoolName(searchInput);
-    console.log('searchInput', searchInput);
   };
 
   const handleCareerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +96,6 @@ const UserInputForm = () => {
       try {
         await instanceAxios.get(`/tnote/user/${id}`).then((res) => {
           setUserName(res.data.name);
-          setUserId(res.data.id);
         });
       } catch (err) {
         console.log('유저의 이름정보를 가져오는데 실패했습니다.', err);
@@ -130,10 +119,10 @@ const UserInputForm = () => {
       <SInput placeholder="이름을 입력해주세요" value={userName} readOnly />
       <SLabel htmlFor="subject">과목</SLabel>
       <div>
-        {isDropdown ? (
-          <IcCloseDropdown onClick={handleClickDropdown} />
+        {isToggle ? (
+          <IcCloseDropdown onClick={handleChangeToggle} />
         ) : (
-          <IcOpenDropdown onClick={handleClickDropdown} />
+          <IcOpenDropdown onClick={handleChangeToggle} />
         )}
         <SInput
           ref={inputRef}
@@ -143,9 +132,7 @@ const UserInputForm = () => {
           placeholder="과목을 선택해주세요"
         ></SInput>
       </div>
-      {isDropdown && (
-        <SubjectDropdownList onSelectedOption={handleClickOption} />
-      )}
+      {isToggle && <SubjectDropdownList onSelectedOption={handleClickOption} />}
 
       <SLabel htmlFor="seniority">연차</SLabel>
       <SInput
@@ -159,14 +146,14 @@ const UserInputForm = () => {
         <IcSearch />
         <SInput
           placeholder="학교를 입력해주세요"
-          onClick={openSchoolSearchModal}
+          onClick={openModal}
           readOnly
           value={schoolName || ''}
         ></SInput>
-        {isModalOpen && (
+        {isOpen && (
           <SchoolSearchModal
-            isOpen={isModalOpen}
-            onRequestClose={closeSchoolSearchModal}
+            isOpen={isOpen}
+            onRequestClose={closeModal}
             onClickSubmit={handleSubmit}
           />
         )}
