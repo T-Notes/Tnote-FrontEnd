@@ -1,16 +1,17 @@
 import styled from 'styled-components';
 import React, { useState, useEffect, useRef } from 'react';
+import SubjectSection from './SubjectInputSection';
 import { Link } from 'react-router-dom';
 import { Input } from '../common/styled/Input';
 import { Button } from '../common/styled/Button';
-import SubjectDropdownList from './SubjectDropdownList';
 import SchoolSearchModal from './SchoolSearchModal';
 import { useParams } from 'react-router-dom';
 import instanceAxios from '../../utils/InstanceAxios';
 import { useModal } from '../../utils/useHooks/useModal';
 import { useToggle } from '../../utils/useHooks/useToggle';
 
-import { IcCloseDropdown, IcOpenDropdown, IcSearch } from '../../assets/icons';
+import { IcSearch } from '../../assets/icons';
+import UserSubjectForm from './UserSubjectForm';
 
 const SLabel = styled.label`
   ${({ theme }) => theme.fonts.button1}
@@ -34,37 +35,13 @@ const SSubmit = styled(Button)`
 const UserInputForm = () => {
   const { id } = useParams();
 
-  const [subject, setSubject] = useState<string>('');
-  // const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isUserInput, setIsUserInput] = useState<boolean>(false);
-
   const [schoolName, setSchoolName] = useState<string | null>('');
   const [career, setCareer] = useState<string>('');
   const [userName, setUserName] = useState<string>('최윤지');
   // 이 값은 빼도 되지 않을까?
   const [alarm, setAlarm] = useState<boolean>(true);
 
-  const { isToggle, setIsToggle, handleChangeToggle } = useToggle();
   const { isOpen, openModal, closeModal } = useModal();
-
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  const handleClickOption = (selectedOption: string) => {
-    if (selectedOption !== '직접입력') {
-      setSubject(selectedOption);
-      console.log('내가 선택한 과목:', selectedOption);
-      setIsUserInput(false);
-    } else {
-      setIsUserInput(true);
-      setSubject('');
-    }
-    setIsToggle(false); // 옵션 선택하면 리스트 닫기
-  };
-
-  const handleUserInputSubject = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const userInputSubject = e.target.value;
-    setSubject(userInputSubject);
-  };
 
   // 자식 컴포넌트의 searchInput 값 받아오는 함수
   const handleSubmit = (searchInput: string) => {
@@ -81,15 +58,6 @@ const UserInputForm = () => {
     // 숫자만 포함된 값으로 설정
     setCareer(e.target.value);
   };
-
-  useEffect(() => {
-    if (isUserInput && inputRef.current) {
-      inputRef.current.removeAttribute('readOnly');
-      inputRef.current.focus();
-    } else {
-      inputRef.current?.setAttribute('readOnly', 'true');
-    }
-  }, [isUserInput]);
 
   useEffect(() => {
     const getUserName = async () => {
@@ -117,23 +85,12 @@ const UserInputForm = () => {
     <>
       <SLabel htmlFor="userName">이름</SLabel>
       <SInput placeholder="이름을 입력해주세요" value={userName} readOnly />
-      <SLabel htmlFor="subject">과목</SLabel>
-      <div>
-        {isToggle ? (
-          <IcCloseDropdown onClick={handleChangeToggle} />
-        ) : (
-          <IcOpenDropdown onClick={handleChangeToggle} />
-        )}
-        <SInput
-          ref={inputRef}
-          type="text"
-          value={subject}
-          onChange={handleUserInputSubject}
-          placeholder="과목을 선택해주세요"
-        ></SInput>
-      </div>
-      {isToggle && <SubjectDropdownList onSelectedOption={handleClickOption} />}
 
+      {/* 과목 */}
+      <SLabel htmlFor="subject">과목</SLabel>
+      <UserSubjectForm />
+
+      {/* 연차 */}
       <SLabel htmlFor="seniority">연차</SLabel>
       <SInput
         type="text"
@@ -161,7 +118,6 @@ const UserInputForm = () => {
       <Link to="/">
         <SCancel>취소</SCancel>
       </Link>
-
       <SSubmit onClick={handleUserInfoSubmit}>확인</SSubmit>
     </>
   );
