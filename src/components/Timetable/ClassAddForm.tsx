@@ -54,7 +54,7 @@ const ClassAddForm = ({ onCloseAddClass }: IsClassAddProps) => {
   const [color, setColor] = useState<string>('');
   const [memo, setMemo] = useState<string>('');
 
-  const { isOpenToggle, handleToggle } = useToggle();
+  const { isToggle, handleChangeToggle } = useToggle();
   const { currentDate } = useCurrentDate();
   const date = currentDate;
   const scheduleId = id;
@@ -90,7 +90,7 @@ const ClassAddForm = ({ onCloseAddClass }: IsClassAddProps) => {
 
   const handleSelectedClassDay = (day: any) => {
     setClassDay(day);
-    handleToggle();
+    handleChangeToggle();
   };
 
   const handleChangeClassLocation = (
@@ -155,14 +155,12 @@ const ClassAddForm = ({ onCloseAddClass }: IsClassAddProps) => {
             placeholder="요일 선택"
             readOnly // 읽기 전용 필드로 설정
           ></SClassAddFormInput>
-          {isOpenToggle ? (
-            <IcCloseDropdown onClick={handleToggle} />
+          {isToggle ? (
+            <IcCloseDropdown onClick={handleChangeToggle} />
           ) : (
-            <IcOpenDropdown onClick={handleToggle} />
+            <IcOpenDropdown onClick={handleChangeToggle} />
           )}
-          {isOpenToggle && (
-            <ClassDayList handleClickDay={handleSelectedClassDay} />
-          )}
+          {isToggle && <ClassDayList handleClickDay={handleSelectedClassDay} />}
           <label>수업 위치 작성</label>
           <SClassAddFormInput
             placeholder="학년 반 작성"

@@ -26,7 +26,7 @@ const SLeftSidebar = styled.div`
 
 const LeftSidebar = () => {
   const id = useRecoilValue(userDataId);
-  const { isOpenToggle, handleToggle } = useToggle();
+  const { isToggle, handleChangeToggle } = useToggle();
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
   //임시더미데이터
@@ -66,13 +66,13 @@ const LeftSidebar = () => {
         <div>시간표</div>
       </Link>
 
-      <div onClick={handleToggle}>
+      <div onClick={handleChangeToggle}>
         <IcProfile />
         {`${data.name} 선생님`}
         <br />
         {data.email}
       </div>
-      {isOpenToggle && <Setting />}
+      {isToggle && <Setting />}
     </SLeftSidebar>
   );
 };

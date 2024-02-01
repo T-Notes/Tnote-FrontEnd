@@ -1,10 +1,13 @@
 import styled from 'styled-components';
-import { useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { isCheckedState } from '../utils/lib/atom';
-import LandingIntro from '../components/Landing/LandingIntro';
-import PrivacyPolicyModal from '../components/Landing/PrivacyPolicyModal';
+import { useState, useEffect } from 'react';
+import { useModal } from '../utils/useHooks/useModal';
+import { useToggle } from '../utils/useHooks/useToggle';
 import { privacyPolicyContent } from '../utils/privacyPolicyContent';
+import { WarningModal } from '../components/common/WarningModal';
+import LandingLayout from '../components/Landing/LandingLayout';
+import KakaoLoginBtn from '../components/Landing/KakaoLoginBtn';
+import PrivacyPolicyCheckbox from '../components/Landing/PrivacyPolicyCheckbox';
+import PrivacyPolicyModal from '../components/Landing/PrivacyPolicyModal';
 
 import ImgLandingBackgroundImage from '../assets/images/LandingBackgroundImage.png';
 
@@ -17,34 +20,73 @@ const SLandingWrapper = styled.div`
   height: 100vh;
   position: absolute;
 `;
+const SUnderbar = styled.div`
+  margin-top: 32px;
+  margin-bottom: 32px;
+  width: 370px;
+  border-bottom: 1px solid #d5d5d5;
+`;
+const SPrivacyPolicyText = styled.span`
+  ${({ theme }) => theme.fonts.button1}
+`;
+const SPrivacyPolicyPointText = styled(SPrivacyPolicyText)`
+  color: ${({ theme }) => theme.colors.purple000};
+  margin-left: 12px;
+  cursor: pointer;
+`;
+const SPrivacyPolicyCheckboxSection = styled.div`
+  display: flex;
+  align-items: center; /* 세로축 가운데 정렬 */
+`;
 
 const Landing = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isChecked, setIsChecked] = useRecoilState(isCheckedState);
+  const [isWarning, setIsWarning] = useState<boolean>(false);
+  const [showWarningModal, setShowWarningModal] = useState<boolean>(false);
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
+  const { isOpen, openModal, closeModal } = useModal(); //개인정보 정책 모달
+  const { isToggle, setIsToggle, handleChangeToggle } = useToggle(); // checked
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleChangeIsChecked = () => {
+  const handleIsCheckedTrue = () => {
     closeModal();
-    setIsChecked(true);
+    setIsToggle(true);
   };
+
+  const closeWarmingModal = () => {
+    setShowWarningModal(false);
+  };
+  useEffect(() => {
+    if (isWarning) {
+      setShowWarningModal(true);
+
+      setIsWarning(false);
+    }
+  }, [isWarning]);
   return (
     <SLandingWrapper>
-      <LandingIntro onPrivacyPolicyModal={openModal} />
-      {isModalOpen && (
+      <LandingLayout />
+      <KakaoLoginBtn onWarning={setIsWarning} isChecked={isToggle} />
+      <SUnderbar />
+
+      <SPrivacyPolicyCheckboxSection>
+        <PrivacyPolicyCheckbox
+          isChecked={isToggle}
+          onCheckboxChange={handleChangeToggle}
+        />
+        <SPrivacyPolicyPointText onClick={openModal}>
+          개인 정보 보호 정책
+        </SPrivacyPolicyPointText>
+        <SPrivacyPolicyText>을 읽고 동의합니다.</SPrivacyPolicyText>
+      </SPrivacyPolicyCheckboxSection>
+      {/* 로그인 로직과 관련 */}
+      {showWarningModal && <WarningModal onClose={closeWarmingModal} />}
+      {isOpen && (
         <>
           <PrivacyPolicyModal
-            isOpen={isModalOpen}
+            isOpen={isOpen}
             onRequestClose={closeModal}
             title="개인 정보 보호 정책"
             content={privacyPolicyContent}
-            onPrivacyAgreement={handleChangeIsChecked}
+            onPrivacyAgreement={handleIsCheckedTrue}
           />
         </>
       )}

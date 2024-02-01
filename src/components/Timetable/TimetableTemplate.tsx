@@ -31,7 +31,7 @@ const SSubjectBox = styled.div`
 `;
 
 const TimetableTemplate = () => {
-  const { isOpenToggle, handleToggle } = useToggle();
+  const { isToggle, handleChangeToggle } = useToggle();
   const { id } = useParams();
   const [lastClass, setLastClass] = useState('9');
   const lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
@@ -142,7 +142,10 @@ const TimetableTemplate = () => {
                           subject.classDay === d.day,
                       )
                       .map((subject: any) => (
-                        <SSubjectBox key={subject.id} onClick={handleToggle}>
+                        <SSubjectBox
+                          key={subject.id}
+                          onClick={handleChangeToggle}
+                        >
                           <p>{subject.classLocation}</p>
                           <p>{subject.subjectName}</p>
                         </SSubjectBox>
@@ -153,7 +156,7 @@ const TimetableTemplate = () => {
             ))}
           </tr>
         ))}
-        {isOpenToggle && <ClassInfoPopup handleToggle={handleToggle} />}
+        {isToggle && <ClassInfoPopup onChangeToggle={handleChangeToggle} />}
       </tbody>
     </STimetableWrapper>
   );

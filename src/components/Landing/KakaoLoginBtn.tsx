@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 
 import { IcKakao } from '../../assets/icons';
+import instanceAxios from '../../utils/InstanceAxios';
+
 //styled //
 const SKakaoLoginBtn = styled.button`
   display: flex;
@@ -14,12 +17,33 @@ const SKakaoLoginBtn = styled.button`
   ${({ theme }) => theme.fonts.button}
   color: ${({ theme }) => theme.colors.black}; // active
 `;
-interface KakaoLoginProps {
-  onClickLogin: React.MouseEventHandler;
+
+interface LoginProps {
+  onWarning: React.Dispatch<React.SetStateAction<boolean>>;
+  isChecked: boolean;
 }
-const KakaoLoginBtn = ({ onClickLogin }: KakaoLoginProps) => {
+const KakaoLoginBtn = ({ onWarning, isChecked }: LoginProps) => {
+  const [token, setToken] = useState<string>('');
+
+  const handleLogin = () => {
+    if (isChecked) {
+      const goLogin = async () => {
+        try {
+          await instanceAxios.get('/oauth2/authorization/kakao').then((res) => {
+            setToken(res.data);
+          });
+        } catch (err) {
+          console.log('err', err);
+        }
+      };
+      goLogin();
+    } else {
+      onWarning(true);
+    }
+  };
+
   return (
-    <SKakaoLoginBtn onClick={onClickLogin}>
+    <SKakaoLoginBtn onClick={handleLogin}>
       <IcKakao />
       카카오로 시작하기
     </SKakaoLoginBtn>

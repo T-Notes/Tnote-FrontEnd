@@ -18,9 +18,9 @@ const SModalLayout = styled(ModalLayout)`
 `;
 
 interface ToggleProps {
-  handleToggle: () => void;
+  onChangeToggle: () => void;
 }
-const ClassInfoPopup = ({ handleToggle }: ToggleProps) => {
+const ClassInfoPopup = ({ onChangeToggle }: ToggleProps) => {
   const [subject, setSubject] = useState<string>('');
   const [classTime, setClassTime] = useState<string>('');
   const [classLocation, setClassLocation] = useState<string>('');
@@ -55,7 +55,7 @@ const ClassInfoPopup = ({ handleToggle }: ToggleProps) => {
             classTime={data.classTime}
             ClassLocation={data.classLocation}
             memo={data.memo}
-            onClose={handleToggle}
+            onClose={onChangeToggle}
             onDelete={() => handleDelete(data.id)}
             onUpdate={() => handleUpdate(data.id)}
           />
