@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import Header from '../components/common/Header';
 
-import UserInputForm from '../components/ProfileInfo/UserInputForm';
+import UserInfoForm from '../components/ProfileInfo/UserInfoForm';
 
 const ProfileInfo = () => {
   return (
     <>
       <Header />
-      <UserInputForm />
+      <UserInfoForm />
     </>
   );
 };

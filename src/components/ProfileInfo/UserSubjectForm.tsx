@@ -2,33 +2,53 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useToggle } from '../../utils/useHooks/useToggle';
 import SubjectInputSection from './SubjectInputSection';
 
-const UserSubjectForm = () => {
+interface UserDataProps {
+  schoolName: string;
+  subject: string;
+  career: string;
+  alarm: boolean;
+}
+
+interface UserSubjectFormProps {
+  userData: UserDataProps;
+  setUserData: React.Dispatch<React.SetStateAction<UserDataProps>>;
+}
+
+const UserSubjectForm = ({ userData, setUserData }: UserSubjectFormProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [subject, setSubject] = useState<string>('');
+
   const [isUserInput, setIsUserInput] = useState<boolean>(false);
   const { isToggle, setIsToggle, handleChangeToggle } = useToggle();
 
-  const handleClickOption = (selectedOption: string) => {
-    if (selectedOption !== '직접입력') {
-      setSubject(selectedOption);
-      console.log('내가 선택한 과목:', selectedOption);
-      setIsUserInput(false);
-    } else {
+  const handleClickSubjectOption = (selectedOption: string) => {
+    if (selectedOption === '직접입력') {
       setIsUserInput(true);
-      setSubject('');
+      setUserData((prevUserData) => ({
+        ...prevUserData,
+        subject: '',
+      }));
+    } else {
+      setUserData((prevUserData) => ({
+        ...prevUserData,
+        subject: selectedOption,
+      }));
+      setIsUserInput(false);
     }
     setIsToggle(false); // 옵션 선택하면 리스트 닫기
   };
 
-  const handleUserInputSubject = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const userInputSubject = e.target.value;
-    setSubject(userInputSubject);
+  const handleChangeSubjectInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const userSubjectInput = e.target.value;
+
+    setUserData((prevUserData) => ({
+      ...prevUserData,
+      subject: userSubjectInput,
+    }));
   };
 
   useEffect(() => {
-    // 과목
-    // 과목 선택 - 직접입력 클릭 시
-    // input readOnly 속성 제거 + focus 효과 주기
+    // 동작: 과목 선택 -> 직접입력 클릭 시 렌더링
+    // 역할: input readOnly 속성 제거 + focus 효과 주기
     if (isUserInput && inputRef.current) {
       inputRef.current.removeAttribute('readOnly');
       inputRef.current.focus();
@@ -41,9 +61,9 @@ const UserSubjectForm = () => {
       <SubjectInputSection
         inputRef={inputRef}
         isToggle={isToggle}
-        subject={subject}
-        handleUserInputSubject={handleUserInputSubject}
-        handleClickOption={handleClickOption}
+        subject={userData.subject}
+        handleChangeSubjectInput={handleChangeSubjectInput}
+        handleClickSubjectOption={handleClickSubjectOption}
         handleChangeToggle={handleChangeToggle}
       />
     </>

@@ -12,6 +12,8 @@ import { useToggle } from '../../utils/useHooks/useToggle';
 
 import { IcSearch } from '../../assets/icons';
 import UserSubjectForm from './UserSubjectForm';
+import { updateUserInfo } from '../../utils/lib/api';
+import UserCareerForm from './UserCareerForm';
 
 const SLabel = styled.label`
   ${({ theme }) => theme.fonts.button1}
@@ -32,14 +34,29 @@ const SSubmit = styled(Button)`
   height: 60px;
   background-color: ${({ theme }) => theme.colors.gray200};
 `;
-const UserInputForm = () => {
+
+interface UserDataProps {
+  schoolName: string;
+  subject: string;
+  career: string;
+  alarm: boolean;
+  // 다른 필요한 속성들도 추가할 수 있습니다.
+}
+
+const UserInfoForm = () => {
   const { id } = useParams();
 
   const [schoolName, setSchoolName] = useState<string | null>('');
-  const [career, setCareer] = useState<string>('');
+  // 하드 코딩된 부분
   const [userName, setUserName] = useState<string>('최윤지');
   // 이 값은 빼도 되지 않을까?
   const [alarm, setAlarm] = useState<boolean>(true);
+  const [userData, setUserData] = useState<UserDataProps>({
+    schoolName: '',
+    subject: '',
+    career: '',
+    alarm: true,
+  });
 
   const { isOpen, openModal, closeModal } = useModal();
 
@@ -47,16 +64,6 @@ const UserInputForm = () => {
   const handleSubmit = (searchInput: string) => {
     closeModal;
     setSchoolName(searchInput);
-  };
-
-  const handleCareerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // 입력값이 숫자가 아니면 무시
-    if (!/^\d*$/.test(e.target.value)) {
-      return;
-    }
-
-    // 숫자만 포함된 값으로 설정
-    setCareer(e.target.value);
   };
 
   useEffect(() => {
@@ -72,13 +79,19 @@ const UserInputForm = () => {
     getUserName();
   }, []);
 
-  const handleUserInfoSubmit = () => {
-    instanceAxios.patch(`/tnote/user/${id}`, {
-      schoolName,
-      subject,
-      career,
-      alarm,
-    });
+  // 회원 추가 정보 작성 폼 전송
+  const handleUserInfoSubmit = async () => {
+    try {
+      const updatedUserData = {
+        schoolName,
+        subject: userData.subject,
+        career: userData.career,
+        alarm,
+      };
+      await updateUserInfo(id, updatedUserData);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -86,18 +99,14 @@ const UserInputForm = () => {
       <SLabel htmlFor="userName">이름</SLabel>
       <SInput placeholder="이름을 입력해주세요" value={userName} readOnly />
 
-      {/* 과목 */}
+      {/* 과목 폼 */}
       <SLabel htmlFor="subject">과목</SLabel>
-      <UserSubjectForm />
+      <UserSubjectForm userData={userData} setUserData={setUserData} />
 
-      {/* 연차 */}
+      {/* 연차 폼*/}
       <SLabel htmlFor="seniority">연차</SLabel>
-      <SInput
-        type="text"
-        placeholder="연차를 입력해주세요"
-        onChange={handleCareerInputChange}
-        value={career}
-      ></SInput>
+      <UserCareerForm userData={userData} setUserData={setUserData} />
+      {/* 학교 폼*/}
       <SLabel htmlFor="school">학교</SLabel>
       <div>
         <IcSearch />
@@ -123,4 +132,4 @@ const UserInputForm = () => {
   );
 };
 
-export default UserInputForm;
+export default UserInfoForm;

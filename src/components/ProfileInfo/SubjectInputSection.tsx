@@ -12,8 +12,8 @@ interface SubjectSectionProps {
   inputRef: React.MutableRefObject<HTMLInputElement | null>;
   isToggle: boolean;
   subject: string;
-  handleUserInputSubject: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleClickOption: (selectedOption: string) => void;
+  handleChangeSubjectInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleClickSubjectOption: (selectedOption: string) => void;
   handleChangeToggle: () => void;
 }
 
@@ -22,8 +22,8 @@ const SubjectInputSection = (props: SubjectSectionProps) => {
     inputRef,
     isToggle,
     subject,
-    handleUserInputSubject,
-    handleClickOption,
+    handleChangeSubjectInput,
+    handleClickSubjectOption,
     handleChangeToggle,
   } = props;
 
@@ -38,10 +38,12 @@ const SubjectInputSection = (props: SubjectSectionProps) => {
         ref={inputRef}
         type="text"
         value={subject}
-        onChange={handleUserInputSubject}
+        onChange={handleChangeSubjectInput}
         placeholder="과목을 선택해주세요"
       ></SInput>
-      {isToggle && <SubjectDropdownList onSelectedOption={handleClickOption} />}
+      {isToggle && (
+        <SubjectDropdownList onSelectedOption={handleClickSubjectOption} />
+      )}
     </>
   );
 };
