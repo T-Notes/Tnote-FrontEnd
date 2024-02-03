@@ -38,7 +38,7 @@ const SemesterSetupBanner = () => {
   // 고민 1. 어떤 값이 바뀔때마다 get 데이터를 불러와야할까?
   return (
     <SWrapper>
-      <Link to="/home">
+      <Link to="/home/:id">
         <IcGoBack />
       </Link>
 

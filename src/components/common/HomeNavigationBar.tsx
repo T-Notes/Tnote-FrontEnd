@@ -57,7 +57,7 @@ const HomeNavigationBar = () => {
   return (
     <SLeftSidebar>
       <IcLogo />
-      <Link to="/home">
+      <Link to="/home/:id">
         <div>홈화면</div>
       </Link>
 
