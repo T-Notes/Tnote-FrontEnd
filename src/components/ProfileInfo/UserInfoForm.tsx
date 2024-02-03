@@ -47,7 +47,6 @@ const UserInfoForm = () => {
   const { id } = useParams();
   const [schoolName, setSchoolName] = useState<string | null>('');
   const [userName, setUserName] = useState<string>('최윤지'); // 하드 코딩된 부분
-  const [alarm, setAlarm] = useState<boolean>(true);
   const [userData, setUserData] = useState<UserDataProps>({
     schoolName: '',
     subject: '',
