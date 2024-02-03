@@ -95,6 +95,7 @@ const SchoolDataLoader = ({
 
   return (
     <>
+      {/* 고민1: 학교 검색 결과를 조회하는 api 활용 유무 */}
       <div>
         {schoolSearchResults.map((school) => (
           <div

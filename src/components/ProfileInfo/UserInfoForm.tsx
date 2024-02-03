@@ -1,19 +1,19 @@
 import styled from 'styled-components';
-import React, { useState, useEffect, useRef } from 'react';
-import SubjectSection from './SubjectInputSection';
+import { useState, useEffect } from 'react';
+
 import { Link } from 'react-router-dom';
-import { Input } from '../common/styled/Input';
-import { Button } from '../common/styled/Button';
-import SchoolSearchModal from './SchoolSearchModal';
 import { useParams } from 'react-router-dom';
 import instanceAxios from '../../utils/InstanceAxios';
 import { useModal } from '../../utils/useHooks/useModal';
-import { useToggle } from '../../utils/useHooks/useToggle';
+import { updateUserInfo } from '../../utils/lib/api';
 
 import { IcSearch } from '../../assets/icons';
+import { Input } from '../common/styled/Input';
+import { Button } from '../common/styled/Button';
+
 import UserSubjectForm from './UserSubjectForm';
-import { updateUserInfo } from '../../utils/lib/api';
 import UserCareerForm from './UserCareerForm';
+import UserSchoolForm from './UserSchoolForm';
 
 const SLabel = styled.label`
   ${({ theme }) => theme.fonts.button1}
@@ -45,11 +45,8 @@ interface UserDataProps {
 
 const UserInfoForm = () => {
   const { id } = useParams();
-
   const [schoolName, setSchoolName] = useState<string | null>('');
-  // 하드 코딩된 부분
-  const [userName, setUserName] = useState<string>('최윤지');
-  // 이 값은 빼도 되지 않을까?
+  const [userName, setUserName] = useState<string>('최윤지'); // 하드 코딩된 부분
   const [alarm, setAlarm] = useState<boolean>(true);
   const [userData, setUserData] = useState<UserDataProps>({
     schoolName: '',
@@ -62,7 +59,7 @@ const UserInfoForm = () => {
 
   // 자식 컴포넌트의 searchInput 값 받아오는 함수
   const handleSubmit = (searchInput: string) => {
-    closeModal;
+    closeModal();
     setSchoolName(searchInput);
   };
 
@@ -83,15 +80,13 @@ const UserInfoForm = () => {
   const handleUserInfoSubmit = async () => {
     try {
       const updatedUserData = {
-        schoolName,
+        schoolName: userData.schoolName,
         subject: userData.subject,
         career: userData.career,
-        alarm,
+        alarm: userData.alarm,
       };
       await updateUserInfo(id, updatedUserData);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch {}
   };
 
   return (
@@ -117,10 +112,12 @@ const UserInfoForm = () => {
           value={schoolName || ''}
         ></SInput>
         {isOpen && (
-          <SchoolSearchModal
+          <UserSchoolForm
             isOpen={isOpen}
             onRequestClose={closeModal}
             onClickSubmit={handleSubmit}
+            userData={userData}
+            setUserData={setUserData}
           />
         )}
       </div>
