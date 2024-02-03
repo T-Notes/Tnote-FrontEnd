@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import LeftSidebar from '../components/common/LeftSidebar';
 import HomeHeader from '../components/Home/HomeHeader';
@@ -14,9 +15,9 @@ const SHomeWrapper = styled.div`
   justify-content: center;
 `;
 const Home = () => {
+  const { id } = useParams();
   return (
     <SHomeWrapper>
-      {/* <LeftSidebar /> */}
       <HomeHeader />
       <RemainingDays />
       <TodaySchedule />

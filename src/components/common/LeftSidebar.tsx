@@ -5,7 +5,7 @@ import { userDataId } from '../../utils/lib/atom';
 
 import styled from 'styled-components';
 import { IcLogo, IcProfile } from '../../assets/icons';
-import instanceAxios from '../../utils/InstanceAxios';
+import { getUserInfo } from '../../utils/lib/api';
 import Setting from '../Setting/Setting';
 import { useToggle } from '../../utils/useHooks/useToggle';
 
@@ -25,10 +25,12 @@ const SLeftSidebar = styled.div`
 `;
 
 const LeftSidebar = () => {
-  const id = useRecoilValue(userDataId);
+  const { id } = useParams();
+  // const id = useRecoilValue(userDataId); //고민1: 서버에 넘겨줄 유저 아이디를 어디서 받아와야할까?
   const { isToggle, handleChangeToggle } = useToggle();
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
+
   //임시더미데이터
   const data = {
     id: 1,
@@ -39,20 +41,18 @@ const LeftSidebar = () => {
     career: 2,
     alarm: true,
   };
-  // 배포 후 연동하기
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     try {
-  //       await instanceAxios.get(`/tnote/user/${id}`).then((res) => {
-  //         setEmail(res.data.email);
-  //         setName(res.data.name);
-  //       });
-  //     } catch (err) {
-  //       console.log('err', err);
-  //     }
-  //   };
-  //   getData();
-  // }, []);
+
+  // 렌더링 되자마자 회원정보 가져오기
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const response = await getUserInfo(id);
+        setEmail(response.email);
+        setName(response.name);
+      } catch {}
+    };
+    getUserData();
+  }, []);
 
   return (
     <SLeftSidebar>
@@ -61,7 +61,9 @@ const LeftSidebar = () => {
         <div>홈화면</div>
       </Link>
 
+      {/* 아카이브 이동 라우팅 만들기 */}
       <div>아카이브</div>
+
       <Link to="/timetable/:id">
         <div>시간표</div>
       </Link>
