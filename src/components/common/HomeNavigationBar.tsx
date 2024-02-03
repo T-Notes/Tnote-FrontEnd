@@ -1,9 +1,9 @@
+import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userDataId } from '../../utils/lib/atom';
 
-import styled from 'styled-components';
 import { IcLogo, IcProfile } from '../../assets/icons';
 import { getUserInfo } from '../../utils/lib/api';
 import Setting from '../Setting/Setting';
@@ -24,7 +24,7 @@ const SLeftSidebar = styled.div`
   border-right: 1px solid #ccc; /* 우측에 경계선 추가 (선택사항) */
 `;
 
-const LeftSidebar = () => {
+const HomeNavigationBar = () => {
   const { id } = useParams();
   // const id = useRecoilValue(userDataId); //고민1: 서버에 넘겨줄 유저 아이디를 어디서 받아와야할까?
   const { isToggle, handleChangeToggle } = useToggle();
@@ -79,4 +79,4 @@ const LeftSidebar = () => {
   );
 };
 
-export default LeftSidebar;
+export default HomeNavigationBar;

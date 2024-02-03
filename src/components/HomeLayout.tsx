@@ -1,10 +1,10 @@
-import LeftSidebar from '../components/common/LeftSidebar';
+import HomeNavigationBar from './common/HomeNavigationBar';
 import { Outlet } from 'react-router-dom';
 
 const HomeLayout = () => {
   return (
     <>
-      <LeftSidebar />
+      <HomeNavigationBar />
       <Outlet />
     </>
   );

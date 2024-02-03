@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import LeftSidebar from '../components/common/LeftSidebar';
+import HomeNavigationBar from '../components/common/HomeNavigationBar';
 import SemesterSetupBanner from '../components/SemesterConfiguration/SemesterSetupBanner';
 import AddSemesterForm from '../components/SemesterConfiguration/AddSemesterForm';
 import SemesterSetupHeader from '../components/SemesterConfiguration/SemesterSetupHeader';
