@@ -1,8 +1,5 @@
 interface SchoolTypeListProps {
-  onSelectedSchoolType: (selectedType: {
-    typeCode: string;
-    typeValue: string;
-  }) => void;
+  onSelectedSchoolType: (selectedType: string) => void;
 }
 // 학교 검색 모달 -> 학교 분류
 export const SchoolTypeList = ({
@@ -18,14 +15,7 @@ export const SchoolTypeList = ({
       <div>
         {typeList.map((type) => (
           <ul key={type.id}>
-            <li
-              onClick={() =>
-                onSelectedSchoolType({
-                  typeCode: type.typeCode,
-                  typeValue: type.typeValue,
-                })
-              }
-            >
+            <li onClick={() => onSelectedSchoolType(type.typeValue)}>
               {type.typeValue}
             </li>
           </ul>
@@ -36,10 +26,7 @@ export const SchoolTypeList = ({
 };
 
 interface SchoolCityListProps {
-  onSelectedCity: (cityNameOption: {
-    cityName: string;
-    cityNum: string;
-  }) => void;
+  onSelectedCity: (region: string) => void;
 }
 // 학교 검색 모달 -> 시/도*
 export const SchoolCityList = ({ onSelectedCity }: SchoolCityListProps) => {
@@ -65,14 +52,7 @@ export const SchoolCityList = ({ onSelectedCity }: SchoolCityListProps) => {
       <div>
         {cityList.map((city) => (
           <ul key={city.cityNum}>
-            <li
-              onClick={() =>
-                onSelectedCity({
-                  cityName: city.cityName,
-                  cityNum: city.cityNum,
-                })
-              }
-            >
+            <li onClick={() => onSelectedCity(city.cityName)}>
               {city.cityName}
             </li>
           </ul>

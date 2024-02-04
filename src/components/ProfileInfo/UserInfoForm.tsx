@@ -40,12 +40,10 @@ interface UserDataProps {
   subject: string;
   career: string;
   alarm: boolean;
-  // 다른 필요한 속성들도 추가할 수 있습니다.
 }
 
 const UserInfoForm = () => {
   const { id } = useParams();
-  const [schoolName, setSchoolName] = useState<string | null>('');
   const [userName, setUserName] = useState<string>('최윤지'); // 하드 코딩된 부분
   const [userData, setUserData] = useState<UserDataProps>({
     schoolName: '',
@@ -56,12 +54,12 @@ const UserInfoForm = () => {
 
   const { isOpen, openModal, closeModal } = useModal();
 
-  // 자식 컴포넌트의 searchInput 값 받아오는 함수
-  const handleSubmit = (searchInput: string) => {
-    closeModal();
-    setSchoolName(searchInput);
-  };
-
+  // 자식 컴포넌트에서 유저가 선택한 학교명 받아오는 함수
+  // const handleSubmit = (searchInput: string) => {
+  //   closeModal();
+  //   setUserData((prevData) => ({ ...prevData, schoolName: searchInput }));
+  // };
+  console.log('1번째 부모컴포넌트:', userData.schoolName);
   useEffect(() => {
     const getUserName = async () => {
       try {
@@ -108,13 +106,13 @@ const UserInfoForm = () => {
           placeholder="학교를 입력해주세요"
           onClick={openModal}
           readOnly
-          value={schoolName || ''}
+          value={userData.schoolName || ''}
         ></SInput>
         {isOpen && (
           <UserSchoolForm
             isOpen={isOpen}
             onRequestClose={closeModal}
-            onClickSubmit={handleSubmit}
+            // onClickSubmit={handleSubmit}
             userData={userData}
             setUserData={setUserData}
           />
