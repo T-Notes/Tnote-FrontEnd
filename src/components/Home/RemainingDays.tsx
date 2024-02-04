@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import instanceAxios from '../../utils/InstanceAxios';
-import { remainingDayData } from '../../utils/lib/api';
+import { getRemainingDayData } from '../../utils/lib/api';
 
 interface SemesterDateProps {
   startDate: string;
@@ -14,15 +14,15 @@ const RemainingDays = () => {
   });
 
   useEffect(() => {
-    const getRemainingDayData = async () => {
+    const remainingDayData = async () => {
       try {
-        const response = await remainingDayData(semesterDate);
+        const response = await getRemainingDayData(semesterDate);
         setRemainingDay(response);
       } catch (err) {
         console.log(err);
       }
     };
-    getRemainingDayData();
+    remainingDayData();
   }, []);
 
   return (
