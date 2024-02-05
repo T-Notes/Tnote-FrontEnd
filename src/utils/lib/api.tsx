@@ -45,11 +45,17 @@ interface SemesterDateRange {
   startDate: string;
   endDate: string;
 }
-export const getRemainingDayData = async (semesterDate: SemesterDateRange) => {
+export const getRemainingDayData = async (
+  scheduleId: string | undefined,
+  semesterDate: SemesterDateRange,
+) => {
   try {
-    const response = await instanceAxios.get('/tnote/schedule/leftClassDays', {
-      data: semesterDate,
-    });
+    const response = await instanceAxios.get(
+      `/tnote/schedule/leftClassDays/${scheduleId}`,
+      {
+        data: semesterDate,
+      },
+    );
     return response.data;
   } catch (error) {
     console.log('남은 학기 일수 조회 에러', error);
