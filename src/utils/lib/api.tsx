@@ -40,20 +40,16 @@ export const getAllSemesterNames = async () => {
 };
 
 // 남은 학기 일수 반환
-//고민: 해당학기의 id값이 없는데 어떤 기준으로 학기가 반환이 되는 것일까?
-interface SemesterDateRange {
-  startDate: string;
-  endDate: string;
-}
+
 export const getRemainingDayData = async (
   scheduleId: string | undefined,
-  semesterDate: SemesterDateRange,
+  remainingDate: string,
 ) => {
   try {
     const response = await instanceAxios.get(
       `/tnote/schedule/leftClassDays/${scheduleId}`,
       {
-        data: semesterDate,
+        data: remainingDate,
       },
     );
     return response.data;
