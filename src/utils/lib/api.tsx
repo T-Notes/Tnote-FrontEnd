@@ -83,3 +83,59 @@ export const getSchoolSearchValue = async (
     throw new Error('학교 검색 결과를 가져오는데 에러가 발생했습니다.');
   }
 };
+
+// todo
+interface TodoProps {
+  date: string;
+  content: string;
+}
+export const createTodo = async (
+  scheduleId: string | undefined,
+  todoData: TodoProps,
+) => {
+  try {
+    const response = await instanceAxios.post(
+      `/tnote/todos/${scheduleId}`,
+      todoData,
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error('Todo 작성을 게시하는데 에러가 발생했습니다.');
+  }
+};
+
+export const updateTodo = async (
+  scheduleId: string | undefined,
+  todoId: number | undefined,
+  todoData: TodoProps,
+) => {
+  try {
+    const response = await instanceAxios.patch(
+      `/tnote/todos/${scheduleId}/${todoId}`,
+      todoData,
+    );
+    return response;
+  } catch (error) {
+    throw new Error('todo 수정에 에러가 발생했습니다.');
+  }
+};
+
+export const getTodo = async (scheduleId: string | undefined) => {
+  try {
+    const response = await instanceAxios.get(`/tnote/todos/${scheduleId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error('todo list를 조회하는데 에러가 발생했습니다.');
+  }
+};
+
+export const removeTodo = async (
+  scheduleId: string | undefined,
+  todoId: number | undefined,
+) => {
+  try {
+    await instanceAxios.delete(`/tnote/todos/${scheduleId}/${todoId}`);
+  } catch (error) {
+    throw new Error('todo 삭제 에러가 발생했습니다.');
+  }
+};

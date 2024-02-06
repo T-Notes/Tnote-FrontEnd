@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { tr } from 'date-fns/locale';
 import TodoListInput from './TodoListInput';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
+import Todo from '../Home/Todo';
 
 const STaskSidebarWrapper = styled.div`
   display: flex;
@@ -33,25 +34,11 @@ const TaskSidebar = () => {
   // 컴포넌트는 1) headless 기반의 추상화 하기 2) 한 가지 역할만 하기(또는 그의 조합) 3) 도메인(=비즈니스 로직) 분리하기
 
   const { year, month, day } = useCurrentDate(); // 데이터 추상화 (headless 기반의 추상화 하기)
-  const [todoInputs, setTodoInputs] = useState([{ id: 1, isVisible: false }]);
 
-  const handleAddTodo = () => {
-    setTodoInputs((prevInputs) => [
-      ...prevInputs,
-      { id: prevInputs.length + 1, isVisible: true },
-    ]);
-  };
   return (
     <STaskSidebarWrapper>
       <div>{`${year}년 ${month + 1}월 ${day}일`}</div>
-      <div>To-do</div>
-      {todoInputs.map(
-        (todoInput) =>
-          todoInput.isVisible && <TodoListInput key={todoInput.id} />,
-      )}
-      <SAddTodo onClick={handleAddTodo}>
-        <IcAddWhite />
-      </SAddTodo>
+      <Todo />
     </STaskSidebarWrapper>
   );
 };
