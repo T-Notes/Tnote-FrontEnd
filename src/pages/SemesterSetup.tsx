@@ -16,7 +16,6 @@ const SemesterSetup = () => {
     <SWrapper>
       <SBody>
         <SemesterSetupBanner />
-        {/* <SemesterSetupHeader /> */}
         <SemesterForm />
       </SBody>
     </SWrapper>

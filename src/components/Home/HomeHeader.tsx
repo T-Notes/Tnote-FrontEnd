@@ -8,7 +8,7 @@ const HomeHeader = () => {
   return (
     <>
       <AllSemesterNamesForm />
-      <Link to="/addSemester">
+      <Link to="/semesterSetup/:id">
         <button>추가</button>
       </Link>
 

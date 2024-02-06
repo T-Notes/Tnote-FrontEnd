@@ -36,8 +36,6 @@ interface SemesterDataProps {
   endDate: string;
 }
 const SemesterSetupBanner = () => {
-  //1. 학기 추가하기 버튼을 클릭하면 Post 보내기 (학기이름만 들어감)
-  //2. 저장 버튼 === 수정
   const [semesterList, setSemesterList] = useState<SemesterListProps[]>([]);
   const [semesterData, setSemesterDate] = useState<SemesterDataProps>({
     semesterName: '',
@@ -134,7 +132,3 @@ const SemesterSetupBanner = () => {
 };
 
 export default SemesterSetupBanner;
-
-// [요구사항]
-//1. 학기 리스트 data의 아이디 값을 저장한다.
-// 2. 학기를 클릭했을때 Link를 통해 해당 학기의 scheduleId로 이동한다.

@@ -149,3 +149,38 @@ export const createSemester = async (semesterData: object) => {
     throw new Error('학기 리스트 생성 에러가 발생했습니다.');
   }
 };
+
+// 특정 학기 전체 정보 조회
+export const getSemesterData = async (scheduleId: string | undefined) => {
+  try {
+    const response = await instanceAxios.get(`/tnote/schedule/${scheduleId}`);
+    return response.data;
+  } catch {
+    throw new Error('해당 학기의 정보를 조회하는데 에러가 발생했습니다.');
+  }
+};
+
+// 학기 수정
+export const updateSemester = async (
+  scheduleId: string | undefined,
+  semesterData: object,
+) => {
+  try {
+    const response = await instanceAxios.patch(
+      `/tnote/schedule/${scheduleId}`,
+      semesterData,
+    );
+    return response;
+  } catch {
+    throw new Error('학기 수정 에러가 발생했습니다.');
+  }
+};
+
+// 학기 삭제
+export const removeSemester = async (scheduleId: string | undefined) => {
+  try {
+    await instanceAxios.delete(`/tnote/schedule/${scheduleId}`);
+  } catch {
+    throw new Error('학기 삭제 에러가 발생했습니다.');
+  }
+};
