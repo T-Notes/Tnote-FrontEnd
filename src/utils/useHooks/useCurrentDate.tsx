@@ -19,7 +19,7 @@ export const useCurrentDate = () => {
     handleNextMonth,
     setCurrentDate,
     year: currentDate.getFullYear(),
-    month: currentDate.getMonth(),
+    month: currentDate.getMonth() + 1,
     day: currentDate.getDate(),
   };
 };
