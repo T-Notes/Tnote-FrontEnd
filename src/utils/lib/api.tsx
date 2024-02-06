@@ -139,3 +139,13 @@ export const removeTodo = async (
     throw new Error('todo 삭제 에러가 발생했습니다.');
   }
 };
+
+// 학기 추가하기
+export const createSemester = async (semesterData: object) => {
+  try {
+    const response = await instanceAxios.post('/tnote/schedule', semesterData);
+    return response.data;
+  } catch {
+    throw new Error('학기 리스트 생성 에러가 발생했습니다.');
+  }
+};

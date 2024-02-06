@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import SemesterForm from '../components/SemesterConfiguration/SemesterForm';
+import SemesterSetupBanner from '../components/SemesterConfiguration/SemesterSetupBanner';
 import SemesterSetupHeader from '../components/SemesterConfiguration/SemesterSetupHeader';
 
 const SWrapper = styled.div`
@@ -14,7 +15,8 @@ const SemesterSetup = () => {
   return (
     <SWrapper>
       <SBody>
-        <SemesterSetupHeader />
+        <SemesterSetupBanner />
+        {/* <SemesterSetupHeader /> */}
         <SemesterForm />
       </SBody>
     </SWrapper>

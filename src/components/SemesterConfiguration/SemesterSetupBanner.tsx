@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { IcAddBlack, IcGoBack } from '../../assets/icons';
 import { useEffect, useState } from 'react';
 import instanceAxios from '../../utils/InstanceAxios';
+import { createSemester, getAllSemesterNames } from '../../utils/lib/api';
+import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 
 const SHeader = styled.h1`
   ${({ theme }) => theme.fonts.h3}
@@ -20,48 +22,119 @@ const SWrapper = styled.div`
   top: 0; /* 맨 위에 고정 */
   left: 16rem; /* 맨 왼쪽에 고정 */
 `;
+
+interface SemesterListProps {
+  id: number;
+  semesterName: string;
+}
+
+interface SemesterDataProps {
+  semesterName: String;
+  lastClass: String;
+  email: String;
+  startDate: string;
+  endDate: string;
+}
 const SemesterSetupBanner = () => {
-  const [dataArray, setDataArray] = useState([]);
-  // 학기 리스트 조회 (get 메서드)
-  // api 연결 후 주석 해제!
-  // 유저가 저장을 클릭 할 때마다, get 메서드 불러오기. (useEffect)
-  // useEffect(() => {
-  //   try {
-  //     instanceAxios.get('/schedule/list').then((res) => {
-  //       const getDate = res.data;
-  //       setDataArray(getDate);
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }, []);
-  // 고민 1. 어떤 값이 바뀔때마다 get 데이터를 불러와야할까?
+  //1. 학기 추가하기 버튼을 클릭하면 Post 보내기 (학기이름만 들어감)
+  //2. 저장 버튼 === 수정
+  const [semesterList, setSemesterList] = useState<SemesterListProps[]>([]);
+  const [semesterData, setSemesterDate] = useState<SemesterDataProps>({
+    semesterName: '',
+    lastClass: '',
+    email: '',
+    startDate: '',
+    endDate: '',
+  });
+
+  const { year, month } = useCurrentDate();
+
+  // 학기 자동 생성 기준
+  const addSemesterName = () => {
+    // month가 1~ 6월이면 상반기 =>  2학기 생성
+    if (1 <= month && month <= 6) {
+      setSemesterDate((prev) => ({ ...prev, semesterName: `${year}년 2학기` }));
+    }
+    // month가 7~12월이면 하반기 => 1학기 생성
+    else if (7 <= month && month <= 12) {
+      setSemesterDate((prev) => ({ ...prev, semesterName: `${year}년 1학기` }));
+    }
+  };
+  console.log('생성한 학기 이름:', semesterData.semesterName);
+
+  // 학기 Post
+  const handleAddSemester = async () => {
+    addSemesterName();
+    try {
+      // 학기 추가 Post
+      const data = {
+        semesterName: semesterData?.semesterName,
+        lastClass: '',
+        email: '',
+        startDate: '',
+        endDate: '',
+      };
+      await createSemester(data);
+    } catch (error) {
+      console.log('학기 추가에 실패했습니다.');
+    }
+  };
+  const data = [
+    {
+      id: 2,
+      semesterName: '2024년 2학기',
+    },
+    {
+      id: 1,
+      semesterName: '2024년 1학기',
+    },
+  ];
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        // 배포 후 코드
+        // const data = await getAllSemesterNames();
+        setSemesterList(data);
+      } catch (error) {
+        console.log(
+          '전체 학기 리스트를 조회하는데 에러가 발생했습니다.',
+          error,
+        );
+      }
+    };
+    getData();
+  }, []);
+
   return (
     <SWrapper>
+      {/* 홈으로 이동 시 어디로 라우팅 되는걸까? */}
       <Link to="/home/:id">
         <IcGoBack />
       </Link>
 
       <SHeader>설정</SHeader>
       <SCaption>학기 설정</SCaption>
-      {/* 추가한 학기 리스트 map */}
       <div>
-        {dataArray.map((data) => (
-          <Link to="/semesterSetup:id">
-            <ul>
-              <li>{data}</li>
-            </ul>
-          </Link>
+        {semesterList.map((data) => (
+          <div key={data.id}>
+            <Link to={`/semesterSetup/${data.id}`}>
+              <ul>
+                <li>{data.semesterName}</li>
+              </ul>
+            </Link>
+          </div>
         ))}
       </div>
       <div>
         <IcAddBlack />
-        <Link to="/addSemester">
-          <SCaption>학기 추가하기</SCaption>
-        </Link>
+        <SCaption onClick={handleAddSemester}>학기 추가하기</SCaption>
       </div>
     </SWrapper>
   );
 };
 
 export default SemesterSetupBanner;
+
+// [요구사항]
+//1. 학기 리스트 data의 아이디 값을 저장한다.
+// 2. 학기를 클릭했을때 Link를 통해 해당 학기의 scheduleId로 이동한다.
