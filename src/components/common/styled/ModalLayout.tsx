@@ -65,3 +65,18 @@ export const searchCustomStyles = {
     borderRadius: '8px',
   },
 };
+
+export const writeFormCustomStyles = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  content: {
+    width: '300px',
+    height: '334px',
+    left: '14%',
+    bottom: '0%',
+    padding: '24px, 20px, 20px, 20px',
+    border: '1px solid #D5D5D5',
+    borderRadius: '20px',
+  },
+};

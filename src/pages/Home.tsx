@@ -6,6 +6,7 @@ import RemainingDays from '../components/Home/RemainingDays';
 import ScheduleCalendar from '../components/Home/ScheduleCalendar';
 import TaskSidebar from '../components/Home/TaskSidebar';
 import TodaySchedule from '../components/Home/TodaySchedule';
+import WriteButton from '../components/Write/WriteButton';
 
 const SHomeWrapper = styled.div`
   display: flex;
@@ -21,6 +22,7 @@ const Home = () => {
       <RemainingDays />
       <TodaySchedule />
       <ScheduleCalendar />
+      <WriteButton />
       <TaskSidebar />
     </SHomeWrapper>
   );

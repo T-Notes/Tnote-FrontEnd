@@ -13,3 +13,7 @@ export { ReactComponent as IcAddWhite } from './addBtnWhiteIcon.svg';
 export { ReactComponent as IcDatePicker } from './datePickerIcon.svg';
 export { ReactComponent as IcProfile } from './profileIcon.svg';
 export { ReactComponent as IcMoveRight } from './moveRightIcon.svg';
+export { ReactComponent as IcWorkLog } from './workLogIcon.svg';
+export { ReactComponent as IcClassLog } from './classLogIcon.svg';
+export { ReactComponent as IcCounselingLog } from './counselingIcon.svg';
+export { ReactComponent as IcStudentObservationLog } from './studentObservationIcon.svg';
