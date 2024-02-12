@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
-import { lastClassState } from '../../utils/lib/atom';
 import instanceAxios from '../../utils/InstanceAxios';
 import { useToggle } from '../../utils/useHooks/useToggle';
 import ClassInfoPopup from './ClassInfoPopup';

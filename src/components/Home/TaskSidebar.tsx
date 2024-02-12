@@ -19,12 +19,7 @@ const STaskSidebarWrapper = styled.div`
   top: 0;
   align-items: center;
 `;
-const SAddTodo = styled(Button)`
-  background-color: ${({ theme }) => theme.colors.purple100};
-  width: 350px;
-  height: 50px;
-  color: ${({ theme }) => theme.colors.white};
-`;
+
 const TaskSidebar = () => {
   // 버튼을 클릭하면 input창이 나타난다.
   // input창이 빈값이 아니고, 외부를 클릭했다면 post

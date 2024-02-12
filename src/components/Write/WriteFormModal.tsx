@@ -7,6 +7,10 @@ import {
   IcCounselingLog,
   IcStudentObservationLog,
 } from '../../assets/icons';
+import { useState, useEffect } from 'react';
+import ClassLogModal from './ClassLogModal';
+import WorkLogModal from './WorkLogModal';
+import { useWriteModal } from '../../utils/useHooks/useModal';
 
 const SWriteForm = styled(ModalLayout)`
   display: flex;
@@ -31,30 +35,50 @@ const SCaption = styled.p`
   ${({ theme }) => theme.fonts.caption}
 `;
 interface WriteProps {
-  isToggle: boolean;
-  handleChangeToggle: () => void;
+  isOpen: boolean;
+  closeModal: () => void;
 }
-const WriteFormModal = ({ isToggle, handleChangeToggle }: WriteProps) => {
+
+interface WriteModal {
+  isOpen: boolean;
+  content: React.ReactNode | null;
+}
+const WriteFormModal = ({ isOpen, closeModal }: WriteProps) => {
+  const { writeModal, handleClickModal } = useWriteModal(closeModal);
+
   return (
-    <ModalBackground onClick={handleChangeToggle}>
+    <ModalBackground>
       <SWriteForm>
         <SItem>
-          <IcClassLog className="pointer" />
+          <IcClassLog
+            className="pointer"
+            onClick={() => handleClickModal('학급일지')}
+          />
           <SCaption>학급일지</SCaption>
         </SItem>
         <SItem>
-          <IcWorkLog className="pointer" />
+          <IcWorkLog
+            className="pointer"
+            onClick={() => handleClickModal('업무일지')}
+          />
           <SCaption>업무일지</SCaption>
         </SItem>
         <SItem>
-          <IcCounselingLog className="pointer" />
+          <IcCounselingLog
+            className="pointer"
+            onClick={() => handleClickModal('상담기록')}
+          />
           <SCaption>상담기록</SCaption>
         </SItem>
         <SItem>
-          <IcStudentObservationLog className="pointer" />
+          <IcStudentObservationLog
+            className="pointer"
+            onClick={() => handleClickModal('학생 관찰 일지')}
+          />
           <SCaption>학생 관찰 일지</SCaption>
         </SItem>
       </SWriteForm>
+      {writeModal.isOpen && writeModal.content}
     </ModalBackground>
   );
 };

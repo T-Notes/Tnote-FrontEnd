@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 import { useModal } from '../../utils/useHooks/useModal';
 import { useToggle } from '../../utils/useHooks/useToggle';
+import { ModalBackground } from '../common/styled/ModalLayout';
 import WriteFormModal from './WriteFormModal';
 
 const SWriteBtn = styled.button`
@@ -18,16 +19,12 @@ const SWriteBtn = styled.button`
 `;
 const WriteButton = () => {
   const { isToggle, handleChangeToggle } = useToggle();
+  const { isOpen, openModal, closeModal } = useModal();
 
   return (
     <>
-      <SWriteBtn onClick={handleChangeToggle}>글쓰기</SWriteBtn>
-      {isToggle && (
-        <WriteFormModal
-          isToggle={isToggle}
-          handleChangeToggle={handleChangeToggle}
-        />
-      )}
+      <SWriteBtn onClick={openModal}>글쓰기</SWriteBtn>
+      {isOpen && <WriteFormModal isOpen={isOpen} closeModal={closeModal} />}
     </>
   );
 };

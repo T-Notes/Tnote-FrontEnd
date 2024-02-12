@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-
-import { lastClassState } from '../../utils/lib/atom';
 
 const TodaySchedule = () => {
-  // const lastClass = useRecoilValue(lastClassState);
   const [lastClass, setLastClass] = useState<string>('9교시');
   const lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
 
