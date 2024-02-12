@@ -43,8 +43,8 @@ const WriteFormModal = ({ isOpen, closeModal }: WriteProps) => {
   const { writeModal, handleClickModal } = useWriteModal(closeModal);
 
   return (
-    <ModalBackground>
-      <SWriteForm>
+    <ModalBackground onClick={closeModal}>
+      <SWriteForm onClick={(e: any) => e.stopPropagation()}>
         <SItem>
           <IcClassLog
             className="pointer"
@@ -73,8 +73,8 @@ const WriteFormModal = ({ isOpen, closeModal }: WriteProps) => {
           />
           <SCaption>학생 관찰 일지</SCaption>
         </SItem>
+        {writeModal.isOpen && writeModal.content}
       </SWriteForm>
-      {writeModal.isOpen && writeModal.content}
     </ModalBackground>
   );
 };
