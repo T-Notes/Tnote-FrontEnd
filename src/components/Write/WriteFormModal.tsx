@@ -39,10 +39,6 @@ interface WriteProps {
   closeModal: () => void;
 }
 
-interface WriteModal {
-  isOpen: boolean;
-  content: React.ReactNode | null;
-}
 const WriteFormModal = ({ isOpen, closeModal }: WriteProps) => {
   const { writeModal, handleClickModal } = useWriteModal(closeModal);
 
