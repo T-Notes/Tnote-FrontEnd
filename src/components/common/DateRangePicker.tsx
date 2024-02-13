@@ -60,6 +60,7 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
       alert('시작일보다 종료일이 빠릅니다.');
     }
   };
+
   // 부모 컴포넌트에 날짜 data 보내기
   useEffect(() => {
     onStartDateChange(startDate, endDate);
@@ -68,8 +69,8 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
   return (
     <>
       <IcDatePicker />
-      <div>기간</div>
-      <p>*</p>
+      {/* <div>기간</div>
+      <p>*</p> */}
       <>
         <SDatePickerBox>
           <>

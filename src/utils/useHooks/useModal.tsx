@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ClassLogModal from '../../components/Write/ClassLogModal';
 import WorkLogModal from '../../components/Write/WorkLogModal';
 
@@ -29,19 +29,21 @@ export const useWriteModal = (closeModal: () => void) => {
     content: null,
   });
 
-  const handleClickModal = (buttonType: string) => {
+  const handleClickModal = (option: string) => {
     let modalContent = null;
-    if (buttonType === '학급일지') {
+    if (option === '학급일지') {
       modalContent = <ClassLogModal closeModal={closeModal} />;
-    } else if (buttonType === '업무일지') {
-      modalContent = <WorkLogModal />;
-    } else if (buttonType === '상담기록') {
+    } else if (option === '업무일지') {
+      modalContent = <WorkLogModal closeModal={closeModal} />;
+    } else if (option === '상담기록') {
       // modalContent = <ConsultationRecordsModal />;
-    } else if (buttonType === '학생 관찰 기록') {
+    } else if (option === '학생 관찰 기록') {
       // modalContent = <StudentRecordsModal />;
     }
+
     //모달 상태 업데이트
     setWriteModal({ isOpen: true, content: modalContent });
   };
-  return { writeModal, handleClickModal };
+
+  return { writeModal, setWriteModal, handleClickModal };
 };

@@ -184,3 +184,18 @@ export const removeSemester = async (scheduleId: string | undefined) => {
     throw new Error('학기 삭제 에러가 발생했습니다.');
   }
 };
+
+// 학급일지 등록
+export const createClassLog = async (
+  scheduleId: string | undefined,
+  LogData: object,
+) => {
+  try {
+    const response = instanceAxios.post(
+      `/tnote/classLog/${scheduleId}`,
+      LogData,
+    );
+  } catch {
+    throw new Error('학급일지 생성 에러가 발생했습니다.');
+  }
+};

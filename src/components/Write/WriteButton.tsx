@@ -18,7 +18,6 @@ const SWriteBtn = styled.button`
   ${({ theme }) => theme.fonts.caption1};
 `;
 const WriteButton = () => {
-  const { isToggle, handleChangeToggle } = useToggle();
   const { isOpen, openModal, closeModal } = useModal();
 
   return (

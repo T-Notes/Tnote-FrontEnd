@@ -9,9 +9,9 @@ const PrivacyPolicyCheckbox = ({
   onCheckboxChange,
 }: PrivacyPolicyCheckboxProps) => {
   return isChecked ? (
-    <IcCheckedBox onClick={onCheckboxChange} />
+    <IcCheckedBox onClick={onCheckboxChange} className="pointer" />
   ) : (
-    <IcUncheckedBox onClick={onCheckboxChange} />
+    <IcUncheckedBox onClick={onCheckboxChange} className="pointer" />
   );
 };
 
