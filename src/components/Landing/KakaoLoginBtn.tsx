@@ -3,40 +3,45 @@ import styled from 'styled-components';
 
 import { IcKakao } from '../../assets/icons';
 import instanceAxios from '../../utils/InstanceAxios';
+import { kakaoLogin } from '../../utils/lib/api';
 
 //styled //
 const SKakaoLoginBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 297px;
+  width: 21rem;
   height: 50px;
+  margin-left: 18%;
   border-radius: 12px;
 
   background-color: ${({ theme }) => theme.colors.yellow200}; // active
-  ${({ theme }) => theme.fonts.button}
+  ${({ theme }) => theme.fonts.caption2}
   color: ${({ theme }) => theme.colors.black}; // active
 `;
 
+const SKaKao = styled(IcKakao)`
+  margin-right: 5.5%;
+`;
 interface LoginProps {
   onWarning: React.Dispatch<React.SetStateAction<boolean>>;
   isChecked: boolean;
 }
 const KakaoLoginBtn = ({ onWarning, isChecked }: LoginProps) => {
-  const [token, setToken] = useState<string>('');
+  const [token, setToken] = useState<any>('');
 
   const handleLogin = () => {
     if (isChecked) {
-      const goLogin = async () => {
+      const login = async () => {
         try {
-          await instanceAxios.get('/oauth2/authorization/kakao').then((res) => {
-            setToken(res.data);
-          });
+          const accessToken = await kakaoLogin();
+          setToken(accessToken);
+          console.log('accessToken:', accessToken);
         } catch (err) {
           console.log('err', err);
         }
       };
-      goLogin();
+      login();
     } else {
       onWarning(true);
     }
@@ -44,7 +49,7 @@ const KakaoLoginBtn = ({ onWarning, isChecked }: LoginProps) => {
 
   return (
     <SKakaoLoginBtn onClick={handleLogin}>
-      <IcKakao />
+      <SKaKao />
       카카오로 시작하기
     </SKakaoLoginBtn>
   );

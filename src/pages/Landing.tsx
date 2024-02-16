@@ -16,14 +16,20 @@ const SLandingWrapper = styled.div`
   // 개선 : 웹 화면 크기에 따라 달라져야 함
   background-image: url(${ImgLandingBackgroundImage});
   background-size: cover;
+  background-position: center;
   width: 100%;
   height: 100vh;
   position: absolute;
+
+  @media (max-width: 768px) {
+    background-size: auto;
+  }
 `;
 const SUnderbar = styled.div`
-  margin-top: 32px;
-  margin-bottom: 32px;
-  width: 370px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  width: 21rem;
+  margin-left: 18%;
   border-bottom: 1px solid #d5d5d5;
 `;
 const SPrivacyPolicyText = styled.span`
@@ -37,6 +43,7 @@ const SPrivacyPolicyPointText = styled(SPrivacyPolicyText)`
 const SPrivacyPolicyCheckboxSection = styled.div`
   display: flex;
   align-items: center; /* 세로축 가운데 정렬 */
+  margin-left: 18%;
 `;
 
 const Landing = () => {

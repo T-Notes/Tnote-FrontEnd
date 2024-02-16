@@ -1,21 +1,29 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
 
 import { IcLogo } from '../../assets/icons';
 
 // styled //
 const SWrapper = styled.div`
-  margin-top: 200px;
-  margin-left: 370px;
+  margin-top: 8%;
+  margin-left: 18%;
 `;
 
 const SContentWrapper = styled.section`
-  margin-top: 41px;
-  margin-bottom: 42px;
+  margin-top: 2.5%;
+  margin-bottom: 3%;
 `;
 
 const SLandingContent = styled.h1`
-  ${({ theme }) => theme.fonts.h1}
+  @media (max-width: 768px) {
+    /* 화면 크기가 768px 이하일 때의 폰트 크기 */
+    font-weight: 700;
+    font-size: 6vw;
+  }
+
+  @media (min-width: 769px) {
+    /* 화면 크기가 769px 이상일 때의 폰트 크기 */
+    ${({ theme }) => theme.fonts.h1}
+  }
 `;
 
 const SLandingContentPointText = styled(SLandingContent)`
