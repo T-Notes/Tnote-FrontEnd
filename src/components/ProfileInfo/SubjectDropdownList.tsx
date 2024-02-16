@@ -1,5 +1,31 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 
+const SDropdownWrapper = styled.div`
+  position: fixed;
+  width: 550px;
+  height: 15rem;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0px 6px 15px 0px #00000033;
+  position: absolute;
+  top: calc(100% + 2px); /* SDropdownLabel 아래로 위치 */
+  left: 0;
+  z-index: 3; /* SDropdownLabel 위에 나타나도록 설정 */
+  overflow-y: scroll;
+`;
+
+const SList = styled.ul`
+  padding: 5px 10px;
+`;
+const SItem = styled.li`
+  ${({ theme }) => theme.fonts.button1}
+  padding-left: 1.5rem;
+  cursor: pointer;
+  &:hover {
+    background-color: #e6f6fc;
+  }
+`;
 interface selectedOptionProps {
   onSelectedOption: (selectedOption: string) => void;
 }
@@ -21,15 +47,15 @@ const SubjectDropdownList = ({ onSelectedOption }: selectedOptionProps) => {
   ];
   return (
     // 개선 : 드롭다운 목록 리스트를 select,option 태그로 변경하는 것이 웹표준을 준수하는 것이지 않을까?
-    <>
+    <SDropdownWrapper>
       {subjectList.map((subject) => (
-        <ul key={subject.id}>
-          <li onClick={() => onSelectedOption(subject.option)}>
+        <SList key={subject.id}>
+          <SItem onClick={() => onSelectedOption(subject.option)}>
             {subject.option}
-          </li>
-        </ul>
+          </SItem>
+        </SList>
       ))}
-    </>
+    </SDropdownWrapper>
   );
 };
 

@@ -15,26 +15,52 @@ import UserSubjectForm from './UserSubjectForm';
 import UserCareerForm from './UserCareerForm';
 import UserSchoolForm from './UserSchoolForm';
 
+const SFormWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 const SLabel = styled.label`
+  margin-right: 32.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   ${({ theme }) => theme.fonts.button1}
 `;
 
-const SInput = styled(Input)`
-  margin-top: 20px;
-`;
-
 const SCancel = styled(Button)`
-  width: 270px;
-  height: 60px;
+  width: 16.875rem;
+  height: 3rem;
+  margin-right: 10px;
+  ${({ theme }) => theme.fonts.button1};
   background-color: ${({ theme }) => theme.colors.gray200};
 `;
 
 const SSubmit = styled(Button)`
-  width: 270px;
-  height: 60px;
+  width: 16.875rem;
+  height: 3rem;
+  ${({ theme }) => theme.fonts.button1};
   background-color: ${({ theme }) => theme.colors.gray200};
 `;
 
+const SInputGroup = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+const SIcon = styled.div`
+  position: absolute;
+  right: 1rem; /* 아이콘의 왼쪽 위치 조정 */
+  top: 55%;
+  transform: translateY(-50%);
+`;
+
+const SButtonGroup = styled.div`
+  display: flex;
+  margin-top: 3rem;
+
+  @media (max-height: 768px) {
+    margin-top: 1rem;
+  }
+`;
 interface UserDataProps {
   schoolName: string;
   subject: string;
@@ -87,9 +113,9 @@ const UserInfoForm = () => {
   };
 
   return (
-    <>
+    <SFormWrapper>
       <SLabel htmlFor="userName">이름</SLabel>
-      <SInput placeholder="이름을 입력해주세요" value={userName} readOnly />
+      <Input placeholder="이름을 입력해주세요" value={userName} readOnly />
 
       {/* 과목 폼 */}
       <SLabel htmlFor="subject">과목</SLabel>
@@ -101,13 +127,17 @@ const UserInfoForm = () => {
       {/* 학교 폼*/}
       <SLabel htmlFor="school">학교</SLabel>
       <div>
-        <IcSearch />
-        <SInput
-          placeholder="학교를 입력해주세요"
-          onClick={openModal}
-          readOnly
-          value={userData.schoolName || ''}
-        ></SInput>
+        <SInputGroup>
+          <SIcon>
+            <IcSearch />
+          </SIcon>
+          <Input
+            placeholder="학교를 입력해주세요"
+            onClick={openModal}
+            readOnly
+            value={userData.schoolName || ''}
+          />
+        </SInputGroup>
         {isOpen && (
           <UserSchoolForm
             isOpen={isOpen}
@@ -118,11 +148,13 @@ const UserInfoForm = () => {
           />
         )}
       </div>
-      <Link to="/">
-        <SCancel>취소</SCancel>
-      </Link>
-      <SSubmit onClick={handleUserInfoSubmit}>확인</SSubmit>
-    </>
+      <SButtonGroup>
+        <Link to="/">
+          <SCancel>취소</SCancel>
+        </Link>
+        <SSubmit onClick={handleUserInfoSubmit}>확인</SSubmit>
+      </SButtonGroup>
+    </SFormWrapper>
   );
 };
 

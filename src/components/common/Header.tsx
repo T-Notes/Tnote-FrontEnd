@@ -3,7 +3,7 @@ import { IcLogo } from '../../assets/icons';
 
 const SHeader = styled.div`
   border: none;
-  padding: 15px 1450px 15px 360px;
+  padding: 10px 5% 10px 15%;
   border-bottom: 1px solid var(--Black-Black50, #d5d5d5);
 `;
 

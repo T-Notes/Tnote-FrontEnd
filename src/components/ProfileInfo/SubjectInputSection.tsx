@@ -4,8 +4,15 @@ import { Input } from '../common/styled/Input';
 import SubjectDropdownList from './SubjectDropdownList';
 import { IcCloseDropdown, IcOpenDropdown, IcSearch } from '../../assets/icons';
 
-const SInput = styled(Input)`
-  margin-top: 20px;
+const SInputWrapper = styled.div`
+  position: relative;
+`;
+
+const SToggle = styled.div`
+  position: absolute;
+  right: 1%; /* 화면 오른쪽으로부터 5% 떨어진 위치 */
+  top: 55%; /* 화면 위쪽으로부터 10% 떨어진 위치 */
+  transform: translateY(-50%);
 `;
 
 interface SubjectSectionProps {
@@ -28,23 +35,25 @@ const SubjectInputSection = (props: SubjectSectionProps) => {
   } = props;
 
   return (
-    <>
-      {isToggle ? (
-        <IcCloseDropdown onClick={handleChangeToggle} />
-      ) : (
-        <IcOpenDropdown onClick={handleChangeToggle} />
-      )}
-      <SInput
+    <SInputWrapper>
+      <SToggle>
+        {isToggle ? (
+          <IcCloseDropdown onClick={handleChangeToggle} />
+        ) : (
+          <IcOpenDropdown onClick={handleChangeToggle} />
+        )}
+      </SToggle>
+      <Input
         ref={inputRef}
         type="text"
         value={subject}
         onChange={handleChangeSubjectInput}
         placeholder="과목을 선택해주세요"
-      ></SInput>
+      />
       {isToggle && (
         <SubjectDropdownList onSelectedOption={handleClickSubjectOption} />
       )}
-    </>
+    </SInputWrapper>
   );
 };
 
