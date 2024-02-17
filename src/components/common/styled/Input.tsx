@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Input = styled.input`
   display: flex;
   width: 550px;
-  height: 60px;
+  height: 50px;
   padding: 10px 10px 10px 24px;
   align-items: center;
   gap: 10px;
@@ -11,7 +11,7 @@ export const Input = styled.input`
   border-radius: 8px;
 
   background-color: ${({ theme }) => theme.colors.white};
-  ${({ theme }) => theme.fonts.button1};
+  ${({ theme }) => theme.fonts.caption};
   color: ${({ theme }) => theme.colors.black};
 
   &::placeholder {

@@ -8,10 +8,11 @@ const STextBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 2rem;
+  margin-top: 20px;
+  margin-bottom: 20px;
 `;
 const SText = styled.div`
-  ${({ theme }) => theme.fonts.h2}
+  ${({ theme }) => theme.fonts.h4}
   padding-bottom: 10px;
 `;
 

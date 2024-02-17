@@ -10,9 +10,9 @@ const SKakaoLoginBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 21rem;
+  width: 290px;
   height: 50px;
-  margin-left: 18%;
+  margin-left: 230px;
   border-radius: 12px;
 
   background-color: ${({ theme }) => theme.colors.yellow200}; // active

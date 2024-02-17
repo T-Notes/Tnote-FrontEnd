@@ -4,20 +4,21 @@ import { IcLogo } from '../../assets/icons';
 
 // styled //
 const SWrapper = styled.div`
-  margin-top: 8%;
-  margin-left: 18%;
+  margin-top: 120px;
+  margin-left: 230px;
 `;
 
 const SContentWrapper = styled.section`
-  margin-top: 2.5%;
-  margin-bottom: 3%;
+  margin-top: 30px;
+  margin-bottom: 20px;
 `;
 
 const SLandingContent = styled.h1`
   @media (max-width: 768px) {
     /* 화면 크기가 768px 이하일 때의 폰트 크기 */
     font-weight: 700;
-    font-size: 6vw;
+    font-size: 28px;
+    line-height: 50px;
   }
 
   @media (min-width: 769px) {

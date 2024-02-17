@@ -21,24 +21,24 @@ const SFormWrapper = styled.div`
   align-items: center;
 `;
 const SLabel = styled.label`
-  margin-right: 32.5rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  ${({ theme }) => theme.fonts.button1}
+  margin-right: 520px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  ${({ theme }) => theme.fonts.caption}
 `;
 
 const SCancel = styled(Button)`
-  width: 16.875rem;
-  height: 3rem;
+  width: 270px;
+  height: 50px;
   margin-right: 10px;
-  ${({ theme }) => theme.fonts.button1};
+  ${({ theme }) => theme.fonts.caption};
   background-color: ${({ theme }) => theme.colors.gray200};
 `;
 
 const SSubmit = styled(Button)`
-  width: 16.875rem;
-  height: 3rem;
-  ${({ theme }) => theme.fonts.button1};
+  width: 270px;
+  height: 50px;
+  ${({ theme }) => theme.fonts.caption};
   background-color: ${({ theme }) => theme.colors.gray200};
 `;
 
@@ -48,18 +48,14 @@ const SInputGroup = styled.div`
 `;
 const SIcon = styled.div`
   position: absolute;
-  right: 1rem; /* 아이콘의 왼쪽 위치 조정 */
-  top: 55%;
+  right: 16px; /* 아이콘의 왼쪽 위치 조정 */
+  top: 26px;
   transform: translateY(-50%);
 `;
 
 const SButtonGroup = styled.div`
   display: flex;
-  margin-top: 3rem;
-
-  @media (max-height: 768px) {
-    margin-top: 1rem;
-  }
+  margin-top: 40px;
 `;
 interface UserDataProps {
   schoolName: string;

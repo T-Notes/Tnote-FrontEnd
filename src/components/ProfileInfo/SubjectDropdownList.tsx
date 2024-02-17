@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const SDropdownWrapper = styled.div`
   position: fixed;
   width: 550px;
-  height: 15rem;
+  height: 240px;
   border-radius: 8px;
   background-color: white;
   box-shadow: 0px 6px 15px 0px #00000033;
@@ -19,8 +19,8 @@ const SList = styled.ul`
   padding: 5px 10px;
 `;
 const SItem = styled.li`
-  ${({ theme }) => theme.fonts.button1}
-  padding-left: 1.5rem;
+  ${({ theme }) => theme.fonts.caption}
+  padding-left: 24px;
   cursor: pointer;
   &:hover {
     background-color: #e6f6fc;

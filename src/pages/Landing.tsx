@@ -26,10 +26,10 @@ const SLandingWrapper = styled.div`
   }
 `;
 const SUnderbar = styled.div`
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  width: 21rem;
-  margin-left: 18%;
+  margin-top: 32px;
+  margin-bottom: 32px;
+  width: 290px;
+  margin-left: 230px;
   border-bottom: 1px solid #d5d5d5;
 `;
 const SPrivacyPolicyText = styled.span`
@@ -43,7 +43,7 @@ const SPrivacyPolicyPointText = styled(SPrivacyPolicyText)`
 const SPrivacyPolicyCheckboxSection = styled.div`
   display: flex;
   align-items: center; /* 세로축 가운데 정렬 */
-  margin-left: 18%;
+  margin-left: 230px;
 `;
 
 const Landing = () => {
