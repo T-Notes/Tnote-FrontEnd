@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { logModalState } from '../../utils/lib/atom';
@@ -6,7 +6,11 @@ import WritingModalTop from './WriteModalTop';
 import WriteDropdown from './WriteDropdown';
 import { useWriteModal } from '../../utils/useHooks/useModal';
 import ModalPortal from '../../utils/ModalPortal';
-import { ModalBackground, ModalLayout } from '../common/styled/ModalLayout';
+import {
+  ModalBackground,
+  ModalLayout,
+  ModalNoBlackBackground,
+} from '../common/styled/ModalLayout';
 import { Button } from '../common/styled/Button';
 import { createClassLog } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
@@ -74,10 +78,10 @@ interface SaveContents {
 interface CloseProps {
   closeModal: () => void;
 }
-const ClassLogModal = ({ closeModal }: CloseProps) => {
+const ClassLogModal = ({ setYouWantedClose }: any) => {
   const { scheduleId } = useParams();
   const [title, setTitle] = useState<string>(''); //제목 상태
-  const { writeModal, handleClickModal } = useWriteModal(closeModal);
+  const { writeModal, handleClickModal } = useWriteModal();
 
   const [contentType, setContentType] =
     useState<keyof SaveContents>('학습계획'); //현재 모달에서 어떤 종류의 탭을 입력하고 있는지를 나타낸다.
@@ -136,15 +140,18 @@ const ClassLogModal = ({ closeModal }: CloseProps) => {
     }
   };
 
+  useEffect(() => {
+    setYouWantedClose(true);
+  }, []);
   return (
     <ModalPortal>
-      <ModalBackground>
+      <ModalNoBlackBackground>
         <SModalLayout>
           <WriteDropdown
             label="학급일지"
             options={['업무일지', '상담기록', '학생 관찰 일지']}
             handleChangeOption={handleClickModal}
-            closeModal={closeModal}
+            // closeModal={closeModal}
           />
           <WritingModalTop
             onTitleChange={handleTitleChange}
@@ -185,7 +192,7 @@ const ClassLogModal = ({ closeModal }: CloseProps) => {
           <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
           {writeModal.isOpen && writeModal.content}
         </SModalLayout>
-      </ModalBackground>
+      </ModalNoBlackBackground>
     </ModalPortal>
   );
 };

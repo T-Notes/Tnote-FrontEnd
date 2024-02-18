@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useModal } from '../../utils/useHooks/useModal';
+import { useModal, WriteModal } from '../../utils/useHooks/useModal';
 import { useToggle } from '../../utils/useHooks/useToggle';
 import { ModalBackground } from '../common/styled/ModalLayout';
 import WriteFormModal from './WriteFormModal';
@@ -19,11 +19,29 @@ const SWriteBtn = styled.button`
 `;
 const WriteButton = () => {
   const { isOpen, openModal, closeModal } = useModal();
+  const [writeModal, setWriteModal] = useState<WriteModal>({
+    isOpen: false,
+    content: null,
+    isClose: true,
+  });
+
+  useEffect(() => {
+    if (writeModal.isOpen) closeModal();
+  }, [writeModal]);
 
   return (
     <>
       <SWriteBtn onClick={openModal}>글쓰기</SWriteBtn>
-      {isOpen && <WriteFormModal isOpen={isOpen} closeModal={closeModal} />}
+      {isOpen && (
+        <WriteFormModal
+          isOpen={isOpen}
+          closeModal={closeModal}
+          setWriteModal={setWriteModal}
+        />
+      )}
+      {writeModal.isOpen && !writeModal.isClose ? (
+        <ModalBackground>{writeModal.content}</ModalBackground>
+      ) : null}
     </>
   );
 };

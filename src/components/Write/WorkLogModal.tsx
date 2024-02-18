@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 import ModalPortal from '../../utils/ModalPortal';
 import { useWriteModal } from '../../utils/useHooks/useModal';
-import { ModalBackground, ModalLayout } from '../common/styled/ModalLayout';
+import {
+  ModalBackground,
+  ModalLayout,
+  ModalNoBlackBackground,
+} from '../common/styled/ModalLayout';
 import WriteDropdown from './WriteDropdown';
 
 const SModalLayout = styled(ModalLayout)`
@@ -11,23 +15,23 @@ const SModalLayout = styled(ModalLayout)`
 interface CloseProps {
   closeModal: () => void;
 }
-const WorkLogModal = ({ closeModal }: CloseProps) => {
-  const { writeModal, handleClickModal } = useWriteModal(closeModal);
+const WorkLogModal = () => {
+  const { writeModal, handleClickModal } = useWriteModal();
   return (
     <ModalPortal>
-      <ModalBackground>
+      <ModalNoBlackBackground>
         <SModalLayout>
           <WriteDropdown
             label="업무일지"
             options={['학급일지', '상담기록', '학생 관찰 일지']}
             handleChangeOption={handleClickModal}
-            closeModal={closeModal}
+            // closeModal={closeModal}
           />
           <div>업무일지 모달이다!!!!!</div>
 
           {writeModal.isOpen && writeModal.content}
         </SModalLayout>
-      </ModalBackground>
+      </ModalNoBlackBackground>
     </ModalPortal>
   );
 };

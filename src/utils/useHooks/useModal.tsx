@@ -18,23 +18,27 @@ export const useModal = (init = false) => {
 };
 
 // 글쓰기 모달
-interface WriteModal {
+export interface WriteModal {
   isOpen: boolean;
+  isClose: boolean;
   content: React.ReactNode | null;
 }
 
-export const useWriteModal = (closeModal: () => void) => {
+export const useWriteModal = () => {
   const [writeModal, setWriteModal] = useState<WriteModal>({
     isOpen: false,
+    isClose: true,
     content: null,
   });
+
+  const [youWantedClose, setYouWantedClose] = useState(false);
 
   const handleClickModal = (option: string) => {
     let modalContent = null;
     if (option === '학급일지') {
-      modalContent = <ClassLogModal closeModal={closeModal} />;
+      modalContent = <ClassLogModal setYouWantedClose={setYouWantedClose} />;
     } else if (option === '업무일지') {
-      modalContent = <WorkLogModal closeModal={closeModal} />;
+      modalContent = <WorkLogModal />;
     } else if (option === '상담기록') {
       // modalContent = <ConsultationRecordsModal />;
     } else if (option === '학생 관찰 기록') {
@@ -42,7 +46,9 @@ export const useWriteModal = (closeModal: () => void) => {
     }
 
     //모달 상태 업데이트
-    setWriteModal({ isOpen: true, content: modalContent });
+    if (youWantedClose)
+      setWriteModal({ isOpen: false, content: modalContent, isClose: true });
+    else setWriteModal({ isOpen: true, content: modalContent, isClose: false });
   };
 
   return { writeModal, setWriteModal, handleClickModal };

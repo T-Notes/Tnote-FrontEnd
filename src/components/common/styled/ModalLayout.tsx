@@ -11,6 +11,17 @@ export const ModalBackground = styled.div`
   align-items: center;
   justify-content: center;
 `;
+
+export const ModalNoBlackBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 export const WarningModalLayout = styled.div`
   border: 1px solid var(--Black-Black50, #d5d5d5);
   background-color: #fff;

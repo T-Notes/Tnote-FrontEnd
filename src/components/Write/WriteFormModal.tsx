@@ -10,7 +10,7 @@ import {
 import { useState, useEffect } from 'react';
 import ClassLogModal from './ClassLogModal';
 import WorkLogModal from './WorkLogModal';
-import { useWriteModal } from '../../utils/useHooks/useModal';
+import { useWriteModal, WriteModal } from '../../utils/useHooks/useModal';
 
 const SWriteForm = styled(ModalLayout)`
   display: flex;
@@ -37,10 +37,15 @@ const SCaption = styled.p`
 interface WriteProps {
   isOpen: boolean;
   closeModal: () => void;
+  setWriteModal: (writeModal: WriteModal) => void;
 }
 
-const WriteFormModal = ({ isOpen, closeModal }: WriteProps) => {
-  const { writeModal, handleClickModal } = useWriteModal(closeModal);
+const WriteFormModal = ({ isOpen, closeModal, setWriteModal }: WriteProps) => {
+  const { writeModal, handleClickModal } = useWriteModal();
+
+  useEffect(() => {
+    setWriteModal(writeModal);
+  }, [writeModal]);
 
   return (
     <ModalBackground onClick={closeModal}>
@@ -73,7 +78,6 @@ const WriteFormModal = ({ isOpen, closeModal }: WriteProps) => {
           />
           <SCaption>학생 관찰 일지</SCaption>
         </SItem>
-        {writeModal.isOpen && writeModal.content}
       </SWriteForm>
     </ModalBackground>
   );

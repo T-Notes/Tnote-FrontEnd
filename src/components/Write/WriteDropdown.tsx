@@ -56,17 +56,17 @@ interface WritingModalProps {
   label: string;
   options: string[];
   handleChangeOption: (option: string) => void;
-  closeModal: () => void;
+  // closeModal: () => void;
 }
 
 const WriteDropdown = (props: WritingModalProps) => {
-  const { label, options, closeModal, handleChangeOption } = props;
+  const { label, options, handleChangeOption } = props;
 
   const { isToggle, handleChangeToggle } = useToggle();
 
   return (
     <SModalTop>
-      <IcClose className="pointer" onClick={closeModal} />
+      <IcClose className="pointer" onClick={() => ''} />
       <SDropdownLabel>
         <div>{label}</div>
         <SDropdownToggle onClick={handleChangeToggle}>
