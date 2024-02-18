@@ -20,3 +20,5 @@ export { ReactComponent as IcStudentObservationLog } from './studentObservationI
 export { ReactComponent as IcTitle } from './titleIcon.svg';
 export { ReactComponent as IcPen } from './penIcon.svg';
 export { ReactComponent as IcLogoHeader } from './logoHeaderIcon.svg';
+export { ReactComponent as IcOpenDropdownSmall } from './openDropdownSmall.svg';
+export { ReactComponent as IcCloseDropdownSmall } from './closeDropdownSmall.svg';

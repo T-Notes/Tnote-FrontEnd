@@ -71,7 +71,7 @@ export const searchCustomStyles = {
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
-    padding: '10px 20px 20px 20px',
+    padding: '20px',
     border: '1px solid #D5D5D5',
     borderRadius: '8px',
   },

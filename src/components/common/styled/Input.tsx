@@ -21,8 +21,9 @@ export const Input = styled.input`
 
 export const SearchInput = styled.input`
   display: flex;
+  margin-left: auto;
   width: 300px;
-  height: 44px;
+  height: 40px;
   padding: 10px 10px 10px 16px;
   justify-content: center;
   align-items: center;

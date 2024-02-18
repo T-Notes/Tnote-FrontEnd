@@ -10,16 +10,45 @@ import {
 import { Button } from '../common/styled/Button';
 import { SchoolTypeList, SchoolCityList } from './SchoolTypeList';
 import SchoolDataLoader from './SchoolDataLoader';
+import CityAndTypeSelection from './CityAndTypeSelection';
 
+const SSchoolSearchWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const SModalTitle = styled.h1`
+  margin-top: 20px;
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  ${({ theme }) => theme.fonts.h4};
+`;
+const SIcClose = styled.div`
+  padding-left: 390px;
+`;
 const SButton = styled(Button)`
   width: 420px;
   height: 60px;
   background-color: ${({ theme }) => theme.colors.gray300};
 
   color: ${({ theme }) => theme.colors.gray100};
-  ${({ theme }) => theme.fonts.button1};
+  ${({ theme }) => theme.fonts.caption};
 `;
 
+const SInputBox = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+`;
+const SLabel = styled.label`
+  ${({ theme }) => theme.fonts.caption};
+  text-align: left;
+`;
+const SPoint = styled.span`
+  color: ${({ theme }) => theme.colors.purple100};
+`;
 interface SchoolSearchProps {
   onRequestClose: () => void;
   // onClickSubmit: (searchInput: string) => void;
@@ -58,56 +87,56 @@ const SchoolSearchSection = (props: SchoolSearchProps) => {
   console.log('schoolData:', schoolData.schoolName);
   return (
     <>
-      <>
+      <SIcClose>
         <IcClose onClick={onRequestClose} />
-        <h1>학교검색</h1>
+      </SIcClose>
+      <SSchoolSearchWrapper>
+        <SModalTitle>학교검색</SModalTitle>
         {/* 시 도 옵션 선택 */}
-        <label htmlFor="city">시/도*</label>
-        <SearchInput
-          placeholder="옵션을 선택하세요"
-          readOnly
+        <CityAndTypeSelection
+          label={'시/도'}
           value={schoolData.region}
-        ></SearchInput>
-        {isCityDropdownOpen ? (
-          <IcCloseDropdown onClick={handleClickCity} />
-        ) : (
-          <IcOpenDropdown onClick={handleClickCity} />
-        )}
-        {isCityDropdownOpen && (
-          <SchoolCityList onSelectedCity={handleClickCityOption} />
-        )}
-        {/* 학교 분류  */}
-        <label htmlFor="type">학교분류*</label>
-        <SearchInput
-          value={schoolData.gubun}
-          readOnly
-          placeholder="옵션을 선택하세요"
-        ></SearchInput>
-        {isTypeDropdownOpen ? (
-          <IcCloseDropdown onClick={handleClickType} />
-        ) : (
-          <IcOpenDropdown onClick={handleClickType} />
-        )}
-        {isTypeDropdownOpen && (
-          <SchoolTypeList onSelectedSchoolType={handleSelectedType} />
-        )}
-        <IcSearch />
-        {/* 학교이름 검색 */}
-        <label htmlFor="schoolName">학교명*</label>
-        <SearchInput
-          onChange={handleSchoolSearchInputChange}
-          placeholder="텍스트를 입력하세요"
-          // value={userData.schoolName}
-        ></SearchInput>
-        <SchoolDataLoader
-          schoolData={schoolData}
-          handleSelectedSchool={handleSelectedSchool}
+          isDropdownOpen={isCityDropdownOpen}
+          onDropdownClick={handleClickCity}
+          dropdownListComponent={
+            <SchoolCityList onSelectedCity={handleClickCityOption} />
+          }
         />
+
+        {/* 학교 분류  */}
+        <CityAndTypeSelection
+          label="학교분류"
+          value={schoolData.gubun}
+          isDropdownOpen={isTypeDropdownOpen}
+          onDropdownClick={handleClickType}
+          dropdownListComponent={
+            <SchoolTypeList onSelectedSchoolType={handleSelectedType} />
+          }
+        />
+
+        <SInputBox>
+          {/* <IcSearch /> */}
+          {/* 학교이름 검색 */}
+          <SLabel htmlFor="schoolName">
+            학교명
+            <SPoint>*</SPoint>
+          </SLabel>
+          <SearchInput
+            onChange={handleSchoolSearchInputChange}
+            placeholder="텍스트를 입력하세요"
+            // value={userData.schoolName}
+          ></SearchInput>
+          <SchoolDataLoader
+            schoolData={schoolData}
+            handleSelectedSchool={handleSelectedSchool}
+          />
+        </SInputBox>
+
         <SButton onClick={() => {}}>확인</SButton>
         {/* <SButton onClick={() => onClickSubmit(userData.schoolName)}>
-          확인
+          확인ß
         </SButton> */}
-      </>
+      </SSchoolSearchWrapper>
     </>
   );
 };

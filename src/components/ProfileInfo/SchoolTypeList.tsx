@@ -1,3 +1,41 @@
+import styled from 'styled-components';
+
+const SSchoolListWrapper = styled.div`
+  width: 302px;
+  height: 100px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0px 6px 15px 0px #00000033;
+  position: absolute;
+  top: calc(60% + 5px); /* SDropdownLabel 아래로 위치 */
+  left: 28%;
+  z-index: 3; /* SDropdownLabel 위에 나타나도록 설정 */
+  overflow-y: scroll;
+`;
+
+const SSchoolCityListWrapper = styled.div`
+  width: 302px;
+  height: 200px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0px 6px 15px 0px #00000033;
+  position: absolute;
+  top: calc(60% + 5px); /* SDropdownLabel 아래로 위치 */
+  left: 28%;
+  z-index: 3; /* SDropdownLabel 위에 나타나도록 설정 */
+  overflow-y: scroll;
+`;
+const SList = styled.ul`
+  padding: 5px 10px;
+`;
+const SItem = styled.li`
+  ${({ theme }) => theme.fonts.caption}
+  padding-left: 24px;
+  cursor: pointer;
+  &:hover {
+    background-color: #e6f6fc;
+  }
+`;
 interface SchoolTypeListProps {
   onSelectedSchoolType: (selectedType: string) => void;
 }
@@ -12,15 +50,15 @@ export const SchoolTypeList = ({
   ];
   return (
     <>
-      <div>
+      <SSchoolListWrapper>
         {typeList.map((type) => (
-          <ul key={type.id}>
-            <li onClick={() => onSelectedSchoolType(type.typeValue)}>
+          <SList key={type.id}>
+            <SItem onClick={() => onSelectedSchoolType(type.typeValue)}>
               {type.typeValue}
-            </li>
-          </ul>
+            </SItem>
+          </SList>
         ))}
-      </div>
+      </SSchoolListWrapper>
     </>
   );
 };
@@ -49,15 +87,15 @@ export const SchoolCityList = ({ onSelectedCity }: SchoolCityListProps) => {
   ];
   return (
     <>
-      <div>
+      <SSchoolCityListWrapper>
         {cityList.map((city) => (
-          <ul key={city.cityNum}>
-            <li onClick={() => onSelectedCity(city.cityName)}>
+          <SList key={city.cityNum}>
+            <SItem onClick={() => onSelectedCity(city.cityName)}>
               {city.cityName}
-            </li>
-          </ul>
+            </SItem>
+          </SList>
         ))}
-      </div>
+      </SSchoolCityListWrapper>
     </>
   );
 };

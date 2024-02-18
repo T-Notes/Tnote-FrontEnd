@@ -63,7 +63,7 @@ const fonts = {
   h4: FONT({ weight: 600, size: 20, height: 24 }),
   button: FONT({ weight: 500, size: 24, height: 29 }),
   button1: FONT({ weight: 500, size: 18, height: 24 }),
-  caption: FONT({ weight: 500, size: 16, height: 20 }),
+  caption: FONT({ weight: 500, size: 16, height: 20 }), // 기본 글씨 크기
   caption1: FONT({ weight: 500, size: 20, height: 28 }),
   caption2: FONT({ weight: 500, size: 20, height: 24 }),
   caption3: FONT({ weight: 500, size: 14, height: 16 }),

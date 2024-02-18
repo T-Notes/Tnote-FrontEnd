@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const SDropdownWrapper = styled.div`
-  position: fixed;
   width: 550px;
   height: 240px;
   border-radius: 8px;
