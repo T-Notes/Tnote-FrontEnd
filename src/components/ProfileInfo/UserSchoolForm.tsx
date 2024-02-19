@@ -33,21 +33,11 @@ const UserSchoolForm = ({
   userData,
   setUserData,
 }: searchModalProps & UserSubjectFormProps) => {
-  const [isCityDropdownOpen, setIsCityDropdownOpen] = useState<boolean>(false);
-  const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState<boolean>(false);
   const [schoolSearchData, setSchoolSearchData] = useState<ResultsProps>({
     region: '',
     gubun: '',
     schoolName: '',
   });
-
-  const handleClickCity = () => {
-    setIsCityDropdownOpen(!isCityDropdownOpen);
-  };
-
-  const handleClickType = () => {
-    setIsTypeDropdownOpen(!isTypeDropdownOpen);
-  };
 
   const handleClickCityOption = (city: string) => {
     //수정 코드
@@ -56,7 +46,7 @@ const UserSchoolForm = ({
       region: city,
     }));
 
-    setIsCityDropdownOpen(false); // 옵션 선택 후 드롭다운 닫기
+    // setIsCityDropdownOpen(false); // 옵션 선택 후 드롭다운 닫기
   };
 
   const handleSelectedType = (type: string) => {
@@ -66,7 +56,7 @@ const UserSchoolForm = ({
       gubun: type,
     }));
 
-    setIsTypeDropdownOpen(false);
+    // setIsTypeDropdownOpen(false);
   };
 
   const handleSchoolSearchInputChange = (
@@ -105,11 +95,7 @@ const UserSchoolForm = ({
       >
         <SchoolSearchSection
           onRequestClose={onRequestClose} // 검색 모달 닫기
-          isCityDropdownOpen={isCityDropdownOpen} // 지역 드롭다운 토글 상태
-          handleClickCity={handleClickCity} // 지역 드롭다운 이벤트핸들러
           handleClickCityOption={handleClickCityOption} //  지역 선택값 저장
-          isTypeDropdownOpen={isTypeDropdownOpen} // 학교분류 드롭다운 토글상태
-          handleClickType={handleClickType} // 학교분류 드롭다운 이벤트 핸들러
           handleSelectedType={handleSelectedType} // 학교 분류 선택값 저장
           handleSchoolSearchInputChange={handleSchoolSearchInputChange} // 유저가 입력하는 학교명 저장 이벤트핸들러
           handleSelectedSchool={handleSelectedSchool} // 검색 결과 리스트 중 유저가 선택한 값 저장

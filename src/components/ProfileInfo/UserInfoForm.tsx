@@ -14,6 +14,7 @@ import { Button } from '../common/styled/Button';
 import UserSubjectForm from './UserSubjectForm';
 import UserCareerForm from './UserCareerForm';
 import UserSchoolForm from './UserSchoolForm';
+import SearchInput from '../common/SearchInput';
 
 const SFormWrapper = styled.div`
   display: flex;
@@ -41,16 +42,25 @@ const SSubmit = styled(Button)`
   ${({ theme }) => theme.fonts.caption};
   background-color: ${({ theme }) => theme.colors.gray200};
 `;
+const SSearchWrapper = styled.div`
+  display: flex;
+  width: 550px;
+  height: 50px;
+  align-items: center;
+  z-index: 1;
+  opacity: 1;
+  border-radius: 8px;
 
-const SInputGroup = styled.div`
-  position: relative;
-  display: inline-block;
+  padding: 10px 10px 10px 16px;
+  border: 1px solid #d5d5d5;
 `;
-const SIcon = styled.div`
-  position: absolute;
-  right: 16px; /* 아이콘의 왼쪽 위치 조정 */
-  top: 26px;
-  transform: translateY(-50%);
+const SSearchInput = styled.input`
+  width: 200px;
+  padding-left: 10px;
+  ${({ theme }) => theme.fonts.caption}
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.gray100};
+  }
 `;
 
 const SButtonGroup = styled.div`
@@ -81,7 +91,7 @@ const UserInfoForm = () => {
   //   closeModal();
   //   setUserData((prevData) => ({ ...prevData, schoolName: searchInput }));
   // };
-  console.log('1번째 부모컴포넌트:', userData.schoolName);
+
   useEffect(() => {
     const getUserName = async () => {
       try {
@@ -123,17 +133,16 @@ const UserInfoForm = () => {
       {/* 학교 폼*/}
       <SLabel htmlFor="school">학교</SLabel>
       <div>
-        <SInputGroup>
-          <SIcon>
-            <IcSearch />
-          </SIcon>
-          <Input
+        <SSearchWrapper>
+          <IcSearch />
+          <SSearchInput
             placeholder="학교를 입력해주세요"
             onClick={openModal}
             readOnly
             value={userData.schoolName || ''}
           />
-        </SInputGroup>
+        </SSearchWrapper>
+
         {isOpen && (
           <UserSchoolForm
             isOpen={isOpen}

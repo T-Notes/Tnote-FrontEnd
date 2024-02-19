@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { SearchInput } from '../common/styled/Input';
+
 import {
   IcClose,
   IcSearch,
@@ -11,6 +11,7 @@ import { Button } from '../common/styled/Button';
 import { SchoolTypeList, SchoolCityList } from './SchoolTypeList';
 import SchoolDataLoader from './SchoolDataLoader';
 import CityAndTypeSelection from './CityAndTypeSelection';
+import SearchInput from '../common/SearchInput';
 
 const SSchoolSearchWrapper = styled.div`
   display: flex;
@@ -46,16 +47,17 @@ const SLabel = styled.label`
   ${({ theme }) => theme.fonts.caption};
   text-align: left;
 `;
+
+const SSearchInputWrapper = styled.div`
+  margin-left: auto;
+`;
 const SPoint = styled.span`
   color: ${({ theme }) => theme.colors.purple100};
 `;
 interface SchoolSearchProps {
   onRequestClose: () => void;
   // onClickSubmit: (searchInput: string) => void;
-  isCityDropdownOpen: boolean;
-  handleClickCity: () => void;
-  handleClickType: () => void;
-  isTypeDropdownOpen: boolean;
+
   handleSchoolSearchInputChange: (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void;
@@ -72,11 +74,7 @@ interface SchoolSearchProps {
 const SchoolSearchSection = (props: SchoolSearchProps) => {
   const {
     onRequestClose,
-    isCityDropdownOpen,
-    handleClickCity,
     handleClickCityOption,
-    isTypeDropdownOpen,
-    handleClickType,
     handleSelectedType,
     handleSchoolSearchInputChange,
     schoolData,
@@ -88,7 +86,7 @@ const SchoolSearchSection = (props: SchoolSearchProps) => {
   return (
     <>
       <SIcClose>
-        <IcClose onClick={onRequestClose} />
+        <IcClose onClick={onRequestClose} className="pointer" />
       </SIcClose>
       <SSchoolSearchWrapper>
         <SModalTitle>학교검색</SModalTitle>
@@ -96,8 +94,6 @@ const SchoolSearchSection = (props: SchoolSearchProps) => {
         <CityAndTypeSelection
           label={'시/도'}
           value={schoolData.region}
-          isDropdownOpen={isCityDropdownOpen}
-          onDropdownClick={handleClickCity}
           dropdownListComponent={
             <SchoolCityList onSelectedCity={handleClickCityOption} />
           }
@@ -107,8 +103,6 @@ const SchoolSearchSection = (props: SchoolSearchProps) => {
         <CityAndTypeSelection
           label="학교분류"
           value={schoolData.gubun}
-          isDropdownOpen={isTypeDropdownOpen}
-          onDropdownClick={handleClickType}
           dropdownListComponent={
             <SchoolTypeList onSelectedSchoolType={handleSelectedType} />
           }
@@ -121,11 +115,16 @@ const SchoolSearchSection = (props: SchoolSearchProps) => {
             학교명
             <SPoint>*</SPoint>
           </SLabel>
-          <SearchInput
-            onChange={handleSchoolSearchInputChange}
-            placeholder="텍스트를 입력하세요"
-            // value={userData.schoolName}
-          ></SearchInput>
+          <SSearchInputWrapper>
+            <SearchInput
+              size="small"
+              theme={{ background: 'blue400' }}
+              handleSearchInputChange={handleSchoolSearchInputChange}
+              placeholder="텍스트를 입력하세요"
+              value={userData.schoolName}
+            ></SearchInput>
+          </SSearchInputWrapper>
+
           <SchoolDataLoader
             schoolData={schoolData}
             handleSelectedSchool={handleSelectedSchool}

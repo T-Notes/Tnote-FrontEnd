@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const SDropdownWrapper = styled.div`
-  width: 550px;
+  position: absolute;
+  width: 100%;
   height: 240px;
   border-radius: 8px;
   background-color: white;
   box-shadow: 0px 6px 15px 0px #00000033;
-  position: absolute;
-  top: calc(100% + 2px); /* SDropdownLabel 아래로 위치 */
+  top: calc(100% + 4px); /* SDropdownLabel 아래로 위치 */
   left: 0;
   z-index: 3; /* SDropdownLabel 위에 나타나도록 설정 */
   overflow-y: scroll;

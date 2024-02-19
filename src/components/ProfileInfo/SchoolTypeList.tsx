@@ -1,28 +1,28 @@
 import styled from 'styled-components';
 
 const SSchoolListWrapper = styled.div`
-  width: 302px;
+  width: 300px;
   height: 100px;
   border-radius: 8px;
   background-color: white;
   box-shadow: 0px 6px 15px 0px #00000033;
   position: absolute;
-  top: calc(60% + 5px); /* SDropdownLabel 아래로 위치 */
-  left: 28%;
-  z-index: 3; /* SDropdownLabel 위에 나타나도록 설정 */
+  top: calc(100% + 4px); /* SDropdownLabel 아래로 위치 */
+  left: 0;
+  z-index: 5; /* SDropdownLabel 위에 나타나도록 설정 */
   overflow-y: scroll;
 `;
 
 const SSchoolCityListWrapper = styled.div`
-  width: 302px;
+  width: 300px;
   height: 200px;
   border-radius: 8px;
   background-color: white;
   box-shadow: 0px 6px 15px 0px #00000033;
   position: absolute;
-  top: calc(60% + 5px); /* SDropdownLabel 아래로 위치 */
-  left: 28%;
-  z-index: 3; /* SDropdownLabel 위에 나타나도록 설정 */
+  top: calc(100% + 4px); /* SDropdownLabel 아래로 위치 */
+  left: 0;
+  z-index: 6; /* SDropdownLabel 위에 나타나도록 설정 */
   overflow-y: scroll;
 `;
 const SList = styled.ul`
@@ -53,7 +53,11 @@ export const SchoolTypeList = ({
       <SSchoolListWrapper>
         {typeList.map((type) => (
           <SList key={type.id}>
-            <SItem onClick={() => onSelectedSchoolType(type.typeValue)}>
+            <SItem
+              onClick={() => {
+                onSelectedSchoolType(type.typeValue);
+              }}
+            >
               {type.typeValue}
             </SItem>
           </SList>
