@@ -2,23 +2,26 @@ import React, { useState } from 'react';
 import ReactModal from 'react-modal';
 import SchoolSearchSection from './SchoolSearchSection';
 import { searchCustomStyles } from '../common/styled/ModalLayout';
+import { UserDataProps } from './UserInfoForm';
 
 interface searchModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   // onClickSubmit: (searchInput: string) => void;
-}
-
-interface UserDataProps {
-  schoolName: string;
-  subject: string;
-  career: string;
-  alarm: boolean;
-}
-interface UserSubjectFormProps {
   userData: UserDataProps;
   setUserData: React.Dispatch<React.SetStateAction<UserDataProps>>;
 }
+
+// interface UserDataProps {
+//   schoolName: string;
+//   subject: string;
+//   career: string;
+//   alarm: boolean;
+// }
+// interface UserSubjectFormProps {
+//   userData: UserDataProps;
+//   setUserData: React.Dispatch<React.SetStateAction<UserDataProps>>;
+// }
 
 interface ResultsProps {
   region: string;
@@ -26,13 +29,8 @@ interface ResultsProps {
   schoolName: string;
 }
 
-const UserSchoolForm = ({
-  isOpen,
-  onRequestClose,
-  // onClickSubmit,
-  userData,
-  setUserData,
-}: searchModalProps & UserSubjectFormProps) => {
+const UserSchoolForm = (props: searchModalProps) => {
+  const { isOpen, onRequestClose, userData, setUserData } = props;
   const [schoolSearchData, setSchoolSearchData] = useState<ResultsProps>({
     region: '',
     gubun: '',

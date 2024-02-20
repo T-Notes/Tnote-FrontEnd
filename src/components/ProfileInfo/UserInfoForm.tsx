@@ -67,7 +67,7 @@ const SButtonGroup = styled.div`
   display: flex;
   margin-top: 40px;
 `;
-interface UserDataProps {
+export interface UserDataProps {
   schoolName: string;
   subject: string;
   career: string;
@@ -76,7 +76,7 @@ interface UserDataProps {
 
 const UserInfoForm = () => {
   const { id } = useParams();
-  const [userName, setUserName] = useState<string>('최윤지'); // 하드 코딩된 부분
+  const [userName, setUserName] = useState<string>(''); // 하드 코딩된 부분
   const [userData, setUserData] = useState<UserDataProps>({
     schoolName: '',
     subject: '',
@@ -92,6 +92,7 @@ const UserInfoForm = () => {
   //   setUserData((prevData) => ({ ...prevData, schoolName: searchInput }));
   // };
 
+  // 로그인된 유저 정보 렌더링 되자마자 가져오기
   useEffect(() => {
     const getUserName = async () => {
       try {

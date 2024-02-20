@@ -33,7 +33,6 @@ interface SelectionProps {
 const CityAndTypeSelection = ({
   label,
   value,
-
   dropdownListComponent,
 }: SelectionProps) => {
   return (

@@ -1,15 +1,28 @@
 import instanceAxios from '../InstanceAxios';
 
+// 소셜로그인(회원가입)
+export const kakaoLogin = async () => {
+  try {
+    const response = await instanceAxios.get('/oauth2/authorization/kakao');
+    // return response.data;
+    const { accessToken, refreshToken } = response.data; // 예상되는 서버 응답 구조에 맞게 수정
+    console.log('response.data:', response.data);
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+    // .then((res) => {
+    //   return res.data;
+    // });
+  } catch (err) {
+    throw new Error('로그인 에러 발생.');
+  }
+};
 // 회원 추가정보 작성
 export const updateUserInfo = async (
   userId: string | undefined,
   userData: object,
 ) => {
   try {
-    const response = await instanceAxios.patch(
-      `/tnote/user/${userId}`,
-      userData,
-    );
+    const response = await instanceAxios.patch(`/tnote/user/1`, userData);
     return response.data;
   } catch (error) {
     console.error('회원 추가정보 작성 에러', error);

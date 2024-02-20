@@ -9,6 +9,7 @@ import AddSemesterForm from './SemesterConfiguration/AddSemesterForm';
 import SemesterForm from './SemesterConfiguration/SemesterForm';
 import SemesterLayout from './SemesterLayout';
 import SemesterSetup from '../pages/SemesterSetup';
+import Callback from '../utils/Callback';
 
 const Router = () => {
   return (
@@ -26,6 +27,7 @@ const Router = () => {
         </Route>
         {/* left sidebar 없음 */}
         <Route path="/profileInfo" element={<ProfileInfo />} />
+        <Route path="/login/oauth2/code/kakao" element={<Callback />} />
       </Routes>
     </BrowserRouter>
   );

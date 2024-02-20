@@ -1,12 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 
-import {
-  IcClose,
-  IcSearch,
-  IcCloseDropdown,
-  IcOpenDropdown,
-} from '../../assets/icons';
+import { IcClose } from '../../assets/icons';
 import { Button } from '../common/styled/Button';
 import { SchoolTypeList, SchoolCityList } from './SchoolTypeList';
 import SchoolDataLoader from './SchoolDataLoader';
@@ -57,7 +52,6 @@ const SPoint = styled.span`
 interface SchoolSearchProps {
   onRequestClose: () => void;
   // onClickSubmit: (searchInput: string) => void;
-
   handleSchoolSearchInputChange: (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void;
