@@ -3,10 +3,10 @@ import instanceAxios from '../InstanceAxios';
 // 소셜로그인(회원가입)
 export const kakaoLogin = async () => {
   try {
-    const response = await instanceAxios.get('/oauth2/authorization/kakao');
+    const response = await instanceAxios.get('/oauth2/authorization/kakao'); // 카카오로 요청을 보내는 것
     // return response.data;
     const { accessToken, refreshToken } = response.data; // 예상되는 서버 응답 구조에 맞게 수정
-    console.log('response.data:', response.data);
+    console.log('response.data:', response?.data);
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
     // .then((res) => {

@@ -10,6 +10,7 @@ import SemesterForm from './SemesterConfiguration/SemesterForm';
 import SemesterLayout from './SemesterLayout';
 import SemesterSetup from '../pages/SemesterSetup';
 import Callback from '../utils/Callback';
+import Auth from './Auth';
 
 const Router = () => {
   return (
@@ -17,6 +18,7 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route element={<HomeLayout />}>
+          <Route path="/login/oauth2/code/kakao" element={<Auth />} />
           <Route path="/home/:id" element={<Home />} />
           {/* <Route element={<SemesterLayout />}> */}
           {/* <Route path="/addSemester" element={<AddSemesterSetup />} /> */}
@@ -27,7 +29,7 @@ const Router = () => {
         </Route>
         {/* left sidebar 없음 */}
         <Route path="/profileInfo" element={<ProfileInfo />} />
-        <Route path="/login/oauth2/code/kakao" element={<Callback />} />
+        {/* <Route path="/login/oauth2/code/kakao" element={<Callback />} /> */}
       </Routes>
     </BrowserRouter>
   );
