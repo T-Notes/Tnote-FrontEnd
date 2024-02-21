@@ -4,7 +4,13 @@ import { Link, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userDataId } from '../../utils/lib/atom';
 
-import { IcLogo, IcProfile } from '../../assets/icons';
+import {
+  IcArchive,
+  IcHome,
+  IcLogo,
+  IcProfile,
+  IcTimetable,
+} from '../../assets/icons';
 import { getUserInfo } from '../../utils/lib/api';
 import Setting from '../Setting/Setting';
 import { useToggle } from '../../utils/useHooks/useToggle';
@@ -13,8 +19,8 @@ import { useToggle } from '../../utils/useHooks/useToggle';
 const SLeftSidebar = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 16rem;
+  /* align-items: center; */
+  width: 220px;
   height: 100vh;
   flex-shrink: 0;
   background-color: ${({ theme }) => theme.colors.blue400};
@@ -22,6 +28,52 @@ const SLeftSidebar = styled.div`
   top: 0; /* 맨 위에 고정 */
   left: 0; /* 맨 왼쪽에 고정 */
   border-right: 1px solid #ccc; /* 우측에 경계선 추가 (선택사항) */
+`;
+const SCategory = styled.div`
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 35px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f0ebff;
+  }
+`;
+const SLogo = styled.div`
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+`;
+const SCategoryText = styled.div`
+  ${({ theme }) => theme.fonts.category};
+  color: ${({ theme }) => theme.colors.gray400};
+  margin-left: 3px;
+`;
+const SUserProfileInfoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  width: 220px;
+  height: 83px;
+  border: none;
+  border-top: 1px solid #d5d5d5;
+  position: fixed;
+  bottom: 0;
+  padding: 15px;
+`;
+const SUserProfile = styled.div`
+  margin-left: 3px;
+`;
+const SUserName = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.gray800};
+`;
+const SUserEmail = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.gray800};
 `;
 
 const HomeNavigationBar = () => {
@@ -56,25 +108,40 @@ const HomeNavigationBar = () => {
 
   return (
     <SLeftSidebar>
-      <IcLogo />
-      <Link to="/home/:id">
-        <div>홈화면</div>
-      </Link>
+      <SLogo>
+        <IcLogo />
+      </SLogo>
+      <>
+        <SCategory>
+          <IcHome />
+          <Link to="/home/:id">
+            <SCategoryText>홈화면</SCategoryText>
+          </Link>
+        </SCategory>
 
-      {/* 아카이브 이동 라우팅 만들기 */}
-      <div>아카이브</div>
-
-      <Link to="/timetable/:id">
-        <div>시간표</div>
-      </Link>
-
-      <div onClick={handleChangeToggle}>
+        {/* 아카이브 이동 라우팅 만들기 */}
+        <SCategory>
+          <IcArchive />
+          <SCategoryText>아카이브</SCategoryText>
+        </SCategory>
+        <SCategory>
+          <IcTimetable />
+          <Link to="/timetable/:id">
+            <SCategoryText>시간표</SCategoryText>
+          </Link>
+        </SCategory>
+      </>
+      <SUserProfileInfoWrapper>
         <IcProfile />
-        {`${data.name} 선생님`}
-        <br />
-        {data.email}
-      </div>
-      {isToggle && <Setting />}
+        <SUserProfile>
+          <SUserName onClick={handleChangeToggle}>
+            {`${data.name} 선생님`}
+            <SUserEmail>{data.email}</SUserEmail>
+          </SUserName>
+        </SUserProfile>
+
+        {isToggle && <Setting />}
+      </SUserProfileInfoWrapper>
     </SLeftSidebar>
   );
 };
