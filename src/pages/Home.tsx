@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import HomeHeader from '../components/Home/HomeHeader';
+import SemesterMenu from '../components/Home/SemesterMenu';
 import RemainingDays from '../components/Home/RemainingDays';
 import ScheduleCalendar from '../components/Home/ScheduleCalendar';
 import TaskSidebar from '../components/Home/TaskSidebar';
@@ -18,7 +18,7 @@ const Home = () => {
   const { id } = useParams();
   return (
     <SHomeWrapper>
-      <HomeHeader />
+      <SemesterMenu />
       <RemainingDays />
       <TodaySchedule />
       <ScheduleCalendar />
