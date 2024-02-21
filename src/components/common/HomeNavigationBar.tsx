@@ -113,24 +113,26 @@ const HomeNavigationBar = () => {
         <IcLogo />
       </SLogo>
       <>
-        <SCategory>
-          <IcHome />
-          <Link to="/home/:id">
+        <Link to="/home/:id">
+          <SCategory>
+            <IcHome />
             <SCategoryText>홈화면</SCategoryText>
-          </Link>
-        </SCategory>
+          </SCategory>
+        </Link>
 
-        {/* 아카이브 이동 라우팅 만들기 */}
-        <SCategory>
-          <IcArchive />
-          <SCategoryText>아카이브</SCategoryText>
-        </SCategory>
-        <SCategory>
-          <IcTimetable />
-          <Link to="/timetable/:id">
+        {/* 아카이브 이동 라우팅 변경하기 */}
+        <Link to="/home/:id">
+          <SCategory>
+            <IcArchive />
+            <SCategoryText>아카이브</SCategoryText>
+          </SCategory>
+        </Link>
+        <Link to="/timetable/:id">
+          <SCategory>
+            <IcTimetable />
             <SCategoryText>시간표</SCategoryText>
-          </Link>
-        </SCategory>
+          </SCategory>
+        </Link>
       </>
       <SUserProfileInfoWrapper>
         <IcProfile />
