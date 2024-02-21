@@ -22,9 +22,7 @@ const Router = () => {
         <Route path="/login/oauth2/code/kakao" element={<Callback />} />
         <Route element={<HomeLayout />}>
           <Route path="/home/:id" element={<Home />} />
-          {/* <Route element={<SemesterLayout />}> */}
           <Route path="/semesterSetup/:id" element={<SemesterSetup />} />
-          {/* </Route> */}
           <Route path="/timetable/:id" element={<Timetable />} />
         </Route>
 
