@@ -9,10 +9,11 @@ import TodaySchedule from '../components/Home/TodaySchedule';
 import WriteButton from '../components/Write/WriteButton';
 
 const SHomeWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 250px;
+  right: 0;
+  bottom: 0;
 `;
 const Home = () => {
   const { id } = useParams();
@@ -23,7 +24,7 @@ const Home = () => {
       <TodaySchedule />
       <ScheduleCalendar />
       <WriteButton />
-      {/* <TaskSidebar /> */}
+      <TaskSidebar />
     </SHomeWrapper>
   );
 };
