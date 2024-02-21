@@ -34,8 +34,8 @@ const KakaoLoginBtn = ({ onWarning, isChecked }: LoginProps) => {
   const handleLogin = () => {
     if (isChecked) {
       window.location.replace(
-        'http://54.180.14.127:8080/oauth2/authorization/kakao',
-      );
+        'http://j9972.kr:8080/oauth2/authorization/kakao',
+      ); //이동 주소
       // 테스트용
       // window.location.assign(
       //   'http://localhost:3000/oauth2/authorization/kakao',
