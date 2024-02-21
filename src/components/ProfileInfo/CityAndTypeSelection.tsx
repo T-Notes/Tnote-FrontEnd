@@ -26,14 +26,19 @@ const SPoint = styled.span`
 interface SelectionProps {
   label: string;
   value: string;
-
-  dropdownListComponent: React.ReactNode;
+  isDropdown: boolean;
+  openDropdown: () => void;
+  closeDropdown: () => void;
+  dropdownList: React.ReactNode;
 }
 
 const CityAndTypeSelection = ({
   label,
   value,
-  dropdownListComponent,
+  dropdownList,
+  isDropdown,
+  openDropdown,
+  closeDropdown,
 }: SelectionProps) => {
   return (
     <SInputContainer>
@@ -48,7 +53,10 @@ const CityAndTypeSelection = ({
             theme={{ background: 'blue400' }}
             placeholder="옵션을 선택해주세요"
             value={value}
-            dropdownList={dropdownListComponent}
+            isDropdown={isDropdown}
+            openDropdown={openDropdown}
+            closeDropdown={closeDropdown}
+            dropdownList={dropdownList}
           ></DropdownInput>
         </SDropdownInput>
       </SInputBox>
