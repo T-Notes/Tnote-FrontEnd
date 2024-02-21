@@ -11,8 +11,8 @@ import WriteButton from '../components/Write/WriteButton';
 const SHomeWrapper = styled.div`
   position: absolute;
   top: 0;
-  left: 250px;
-  right: 0;
+  left: 230px; // 사이드바에서 30px 띄우기
+  right: 330px; // 사이드바에서 30px 띄우기
   bottom: 0;
 `;
 const Home = () => {
