@@ -64,6 +64,7 @@ const SUserProfileInfoWrapper = styled.div`
 `;
 const SUserProfile = styled.div`
   margin-left: 3px;
+  cursor: pointer;
 `;
 const SUserName = styled.div`
   font-size: 16px;
