@@ -20,7 +20,7 @@ const SLeftSidebar = styled.div`
   display: flex;
   flex-direction: column;
   /* align-items: center; */
-  width: 220px;
+  width: 200px;
   height: 100vh;
   flex-shrink: 0;
   background-color: ${({ theme }) => theme.colors.blue400};
@@ -41,10 +41,10 @@ const SCategory = styled.div`
   }
 `;
 const SLogo = styled.div`
-  padding-left: 30px;
+  padding-left: 20px;
   padding-right: 30px;
-  padding-top: 25px;
-  padding-bottom: 25px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 `;
 const SCategoryText = styled.div`
   ${({ theme }) => theme.fonts.category};
@@ -54,7 +54,7 @@ const SCategoryText = styled.div`
 const SUserProfileInfoWrapper = styled.div`
   display: flex;
   align-items: center;
-  width: 220px;
+  width: 200px;
   height: 83px;
   border: none;
   border-top: 1px solid #d5d5d5;
