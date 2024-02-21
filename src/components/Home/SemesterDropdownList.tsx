@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 const SSemesterWrapper = styled.div`
   width: 300px;
-  height: 100px;
   border-radius: 8px;
   background-color: white;
   box-shadow: 0px 6px 15px 0px #00000033;
