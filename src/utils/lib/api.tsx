@@ -22,7 +22,10 @@ export const updateUserInfo = async (
   userData: object,
 ) => {
   try {
-    const response = await instanceAxios.patch(`/tnote/user/1`, userData);
+    const response = await instanceAxios.patch(
+      `/tnote/user/${userId}`,
+      userData,
+    );
     return response.data;
   } catch (error) {
     console.error('회원 추가정보 작성 에러', error);
