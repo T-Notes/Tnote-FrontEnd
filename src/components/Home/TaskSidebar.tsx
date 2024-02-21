@@ -12,12 +12,24 @@ const STaskSidebarWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.blue400};
-  width: 408px;
+  width: 300px;
   height: 100vh;
   position: fixed;
   right: 0;
   top: 0;
-  align-items: center;
+  padding-left: 20px;
+`;
+const SFont = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+  padding-top: 20px;
+  padding-bottom: 20px;
+`;
+const SDateFont = styled.div`
+  font-size: 20px;
+  font-weight: 500;
+  padding-top: 20px;
+  padding-bottom: 20px;
 `;
 
 const TaskSidebar = () => {
@@ -32,8 +44,15 @@ const TaskSidebar = () => {
 
   return (
     <STaskSidebarWrapper>
-      <div>{`${year}년 ${month + 1}월 ${day}일`}</div>
-      <Todo />
+      <SDateFont>{`${year}년 ${month + 1}월 ${day}일`}</SDateFont>
+      <div>
+        <SFont>To do</SFont>
+        <Todo />
+      </div>
+      <SFont>학급 일지</SFont>
+      <SFont>업무 일지</SFont>
+      <SFont>관찰 일지</SFont>
+      <SFont>상담 일지</SFont>
     </STaskSidebarWrapper>
   );
 };

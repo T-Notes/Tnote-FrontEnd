@@ -6,8 +6,8 @@ import TodoListInput from './TodoListInput';
 
 const SAddTodo = styled(Button)`
   background-color: ${({ theme }) => theme.colors.purple100};
-  width: 350px;
-  height: 50px;
+  width: 260px;
+  height: 40px;
   color: ${({ theme }) => theme.colors.white};
 `;
 const Todo = () => {
@@ -23,7 +23,7 @@ const Todo = () => {
   };
   return (
     <>
-      <div>To do</div>
+      {/* <div>To do</div> */}
       {todoInputs.map(
         (todoInput) =>
           todoInput.isVisible && <TodoListInput key={todoInput.id} />,
