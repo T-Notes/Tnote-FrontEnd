@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import HomeHeader from '../components/Home/HomeHeader';
+import SemesterMenu from '../components/Home/SemesterMenu';
 import RemainingDays from '../components/Home/RemainingDays';
 import ScheduleCalendar from '../components/Home/ScheduleCalendar';
 import TaskSidebar from '../components/Home/TaskSidebar';
@@ -9,21 +9,22 @@ import TodaySchedule from '../components/Home/TodaySchedule';
 import WriteButton from '../components/Write/WriteButton';
 
 const SHomeWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 230px; // 사이드바에서 30px 띄우기
+  right: 330px; // 사이드바에서 30px 띄우기
+  bottom: 0;
 `;
 const Home = () => {
   const { id } = useParams();
   return (
     <SHomeWrapper>
-      <HomeHeader />
+      <SemesterMenu />
       <RemainingDays />
       <TodaySchedule />
       <ScheduleCalendar />
       <WriteButton />
-      {/* <TaskSidebar /> */}
+      <TaskSidebar />
     </SHomeWrapper>
   );
 };

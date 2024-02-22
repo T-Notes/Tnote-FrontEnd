@@ -68,6 +68,7 @@ const fonts = {
   caption2: FONT({ weight: 500, size: 20, height: 24 }),
   caption3: FONT({ weight: 500, size: 14, height: 16 }),
   caption4: FONT({ weight: 500, size: 12, height: 14 }),
+  category: FONT({ weight: 400, size: 16, height: 16 }),
   dateText: FONT({ weight: 700, size: 12, height: 14 }),
 };
 

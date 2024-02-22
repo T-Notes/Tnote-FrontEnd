@@ -22,3 +22,6 @@ export { ReactComponent as IcPen } from './penIcon.svg';
 export { ReactComponent as IcLogoHeader } from './logoHeaderIcon.svg';
 export { ReactComponent as IcOpenDropdownSmall } from './openDropdownSmall.svg';
 export { ReactComponent as IcCloseDropdownSmall } from './closeDropdownSmall.svg';
+export { ReactComponent as IcHome } from './homeIcon.svg';
+export { ReactComponent as IcArchive } from './archiveIcon.svg';
+export { ReactComponent as IcTimetable } from './timetableIcon.svg';

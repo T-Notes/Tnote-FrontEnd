@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 
 const instanceAxios: AxiosInstance = axios.create({
-  baseURL: 'http://54.180.14.127:8080', //기본 url설정
+  baseURL: 'http://j9972.kr', //기본 url설정
   timeout: 5000, // 무한대기 현상 방지와 리소스 낭비를 줄이기 위해 설정
   headers: {
     'Content-Type': 'application/json',

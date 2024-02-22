@@ -1,3 +1,4 @@
+import React, { ReactNode, useState } from 'react';
 import styled from 'styled-components';
 import { IcCloseDropdownSmall, IcOpenDropdownSmall } from '../../assets/icons';
 import { useToggle } from '../../utils/useHooks/useToggle';
@@ -52,28 +53,36 @@ interface DropdownProps {
   theme: {
     background: string;
   };
-  dropdownList: any;
+  dropdownList: ReactNode;
+  isDropdown: boolean;
+  openDropdown: () => void;
+  closeDropdown: () => void;
 }
 const DropdownInput = (props: DropdownProps) => {
-  const { placeholder, value, size, theme, dropdownList } = props;
-  const { isToggle, handleChangeToggle } = useToggle();
+  const {
+    placeholder,
+    value,
+    size,
+    theme,
+    dropdownList,
+    isDropdown,
+    openDropdown,
+    closeDropdown,
+  } = props;
 
   return (
     <>
       <SDropdownInputWrapper size={size} theme={theme}>
         <SDropdownInput placeholder={placeholder} value={value} readOnly />
-        {isToggle ? (
-          <IcCloseDropdownSmall
-            onClick={handleChangeToggle}
-            className="pointer"
-          />
+        {isDropdown ? (
+          <IcCloseDropdownSmall onClick={closeDropdown} className="pointer" /> // 드롭다운이 true니까 닫아주기
         ) : (
           <IcOpenDropdownSmall
-            onClick={handleChangeToggle}
+            onClick={openDropdown} // 드롭다운이 false이므로 클릭하면 오픈하기
             className="pointer"
           />
         )}
-        {isToggle && dropdownList}
+        {isDropdown && dropdownList}
       </SDropdownInputWrapper>
     </>
   );
