@@ -76,6 +76,8 @@ export interface UserDataProps {
 
 const UserInfoForm = () => {
   const { id } = useParams();
+  const userId = localStorage.getItem('userId'); // 로컬스토리지에 담긴 UserId 받아오기
+
   const [userName, setUserName] = useState<string>(''); // 하드 코딩된 부분
   const [userData, setUserData] = useState<UserDataProps>({
     schoolName: '',
@@ -94,17 +96,21 @@ const UserInfoForm = () => {
 
   // 로그인된 유저 정보 렌더링 되자마자 가져오기
   useEffect(() => {
-    const getUserName = async () => {
-      try {
-        await instanceAxios.get(`/tnote/user/${id}`).then((res) => {
-          setUserName(res.data.name);
-        });
-      } catch (err) {
-        console.log('유저의 이름정보를 가져오는데 실패했습니다.', err);
-      }
-    };
-    getUserName();
-  }, []);
+    if (userId) {
+      const getUserName = async () => {
+        try {
+          await instanceAxios.get(`/tnote/user/${userId}`).then((res) => {
+            const userData = res.data.data;
+            console.log('res', userData.name);
+            setUserName(userData.name);
+          });
+        } catch (err) {
+          console.log('유저의 이름정보를 가져오는데 실패했습니다.', err);
+        }
+      };
+      getUserName();
+    }
+  }, [userId]);
 
   // 회원 추가 정보 작성 폼 전송
   const handleUserInfoSubmit = async () => {
@@ -115,7 +121,7 @@ const UserInfoForm = () => {
         career: userData.career,
         alarm: userData.alarm,
       };
-      await updateUserInfo(id, updatedUserData);
+      await updateUserInfo(userId, updatedUserData);
     } catch {}
   };
 

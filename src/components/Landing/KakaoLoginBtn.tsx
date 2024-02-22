@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { IcKakao } from '../../assets/icons';
 import instanceAxios from '../../utils/InstanceAxios';
-import { kakaoLogin } from '../../utils/lib/api';
+// import { kakaoLogin } from '../../utils/lib/api';
 
 //styled //
 const SKakaoLoginBtn = styled.button`
@@ -29,7 +29,6 @@ interface LoginProps {
   isChecked: boolean;
 }
 const KakaoLoginBtn = ({ onWarning, isChecked }: LoginProps) => {
-  const navigate = useNavigate();
   const [token, setToken] = useState<any>();
   const handleLogin = () => {
     if (isChecked) {
@@ -39,37 +38,6 @@ const KakaoLoginBtn = ({ onWarning, isChecked }: LoginProps) => {
     }
   };
 
-  const handleTokenAndRedirect = async () => {
-    console.log('리다이렉트!');
-    try {
-      // 토큰을 받아오는 API 호출 (예시 코드)
-      const accessToken = await kakaoLogin(); // 토큰을 받아오는 함수는 실제 구현에 맞게 변경되어야 합니다.
-
-      // 받아온 토큰을 로컬 스토리지에 저장
-      // localStorage.setItem('accessToken', accessToken);
-
-      // /home 페이지로 리다이렉트
-      navigate('/home');
-    } catch (error) {
-      console.error('토큰을 받아오는 중에 오류가 발생했습니다:', error);
-      // 오류 처리
-    }
-    const login = async () => {
-      try {
-        const accessToken = await kakaoLogin();
-        setToken(accessToken);
-        console.log('accessToken:', accessToken);
-      } catch (err) {
-        console.log('err', err);
-      }
-    };
-  };
-
-  // 카카오 로그인 버튼 클릭 핸들러
-  // const handleClick = () => {
-  //   handleLogin();
-  //   handleTokenAndRedirect(); // 로그인 후 토큰을 받아오고 /home 페이지로 이동하는 함수 호출
-  // };
   return (
     <SKakaoLoginBtn onClick={handleLogin}>
       <SKaKao />

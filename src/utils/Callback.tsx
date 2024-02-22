@@ -1,65 +1,46 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { kakaoLogin } from './lib/api';
+import { useNavigate } from 'react-router-dom';
 import instanceAxios from './InstanceAxios';
 
 const Callback = () => {
-  console.log(2, '실행!');
+  console.log('실행!');
   const navigate = useNavigate();
+  const code = new URL(window.location.href).searchParams.get('code'); // 인가코드 받아보기
 
-  const [code, setCode] = useState<string | null>(null);
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-
-  // 특정 키에 해당하는 쿼리 파라미터 값 가져오기
-  const myParamValue = queryParams.get('code');
-
+  // 서버에 인가코드 넘겨주고, 토큰 값 받아오기
+  // 기존회원과 새회원 구분하여 페이지 이동하기
+  // 로그인을 해서 받아오는 정보에 회원정보 폼까지 작성한 유저인지, 아닌지 구분이 필요!
+  // 내 생각: 추가 회원정보 폼까지 다 작성한 유저라면, /home/id
+  // 그 이외에는 전부 /profileInfo
   const getToken = async () => {
-    await instanceAxios
-      .get(
-        `http://j9972.kr/login/oauth2/code/kakao?code=${code}&state=2vmvEBbhSq4ujp1WQbL1eh3VwSSGX6zck1AFq4XAXro%3D`,
-      )
-      .then(({ data }) => {
-        console.log('TOKEN:', data);
-        navigate('/profileInfo');
-      })
-      .catch((e) => {
-        console.log('ERRORE:', e);
-      });
-  };
+    try {
+      await instanceAxios
+        .get(
+          `http://j9972.kr/login/oauth2/code/kakao?code=${code}&state=2vmvEBbhSq4ujp1WQbL1eh3VwSSGX6zck1AFq4XAXro%3D`,
+        )
+        .then((res) => {
+          const data = res.data.data;
+          localStorage.setItem('accessToken', data.accessToken);
+          localStorage.setItem('refreshToken', data.refreshToken);
+          localStorage.setItem('userId', data.userId);
 
-  useEffect(() => {
-    setCode(myParamValue);
-  }, []);
+          navigate('/profileInfo');
+        });
+    } catch (err) {
+      console.log('err', err);
+    }
+  };
 
   useEffect(() => {
     getToken();
   }, [code]);
 
-  // useEffect(() => {
-  //   const getTokens = async () => {
-  //     try {
-  //       const accessToken = localStorage.getItem('accessToken');
-  //       const refreshToken = localStorage.getItem('refreshToken');
-
-  //       if (!accessToken || !refreshToken) {
-  //         // 토큰이 없을 때 카카오 로그인을 호출합니다.
-  //         await kakaoLogin(); // kakaoLogin API를 호출하여 토큰을 받아옵니다.
-  //         // 받아온 토큰을 가지고 원하는 페이지로 리다이렉트합니다.
-  //         navigate('/profileInfo');
-  //       } else {
-  //         // 토큰이 이미 있으면 원하는 페이지로 리다이렉트합니다.
-  //         navigate('/home/:id');
-  //       }
-  //     } catch (error) {
-  //       console.error('토큰 가져오기 실패:', error);
-  //     }
-  //   };
-
-  //   getTokens();
-  // }, [navigate]);
-
-  return null; // 이 컴포넌트는 렌더링하지 않음
+  return (
+    <>
+      <div>잠시만 기다려주세요!</div>
+      <p>회원님의 정보를 가져오는 중입니다.</p>
+    </>
+  );
 };
 
 export default Callback;
