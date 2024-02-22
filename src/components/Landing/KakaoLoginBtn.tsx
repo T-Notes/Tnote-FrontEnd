@@ -33,13 +33,7 @@ const KakaoLoginBtn = ({ onWarning, isChecked }: LoginProps) => {
   const [token, setToken] = useState<any>();
   const handleLogin = () => {
     if (isChecked) {
-      window.location.replace(
-        'http://j9972.kr:8080/oauth2/authorization/kakao',
-      ); //이동 주소
-      // 테스트용
-      // window.location.assign(
-      //   'http://localhost:3000/oauth2/authorization/kakao',
-      // );
+      window.location.assign('http://j9972.kr/oauth2/authorization/kakao'); //카카오 oauth url이동 주소
     } else {
       onWarning(true);
     }

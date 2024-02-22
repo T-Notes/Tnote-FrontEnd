@@ -25,8 +25,6 @@ const Router = () => {
           <Route path="/semesterSetup/:id" element={<SemesterSetup />} />
           <Route path="/timetable/:id" element={<Timetable />} />
         </Route>
-
-        {/* http://j9972.kr/login/oauth2/code/kakao  리다이렉트 주소 */}
       </Routes>
     </BrowserRouter>
   );
