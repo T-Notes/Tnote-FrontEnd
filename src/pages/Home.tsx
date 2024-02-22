@@ -15,13 +15,19 @@ const SHomeWrapper = styled.div`
   right: 330px; // 사이드바에서 30px 띄우기
   bottom: 0;
 `;
+const SDayAndScheduleWrapper = styled.div`
+  display: flex;
+`;
 const Home = () => {
   const { id } = useParams();
   return (
     <SHomeWrapper>
       <SemesterMenu />
-      <RemainingDays />
-      <TodaySchedule />
+      <SDayAndScheduleWrapper>
+        <RemainingDays />
+        <TodaySchedule />
+      </SDayAndScheduleWrapper>
+
       <ScheduleCalendar />
       <WriteButton />
       <TaskSidebar />
