@@ -34,7 +34,8 @@ const KakaoLoginBtn = ({ onWarning, isChecked }: LoginProps) => {
   const handleLogin = () => {
     if (isChecked) {
       window.location.replace(
-        'http://j9972.kr:8080/oauth2/authorization/kakao',
+        // 'https://kauth.kakao.com/oauth/authorize?client_id=1fd36738c302aa9ef386829b6c07690a&redirect_uri=http://localhost:3000/login/oauth2/code/kakao&response_type=code',
+        'http://j9972.kr/oauth2/authorization/kakao'
       ); //이동 주소
       // 테스트용
       // window.location.assign(
