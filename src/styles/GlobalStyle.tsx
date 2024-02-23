@@ -8,7 +8,7 @@ const GlobalStyle = createGlobalStyle`
       
         &::-webkit-scrollbar {
     background-color: transparent;
-    width: 0.6rem;
+    width: 0.5rem;
     
   }
 
@@ -17,8 +17,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   &::-webkit-scrollbar-thumb {
-    height: 10rem;
-    border-radius: 1.6rem;
+    height: 3.2rem;
+    border-radius: 4px;
     background-color: ${({ theme }) => theme.colors.gray900};
   }
 

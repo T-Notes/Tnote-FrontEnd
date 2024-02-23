@@ -40,9 +40,15 @@ const SButton = styled(Button)`
 `;
 
 const SInputBox = styled.div`
+  /* position: relative; */
   display: flex;
   align-items: center;
   margin-bottom: 40px;
+`;
+
+const SSearchWrapper = styled.div`
+  position: relative;
+  margin-left: auto;
 `;
 const SLabel = styled.label`
   ${({ theme }) => theme.fonts.caption};
@@ -50,7 +56,7 @@ const SLabel = styled.label`
 `;
 
 const SSearchInputWrapper = styled.div`
-  margin-left: auto;
+  /* margin-left: auto; */
 `;
 const SPoint = styled.span`
   color: ${({ theme }) => theme.colors.purple100};
@@ -65,7 +71,7 @@ interface searchModalProps {
 }
 interface ResultsProps {
   region: string;
-  gubun: string;
+  schoolType: string;
   schoolName: string;
 }
 
@@ -73,7 +79,7 @@ const UserSchoolForm = (props: searchModalProps) => {
   const { isOpen, onRequestClose, userData, setUserData } = props;
   const [schoolSearchData, setSchoolSearchData] = useState<ResultsProps>({
     region: '',
-    gubun: '',
+    schoolType: '',
     schoolName: '',
   });
   // 드롭다운 상태 제어 코드 추가
@@ -101,17 +107,15 @@ const UserSchoolForm = (props: searchModalProps) => {
       region: region,
     }));
     closeRegionDropdown(); //옵션 선택 후 드롭다운 닫기
-    // setIsCityDropdownOpen(false); // 옵션 선택 후 드롭다운 닫기
   };
 
-  const handleSelectedGubunOption = (gubun: string) => {
+  const handleSelectedGubunOption = (schoolType: string) => {
     //수정 코드
     setSchoolSearchData((prev) => ({
       ...prev,
-      gubun: gubun,
+      schoolType: schoolType,
     }));
     closeGubunDropdown(); //옵션 선택 후 드롭다운 닫기
-    // setIsTypeDropdownOpen(false);
   };
 
   const handleSchoolSearchInputChange = (
@@ -130,10 +134,10 @@ const UserSchoolForm = (props: searchModalProps) => {
   //유저가 선택한 학교이름
   const handleSelectedSchool = (schoolName: string) => {
     // 서버에 학교 검색 조회를 하기 위해서 schoolData에 값 전달해야함 => 서버에는 입력값만 보내면 되지 않음?
-    // setSchoolSearchData((prevUserData) => ({
-    //   ...prevUserData,
-    //   schoolName: schoolName,
-    // }));
+    setSchoolSearchData((prevUserData) => ({
+      ...prevUserData,
+      schoolName: schoolName,
+    }));
     // 유저 추가 정보 내용을 patch하기 위해 담아주는 값
     setUserData((prevUserData) => ({
       ...prevUserData,
@@ -171,7 +175,7 @@ const UserSchoolForm = (props: searchModalProps) => {
             {/* 학교 분류  */}
             <CityAndTypeSelection
               label="학교분류"
-              value={schoolSearchData.gubun}
+              value={schoolSearchData.schoolType}
               isDropdown={isGubunDropdownOpen}
               openDropdown={openGubunDropdown}
               closeDropdown={closeGubunDropdown}
@@ -189,7 +193,7 @@ const UserSchoolForm = (props: searchModalProps) => {
                 학교명
                 <SPoint>*</SPoint>
               </SLabel>
-              <SSearchInputWrapper>
+              <SSearchWrapper>
                 <SearchInput
                   size="small"
                   theme={{ background: 'blue400' }}
@@ -197,12 +201,12 @@ const UserSchoolForm = (props: searchModalProps) => {
                   placeholder="텍스트를 입력하세요"
                   value={schoolSearchData.schoolName}
                 ></SearchInput>
-              </SSearchInputWrapper>
 
-              <SchoolDataLoader
-                schoolData={schoolSearchData}
-                handleSelectedSchool={handleSelectedSchool}
-              />
+                <SchoolDataLoader
+                  schoolData={schoolSearchData}
+                  handleSelectedSchool={handleSelectedSchool}
+                />
+              </SSearchWrapper>
             </SInputBox>
 
             <SButton onClick={() => {}}>확인</SButton>
