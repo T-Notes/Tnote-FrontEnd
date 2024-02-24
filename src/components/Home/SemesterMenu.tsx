@@ -7,6 +7,7 @@ import AllSemesterNamesForm from './AllSemesterNamesForm';
 const SSemesterMenuWrapper = styled.div`
   display: flex;
   align-items: center;
+  margin-top: 20px;
 `;
 const SButton = styled.button`
   ${({ theme }) => theme.fonts.h4}

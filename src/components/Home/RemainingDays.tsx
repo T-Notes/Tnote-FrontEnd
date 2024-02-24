@@ -5,17 +5,28 @@ import instanceAxios from '../../utils/InstanceAxios';
 import { getRemainingDayData } from '../../utils/lib/api';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 
-const SFont = styled.div`
-  font-size: 20px;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.gray000};
-`;
-
 const SRemainingDayWrapper = styled.div`
   display: flex;
   flex-direction: column;
+`;
+const SFont = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.gray000};
+  padding-left: 10px;
+  margin-bottom: 10px;
+  margin-top: 30px;
+`;
+const SDayBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 250px;
   height: 80px;
+  padding: 10px;
+  color: ${({ theme }) => theme.colors.gray100};
+  ${({ theme }) => theme.fonts.button};
   background-color: ${({ theme }) => theme.colors.blue400};
 `;
 const SRemainingDay = styled.p``;
@@ -41,12 +52,12 @@ const RemainingDays = () => {
   }, []);
 
   return (
-    <>
+    <SRemainingDayWrapper>
       <SFont>이번 학기 남은 일수</SFont>
-      <SRemainingDayWrapper>
+      <SDayBox>
         <SRemainingDay>{remainingDay || '생성된 학기 없음'}</SRemainingDay>
-      </SRemainingDayWrapper>
-    </>
+      </SDayBox>
+    </SRemainingDayWrapper>
   );
 };
 

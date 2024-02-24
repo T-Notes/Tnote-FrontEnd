@@ -18,6 +18,10 @@ const STaskSidebarWrapper = styled.div`
   right: 0;
   top: 0;
   padding-left: 20px;
+
+  @media (max-width: 1080px) {
+    display: none;
+  }
 `;
 const SFont = styled.div`
   font-size: 18px;

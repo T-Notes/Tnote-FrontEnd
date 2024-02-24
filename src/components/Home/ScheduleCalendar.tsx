@@ -14,8 +14,12 @@ import {
   isSameMonth,
   isWeekend,
 } from 'date-fns';
-// import TodayBtn from './TodayBtn';
-// import AddScheduleBtn from './AddScheduleBtn';
+
+const SCalendarWrapper = styled.div`
+  /* border: 1px solid black; */
+  width: 100%;
+  height: 500px;
+`;
 
 const SCalendarHeader = styled.div`
   display: flex;
@@ -25,36 +29,39 @@ const SCalendarHeader = styled.div`
   margin-bottom: 10px;
 `;
 const SCalendarDate = styled.div`
-  padding-left: 20px;
+  height: 400px;
 `;
 
 const SWeekBox = styled.div`
   display: flex;
-  width: 70%;
-  padding: 10px 0px;
+
+  width: 100%;
+  /* padding: 10px 0px; */
   justify-content: space-around;
   border-bottom: 5px solid gray;
+  background-color: ${({ theme }) => theme.colors.blue400};
+  font-size: 14px;
+  font-weight: 600;
+  color: #2f2f2f;
 `;
 const SWeek = styled.div`
-  font-weight: bold;
-  width: 100%;
+  padding: 10px;
 `;
 const SDaysBox = styled.div`
   display: flex;
-  width: 70%;
+  width: 100%;
+  height: 100%; // 이 값의 설정에 따라 내부 달력 높이가 달라짐
   flex-wrap: wrap;
 `;
 const SDays = styled.div`
   border: 1px solid #ccc;
   border-top: none;
+  flex: 1;
+  height: auto;
   flex: 1 0 14%; // 한 줄에 요소 아이템이 7개씩 들어가도록 간격 맞추기
-  padding-bottom: 100px;
-  padding-top: 5px;
+  padding: 5px;
 `;
 
-const SCalendarWrapper = styled.div`
-  border: 1px solid black;
-`;
 const ScheduleCalendar = () => {
   const { currentDate, handlePrevMonth, handleNextMonth, setCurrentDate } =
     useCurrentDate();
@@ -86,11 +93,9 @@ const ScheduleCalendar = () => {
 
       <SCalendarDate>
         <SWeekBox>
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(
-            (week, index) => (
-              <SWeek key={index}>{week}</SWeek>
-            ),
-          )}
+          {['일', '월', '화', '수', '목', '금', '토'].map((week, index) => (
+            <SWeek key={index}>{week}</SWeek>
+          ))}
         </SWeekBox>
         <SDaysBox>
           {days.map((day, index) => (

@@ -1,5 +1,31 @@
 import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 
+const STodayScheduleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 30px;
+`;
+const SFont = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.gray000};
+  margin-bottom: 10px;
+  margin-top: 30px;
+  padding-left: 10px;
+`;
+const SClass = styled.div`
+  color: ${({ theme }) => theme.colors.gray000};
+  font-size: 12px;
+  font-weight: 600;
+  padding: 10px;
+`;
+const SSchedule = styled.div`
+  display: flex;
+  /* width: 250px; */
+  height: 80px;
+  background-color: ${({ theme }) => theme.colors.blue400};
+`;
 const TodaySchedule = () => {
   const [lastClass, setLastClass] = useState<string>('9교시');
   const lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
@@ -30,12 +56,17 @@ const TodaySchedule = () => {
 
   return (
     <>
-      <div>{/* 선택한 교시까지의 시간표 출력 */}</div>
-      {Array.from({ length: lastClassNumber }, (_, index) => index + 1).map(
-        (hour) => (
-          <div key={hour}>{timetables[hour]}</div>
-        ),
-      )}
+      <STodayScheduleWrapper>
+        <SFont>오늘 수업 일정</SFont>
+        <SSchedule>
+          {/* 선택한 교시까지의 시간표 출력 */}
+          {Array.from({ length: lastClassNumber }, (_, index) => index + 1).map(
+            (hour) => (
+              <SClass key={hour}>{timetables[hour]}</SClass>
+            ),
+          )}
+        </SSchedule>
+      </STodayScheduleWrapper>
     </>
   );
 };

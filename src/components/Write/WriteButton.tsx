@@ -6,16 +6,16 @@ import { ModalBackground } from '../common/styled/ModalLayout';
 import WriteFormModal from './WriteFormModal';
 
 const SWriteBtn = styled.button`
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   position: fixed;
-  bottom: 2%;
-  left: 14%;
-  border-radius: 82px;
+  left: 200px;
+  bottom: 20px;
+  border-radius: 50%;
   padding: 10px;
   background-color: ${({ theme }) => theme.colors.purple100};
   color: ${({ theme }) => theme.colors.white};
-  ${({ theme }) => theme.fonts.caption1};
+  ${({ theme }) => theme.fonts.caption3};
 `;
 const WriteButton = () => {
   const { isOpen, openModal, closeModal } = useModal();
