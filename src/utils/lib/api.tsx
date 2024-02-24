@@ -62,20 +62,15 @@ export const getRemainingDayData = async (
 // 학교검색 결과 조회
 interface schoolSearchValueProps {
   region: string;
-  gubun: string;
+  schoolType: string;
   schoolName: string;
 }
 export const getSchoolSearchValue = async (
-  schoolList: schoolSearchValueProps,
+  schoolData: schoolSearchValueProps,
 ) => {
   try {
-    // return [
-    //   ['흥덕고등학교', '경기도 용인시 기흥구 흥덕2로 36(영덕동)'],
-    //   ['원종고등학교', '경기도 용인시 기흥구 흥덕2로 37(영덕동)'],
-    //   ['수주고등학교', '경기도 용인시 기흥구 흥덕2로 38(영덕동)'],
-    // ];
     const response = await instanceAxios.get('/tnote/user/school', {
-      data: schoolList,
+      params: schoolData,
     });
     return response.data;
   } catch (error) {
