@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import instanceAxios from '../../utils/InstanceAxios';
 import { useModal } from '../../utils/useHooks/useModal';
@@ -15,6 +15,8 @@ import UserSubjectForm from './UserSubjectForm';
 import UserCareerForm from './UserCareerForm';
 import UserSchoolForm from './UserSchoolForm';
 import SearchInput from '../common/SearchInput';
+import { useRecoilState } from 'recoil';
+import { userDataState } from '../../utils/lib/recoil/userDataState';
 
 const SFormWrapper = styled.div`
   display: flex;
@@ -75,24 +77,23 @@ export interface UserDataProps {
 }
 
 const UserInfoForm = () => {
-  const { id } = useParams();
+  const navigate = useNavigate();
   const userId = localStorage.getItem('userId'); // 로컬스토리지에 담긴 UserId 받아오기
+  const [user, setUser] = useRecoilState(userDataState); // 카카오 유저정보 전역관리
 
-  const [userName, setUserName] = useState<string>(''); // 하드 코딩된 부분
   const [userData, setUserData] = useState<UserDataProps>({
     schoolName: '',
     subject: '',
     career: '',
     alarm: true,
   });
-
   const { isOpen, openModal, closeModal } = useModal();
 
   // 자식 컴포넌트에서 유저가 선택한 학교명 받아오는 함수
-  // const handleSubmit = (searchInput: string) => {
-  //   closeModal();
-  //   setUserData((prevData) => ({ ...prevData, schoolName: searchInput }));
-  // };
+  const handleSubmit = (searchInput: string) => {
+    closeModal();
+    setUserData((prevData) => ({ ...prevData, schoolName: searchInput }));
+  };
 
   // 로그인된 유저 정보 렌더링 되자마자 가져오기
   useEffect(() => {
@@ -101,8 +102,12 @@ const UserInfoForm = () => {
         try {
           await instanceAxios.get(`/tnote/user/${userId}`).then((res) => {
             const userData = res.data.data;
-            console.log('res', userData.name);
-            setUserName(userData.name);
+            console.log('userData:', userData);
+            setUser({
+              ...user,
+              name: userData.name,
+              email: userData.email,
+            });
           });
         } catch (err) {
           console.log('유저의 이름정보를 가져오는데 실패했습니다.', err);
@@ -114,6 +119,7 @@ const UserInfoForm = () => {
 
   // 회원 추가 정보 작성 폼 전송
   const handleUserInfoSubmit = async () => {
+    console.log(1, '전송');
     try {
       const updatedUserData = {
         schoolName: userData.schoolName,
@@ -121,14 +127,20 @@ const UserInfoForm = () => {
         career: userData.career,
         alarm: userData.alarm,
       };
-      await updateUserInfo(userId, updatedUserData);
+      console.log(2, 'updatedUserData:', updatedUserData);
+
+      await updateUserInfo(userId, updatedUserData).then((res) => {
+        // 추가 회원정보 입력
+        navigate(`/home/${userId}`);
+      });
+      console.log(3, '3:', updatedUserData);
     } catch {}
   };
 
   return (
     <SFormWrapper>
       <SLabel htmlFor="userName">이름</SLabel>
-      <Input placeholder="이름을 입력해주세요" value={userName} readOnly />
+      <Input placeholder="이름을 입력해주세요" value={user.name} readOnly />
 
       {/* 과목 폼 */}
       <SLabel htmlFor="subject">과목</SLabel>
@@ -154,7 +166,7 @@ const UserInfoForm = () => {
           <UserSchoolForm
             isOpen={isOpen}
             onRequestClose={closeModal}
-            // onClickSubmit={handleSubmit}
+            onClickSubmit={handleSubmit}
             userData={userData}
             setUserData={setUserData}
           />

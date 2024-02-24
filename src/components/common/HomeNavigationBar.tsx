@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userDataId } from '../../utils/lib/atom';
-
+import { userDataState } from '../../utils/lib/recoil/userDataState';
 import {
   IcArchive,
   IcHome,
@@ -80,6 +80,8 @@ const SUserEmail = styled.div`
 const HomeNavigationBar = () => {
   const { id } = useParams();
   // const id = useRecoilValue(userDataId); //고민1: 서버에 넘겨줄 유저 아이디를 어디서 받아와야할까?
+  const user = useRecoilValue(userDataState);
+  console.log('user', user);
   const { isToggle, handleChangeToggle } = useToggle();
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
@@ -138,8 +140,8 @@ const HomeNavigationBar = () => {
         <IcProfile />
         <SUserProfile>
           <SUserName onClick={handleChangeToggle}>
-            {`${data.name} 선생님`}
-            <SUserEmail>{data.email}</SUserEmail>
+            {`${user.name} 선생님`}
+            <SUserEmail>{user.email}</SUserEmail>
           </SUserName>
         </SUserProfile>
 
