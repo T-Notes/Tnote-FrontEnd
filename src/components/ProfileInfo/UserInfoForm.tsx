@@ -102,7 +102,7 @@ const UserInfoForm = () => {
         try {
           await instanceAxios.get(`/tnote/user/${userId}`).then((res) => {
             const userData = res.data.data;
-            console.log('userData:', userData);
+
             setUser({
               ...user,
               name: userData.name,
@@ -119,7 +119,6 @@ const UserInfoForm = () => {
 
   // 회원 추가 정보 작성 폼 전송
   const handleUserInfoSubmit = async () => {
-    console.log(1, '전송');
     try {
       const updatedUserData = {
         schoolName: userData.schoolName,
@@ -127,13 +126,11 @@ const UserInfoForm = () => {
         career: userData.career,
         alarm: userData.alarm,
       };
-      console.log(2, 'updatedUserData:', updatedUserData);
 
       await updateUserInfo(userId, updatedUserData).then((res) => {
         // 추가 회원정보 입력
         navigate(`/home/${userId}`);
       });
-      console.log(3, '3:', updatedUserData);
     } catch {}
   };
 
