@@ -65,7 +65,7 @@ const SPoint = styled.span`
 interface searchModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
-  // onClickSubmit: (searchInput: string) => void;
+  onClickSubmit: (searchInput: string) => void;
   userData: UserDataProps;
   setUserData: React.Dispatch<React.SetStateAction<UserDataProps>>;
 }
@@ -76,7 +76,8 @@ interface ResultsProps {
 }
 
 const UserSchoolForm = (props: searchModalProps) => {
-  const { isOpen, onRequestClose, userData, setUserData } = props;
+  const { isOpen, onRequestClose, userData, setUserData, onClickSubmit } =
+    props;
   const [schoolSearchData, setSchoolSearchData] = useState<ResultsProps>({
     region: '',
     schoolType: '',
@@ -128,7 +129,6 @@ const UserSchoolForm = (props: searchModalProps) => {
       ...searchValue,
       schoolName: userInputChange,
     }));
-    console.log('유저가 입력한 값:', userInputChange);
   };
 
   //유저가 선택한 학교이름
@@ -209,10 +209,10 @@ const UserSchoolForm = (props: searchModalProps) => {
               </SSearchWrapper>
             </SInputBox>
 
-            <SButton onClick={() => {}}>확인</SButton>
-            {/* <SButton onClick={() => onClickSubmit(userData.schoolName)}>
-          확인ß
-        </SButton> */}
+            {/* <SButton onClick={() => {}}>확인</SButton> */}
+            <SButton onClick={() => onClickSubmit(userData.schoolName)}>
+              확인
+            </SButton>
           </SSchoolSearchWrapper>
         </>
       </ReactModal>
