@@ -48,7 +48,6 @@ const SchoolDataLoader = ({
   schoolData,
   handleSelectedSchool,
 }: ResultsProps) => {
-  console.log('schoolData:', schoolData);
   //검색 결과를 담을 배열
   const [schoolSearchResults, setSchoolSearchResults] = useState<string[][]>(
     [],
@@ -57,20 +56,10 @@ const SchoolDataLoader = ({
   // 학교검색 결과 조회 이벤트핸들러
   // 유저가 정보를 모두 입력 후 검색을 할때, 요청이 가야함.
   const handleSchoolSearch = async () => {
-    console.log(3, '학교 검색');
     //문제 지점
     try {
-      console.log(
-        4,
-        '학교 정보:',
-        schoolData,
-        schoolData.schoolType,
-        schoolData.region,
-        schoolData.schoolName,
-      ); // schoolData 값 잘 들어옴
       const response = await getSchoolSearchValue(schoolData);
 
-      console.log(5, '학교 검색:', response.data); // 여기서 에러 발생 통신에 문제가 있다.
       setSchoolSearchResults(response.data); // 타입이 맞는지 확인해 볼 것
     } catch (err) {
       console.log('학교 검색결과 조회 에러', err);
@@ -80,16 +69,9 @@ const SchoolDataLoader = ({
   const debouncedSearch = _debounce(handleSchoolSearch, 300);
 
   useEffect(() => {
-    console.log(
-      1,
-      '학교 정보:',
-      schoolData.schoolType,
-      schoolData.region,
-      schoolData.schoolName,
-    );
     if (schoolData.schoolType && schoolData.region && schoolData.schoolName) {
       debouncedSearch();
-      console.log(2);
+
       return () => {
         debouncedSearch.cancel();
       };
