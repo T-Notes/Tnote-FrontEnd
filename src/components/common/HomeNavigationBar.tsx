@@ -78,32 +78,18 @@ const SUserEmail = styled.div`
 `;
 
 const HomeNavigationBar = () => {
-  const { id } = useParams();
-  // const id = useRecoilValue(userDataId); //고민1: 서버에 넘겨줄 유저 아이디를 어디서 받아와야할까?
-  const user = useRecoilValue(userDataState);
-  console.log('user', user);
+  const id = localStorage.getItem('userId');
   const { isToggle, handleChangeToggle } = useToggle();
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
-
-  //임시더미데이터
-  const data = {
-    id: 1,
-    email: 'j9972@naver.com',
-    name: '정수영',
-    school: '신갈고등학교',
-    subject: '체육',
-    career: 2,
-    alarm: true,
-  };
 
   // 렌더링 되자마자 회원정보 가져오기
   useEffect(() => {
     const getUserData = async () => {
       try {
         const response = await getUserInfo(id);
-        setEmail(response.email);
-        setName(response.name);
+        setEmail(response.data.email);
+        setName(response.data.name);
       } catch {}
     };
     getUserData();
@@ -140,8 +126,8 @@ const HomeNavigationBar = () => {
         <IcProfile />
         <SUserProfile>
           <SUserName onClick={handleChangeToggle}>
-            {`${user.name} 선생님`}
-            <SUserEmail>{user.email}</SUserEmail>
+            {`${name} 선생님`}
+            <SUserEmail>{email}</SUserEmail>
           </SUserName>
         </SUserProfile>
 
