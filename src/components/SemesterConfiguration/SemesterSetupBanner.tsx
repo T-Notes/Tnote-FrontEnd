@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import instanceAxios from '../../utils/InstanceAxios';
 import { createSemester, getAllSemesterNames } from '../../utils/lib/api';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
+import { useRecoilValue } from 'recoil';
+import { userDataState } from '../../utils/lib/recoil/userDataState';
 
 const SHeader = styled.h1`
   ${({ theme }) => theme.fonts.h3}
@@ -31,68 +33,66 @@ interface SemesterListProps {
 interface SemesterDataProps {
   semesterName: String;
   lastClass: String;
-  email: String;
   startDate: string;
   endDate: string;
 }
 const SemesterSetupBanner = () => {
+  const email = useRecoilValue(userDataState);
+  // console.log('email', email.email);
   const [semesterList, setSemesterList] = useState<SemesterListProps[]>([]);
-  const [semesterData, setSemesterDate] = useState<SemesterDataProps>({
+  const [semesterData, setSemesterData] = useState<SemesterDataProps>({
     semesterName: '',
     lastClass: '',
-    email: '',
     startDate: '',
     endDate: '',
   });
-
   const { year, month } = useCurrentDate();
 
   // 학기 자동 생성 기준
   const addSemesterName = () => {
+    let newSemesterName = '';
     // month가 1~ 6월이면 상반기 =>  2학기 생성
     if (1 <= month && month <= 6) {
-      setSemesterDate((prev) => ({ ...prev, semesterName: `${year}년 2학기` }));
+      newSemesterName = `${year}년 2학기`;
     }
     // month가 7~12월이면 하반기 => 1학기 생성
     else if (7 <= month && month <= 12) {
-      setSemesterDate((prev) => ({ ...prev, semesterName: `${year}년 1학기` }));
+      newSemesterName = `${year}년 1학기`;
     }
+    setSemesterData((prev) => ({ ...prev, semesterName: newSemesterName }));
   };
-  console.log('생성한 학기 이름:', semesterData.semesterName);
 
   // 학기 Post
   const handleAddSemester = async () => {
-    addSemesterName();
     try {
       // 학기 추가 Post
-      const data = {
-        semesterName: semesterData?.semesterName,
-        lastClass: '',
-        email: '',
-        startDate: '',
-        endDate: '',
-      };
-      await createSemester(data);
+      // 문제: 값이 안들어옴
+      if (semesterData.semesterName) {
+        console.log(4);
+        const data = {
+          semesterName: semesterData.semesterName,
+          lastClass: '',
+          email: '',
+          startDate: '',
+          endDate: '',
+        };
+        await createSemester(data);
+        const AllSemesterNames = await getAllSemesterNames();
+        setSemesterList(AllSemesterNames);
+      }
     } catch (error) {
       console.log('학기 추가에 실패했습니다.');
     }
   };
-  const data = [
-    {
-      id: 2,
-      semesterName: '2024년 2학기',
-    },
-    {
-      id: 1,
-      semesterName: '2024년 1학기',
-    },
-  ];
+
   useEffect(() => {
-    const getData = async () => {
+    addSemesterName(); // 렌더링 되자마자 학기 이름 계산 후 저장
+    // 학기 리스트 가져오기
+    const getAllSemesterList = async () => {
       try {
         // 배포 후 코드
-        // const data = await getAllSemesterNames();
-        setSemesterList(data);
+        const AllSemesterNames = await getAllSemesterNames();
+        setSemesterList(AllSemesterNames);
       } catch (error) {
         console.log(
           '전체 학기 리스트를 조회하는데 에러가 발생했습니다.',
@@ -100,8 +100,9 @@ const SemesterSetupBanner = () => {
         );
       }
     };
-    getData();
+    getAllSemesterList();
   }, []);
+  console.log(semesterList);
 
   return (
     <SWrapper>
