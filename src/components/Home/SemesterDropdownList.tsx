@@ -25,12 +25,12 @@ const SItem = styled.li`
 `;
 interface SemesterOption {
   id: string;
-  name: string;
+  semesterName: string;
 }
 
 interface SemesterOptionProps {
   options: SemesterOption[];
-  onSelectedSemester: (semester: string) => void;
+  onSelectedSemester: (semesterName: string, semesterId: string) => void;
 }
 const SemesterDropdownList = (props: SemesterOptionProps) => {
   const { options, onSelectedSemester } = props;
@@ -42,10 +42,10 @@ const SemesterDropdownList = (props: SemesterOptionProps) => {
           <SList key={option.id}>
             <SItem
               onClick={() => {
-                onSelectedSemester(option.name);
+                onSelectedSemester(option.semesterName, option.id);
               }}
             >
-              {option.name}
+              {option.semesterName}
             </SItem>
           </SList>
         ))}
