@@ -18,7 +18,7 @@ export const updateUserInfo = async (
 };
 
 // 회원 정보 조회
-export const getUserInfo = async (userId: string | undefined) => {
+export const getUserInfo = async (userId: string | null) => {
   try {
     const response = await instanceAxios.get(`/tnote/user/${userId}`);
     return response.data;
@@ -32,7 +32,7 @@ export const getUserInfo = async (userId: string | undefined) => {
 export const getAllSemesterNames = async () => {
   try {
     const response = await instanceAxios.get('/tnote/schedule/list');
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.log('추가한 학기 리스트 조회 실패', error);
     throw new Error('추가한 학기 리스트를 가져오는데 에러가 발생했습니다.');
@@ -154,6 +154,10 @@ export const getSemesterData = async (scheduleId: string | undefined) => {
     throw new Error('해당 학기의 정보를 조회하는데 에러가 발생했습니다.');
   }
 };
+// 학기 추가하기
+// export const createSemester = async()=>{
+
+// }
 
 // 학기 수정
 export const updateSemester = async (
