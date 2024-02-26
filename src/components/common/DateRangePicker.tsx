@@ -50,7 +50,14 @@ interface DateProps {
 const DateRangePicker = ({ onStartDateChange }: DateProps) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  //   const [isAllDay, setIsAllDay] = useState<boolean>(false);
+
+  // 날짜를 "yyyy-mm-dd" 형식의 문자열로 변환하는 함수
+  const formatDate = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   const handleDateChange = (start: Date, end: Date) => {
     setStartDate(start);
@@ -61,9 +68,11 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
     }
   };
 
-  // 부모 컴포넌트에 날짜 data 보내기
+  // 부모 컴포넌트에 날짜 데이터를 "yyyy-mm-dd" 형식으로 보내기
   useEffect(() => {
-    onStartDateChange(startDate, endDate);
+    const formattedStartDate = formatDate(startDate);
+    const formattedEndDate = formatDate(endDate);
+    onStartDateChange(formattedStartDate, formattedEndDate);
   }, [startDate, endDate]);
 
   return (
@@ -85,7 +94,7 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
               // timeIntervals={30} // 시간 선택 옵션에서 표시할 분 간격
               // timeCaption="시간"
               shouldCloseOnSelect={true} // 날짜 클릭 시 자동으로 닫히는 속성
-              dateFormat="yyyy-MM-dd (eee) HH:mm" // 날짜 표시 형식
+              dateFormat="yyyy-MM-dd" // 날짜 표시 형식
             />
           </>
           <STildeIcon>~</STildeIcon>
@@ -97,7 +106,7 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
             // showTimeSelect
             // timeFormat="HH:mm"
             // timeIntervals={30}
-            dateFormat="yyyy-MM-dd (eee) HH:mm"
+            dateFormat="yyyy-MM-dd"
             shouldCloseOnSelect={true}
           />
         </SDatePickerBox>
