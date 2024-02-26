@@ -26,7 +26,7 @@ const SemesterMenu = () => {
       <Link to="/semesterSetup/:id">
         <SButton>추가</SButton>
       </Link>
-      <Link to="/semesterSetup/:id">
+      <Link to="/addSemester">
         <SButton>설정</SButton>
       </Link>
 

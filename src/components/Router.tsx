@@ -2,15 +2,11 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from '../pages/Home';
 import Landing from '../pages/Landing';
 import ProfileInfo from '../pages/ProfileInfo';
-import AddSemesterSetup from '../pages/AddSemesterSetup';
+import AddSemester from '../pages/AddSemester';
 import Timetable from '../pages/Timetable';
 import HomeLayout from './HomeLayout';
-import AddSemesterForm from './SemesterConfiguration/AddSemesterForm';
-import SemesterForm from './SemesterConfiguration/SemesterForm';
-import SemesterLayout from './SemesterLayout';
 import SemesterSetup from '../pages/SemesterSetup';
 import Callback from '../utils/Callback';
-import HomeNavigationBar from './common/HomeNavigationBar';
 
 const Router = () => {
   return (
@@ -22,7 +18,11 @@ const Router = () => {
         <Route path="/login/oauth2/code/kakao" element={<Callback />} />
         <Route element={<HomeLayout />}>
           <Route path="/home/:id" element={<Home />} />
-          <Route path="/semesterSetup/:id" element={<SemesterSetup />} />
+          <Route
+            path="/semesterSetup/:scheduleId"
+            element={<SemesterSetup />}
+          />
+          <Route path="/addSemester" element={<AddSemester />} />
           <Route path="/timetable/:id" element={<Timetable />} />
         </Route>
       </Routes>

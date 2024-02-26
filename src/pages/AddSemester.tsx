@@ -14,14 +14,10 @@ const SBody = styled.div`
   flex-direction: column;
 `;
 const AddSemesterSetup = () => {
-  //학기 설정 배너,
-  //학기 설정 헤더
-  //폼
   return (
     <SWrapper>
-      {/* <SemesterSetupBanner /> */}
       <SBody>
-        <SemesterSetupHeader />
+        <SemesterSetupBanner />
         <AddSemesterForm />
       </SBody>
     </SWrapper>

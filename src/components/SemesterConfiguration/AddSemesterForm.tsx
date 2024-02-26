@@ -6,7 +6,9 @@ import { Button } from '../common/styled/Button';
 import { IcCloseDropdown, IcOpenDropdown, IcSearch } from '../../assets/icons';
 import LastClassList from './LastClassList';
 import styled from 'styled-components';
-import instanceAxios from '../../utils/InstanceAxios';
+
+import { createSemester } from '../../utils/lib/api';
+import { userDataState } from '../../utils/lib/recoil/userDataState';
 
 const SWrapper = styled.div`
   margin-left: 7rem;
@@ -32,17 +34,18 @@ const SWarningText = styled.p`
 // 학기 추가하기 페이지
 const AddSemesterForm = () => {
   // ** 상태 관리
-
   const [isDropdown, setIsDropdown] = useState<boolean>(false);
   const [lastClass, setLastClass] = useState<string>('');
   const [semesterName, setSemesterName] = useState<string>('');
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
+  const { email } = useRecoilValue(userDataState);
 
   // ** 이벤트 핸들러
 
   const handleParentStartDateChange = (startDate: Date, endDate: Date) => {
     // 받은 startDate 값을 부모 컴포넌트의 상태로 업데이트
+
     setStartDate(startDate);
     setEndDate(endDate);
   };
@@ -62,23 +65,20 @@ const AddSemesterForm = () => {
 
   const handleSubmit = async () => {
     try {
-      await instanceAxios
-        .post('/schedule', {
-          semesterName,
-          lastClass,
-          //email // => 로그인 기능 후 유저 정보(email)를 전역에서 관리 후 불러오기!
-          startDate,
-          endDate,
-        })
-        .then((res) => {
-          const getData = res.data.data;
-          console.log('getData:', getData);
-          // 저장 후 현재 페이지의 값 비우기
-          setSemesterName('');
-          setStartDate(new Date());
-          setEndDate(new Date());
-          setLastClass('');
-        });
+      const semesterData = {
+        semesterName: semesterName,
+        lastClass: lastClass,
+        email: email,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      const postSemester = await createSemester(semesterData);
+      console.log(1, 'postSemester:', postSemester);
+      // 저장 후 현재 페이지의 값 비우기
+      setSemesterName('');
+      setStartDate(new Date());
+      setEndDate(new Date());
+      setLastClass('');
     } catch (err) {
       console.log('학기 저장에 실패했습니다.:', err);
     }

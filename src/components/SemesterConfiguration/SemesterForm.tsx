@@ -57,11 +57,11 @@ const SemesterForm = () => {
   const { isToggle, setIsToggle, handleChangeToggle } = useToggle();
 
   const [semesterData, setSemesterData] = useState<SemesterDataProps>({
-    id: null,
+    id: null, // 없는 값
     semesterName: '',
     lastClass: '',
     email: '',
-    subjects: null,
+    subjects: null, // 없는 값
     startDate: null,
     endDate: null,
   });
