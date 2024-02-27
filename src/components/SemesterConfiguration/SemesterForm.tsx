@@ -4,7 +4,11 @@ import DateRangePicker from '../common/DateRangePicker';
 
 import { Input } from '../common/styled/Input';
 import { Button } from '../common/styled/Button';
-import { IcCloseDropdown, IcOpenDropdown } from '../../assets/icons';
+import {
+  IcCloseDropdown,
+  IcDatePicker,
+  IcOpenDropdown,
+} from '../../assets/icons';
 import LastClassList from './LastClassList';
 import styled from 'styled-components';
 
@@ -16,30 +20,75 @@ import {
   removeSemester,
   updateSemester,
 } from '../../utils/lib/api';
+import DropdownInput from '../common/DropdownInput';
 
 const SWrapper = styled.div`
-  margin-left: 7rem;
+  display: flex;
+  flex-direction: column;
+  position: fixed; /* 고정 위치 */
+  left: 500px;
+  /* align-items: center; */
+`;
+const SSemesterBody = styled.div`
+  margin-top: 25px;
+  margin-bottom: 40px;
+`;
+const SLabel = styled.div`
+  padding-top: 40px;
+  padding-bottom: 20px;
+
+  ${({ theme }) => theme.fonts.caption};
 `;
 
 const SDelete = styled(Button)`
-  width: 270px;
-  height: 60px;
+  width: 245px;
+  height: 50px;
+  margin-right: 10px;
   background-color: ${({ theme }) => theme.colors.gray200};
-  ${({ theme }) => theme.fonts.button1};
+  ${({ theme }) => theme.fonts.caption};
 `;
 const SSave = styled(Button)`
-  width: 270px;
-  height: 60px;
+  width: 245px;
+  height: 50px;
   background-color: ${({ theme }) => theme.colors.purple100};
   color: ${({ theme }) => theme.colors.white};
-  ${({ theme }) => theme.fonts.button1};
+  ${({ theme }) => theme.fonts.caption};
 `;
 const SWarningText = styled.p`
-  ${({ theme }) => theme.fonts.button1};
+  ${({ theme }) => theme.fonts.caption};
   color: ${({ theme }) => theme.colors.gray000};
 `;
 const SHeader = styled.h1`
-  ${({ theme }) => theme.fonts.h3}
+  ${({ theme }) => theme.fonts.h2}
+  margin-top: 30px;
+`;
+const SDateIc = styled.div`
+  display: flex;
+  font-size: 18px;
+  font-weight: 500;
+`;
+const SDate = styled.div`
+  padding-left: 5px;
+  > span {
+    color: #632cfa;
+  }
+`;
+const SDropdownInput = styled(DropdownInput)`
+  width: 500px;
+`;
+const SButtons = styled.div`
+  display: flex;
+  margin-top: 15px;
+`;
+const SDropdownWrapper = styled.div`
+  width: 550px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  opacity: 1;
+`;
+const SInput = styled(Input)`
+  width: 500px;
 `;
 
 interface SemesterDataProps {
@@ -53,7 +102,6 @@ interface SemesterDataProps {
 }
 const SemesterForm = () => {
   const { scheduleId } = useParams();
-  console.log('scheduleId', scheduleId);
   const { isToggle, setIsToggle, handleChangeToggle } = useToggle();
 
   const [semesterData, setSemesterData] = useState<SemesterDataProps>({
@@ -65,7 +113,13 @@ const SemesterForm = () => {
     startDate: null,
     endDate: null,
   });
-
+  const [isLastClassDropdown, setIsLastClassDropdown] = useState(false);
+  const openLastClassDropdown = () => {
+    setIsLastClassDropdown(true);
+  };
+  const closeLastClassDropdown = () => {
+    setIsLastClassDropdown(false);
+  };
   const handleChangeSemesterName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const updateSemesterName = e.target.value;
     setSemesterData((prev) => ({ ...prev, semesterName: updateSemesterName }));
@@ -87,34 +141,40 @@ const SemesterForm = () => {
       endDate: endDate,
     }));
   };
+
+  const fetchSemesterData = async () => {
+    await getSemesterData(scheduleId).then((res) => {
+      console.log(1, '학기 정보:', res.data);
+      const data = res.data[0];
+      setSemesterData((prev) => ({
+        ...prev,
+        semesterName: data.semesterName,
+        lastClass: data.lastClass,
+        startDate: data.startDate,
+        endDate: data.endDate,
+      }));
+    });
+  };
+
   // 유저가 저장한 값 가져오기
   useEffect(() => {
-    const getData = async () => {
-      try {
-        await getSemesterData(scheduleId);
-        setSemesterData((prev) => ({
-          ...prev,
-          semesterName: semesterData.semesterName,
-          lastClass: semesterData.lastClass,
-          startDate: semesterData.startDate,
-          endDate: semesterData.endDate,
-        }));
-        getData();
-      } catch {}
-    };
-  }, []);
+    fetchSemesterData();
+  }, [scheduleId]);
 
   // 학기 수정하기
   const handleUpdateSemester = async () => {
     try {
-      await updateSemester(scheduleId, semesterData);
-      setSemesterData((prev) => ({
-        ...prev,
-        semesterName: semesterData.semesterName,
-        lastClass: semesterData.lastClass,
-        startDate: semesterData.startDate,
-        endDate: semesterData.endDate,
-      }));
+      await updateSemester(scheduleId, semesterData).then((res) => {
+        console.log(2, 'res', res.data.data); // 수정된 값이 담겨서 들어옴
+        const data = res.data.data;
+        setSemesterData((prev) => ({
+          ...prev,
+          semesterName: data.semesterName,
+          lastClass: data.lastClass,
+          startDate: data.startDate,
+          endDate: data.endDate,
+        }));
+      });
     } catch (error) {
       console.log('학기 수정에 실패했습니다.', error);
     }
@@ -128,33 +188,49 @@ const SemesterForm = () => {
   return (
     <SWrapper>
       <SHeader>학기 설정</SHeader>
-      <label>학기 이름</label>
-      <Input
-        placeholder="EX: 2024년 1학기"
-        value={semesterData.semesterName}
-        onChange={handleChangeSemesterName}
-      />
-      <label>학기 기간 설정</label>
-      <DateRangePicker onStartDateChange={handleParentStartDateChange} />
+      <SSemesterBody>
+        <SLabel>학기 이름</SLabel>
+        <SInput
+          placeholder="EX: 2024년 1학기"
+          value={semesterData.semesterName}
+          onChange={handleChangeSemesterName}
+        />
+        <SLabel>학기 기간 설정</SLabel>
 
-      <label>마지막 교시</label>
-      {isToggle ? (
-        <IcCloseDropdown onClick={handleChangeToggle} />
-      ) : (
-        <IcOpenDropdown onClick={handleChangeToggle} />
-      )}
-      {isToggle && <LastClassList onSelectedPeriod={handleClickLastClass} />}
+        {/* <SDateIc>
+          <IcDatePicker />
+          <SDate>
+            기간
+            <span>*</span>
+          </SDate>
+        </SDateIc> */}
+        <DateRangePicker onStartDateChange={handleParentStartDateChange} />
 
-      <Input
-        value={semesterData.lastClass}
-        readOnly
-        placeholder="교시를 선택해주세요"
-      />
+        <SLabel>마지막 교시</SLabel>
+
+        <SDropdownWrapper>
+          <SInput
+            value={semesterData.lastClass}
+            readOnly
+            placeholder="교시를 선택해주세요"
+          />
+          {isToggle ? (
+            <IcCloseDropdown onClick={handleChangeToggle} />
+          ) : (
+            <IcOpenDropdown onClick={handleChangeToggle} />
+          )}
+          {isToggle && (
+            <LastClassList onSelectedPeriod={handleClickLastClass} />
+          )}
+        </SDropdownWrapper>
+      </SSemesterBody>
       <SWarningText>
         학기 삭제 시 해당 학기 아카이브의 모든 문서 및 시간표 내용이 삭제됩니다.
       </SWarningText>
-      <SDelete onClick={handleDeleteSemester}>학기 삭제</SDelete>
-      <SSave onClick={handleUpdateSemester}>저장</SSave>
+      <SButtons>
+        <SDelete onClick={handleDeleteSemester}>학기 삭제</SDelete>
+        <SSave onClick={handleUpdateSemester}>저장</SSave>
+      </SButtons>
     </SWrapper>
   );
 };
