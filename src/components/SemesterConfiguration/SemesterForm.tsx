@@ -12,7 +12,7 @@ import {
 import LastClassList from './LastClassList';
 import styled from 'styled-components';
 
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useToggle } from '../../utils/useHooks/useToggle';
 
 import {
@@ -67,28 +67,35 @@ const SDateIc = styled.div`
   font-size: 18px;
   font-weight: 500;
 `;
-const SDate = styled.div`
-  padding-left: 5px;
-  > span {
-    color: #632cfa;
-  }
-`;
-const SDropdownInput = styled(DropdownInput)`
-  width: 500px;
-`;
+
 const SButtons = styled.div`
   display: flex;
   margin-top: 15px;
 `;
 const SDropdownWrapper = styled.div`
-  width: 550px;
-  display: flex;
   position: relative;
+  width: 500px;
+  height: 50px;
+  display: flex;
   align-items: center;
   opacity: 1;
+  border-radius: 8px;
+  padding: 10px 10px 10px 16px;
+  border: 1px solid #d5d5d5;
 `;
 const SInput = styled(Input)`
   width: 500px;
+`;
+
+const SLastClassInput = styled.input`
+  width: 500px;
+  background-color: ${({ theme }) => theme.colors.white};
+  ${({ theme }) => theme.fonts.caption};
+  color: ${({ theme }) => theme.colors.black};
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.gray100};
+  }
 `;
 
 interface SemesterDataProps {
@@ -103,7 +110,7 @@ interface SemesterDataProps {
 const SemesterForm = () => {
   const { scheduleId } = useParams();
   const { isToggle, setIsToggle, handleChangeToggle } = useToggle();
-
+  const navigate = useNavigate();
   const [semesterData, setSemesterData] = useState<SemesterDataProps>({
     id: null, // 없는 값
     semesterName: '',
@@ -113,13 +120,7 @@ const SemesterForm = () => {
     startDate: null,
     endDate: null,
   });
-  const [isLastClassDropdown, setIsLastClassDropdown] = useState(false);
-  const openLastClassDropdown = () => {
-    setIsLastClassDropdown(true);
-  };
-  const closeLastClassDropdown = () => {
-    setIsLastClassDropdown(false);
-  };
+
   const handleChangeSemesterName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const updateSemesterName = e.target.value;
     setSemesterData((prev) => ({ ...prev, semesterName: updateSemesterName }));
@@ -174,6 +175,7 @@ const SemesterForm = () => {
           startDate: data.startDate,
           endDate: data.endDate,
         }));
+        navigate(`/home/${scheduleId}`);
       });
     } catch (error) {
       console.log('학기 수정에 실패했습니다.', error);
@@ -197,19 +199,12 @@ const SemesterForm = () => {
         />
         <SLabel>학기 기간 설정</SLabel>
 
-        {/* <SDateIc>
-          <IcDatePicker />
-          <SDate>
-            기간
-            <span>*</span>
-          </SDate>
-        </SDateIc> */}
         <DateRangePicker onStartDateChange={handleParentStartDateChange} />
 
         <SLabel>마지막 교시</SLabel>
 
         <SDropdownWrapper>
-          <SInput
+          <SLastClassInput
             value={semesterData.lastClass}
             readOnly
             placeholder="교시를 선택해주세요"

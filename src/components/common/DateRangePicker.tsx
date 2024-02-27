@@ -6,37 +6,48 @@ import { SDateInput } from '../common/styled/Input';
 import { IcDatePicker } from '../../assets/icons';
 import { useEffect, useState } from 'react';
 
+const SWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
 const SDatePickerBox = styled.div`
   display: flex;
-  width: 710px;
-  height: 56px;
+  /* width: 710px; */
+  /* height: 56px; */
   align-items: center;
-  gap: 28px;
+  gap: 20px;
 `;
-// const SDatePicker = styled(SDateInput)`
-//   .date_picker {
-//     border: 1px solid black;
-//     /* width: 308px;
-//     height: 345px; */
-//     ${({ theme }) => theme.fonts.caption2}
-//     color:   ${({ theme }) => theme.colors.gray100};
-//   }
-// `;
+const SDateIc = styled.div`
+  display: flex;
+  font-size: 18px;
+  font-weight: 500;
+  padding-right: 30px;
+`;
+const SDate = styled.div`
+  padding-left: 5px;
+  > span {
+    color: #632cfa;
+  }
+  @media screen and (max-width: 1200px) {
+    display: none;
+  }
+`;
 
 // 달력 스타일링
 const SCalender = styled(DatePicker)`
   display: flex;
-  border-bottom: #a6a6a6;
-  width: 320px;
+
+  border: none;
+  border-bottom: 1px solid #e8e8e8;
+  width: 270px;
   height: 24px;
   padding: 16px 20px;
   justify-content: center;
   align-items: center;
   gap: 10px;
   text-align: center;
-  border: 1px solid black;
 
-  ${({ theme }) => theme.fonts.caption2}
+  ${({ theme }) => theme.fonts.button1}
   color:   ${({ theme }) => theme.colors.gray100};
 `;
 const STildeIcon = styled.p`
@@ -76,10 +87,14 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
   }, [startDate, endDate]);
 
   return (
-    <>
-      <IcDatePicker />
-      {/* <div>기간</div>
-      <p>*</p> */}
+    <SWrapper>
+      <SDateIc>
+        <IcDatePicker />
+        <SDate>
+          기간
+          <span>*</span>
+        </SDate>
+      </SDateIc>
       <>
         <SDatePickerBox>
           <>
@@ -111,7 +126,7 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
           />
         </SDatePickerBox>
       </>
-    </>
+    </SWrapper>
   );
 };
 

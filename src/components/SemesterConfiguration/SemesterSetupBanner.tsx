@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { IcAddBlack, IcGoBack } from '../../assets/icons';
 import { useEffect, useState } from 'react';
@@ -10,21 +10,45 @@ import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../utils/lib/recoil/userDataState';
 
 const SHeader = styled.h1`
-  ${({ theme }) => theme.fonts.h3}
+  ${({ theme }) => theme.fonts.h2}
+`;
+const SSetup = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+const SBannerText = styled.div`
+  margin-top: 30px;
+  padding-left: 10px;
+`;
+const SAddSemester = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
 `;
 const SCaption = styled.p`
+  padding-bottom: 20px;
+`;
+const SText = styled.div`
   color: ${({ theme }) => theme.colors.gray1000};
+  ${({ theme }) => theme.fonts.button1};
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 30px;
 `;
 const SWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.gray1100};
-  margin-right: 10rem;
-  width: 20rem;
+  /* margin-right: 50px; */
+  width: 250px;
   height: 100vh;
   position: fixed; /* 고정 위치 */
   top: 0; /* 맨 위에 고정 */
-  left: 16rem; /* 맨 왼쪽에 고정 */
+  left: 200px; /* 맨 왼쪽에 고정 */
 `;
-
+const SAddSemesterText = styled.div`
+  cursor: pointer;
+`;
 interface SemesterListProps {
   id: number;
   semesterName: string;
@@ -47,6 +71,7 @@ const SemesterSetupBanner = () => {
   //   endDate: '',
   // });
   const { year, month } = useCurrentDate();
+  const { scheduleId } = useParams();
 
   useEffect(() => {
     // 학기 리스트 가져오기
@@ -103,27 +128,33 @@ const SemesterSetupBanner = () => {
   return (
     <SWrapper>
       {/* 홈으로 이동 시 어디로 라우팅 되는걸까? */}
-      <Link to="/home/:id">
-        <IcGoBack />
-      </Link>
+      <SBannerText>
+        <SSetup>
+          <Link to={`/home/${scheduleId}`}>
+            <IcGoBack />
+          </Link>
+          <SHeader>설정</SHeader>
+        </SSetup>
+        <SText>
+          <SCaption>학기 설정</SCaption>
 
-      <SHeader>설정</SHeader>
-      <SCaption>학기 설정</SCaption>
-      <div>
-        {semesterList.map((data) => (
-          <div key={data.id}>
-            <Link to={`/semesterSetup/${data.id}`}>
-              <ul>
-                <li>{data.semesterName}</li>
-              </ul>
-            </Link>
-          </div>
-        ))}
-      </div>
-      <div>
-        <IcAddBlack />
-        <SCaption onClick={handleAddSemester}>학기 추가하기</SCaption>
-      </div>
+          {semesterList.map((data) => (
+            <div key={data.id}>
+              <Link to={`/semesterSetup/${data.id}`}>
+                <ul>
+                  <li>{data.semesterName}</li>
+                </ul>
+              </Link>
+            </div>
+          ))}
+          <SAddSemester>
+            <IcAddBlack />
+            <SAddSemesterText onClick={handleAddSemester}>
+              학기 추가하기
+            </SAddSemesterText>
+          </SAddSemester>
+        </SText>
+      </SBannerText>
     </SWrapper>
   );
 };
