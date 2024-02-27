@@ -1,24 +1,25 @@
 import styled from 'styled-components';
 import React, { useState } from 'react';
 import WriteDatePicker from './WriteDatePicker';
-import { IcDatePicker, IcTitle } from '../../assets/icons';
+import { IcDatePicker, IcSmallDatePicker, IcTitle } from '../../assets/icons';
 
 const SWrapper = styled.div`
-  padding-left: 2.5rem;
-  width: 100%;
+  /* border: 1px solid red; */
+  padding-left: 10px;
+
   z-index: 1;
 `;
 const STitle = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
   width: 100%;
 `;
 const SPointText = styled.span`
   color: #632cfa;
 `;
 const STitleInput = styled.input`
-  ${({ theme }) => theme.fonts.caption}
+  ${({ theme }) => theme.fonts.caption3}
   border: none;
   padding-left: 10px;
   border-bottom: 1px solid #e8e8e8;
@@ -47,7 +48,7 @@ const SLabel = styled.p`
   padding-left: 10px;
   padding-right: 20px;
   flex-shrink: 0;
-  ${({ theme }) => theme.fonts.button1}
+  ${({ theme }) => theme.fonts.caption3}
 `;
 const SPeriod = styled.div`
   display: flex;
@@ -89,7 +90,7 @@ const WritingModalTop = ({
         <STitleLength>({title.length} / 30)</STitleLength>
       </STitle>
       <SPeriod>
-        <IcDatePicker />
+        <IcSmallDatePicker />
         <SLabel>
           기간
           <SPointText>*</SPointText>

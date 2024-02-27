@@ -9,19 +9,20 @@ import { useToggle } from '../../utils/useHooks/useToggle';
 const SModalTop = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 3.125rem;
+  margin-bottom: 20px;
 `;
 const SDropdownLabel = styled.div`
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 10rem; /* 204px를 rem 단위로 변경 */
-  height: 3rem; /* 62px를 rem 단위로 변경 */
-  border-radius: 8px;
-  margin-left: 1rem;
-  border: 1px solid #a6a6a6;
-  ${({ theme }) => theme.fonts.h2}
+  /* 204px를 rem 단위로 변경 */
+  width: auto;
+  /* height: 60px; */
+  /* border-radius: 8px; */
+  padding-left: 20px;
+  /* border: 1px solid #a6a6a6; */
+  ${({ theme }) => theme.fonts.h4}
 `;
 const SDropdownToggle = styled.div`
   display: flex;

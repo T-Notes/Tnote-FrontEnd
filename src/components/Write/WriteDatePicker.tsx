@@ -18,8 +18,8 @@ const SCalender = styled(DatePicker)`
   display: flex;
   border: none;
   border-bottom: 1px solid #e8e8e8;
-  width: 14.9rem;
-  height: 1rem;
+  width: 210px;
+  height: 16px;
   padding: 16px 20px;
   justify-content: center;
   align-items: center;
@@ -28,8 +28,7 @@ const SCalender = styled(DatePicker)`
   color:   ${({ theme }) => theme.colors.gray100};
 `;
 const STildeIcon = styled.span`
-  font-size: 25px;
-
+  font-size: 20px;
   color: ${({ theme }) => theme.colors.gray000};
 `;
 
@@ -37,12 +36,12 @@ const SAllDay = styled.div`
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  padding-right: 30px;
+  margin-left: 25px;
 `;
 
 const SAllDayText = styled.span`
   color: ${({ theme }) => theme.colors.gray000};
-  ${({ theme }) => theme.fonts.caption}
+  ${({ theme }) => theme.fonts.caption3}
   padding-left: 0.5rem;
 `;
 
@@ -105,6 +104,7 @@ const WriteDatePicker = ({ onStartDateChange }: DateProps) => {
     <>
       <SDatePickerBox>
         <SCalender
+          readOnly
           selected={startDate} //선택된 날짜를 나타내는 속성
           onChange={(date) => handleDateChange(date as Date, endDate)} //날짜가 선택되었을때 호출되는 콜백 함수
           minDate={new Date('2000-01-01')} // minDate 이전 날짜 선택 불가
@@ -119,6 +119,7 @@ const WriteDatePicker = ({ onStartDateChange }: DateProps) => {
         />
         <STildeIcon>~</STildeIcon>
         <SCalender
+          readOnly
           selected={endDate}
           onChange={(date) => handleDateChange(startDate, date as Date)}
           minDate={new Date(startDate)}

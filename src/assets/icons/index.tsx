@@ -25,3 +25,5 @@ export { ReactComponent as IcCloseDropdownSmall } from './closeDropdownSmall.svg
 export { ReactComponent as IcHome } from './homeIcon.svg';
 export { ReactComponent as IcArchive } from './archiveIcon.svg';
 export { ReactComponent as IcTimetable } from './timetableIcon.svg';
+export { ReactComponent as IcSmallDatePicker } from './dateSmallIcon.svg';
+export { ReactComponent as IcClip } from './clipIcon.svg';
