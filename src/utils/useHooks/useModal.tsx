@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import ClassLogModal from '../../components/Write/ClassLogModal';
 import WorkLogModal from '../../components/Write/WorkLogModal';
 import ConsultationRecordsModal from '../../components/Write/ConsultationRecordsModal';
+import StudentRecordsModal from '../../components/Write/StudentRecordsModal';
+
 // 일반 모달
 export const useModal = (init = false) => {
   const [isOpen, setIsModal] = useState<boolean>(init);
@@ -34,6 +36,8 @@ export const useWriteModal = () => {
   const [youWantedClose, setYouWantedClose] = useState(false);
 
   const handleClickModal = (option: string) => {
+    console.log(1, 'option:', option);
+
     let modalContent = null;
     if (option === '학급일지') {
       modalContent = <ClassLogModal setYouWantedClose={setYouWantedClose} />;
@@ -41,8 +45,8 @@ export const useWriteModal = () => {
       modalContent = <WorkLogModal />;
     } else if (option === '상담기록') {
       modalContent = <ConsultationRecordsModal />;
-    } else if (option === '학생 관찰 기록') {
-      // modalContent = <StudentRecordsModal />;
+    } else if (option === '학생 관찰 일지') {
+      modalContent = <StudentRecordsModal />;
     }
 
     //모달 상태 업데이트

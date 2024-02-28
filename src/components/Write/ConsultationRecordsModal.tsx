@@ -209,7 +209,7 @@ const ConsultationRecordsModal = () => {
         <SModalLayout>
           <WriteDropdown
             label="상담기록"
-            options={['학급일지', '업무일지', '학생 관찰 기록']}
+            options={['학급일지', '업무일지', '학생 관찰 일지']}
             handleChangeOption={handleClickModal}
           />
           <WritingModalTop
