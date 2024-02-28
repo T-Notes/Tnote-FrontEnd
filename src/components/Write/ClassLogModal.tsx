@@ -86,6 +86,7 @@ const SContentLength = styled.div`
   margin-left: auto;
   padding-right: 5px;
   ${({ theme }) => theme.fonts.caption4};
+  color: ${({ theme }) => theme.colors.gray100};
 `;
 const SFileUploadInput = styled.input`
   ${({ theme }) => theme.fonts.caption3}
@@ -205,6 +206,8 @@ const ClassLogModal = ({ setYouWantedClose }: any) => {
             // closeModal={closeModal}
           />
           <WritingModalTop
+            titleLabel={'제목'}
+            dateLabel={'기간'}
             onTitleChange={handleTitleChange}
             onStartDateChange={dateValue}
           />
