@@ -56,13 +56,17 @@ const SPeriod = styled.div`
   margin-bottom: 10px;
 `;
 
-interface ModalTopProps {
+export interface ModalTopProps {
   onTitleChange: (newTitle: string) => void;
   onStartDateChange: (startDate: any, endDate: any) => void;
+  titleLabel: string;
+  dateLabel: string;
 }
 const WritingModalTop = ({
   onTitleChange,
   onStartDateChange,
+  titleLabel,
+  dateLabel,
 }: ModalTopProps) => {
   const [title, setTitle] = useState<string>('');
 
@@ -77,7 +81,7 @@ const WritingModalTop = ({
       <STitle>
         <IcTitle />
         <SLabel>
-          제목
+          {titleLabel}
           <SPointText>*</SPointText>
         </SLabel>
 
@@ -92,7 +96,7 @@ const WritingModalTop = ({
       <SPeriod>
         <IcSmallDatePicker />
         <SLabel>
-          기간
+          {dateLabel}
           <SPointText>*</SPointText>
         </SLabel>
         <div>

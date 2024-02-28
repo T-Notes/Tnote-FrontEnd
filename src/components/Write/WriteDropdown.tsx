@@ -53,7 +53,7 @@ const SDropdownItem = styled.li`
   }
 `;
 
-interface WritingModalProps {
+export interface WritingModalProps {
   label: string;
   options: string[];
   handleChangeOption: (option: string) => void;
