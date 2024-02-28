@@ -35,6 +35,7 @@ const SCounseling = styled.div`
 `;
 const SCounselingTarget = styled.div`
   padding-left: 10px;
+  padding-top: 10px;
 `;
 
 const SCounselingCategory = styled(Button)<{ selected: boolean }>`
