@@ -26,16 +26,13 @@ instanceAxios.interceptors.request.use(
     if (accessToken !== null && refreshToken !== null) {
       const accessDecoded = jwtDecode<JwtPayload>(accessToken);
       const refreshDecode = jwtDecode<JwtPayload>(refreshToken);
-
       //현재시간(초 단위)
       const now = Math.floor(Date.now() / 1000);
       //###3. 엑세스토큰의 유효기간이 끝나기 전에 갱신처리/리프레쉬토큰은 로그아웃 처리
       // 60* 5 => 5분
-      // console.log(accessDecoded.exp);
-      const date = new Date(accessDecoded.exp * 1000);
-      // console.log('date', date);
+
       //accessDecoded.exp - now < 60 * 5
-      //=== 1709024653
+      // 조건문: 엑세스 토큰이 만료된 뒤 <= now
       if (accessDecoded.exp - now < 60 * 5) {
         //if(리프레쉬토큰 만료되기 1분 전이라면)
         console.log(1, '토큰 갱신 필요!');
@@ -47,28 +44,31 @@ instanceAxios.interceptors.request.use(
           //리프레쉬토큰 만료기간이 남았다면 엑세스토큰 갱신 요청
           console.log(2, '토큰 갱신 필요!');
           const refreshToken = localStorage.getItem('refreshToken');
-          console.log('refreshToken', refreshToken);
+          // console.log('refreshToken', refreshToken);
           const renewalToken = async () => {
             await axios
               .post(
                 'http://j9972.kr/tnote/refresh',
-                { registrationId: 'KAKAO' },
+                {},
                 {
                   headers: {
                     'Content-Type': 'application/json;charset=UTF-8',
                     Accept: 'application/json',
-                    Authorization: refreshToken,
+                    AccessToken: accessToken,
+                    // Authorization: `Bearer ${accessToken}`,
+                    RefreshToken: refreshToken,
                   },
                 },
               )
               .then((res) => {
                 //새로운 토큰 저장
-                // console.log(3, '토큰 갱신 ', res);
-                // const newAccessToken = res.headers.get('authorization');
-                // localStorage.setItem('accessToken', newAccessToken);
-                // if (newAccessToken) {
-                //   config.headers['Authorization'] = `Bearer ${newAccessToken}`;
-                // }
+                console.log(3, '토큰 갱신 ', res);
+
+                const newAccessToken = res.data.get('accessToken');
+                localStorage.setItem('accessToken', newAccessToken);
+                if (newAccessToken) {
+                  config.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                }
               })
               .catch((err) => {
                 console.error(err);
