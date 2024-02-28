@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ClassLogModal from '../../components/Write/ClassLogModal';
 import WorkLogModal from '../../components/Write/WorkLogModal';
-
+import ConsultationRecordsModal from '../../components/Write/ConsultationRecordsModal';
 // 일반 모달
 export const useModal = (init = false) => {
   const [isOpen, setIsModal] = useState<boolean>(init);
@@ -40,7 +40,7 @@ export const useWriteModal = () => {
     } else if (option === '업무일지') {
       modalContent = <WorkLogModal />;
     } else if (option === '상담기록') {
-      // modalContent = <ConsultationRecordsModal />;
+      modalContent = <ConsultationRecordsModal />;
     } else if (option === '학생 관찰 기록') {
       // modalContent = <StudentRecordsModal />;
     }
