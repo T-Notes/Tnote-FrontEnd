@@ -27,7 +27,7 @@ const SSearchWrapper = styled.div<StyledSearchInputProps>`
   height: 40px;
   display: flex;
   align-items: center;
-  z-index: 1;
+  /* z-index: 1; */
   opacity: 1;
   border-radius: 4px;
 

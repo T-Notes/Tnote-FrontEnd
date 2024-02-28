@@ -7,6 +7,7 @@ import ScheduleCalendar from '../components/Home/ScheduleCalendar';
 import TaskSidebar from '../components/Home/TaskSidebar';
 import TodaySchedule from '../components/Home/TodaySchedule';
 import WriteButton from '../components/Write/WriteButton';
+import instanceAxios from '../utils/InstanceAxios';
 
 const SHomeWrapper = styled.div`
   position: absolute;
@@ -19,7 +20,13 @@ const SDayAndScheduleWrapper = styled.div`
   display: flex;
 `;
 const Home = () => {
-  const { id } = useParams();
+  // 스케줄 id를 전역에 저장.
+  // 홈페이지에서 해당 값을 url에 담기
+  const handleClickLogout = () => {
+    const res = instanceAxios.post('/tnote/user/logout').then((res) => {
+      console.log(1, 'res:', res);
+    });
+  };
   return (
     <SHomeWrapper>
       <SemesterMenu />
@@ -27,10 +34,10 @@ const Home = () => {
         <RemainingDays />
         <TodaySchedule />
       </SDayAndScheduleWrapper>
-
       <ScheduleCalendar />
-      <WriteButton />
       <TaskSidebar />
+      <WriteButton />
+      <button onClick={handleClickLogout}>로그아읏</button>
     </SHomeWrapper>
   );
 };
