@@ -27,3 +27,4 @@ export { ReactComponent as IcArchive } from './archiveIcon.svg';
 export { ReactComponent as IcTimetable } from './timetableIcon.svg';
 export { ReactComponent as IcSmallDatePicker } from './dateSmallIcon.svg';
 export { ReactComponent as IcClip } from './clipIcon.svg';
+export { ReactComponent as IcMap } from './mapIcon.svg';

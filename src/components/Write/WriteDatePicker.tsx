@@ -104,7 +104,6 @@ const WriteDatePicker = ({ onStartDateChange }: DateProps) => {
     <>
       <SDatePickerBox>
         <SCalender
-          readOnly
           selected={startDate} //선택된 날짜를 나타내는 속성
           onChange={(date) => handleDateChange(date as Date, endDate)} //날짜가 선택되었을때 호출되는 콜백 함수
           minDate={new Date('2000-01-01')} // minDate 이전 날짜 선택 불가
@@ -119,7 +118,6 @@ const WriteDatePicker = ({ onStartDateChange }: DateProps) => {
         />
         <STildeIcon>~</STildeIcon>
         <SCalender
-          readOnly
           selected={endDate}
           onChange={(date) => handleDateChange(startDate, date as Date)}
           minDate={new Date(startDate)}
