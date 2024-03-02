@@ -54,31 +54,23 @@ interface SemesterListProps {
   semesterName: string;
 }
 
-// interface SemesterDataProps {
-//   semesterName: String;
-//   lastClass: String;
-//   startDate: string;
-//   endDate: string;
-// }
 const SemesterSetupBanner = () => {
   const email = useRecoilValue(userDataState); // 이메일이 꼭 필요할까?
-  // console.log('email', email.email);
   const [semesterList, setSemesterList] = useState<SemesterListProps[]>([]);
-  // const [semesterData, setSemesterData] = useState<SemesterDataProps>({
-  //   semesterName: '',
-  //   lastClass: '',
-  //   startDate: '',
-  //   endDate: '',
-  // });
   const { year, month } = useCurrentDate();
   const { scheduleId } = useParams();
 
+  // 문제: 처음 추가할 때도 리스트 조회 요청을 보내서 500이 뜸
+  // 추가한 학기가 있을때만 조회하는 것으로 수정
   useEffect(() => {
-    // 학기 리스트 가져오기
+    // 추가된 학기가 있을 때만 조회 요청 보내기
     const fetchData = async () => {
       try {
-        const data = await getAllSemesterNames();
-        setSemesterList(data);
+        const hasSemesters = semesterList.length > 0;
+        if (!hasSemesters) {
+          const data = await getAllSemesterNames();
+          setSemesterList(data);
+        }
       } catch (error) {
         console.log(
           '전체 학기 리스트를 조회하는데 에러가 발생했습니다.',
@@ -86,9 +78,8 @@ const SemesterSetupBanner = () => {
         );
       }
     };
-
     fetchData();
-  }, []); // 컴포넌트가 처음 마운트될 때만 실행
+  }, [semesterList]); // 컴포넌트가 처음 마운트될 때만 실행
 
   // 학기 자동 생성 기준
   const addSemesterName = () => {
@@ -130,7 +121,7 @@ const SemesterSetupBanner = () => {
       {/* 홈으로 이동 시 어디로 라우팅 되는걸까? */}
       <SBannerText>
         <SSetup>
-          <Link to={`/home/${scheduleId}`}>
+          <Link to={scheduleId ? `/home/${scheduleId}` : '/home'}>
             <IcGoBack />
           </Link>
           <SHeader>설정</SHeader>
