@@ -64,8 +64,11 @@ const SDays = styled.div`
   flex: 1 0 14%; // 한 줄에 요소 아이템이 7개씩 들어가도록 간격 맞추기
   padding: 5px;
   .today {
-    color: #7f51fc; // border가 들어갈 크기가 안돼서 컬러로 대체
-    font-weight: 600;
+    color: #ffff; // border가 들어갈 크기가 안돼서 컬러로 대체
+    background-color: #7f51fc;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 8px;
   }
 `;
 const SCalendarHeaderWrapper = styled.div`
