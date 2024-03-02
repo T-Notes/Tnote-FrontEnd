@@ -78,6 +78,8 @@ const SUserEmail = styled.div`
 `;
 
 const HomeNavigationBar = () => {
+  const { scheduleId } = useParams();
+
   const id = localStorage.getItem('userId');
   const { isToggle, handleChangeToggle } = useToggle();
   const [email, setEmail] = useState<string>('');
@@ -101,7 +103,7 @@ const HomeNavigationBar = () => {
         <IcLogo />
       </SLogo>
       <>
-        <Link to="/home/:id">
+        <Link to={scheduleId ? `/home/${scheduleId}` : '/home'}>
           <SCategory>
             <IcHome />
             <SCategoryText>홈화면</SCategoryText>
@@ -109,13 +111,13 @@ const HomeNavigationBar = () => {
         </Link>
 
         {/* 아카이브 이동 라우팅 변경하기 */}
-        <Link to="/home/:id">
+        <Link to="/home">
           <SCategory>
             <IcArchive />
             <SCategoryText>아카이브</SCategoryText>
           </SCategory>
         </Link>
-        <Link to="/timetable/:id">
+        <Link to={scheduleId ? `/timetable/${scheduleId}` : '/timetable'}>
           <SCategory>
             <IcTimetable />
             <SCategoryText>시간표</SCategoryText>
