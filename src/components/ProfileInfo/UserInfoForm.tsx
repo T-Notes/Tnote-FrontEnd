@@ -129,7 +129,7 @@ const UserInfoForm = () => {
 
       await updateUserInfo(userId, updatedUserData).then((res) => {
         // 추가 회원정보 입력
-        navigate(`/home/${userId}`);
+        navigate(`/home`);
       });
     } catch {}
   };

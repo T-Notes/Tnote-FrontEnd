@@ -1,32 +1,86 @@
 import styled from 'styled-components';
 import { useToggle } from '../../utils/useHooks/useToggle';
 
-import { IcCloseDropdown, IcOpenDropdown, IcClose } from '../../assets/icons';
+import {
+  IcCloseDropdown,
+  IcOpenDropdown,
+  IcClose,
+  IcSelectedIcon,
+  IcBlueColor,
+  IcYellowColor,
+  IcPinkColor,
+  IcRedColor,
+  IcGreenColor,
+  IcGrayColor,
+  IcPurpleColor,
+} from '../../assets/icons';
 import ClassDayList from './ClassDayList';
 import { useState } from 'react';
 import { Button } from '../common/styled/Button';
 import instanceAxios from '../../utils/InstanceAxios';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 import { useSetRecoilState } from 'recoil';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import DropdownInput from '../common/DropdownInput';
 
-const SClassAddForm = styled.div`
+const SClassAddFormWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({ theme }) => theme.colors.gray1100};
+  width: 300px;
+  height: 100vh;
+  position: fixed;
+  right: 0;
+  top: 0;
+`;
+const SClassAddFormLayout = styled.div`
+  box-shadow: 0px 9px 16px 0px #00000017;
+  width: 250px;
+  height: 80%;
+  background-color: #ffff;
+`;
+const SHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: ${({ theme }) => theme.colors.gray1100};
+  font-size: 18px;
+  font-weight: 500;
+`;
+const STitle = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const SClassAddFormInput = styled.input`
-  border-radius: 0;
-  border-bottom: 1px solid black;
+const SLabel = styled.label`
+  font-size: 16px;
+  font-weight: 500;
+  padding-top: 10px;
+  padding-bottom: 10px;
 `;
-interface SClassProps {
-  isSelected: boolean;
-}
-const SClass = styled.div<SClassProps>`
-  background-color: ${(props) =>
-    props.isSelected ? '#632CFA' : 'transparent'};
+const SClassAddForm = styled.div`
+  /* display: flex;
+  flex-direction: column; */
+`;
+const SClassAddFormInput = styled.input`
+  padding-bottom: 10px;
+  padding-top: 10px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #cccccc;
+`;
+
+const SClass = styled.div<{ selected: boolean }>`
+  background-color: ${(props) => (props.selected ? '#632CFA' : '#ffff')};
+  border-radius: 35px;
+  color: ${(props) => (props.selected ? '#ffff' : '#000000')};
+  padding: 7px;
+  font-size: 14px;
+  font-weight: 500;
 `;
 
 const SColorPreview = styled.div`
+  background-color: ${({ color }) => color};
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -34,31 +88,62 @@ const SColorPreview = styled.div`
 `;
 
 const SSaveClassBtn = styled(Button)`
-  width: 357px;
-  height: 58px;
+  width: 100%;
   background-color: ${({ theme }) => theme.colors.purple100};
   color: ${({ theme }) => theme.colors.white};
-  ${({ theme }) => theme.fonts.button1};
+  font-size: 18px;
+  font-weight: 500;
+  padding: 10px;
+`;
+const SClassAddFormBody = styled.div`
+  padding: 10px;
+`;
+const SClassNum = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const SClassDays = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const SClassColor = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const SColor = styled.div`
+  padding-right: 7px;
 `;
 
+const SDropdownInput = styled(DropdownInput)`
+  font-size: 14px;
+  font-weight: 500;
+`;
 interface IsClassAddProps {
   onCloseAddClass: () => void;
 }
 
 const ClassAddForm = ({ onCloseAddClass }: IsClassAddProps) => {
-  const { id } = useParams();
+  const { scheduleId } = useParams();
+  const navigate = useNavigate();
   const [subjectName, setSubjectName] = useState<string>('');
   const [classTime, setClassTime] = useState<number>();
   const [classDay, setClassDay] = useState<string>('');
   const [classLocation, setClassLocation] = useState<string>('');
   const [color, setColor] = useState<string>('');
+  const [selectedColor, setSelectedColor] = useState<string>('');
   const [memo, setMemo] = useState<string>('');
 
-  const { isToggle, handleChangeToggle } = useToggle();
   const { currentDate } = useCurrentDate();
   const date = currentDate;
-  const scheduleId = id;
-
+  const [isClassDayDropdownOpen, setIsClassDayDropdownOpen] = useState(false);
+  const openClassDayDropdown = () => {
+    setIsClassDayDropdownOpen(true);
+  };
+  const closeClassDayDropdown = () => {
+    setIsClassDayDropdownOpen(false);
+  };
   const classNum = [
     { id: 1, class: 1 },
     { id: 2, class: 2 },
@@ -72,7 +157,7 @@ const ClassAddForm = ({ onCloseAddClass }: IsClassAddProps) => {
   ];
 
   const ClassColor = [
-    { id: 1, color: '파란색', code: 'rgba(14, 165, 233, 0.10)' },
+    { id: 1, color: '파란색', code: '#0EA5E91A' },
     { id: 2, color: '보라색', code: '#E5E6FE' },
     { id: 3, color: '노란색', code: '#FEF5E6' },
     { id: 4, color: '빨간색', code: '#FEE6E6' },
@@ -90,7 +175,7 @@ const ClassAddForm = ({ onCloseAddClass }: IsClassAddProps) => {
 
   const handleSelectedClassDay = (day: any) => {
     setClassDay(day);
-    handleChangeToggle();
+    closeClassDayDropdown();
   };
 
   const handleChangeClassLocation = (
@@ -100,7 +185,7 @@ const ClassAddForm = ({ onCloseAddClass }: IsClassAddProps) => {
   };
 
   const handleClickColor = (color: string) => {
-    console.log('color:', color);
+    setSelectedColor(color);
     setColor(color);
   };
   const handleChangeMemo = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,81 +194,115 @@ const ClassAddForm = ({ onCloseAddClass }: IsClassAddProps) => {
 
   const handleSaveClassForm = () => {
     instanceAxios
-      .post('/tnote/subjects', {
-        subjectName,
-        classTime,
-        classLocation,
-        memo,
-        color,
-        date,
-        scheduleId,
+      .post(`/tnote/subjects/${scheduleId}`, {
+        subjectName: subjectName,
+        classTime: classTime,
+        classDay: classDay,
+        classLocation: classLocation,
+        memo: memo,
+        color: selectedColor,
+        date: '2024-01-01',
+        scheduleId: scheduleId,
       })
       .then((res) => {
         console.log('수업 과목 저장에 성공했습니다!');
+        console.log(res);
       });
   };
+
+  // const handleBackPage = () => {
+  //   navigate(`/timetable/${scheduleId}`);
+  // };
   return (
-    <>
-      <div>
-        <div>수업추가</div>
-        <IcClose onClick={onCloseAddClass} />
-        <SClassAddForm>
-          <label>과목 이름</label>
-          <SClassAddFormInput
-            placeholder="과목명 작성"
-            onChange={handleChangeSubjectName}
-            value={subjectName}
-          ></SClassAddFormInput>
-          <label>수업 교시</label>
-          {'<'}
-          {classNum.map((per) => (
-            <div
-              key={per.id}
-              onClick={() => handleSelectedClass(per.class)}
-              style={{
-                backgroundColor:
-                  per.class === classTime ? '#632CFA' : 'transparent',
-              }}
-            >
-              <p>{per.class}</p>
-            </div>
-          ))}
-          {'>'}
-          <label>수업 요일</label>
-          <SClassAddFormInput
-            value={classDay || ''} // value 속성
-            placeholder="요일 선택"
-            readOnly // 읽기 전용 필드로 설정
-          ></SClassAddFormInput>
-          {isToggle ? (
-            <IcCloseDropdown onClick={handleChangeToggle} />
-          ) : (
-            <IcOpenDropdown onClick={handleChangeToggle} />
-          )}
-          {isToggle && <ClassDayList handleClickDay={handleSelectedClassDay} />}
-          <label>수업 위치 작성</label>
-          <SClassAddFormInput
-            placeholder="학년 반 작성"
-            onChange={handleChangeClassLocation}
-            value={classLocation}
-          ></SClassAddFormInput>
-        </SClassAddForm>
-        <label>색상 선택</label>
-        {ClassColor.map((colors) => (
-          <div key={colors.id} onClick={() => handleClickColor(colors.color)}>
-            <SColorPreview style={{ backgroundColor: colors.code }} />
-          </div>
-        ))}
-        <br />
-        <label>메모</label>
-        <SClassAddFormInput
-          placeholder="메모작성"
-          onChange={handleChangeMemo}
-          value={memo}
-        ></SClassAddFormInput>
-        <SSaveClassBtn onClick={handleSaveClassForm}>수업 저장</SSaveClassBtn>
-      </div>
-    </>
+    <SClassAddFormWrapper>
+      <SClassAddFormLayout>
+        <SHeader>
+          <div>수업추가</div>
+          <IcClose onClick={onCloseAddClass} />
+        </SHeader>
+        <SClassAddFormBody>
+          <SClassAddForm>
+            <STitle>
+              <SLabel>과목 이름</SLabel>
+              <SClassAddFormInput
+                placeholder="과목명 작성"
+                onChange={handleChangeSubjectName}
+                value={subjectName}
+              ></SClassAddFormInput>
+            </STitle>
+
+            <SLabel>수업 교시</SLabel>
+            <SClassNum>
+              {classNum.map((classNum) => (
+                <SClass
+                  key={classNum.id}
+                  onClick={() => handleSelectedClass(classNum.class)}
+                  selected={classTime === classNum.class}
+                >
+                  <p>{classNum.class}</p>
+                </SClass>
+              ))}
+            </SClassNum>
+            <SClassDays>
+              <SLabel>수업 요일</SLabel>
+              <DropdownInput
+                size="mini"
+                theme={{ background: 'white' }}
+                placeholder="수업 요일을 선택해주세요"
+                value={classDay || ''}
+                isDropdown={isClassDayDropdownOpen}
+                openDropdown={openClassDayDropdown}
+                closeDropdown={closeClassDayDropdown}
+                dropdownList={
+                  <ClassDayList handleClickDay={handleSelectedClassDay} />
+                }
+              />
+            </SClassDays>
+            <STitle>
+              <SLabel>수업 위치 작성</SLabel>
+              <SClassAddFormInput
+                placeholder="학년 반 작성"
+                onChange={handleChangeClassLocation}
+                value={classLocation}
+              ></SClassAddFormInput>
+            </STitle>
+          </SClassAddForm>
+          <SLabel>색상 선택</SLabel>
+          <SClassColor>
+            {ClassColor.map((colors) => (
+              <SColor
+                key={colors.id}
+                onClick={() => handleClickColor(colors.color)}
+              >
+                {selectedColor === colors.color ? (
+                  <IcSelectedIcon />
+                ) : (
+                  <>
+                    {colors.color === '파란색' && <IcBlueColor />}
+                    {colors.color === '보라색' && <IcPurpleColor />}
+                    {colors.color === '노란색' && <IcYellowColor />}
+                    {colors.color === '빨간색' && <IcRedColor />}
+                    {colors.color === '초록색' && <IcGreenColor />}
+                    {colors.color === '분홍색' && <IcPinkColor />}
+                    {colors.color === '회색' && <IcGrayColor />}
+                  </>
+                )}
+              </SColor>
+            ))}
+          </SClassColor>
+          <STitle>
+            <SLabel>메모</SLabel>
+            <SClassAddFormInput
+              placeholder="메모작성"
+              onChange={handleChangeMemo}
+              value={memo}
+            ></SClassAddFormInput>
+          </STitle>
+
+          <SSaveClassBtn onClick={handleSaveClassForm}>수업 저장</SSaveClassBtn>
+        </SClassAddFormBody>
+      </SClassAddFormLayout>
+    </SClassAddFormWrapper>
   );
 };
 

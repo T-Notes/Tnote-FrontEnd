@@ -46,7 +46,7 @@ const SAllDayText = styled.span`
 `;
 
 interface DateProps {
-  onStartDateChange: (startDate: any, endDate: any) => void;
+  onStartDateChange: (startDate: any, endDate: any, isAllDay: boolean) => void;
 }
 
 const WriteDatePicker = ({ onStartDateChange }: DateProps) => {
@@ -97,8 +97,8 @@ const WriteDatePicker = ({ onStartDateChange }: DateProps) => {
 
   // 부모 컴포넌트에 날짜 data 보내기
   useEffect(() => {
-    onStartDateChange(startDate, endDate);
-  }, [startDate, endDate]);
+    onStartDateChange(startDate, endDate, isAllDay);
+  }, [startDate, endDate, isAllDay]);
 
   return (
     <>

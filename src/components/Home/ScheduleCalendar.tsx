@@ -47,7 +47,6 @@ const SWeek = styled.div`
 `;
 const SDaysBox = styled.div`
   display: flex;
-
   width: 100%;
   height: 100%;
   flex: 1; /* 남은 공간을 모두 차지하도록 설정 */

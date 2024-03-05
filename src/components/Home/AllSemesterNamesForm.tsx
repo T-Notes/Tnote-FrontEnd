@@ -4,6 +4,8 @@ import { getAllSemesterNames } from '../../utils/lib/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import DropdownInput from '../common/DropdownInput';
 import SemesterDropdownList from './SemesterDropdownList';
+import { useRecoilState } from 'recoil';
+import { scheduleIdState } from '../../utils/lib//recoil/scheduleIdState';
 
 interface Semester {
   id: string;
@@ -15,7 +17,7 @@ const AllSemesterNamesForm = () => {
   const [semesterOptions, setSemesterOptions] = useState<any[]>([]);
   const [selectedSemester, setSelectedSemester] = useState<string>('');
   const [isDropdownSemester, setIsDropdownSemester] = useState<boolean>(false);
-
+  const [scheduleId, setScheduleId] = useRecoilState(scheduleIdState);
   const openDropdownSemester = () => {
     setIsDropdownSemester(true);
   };
@@ -35,18 +37,23 @@ const AllSemesterNamesForm = () => {
 
   // 선택된 학기값
   const handleClickSemester = (semester: string, semesterId: string) => {
-    console.log(semester);
-
-    const selectedSemesterName = semesterOptions.find(
-      (s) => s.id === semesterId,
-    );
-
-    if (selectedSemesterName) {
-      navigate(`/home/${selectedSemesterName.id}`);
+    const selectedSemesterId = semesterOptions.find((s) => s.id === semesterId);
+    // 선택한 스케줄 id url에 담기
+    if (selectedSemesterId) {
+      navigate(`/home/${selectedSemesterId.id}`);
     }
+    setScheduleId(selectedSemesterId.id); // 전역에 스케줄아이디 저장
+    localStorage.setItem('selectedSemester', semester); // 선택된 학기값을 로컬 스토리지에 저장
     setSelectedSemester(semester);
     closeDropdownSemester();
   };
+
+  useEffect(() => {
+    const storedSemester = localStorage.getItem('selectedSemester');
+    if (storedSemester) {
+      setSelectedSemester(storedSemester); // 페이지가 로드될 때 로컬 스토리지에서 선택된 학기값을 가져와 상태에 설정
+    }
+  }, []);
 
   return (
     <>

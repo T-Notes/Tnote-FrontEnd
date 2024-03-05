@@ -58,7 +58,7 @@ const SPeriod = styled.div`
 
 export interface ModalTopProps {
   onTitleChange: (newTitle: string) => void;
-  onStartDateChange: (startDate: any, endDate: any) => void;
+  onStartDateChange: (startDate: any, endDate: any, isAllDay: boolean) => void;
   titleLabel: string;
   dateLabel: string;
 }

@@ -4,7 +4,7 @@ import { IcCloseDropdownSmall, IcOpenDropdownSmall } from '../../assets/icons';
 import { useToggle } from '../../utils/useHooks/useToggle';
 
 interface StyledDropdownInputProps {
-  size?: 'small' | 'large';
+  size?: 'mini' | 'small' | 'large';
   theme: {
     background: string;
   };
@@ -24,13 +24,24 @@ const SDropdownInputWrapper = styled.div<StyledDropdownInputProps>`
   }};
   width: ${(props) => {
     switch (props.size) {
+      case 'mini':
+        return '100%';
       case 'small':
         return '300px';
       case 'large':
         return '550px';
     }
   }};
-  height: 40px;
+  height: ${(props) => {
+    switch (props.size) {
+      case 'mini':
+        return '30px';
+      case 'small':
+        return '40px';
+      case 'large':
+        return '40px';
+    }
+  }};
   display: flex;
   align-items: center;
   opacity: 1;
@@ -49,7 +60,7 @@ const SDropdownInput = styled.input`
 interface DropdownProps {
   placeholder: string;
   value: string;
-  size?: 'small' | 'large';
+  size?: 'mini' | 'small' | 'large';
   theme: {
     background: string;
   };

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import { scheduleIdState } from '../../utils/lib/recoil/scheduleIdState';
 
 import AllSemesterNamesForm from './AllSemesterNamesForm';
 
@@ -16,19 +18,56 @@ const SButton = styled.button`
   padding-left: 10px;
   padding-right: 10px;
 `;
-// 메인홈의 상단 부분 (학기명, 추가&설정 버튼)
-// 시간표 상단 부분과 동일 => 공통 컴포넌트 나중에 고려하자
+const SAddAndSetup = styled.div`
+  margin-left: auto;
+`;
+interface SemesterMenu {
+  onClick: () => void;
+}
+const SemesterMenu = ({ onClick }: SemesterMenu) => {
+  const { scheduleId } = useParams();
+  const location = useLocation();
+  // const scheduleId = useRecoilValue(scheduleIdState);
 
-const SemesterMenu = () => {
+  // 페이지 별 추가 라우팅 설정
+  let toPath = '/semesterSetup';
+  if (
+    location.pathname === '/home' ||
+    location.pathname === `/home/${scheduleId}`
+  ) {
+    toPath = '/semesterSetup';
+  } else if (location.pathname === '/timetable') {
+    toPath = `/timetable`; // 학기 추가 전에 과목 추가를 누르면 어떻게 이동시킬것인가
+  } else if (location.pathname === `/timetable/${scheduleId}`) {
+    toPath = `/timetable/${scheduleId}`;
+  }
+
+  // 아이디가 있으면 => /semesterSetup/${scheduleId}
+  // 아이디가 없으면 /semesterSetup으로 이동
   return (
     <SSemesterMenuWrapper>
       <AllSemesterNamesForm />
-      <Link to="/semesterSetup/:id">
-        <SButton>추가</SButton>
-      </Link>
-      <Link to="/addSemester">
-        <SButton>설정</SButton>
-      </Link>
+
+      <SAddAndSetup>
+        {/* <Link to={toPath}> */}
+        <SButton onClick={onClick}>추가</SButton>
+        {/* </Link> */}
+        <Link
+          to={scheduleId ? `/semesterSetup/${scheduleId}` : '/semesterSetup'}
+        >
+          <SButton>설정</SButton>
+        </Link>
+      </SAddAndSetup>
+
+      {/* {scheduleId ? (
+        <Link to={`/semesterSetup/${scheduleId}`}>
+          <SButton>설정</SButton>
+        </Link>
+      ) : (
+        <Link to="/semesterSetup">
+          <SButton>설정</SButton>
+        </Link>
+      )} */}
 
       {/* 설정 : 추가한 학기가 있을 경우, 해당 학기 설정 화면으로 이동 */}
     </SSemesterMenuWrapper>

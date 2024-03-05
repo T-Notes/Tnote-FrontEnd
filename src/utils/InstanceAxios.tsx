@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import jwtDecode from 'jwt-decode';
+import { Navigate } from 'react-router-dom';
 
 interface JwtPayload {
   exp: number;
@@ -14,81 +15,73 @@ const instanceAxios: AxiosInstance = axios.create({
     //필요한 다른 헤더 설정 가능
   },
 });
-//###2. 요청 인터셉터 추가하기(모든 요청의 header에 accessToken을 넣어서 보낸다.)
-instanceAxios.interceptors.request.use(
-  (config) => {
-    //##요청이 전달되기 전에 작업 수행
-    // 토큰 가져오기
-    const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
 
-    //토큰 디코딩
-    if (accessToken !== null && refreshToken !== null) {
-      const accessDecoded = jwtDecode<JwtPayload>(accessToken);
-      const refreshDecode = jwtDecode<JwtPayload>(refreshToken);
-      //현재시간(초 단위)
-      const now = Math.floor(Date.now() / 1000);
-      //###3. 엑세스토큰의 유효기간이 끝나기 전에 갱신처리/리프레쉬토큰은 로그아웃 처리
-      // 60* 5 => 5분
+//###2. 응답 인터셉터 추가하기
+instanceAxios.interceptors.response.use(
+  (response) => {
+    //##응답이 전달되기 전에 작업 수행
+    console.log(1, response);
 
-      //accessDecoded.exp - now < 60 * 5
-      // 조건문: 엑세스 토큰이 만료된 뒤 <= now
-      if (accessDecoded.exp - now < 60 * 5) {
-        //if(리프레쉬토큰 만료되기 1분 전이라면)
-        console.log(1, '토큰 갱신 필요!');
-        if (refreshDecode.exp - now < 60 * 1) {
-          //로그아웃
-          localStorage.clear();
-          window.location.reload();
-        } else {
-          //리프레쉬토큰 만료기간이 남았다면 엑세스토큰 갱신 요청
-          console.log(2, '토큰 갱신 필요!');
-          const refreshToken = localStorage.getItem('refreshToken');
-          // console.log('refreshToken', refreshToken);
-          const renewalToken = async () => {
-            await axios
-              .post(
-                'http://j9972.kr/tnote/refresh',
-                {},
-                {
-                  headers: {
-                    'Content-Type': 'application/json;charset=UTF-8',
-                    Accept: 'application/json',
-                    AccessToken: accessToken,
-                    // Authorization: `Bearer ${accessToken}`,
-                    RefreshToken: refreshToken,
-                  },
-                },
-              )
-              .then((res) => {
-                //새로운 토큰 저장
-                console.log(3, '토큰 갱신 ', res);
+    return response;
+  },
+  async (error) => {
+    //##응답 오류가 있는 작업 수행
+    // 오류 응답에서 상태 코드 및 메시지를 가져옵니다.
+    console.log(2, error.response.data.message);
+    const errorMessage = error.response.data.message;
 
-                const newAccessToken = res.data.get('accessToken');
-                localStorage.setItem('accessToken', newAccessToken);
-                if (newAccessToken) {
-                  config.headers['Authorization'] = `Bearer ${newAccessToken}`;
-                }
-              })
-              .catch((err) => {
-                console.error(err);
-              });
-          };
-          renewalToken();
-        }
+    // 만료된 토큰인 경우
+    if (errorMessage === 'not found token') {
+      console.log(3, '토큰 만료');
+
+      // 토큰 갱신 요청 보내기
+      try {
+        console.log(4, '갱신요청');
+        const refreshToken = localStorage.getItem('refreshToken');
+        const response = await axios.post(
+          'http://j9972.kr/tnote/refresh',
+          {},
+          {
+            headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              Accept: 'application/json',
+              RefreshToken: refreshToken,
+            },
+          },
+        );
+        // 새로운 엑세스 토큰 저장
+        const newAccessToken = response.data.accessToken;
+        localStorage.setItem('accessToken', newAccessToken);
+
+        // 갱신된 토큰으로 요청을 재시도합니다.
+        error.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
+        return axios(error.config); // 다시 해당 요청을 보냅니다.
+      } catch (refreshError) {
+        console.log(5, '갱신실패');
+        console.error('토큰 갱신 실패', refreshError);
+        // 토큰 갱신에 실패한 경우 로그아웃 또는 다른 처리를 수행합니다.
+        localStorage.clear();
       }
     }
 
-    //엑세스토큰 만료기간이 지나지 않은 경우
+    // 토큰 만료 이외의 다른 오류 처리
+    return Promise.reject(error);
+  },
+);
+
+// **요청인터셉터 헤더에 엑세스 토큰 추가
+instanceAxios.interceptors.request.use(
+  (config) => {
+    // 엑세스토큰 만료기간이 지나지 않은 경우// 토큰 가져오기
+    const accessToken = localStorage.getItem('accessToken');
+
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
-
     return config;
   },
-
   (error) => {
-    //##요청 오류가 있는 작업 수행
+    // 요청 오류가 있는 작업 수행
     return Promise.reject(error);
   },
 );

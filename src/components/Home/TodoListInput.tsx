@@ -37,7 +37,7 @@ const initialTodoList: TodoListProps[] = [
     date: '',
   },
 ];
-const TodoListInput = () => {
+const TodoListInput = (todoId: number) => {
   // input창이 빈값이 아니고, 외부를 클릭했다면 post
   // 해당 input창은 비워지기
   // 유저가 입력한 값은 get으로 가져오기.
@@ -51,7 +51,7 @@ const TodoListInput = () => {
   });
   const [todoList, setTodoList] = useState(initialTodoList);
   const [isSaved, setIsSaved] = useState<boolean>(false);
-  const [todoId, setTodoId] = useState<number | undefined>();
+  // const [todoId, setTodoId] = useState<number | undefined>();
 
   // 유저가 todo Input창에 글 작성
   const handleChangeTodoInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,11 +66,33 @@ const TodoListInput = () => {
   };
 
   // input 바깥쪽 클릭
+  // useEffect(() => {
+  //   console.log('content!');
+  //   const handleClickOutside = (e: any) => {
+  //     if (inputRef.current && !inputRef.current.contains(e.target)) {
+  //       handleAddTodo();
+  //     }
+  //   };
+
+  //   document.addEventListener('mousedown', handleClickOutside);
+
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, []);
   useEffect(() => {
     console.log('content!');
     const handleClickOutside = (e: any) => {
       if (inputRef.current && !inputRef.current.contains(e.target)) {
-        handleAddTodo();
+        const patchTodo = async () => {
+          const todoData = {
+            date: todo.date,
+            content: todo.content,
+            status: todo.status,
+          };
+          await updateTodo(scheduleId, todoId, todoData);
+        };
+        // patchTodo();
       }
     };
 
@@ -92,7 +114,7 @@ const TodoListInput = () => {
           };
           const response = await createTodo(scheduleId, todoData);
 
-          setTodoId(response.id);
+          // setTodoId(response.id);
         };
 
         setTodo((prev) => ({ ...prev, content: '' }));

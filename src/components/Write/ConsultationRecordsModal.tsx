@@ -1,6 +1,8 @@
 import { ChangeEvent, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { IcClip, IcPen, IcSmallDatePicker, IcTitle } from '../../assets/icons';
+import { createConsultationRecords } from '../../utils/lib/api';
 import ModalPortal from '../../utils/ModalPortal';
 import { useWriteModal } from '../../utils/useHooks/useModal';
 import { Button } from '../common/styled/Button';
@@ -164,6 +166,7 @@ const SCounselingResult = styled.div`
   border-top: 1px solid #d5d5d5;
 `;
 const ConsultationRecordsModal = () => {
+  const { scheduleId } = useParams();
   const { writeModal, handleClickModal } = useWriteModal();
   const [title, setTitle] = useState<string>(''); //제목 상태
   const [counselingContent, setCounselingContent] = useState<string>('');
@@ -175,6 +178,7 @@ const ConsultationRecordsModal = () => {
   const [selectedCounselingButton, setSelectedCounselingButton] =
     useState<string>('');
   const [selectedTargetButton, setSelectedTargetButton] = useState<string>('');
+  const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
 
   const handleCounselingButtonClick = (buttonName: string) => {
     setSelectedCounselingButton(buttonName);
@@ -187,12 +191,13 @@ const ConsultationRecordsModal = () => {
     setTitle(newTitle);
   };
   // 자식 컴포넌트에게서 기간 값 가져오기
-  const dateValue = (startDate: any, endDate: any) => {
+  const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
     setDate((prevDate) => ({
       ...prevDate,
       startDate: startDate,
       endDate: endDate,
     }));
+    setParentsIsAllDay(isAllDay);
   };
   const handleCounselingContentChange = (
     e: ChangeEvent<HTMLTextAreaElement>,
@@ -203,6 +208,24 @@ const ConsultationRecordsModal = () => {
     e: ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setCounselingResult(e.target.value);
+  };
+
+  const handleClickSubmit = async () => {
+    try {
+      const logData = {
+        studentName: title,
+        startDate: date.startDate,
+        endDate: date.endDate,
+        counselingField: selectedCounselingButton,
+        counselingType: selectedTargetButton,
+        consultationContents: counselingContent,
+        consultationResult: counselingResult,
+        isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
+      };
+      await createConsultationRecords(scheduleId, logData);
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <ModalPortal>
@@ -230,32 +253,32 @@ const ConsultationRecordsModal = () => {
                 </SLabel>
                 <SCounselingCategoryBox>
                   <SCounselingCategory
-                    selected={selectedCounselingButton === 'button1'}
-                    onClick={() => handleCounselingButtonClick('button1')}
+                    selected={selectedCounselingButton === '교우관계'}
+                    onClick={() => handleCounselingButtonClick('교우관계')}
                   >
                     교우관계
                   </SCounselingCategory>
                   <SCounselingCategory
-                    selected={selectedCounselingButton === 'button2'}
-                    onClick={() => handleCounselingButtonClick('button2')}
+                    selected={selectedCounselingButton === '성적'}
+                    onClick={() => handleCounselingButtonClick('성적')}
                   >
                     성적
                   </SCounselingCategory>
                   <SCounselingCategory
-                    selected={selectedCounselingButton === 'button3'}
-                    onClick={() => handleCounselingButtonClick('button3')}
+                    selected={selectedCounselingButton === '가정'}
+                    onClick={() => handleCounselingButtonClick('가정')}
                   >
                     가정
                   </SCounselingCategory>
                   <SCounselingCategory
-                    selected={selectedCounselingButton === 'button4'}
-                    onClick={() => handleCounselingButtonClick('button4')}
+                    selected={selectedCounselingButton === '건강'}
+                    onClick={() => handleCounselingButtonClick('건강')}
                   >
                     건강
                   </SCounselingCategory>
                   <SCounselingCategory
-                    selected={selectedCounselingButton === 'button5'}
-                    onClick={() => handleCounselingButtonClick('button5')}
+                    selected={selectedCounselingButton === '기타'}
+                    onClick={() => handleCounselingButtonClick('기타')}
                   >
                     기타
                   </SCounselingCategory>
@@ -269,14 +292,14 @@ const ConsultationRecordsModal = () => {
                 </SLabel>
                 <SCounselingCategoryBox>
                   <STargetCategory
-                    selected={selectedTargetButton === 'button1'}
-                    onClick={() => handleTargetButtonClick('button1')}
+                    selected={selectedTargetButton === '학생'}
+                    onClick={() => handleTargetButtonClick('학생')}
                   >
                     학생
                   </STargetCategory>
                   <STargetCategory
-                    selected={selectedTargetButton === 'button2'}
-                    onClick={() => handleTargetButtonClick('button2')}
+                    selected={selectedTargetButton === '학부모'}
+                    onClick={() => handleTargetButtonClick('학부모')}
                   >
                     학부모
                   </STargetCategory>
@@ -336,7 +359,7 @@ const ConsultationRecordsModal = () => {
               </SFileWrapper>
             </SCounselingResult>
 
-            <SSubmit onClick={() => ''}>등록</SSubmit>
+            <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
           </SScroll>
         </SModalLayout>
 

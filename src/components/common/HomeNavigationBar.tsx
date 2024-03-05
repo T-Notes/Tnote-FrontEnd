@@ -79,7 +79,6 @@ const SUserEmail = styled.div`
 
 const HomeNavigationBar = () => {
   const { scheduleId } = useParams();
-
   const id = localStorage.getItem('userId');
   const { isToggle, handleChangeToggle } = useToggle();
   const [email, setEmail] = useState<string>('');

@@ -30,26 +30,30 @@ const SDayBox = styled.div`
   background-color: ${({ theme }) => theme.colors.blue400};
 `;
 const SRemainingDay = styled.p``;
+
 const RemainingDays = () => {
-  const { id } = useParams(); //현재 url에서 추출한 동적으로 변하는 id값
-  console.log('남은학기 일수 scheduleId:', id);
-  const [remainingDay, setRemainingDay] = useState<string | null>(null);
+  const { scheduleId } = useParams(); //현재 url에서 추출한 동적으로 변하는 id값
+  const [remainingDay, setRemainingDay] = useState<string | undefined>('');
   // 고민1. formattedDate형식으로 넘겨주면 되는건가?
   const { currentDate } = useCurrentDate();
-  const formattedDate = currentDate.toISOString().split('T')[0];
-  // console.log('remainingDate:', formattedDate);
+  const date = currentDate.toISOString().split('T')[0];
+  console.log('remainingDate:', date);
 
   useEffect(() => {
+    console.log(1, '렌더링!');
     const remainingDayData = async () => {
       try {
-        const response = await getRemainingDayData(id, formattedDate);
-        setRemainingDay(response);
+        console.log(2, '렌더링!');
+        const response = await getRemainingDayData(scheduleId, date);
+        console.log('남은학기일수', response.data);
+
+        setRemainingDay(response.data);
       } catch (err) {
         console.log(err);
       }
     };
     remainingDayData();
-  }, []);
+  }, [scheduleId]);
 
   return (
     <SRemainingDayWrapper>

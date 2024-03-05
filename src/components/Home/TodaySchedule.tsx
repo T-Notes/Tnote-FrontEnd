@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const STodayScheduleWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 30px;
+  margin-left: auto;
 `;
 const SFont = styled.div`
   font-size: 16px;

@@ -1,6 +1,8 @@
 import { ChangeEvent, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { IcClip, IcPen } from '../../assets/icons';
+import { createStudentObservation } from '../../utils/lib/api';
 import ModalPortal from '../../utils/ModalPortal';
 import { useWriteModal } from '../../utils/useHooks/useModal';
 import { Button } from '../common/styled/Button';
@@ -115,6 +117,7 @@ const STeachingPlan = styled.div`
 `;
 
 const StudentRecordsModal = () => {
+  const { scheduleId } = useParams();
   const { writeModal, handleClickModal } = useWriteModal();
   const [title, setTitle] = useState<string>(''); //제목 상태
   const [observationContent, setObservationContent] = useState<string>('');
@@ -123,17 +126,19 @@ const StudentRecordsModal = () => {
     startDate: '',
     endDate: '',
   });
+  const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
 
   const handleTitleChange = (newTitle: string) => {
     setTitle(newTitle);
   };
   // 자식 컴포넌트에게서 기간 값 가져오기
-  const dateValue = (startDate: any, endDate: any) => {
+  const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
     setDate((prevDate) => ({
       ...prevDate,
       startDate: startDate,
       endDate: endDate,
     }));
+    setParentsIsAllDay(isAllDay);
   };
   const handleObservationContentChange = (
     e: ChangeEvent<HTMLTextAreaElement>,
@@ -142,6 +147,22 @@ const StudentRecordsModal = () => {
   };
   const handleTeachingPlanChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setTeachingPlan(e.target.value);
+  };
+
+  const handleClickSubmit = async () => {
+    try {
+      const logData = {
+        studentName: title,
+        startDate: date.startDate,
+        endDate: date.endDate,
+        observationContents: observationContent,
+        guidance: teachingPlan,
+        isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
+      };
+      await createStudentObservation(scheduleId, logData);
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <ModalPortal>
@@ -210,7 +231,7 @@ const StudentRecordsModal = () => {
               </SFileWrapper>
             </STeachingPlan>
 
-            <SSubmit onClick={() => ''}>등록</SSubmit>
+            <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
           </SScroll>
           {writeModal.isOpen && writeModal.content}
         </SModalLayout>

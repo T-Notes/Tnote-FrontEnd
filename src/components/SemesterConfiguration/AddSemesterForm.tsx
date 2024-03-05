@@ -13,7 +13,9 @@ import { userDataState } from '../../utils/lib/recoil/userDataState';
 const SWrapper = styled.div`
   margin-left: 7rem;
 `;
-
+const SHeader = styled.h1`
+  ${({ theme }) => theme.fonts.h3}
+`;
 const SDelete = styled(Button)`
   width: 270px;
   height: 60px;
@@ -86,6 +88,7 @@ const AddSemesterForm = () => {
 
   return (
     <SWrapper>
+      <SHeader>학기 설정</SHeader>
       <label>학기 이름</label>
       <Input
         placeholder="EX: 2024년 1학기"

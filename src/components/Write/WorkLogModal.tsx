@@ -1,6 +1,8 @@
 import { ChangeEvent, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { IcClip, IcMap, IcPen } from '../../assets/icons';
+import { createWorkLog } from '../../utils/lib/api';
 import ModalPortal from '../../utils/ModalPortal';
 import { useWriteModal } from '../../utils/useHooks/useModal';
 import { Button } from '../common/styled/Button';
@@ -165,6 +167,7 @@ interface CloseProps {
   closeModal: () => void;
 }
 const WorkLogModal = () => {
+  const { scheduleId } = useParams();
   const { writeModal, handleClickModal } = useWriteModal();
   const [title, setTitle] = useState<string>(''); //제목 상태
   const [place, setPlace] = useState<string>('');
@@ -172,18 +175,19 @@ const WorkLogModal = () => {
     startDate: '',
     endDate: '',
   });
-  const [saveContents, setSaveContents] = useState<string>('');
-
+  const [workContents, setWorkContents] = useState<string>('');
+  const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const handleTitleChange = (newTitle: string) => {
     setTitle(newTitle);
   };
   // 자식 컴포넌트에게서 기간 값 가져오기
-  const dateValue = (startDate: any, endDate: any) => {
+  const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
     setDate((prevDate) => ({
       ...prevDate,
       startDate: startDate,
       endDate: endDate,
     }));
+    setParentsIsAllDay(isAllDay);
   };
 
   const handlePlaceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -192,8 +196,25 @@ const WorkLogModal = () => {
   };
 
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setSaveContents(e.target.value);
+    setWorkContents(e.target.value);
   };
+
+  const handleClickSubmit = async () => {
+    try {
+      const logData = {
+        title,
+        startDate: date.startDate,
+        endDate: date.endDate,
+        location: place,
+        workContents: workContents,
+        isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
+      };
+      await createWorkLog(scheduleId, logData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <ModalPortal>
       <ModalNoBlackBackground>
@@ -241,14 +262,14 @@ const WorkLogModal = () => {
                     </SContent>
                   </SContentIc>
                   <SContentLength>
-                    ({saveContents.length} / 3000)
+                    ({workContents.length} / 3000)
                   </SContentLength>
                 </SPlaceContent>
               </SPlaceContentWrapper>
 
               <STextarea
                 placeholder="텍스트를 입력해주세요"
-                value={saveContents}
+                value={workContents}
                 onChange={handleContentChange}
               />
             </SContentWrap>
@@ -259,7 +280,7 @@ const WorkLogModal = () => {
               <SFileUploadInput placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다." />
               <SUploadBtn>업로드</SUploadBtn>
             </SFileWrapper>
-            <SSubmit onClick={() => ''}>등록</SSubmit>
+            <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
           </SScroll>
 
           {writeModal.isOpen && writeModal.content}

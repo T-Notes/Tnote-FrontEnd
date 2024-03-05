@@ -159,7 +159,9 @@ const SemesterForm = () => {
 
   // 유저가 저장한 값 가져오기
   useEffect(() => {
-    fetchSemesterData();
+    if (scheduleId) {
+      fetchSemesterData();
+    }
   }, [scheduleId]);
 
   // 학기 수정하기

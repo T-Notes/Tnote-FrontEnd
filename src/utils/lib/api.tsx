@@ -43,16 +43,18 @@ export const getAllSemesterNames = async () => {
 
 export const getRemainingDayData = async (
   scheduleId: string | undefined,
-  remainingDate: string,
+  date: any,
 ) => {
   try {
     const response = await instanceAxios.get(
       `/tnote/schedule/leftClassDays/${scheduleId}`,
       {
-        data: remainingDate,
+        params: { date: date },
       },
     );
-    return response.data;
+    console.log('response:', response);
+
+    return response;
   } catch (error) {
     console.log('남은 학기 일수 조회 에러', error);
     throw new Error('해당 학기의 남은 일수를 조회하는데 에러가 발생했습니다.');
@@ -154,10 +156,6 @@ export const getSemesterData = async (scheduleId: string | undefined) => {
     throw new Error('해당 학기의 정보를 조회하는데 에러가 발생했습니다.');
   }
 };
-// 학기 추가하기
-// export const createSemester = async()=>{
-
-// }
 
 // 학기 수정
 export const updateSemester = async (
@@ -192,6 +190,50 @@ export const createClassLog = async (
   try {
     const response = instanceAxios.post(
       `/tnote/classLog/${scheduleId}`,
+      LogData,
+    );
+  } catch {
+    throw new Error('학급일지 생성 에러가 발생했습니다.');
+  }
+};
+
+// 업무일지 등록
+export const createWorkLog = async (
+  scheduleId: string | undefined,
+  LogData: object,
+) => {
+  try {
+    const response = instanceAxios.post(
+      `/tnote/proceeding/${scheduleId}`,
+      LogData,
+    );
+  } catch {
+    throw new Error('학급일지 생성 에러가 발생했습니다.');
+  }
+};
+
+// 학생관찰일지 등록
+export const createStudentObservation = async (
+  scheduleId: string | undefined,
+  LogData: object,
+) => {
+  try {
+    const response = instanceAxios.post(
+      `/tnote/observation/${scheduleId}`,
+      LogData,
+    );
+  } catch {
+    throw new Error('학급일지 생성 에러가 발생했습니다.');
+  }
+};
+
+export const createConsultationRecords = async (
+  scheduleId: string | undefined,
+  LogData: object,
+) => {
+  try {
+    const response = instanceAxios.post(
+      `/tnote/consultation/${scheduleId}`,
       LogData,
     );
   } catch {
