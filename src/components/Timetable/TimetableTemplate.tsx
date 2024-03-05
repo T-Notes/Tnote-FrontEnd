@@ -7,7 +7,9 @@ import { useToggle } from '../../utils/useHooks/useToggle';
 import ClassInfoPopup from './ClassInfoPopup';
 
 const STimetableWrapper = styled.table`
-  width: 50%;
+  margin-top: 30px;
+  width: auto;
+  height: auto;
   border-collapse: collapse;
 `;
 
@@ -17,18 +19,25 @@ const SDaysWrapper = styled.td`
   padding: 10px;
   text-align: center;
   width: 145px;
-  height: 85px;
+  height: 60px;
 `;
 
 const SThead = styled.td`
   border-bottom: 1px solid #ddd;
-  border-right: 1px solid #ddd;
+  font-size: 12px;
+  color: #5b5b5b;
+  font-weight: 700;
 `;
 const SSubjectBox = styled.div`
   cursor: pointer;
   border: 1px solid red;
 `;
-
+const SClassAndTime = styled.td`
+  padding: 10px;
+  font-size: 12px;
+  color: #5b5b5b;
+  font-weight: 700;
+`;
 const TimetableTemplate = () => {
   const { isToggle, handleChangeToggle } = useToggle();
   const { id } = useParams();
@@ -125,10 +134,10 @@ const TimetableTemplate = () => {
       <tbody>
         {filteredTimetables.map((t: any) => (
           <tr key={t.id}>
-            <td>
+            <SClassAndTime>
               <p>{t.class}</p>
               <p>{t.time}</p>
-            </td>
+            </SClassAndTime>
             {days.map((d) => (
               <SDaysWrapper key={d.id}>
                 {/* 여기서 data의 정보를 넣어줌 */}
