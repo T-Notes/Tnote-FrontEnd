@@ -40,7 +40,7 @@ const SClassAndTime = styled.td`
 `;
 const TimetableTemplate = () => {
   const { isToggle, handleChangeToggle } = useToggle();
-  const { id } = useParams();
+  const { scheduleId } = useParams();
   const [lastClass, setLastClass] = useState('9');
   const lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
 
@@ -71,16 +71,20 @@ const TimetableTemplate = () => {
   useEffect(() => {
     const getTimetable = async () => {
       try {
-        await instanceAxios.get(`/tnote/schedule/week/${id}`).then((res) => {
-          const getData = res.data;
-          setLastClass(getData.lastClass);
-        });
+        await instanceAxios
+          .get(`/tnote/schedule/week/${scheduleId}`)
+          .then((res) => {
+            const getData = res.data;
+            console.log(3, getData.data[0].lastClass);
+
+            setLastClass(getData.data[0].lastClass);
+          });
       } catch (err) {
         console.log('시간표 조회에 실패했습니다.', err);
       }
     };
     getTimetable();
-  }, [id]);
+  }, [scheduleId]);
 
   useEffect(() => {
     if (lastClass === '') {
