@@ -161,8 +161,8 @@ const ClassLogModal = ({ setYouWantedClose }: any) => {
   const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
     setDate((prevDate) => ({
       ...prevDate,
-      startDate: startDate.toISOString().slice(0, 19).replace('T', ' '),
-      endDate: endDate.toISOString().slice(0, 19).replace('T', ' '),
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
     }));
     setParentsIsAllDay(isAllDay);
   };
