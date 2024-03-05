@@ -15,9 +15,8 @@ import { Button } from '../common/styled/Button';
 import { createClassLog } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
 import { IcClip, IcClose, IcPen } from '../../assets/icons';
-
+import axios from 'axios';
 // styled //
-
 const SModalLayout = styled(ModalLayout)`
   display: flex;
   flex-direction: column;
@@ -28,7 +27,6 @@ const SModalLayout = styled(ModalLayout)`
   height: 600px;
   /* padding: 30px 40px; */
 `;
-
 const STextarea = styled.textarea`
   height: 180px;
   width: 100%;
@@ -43,7 +41,6 @@ const SContentLine = styled.div`
   display: flex;
   padding-bottom: 10px;
 `;
-
 const SSubmit = styled(Button)`
   display: flex;
   margin-left: 40%;
@@ -54,12 +51,10 @@ const SSubmit = styled(Button)`
   color: ${({ theme }) => theme.colors.white};
   ${({ theme }) => theme.fonts.caption3};
 `;
-
 const SType = styled.div`
   border-bottom: 2.5px solid #0000004d;
   margin-bottom: 20px;
 `;
-
 const STypeBtn = styled.button`
   padding: 20px 30px;
   ${({ theme }) => theme.fonts.caption3}
@@ -81,7 +76,6 @@ const SContent = styled.div`
     color: #632cfa;
   }
 `;
-
 const SContentLength = styled.div`
   margin-left: auto;
   padding-right: 5px;
@@ -126,15 +120,16 @@ interface SaveContents {
   제출과제: string;
   진도표: string;
 }
-
 interface CloseProps {
   closeModal: () => void;
 }
 const ClassLogModal = ({ setYouWantedClose }: any) => {
+  const formData = new FormData();
   const { scheduleId } = useParams();
   const [title, setTitle] = useState<string>(''); //제목 상태
+  const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
+  const [imgUrl, setImgUrl] = useState<File>();
   const { writeModal, handleClickModal } = useWriteModal();
-
   const [contentType, setContentType] =
     useState<keyof SaveContents>('학습계획'); //현재 모달에서 어떤 종류의 탭을 입력하고 있는지를 나타낸다.
   const [saveContents, setSaveContents] = useState<SaveContents>({
@@ -143,18 +138,15 @@ const ClassLogModal = ({ setYouWantedClose }: any) => {
     제출과제: '',
     진도표: '',
   }); //각 탭의 타입에 따른 입력된 내용을 저장하는 객체
-
-  //   const [dropdown, setDropdown] = useState<boolean>(false);
   const [date, setDate] = useState({
     startDate: '',
     endDate: '',
   });
 
-  // 모달의 컨텐츠 타입이 변경될 때 호출
   const handleContentTypeChange = (type: keyof SaveContents) => {
     setContentType(type);
   };
-  // 탭 내용 업데이트, 이전 상태 유지
+
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setSaveContents((prevSaveContents) => ({
       ...prevSaveContents,
@@ -165,28 +157,62 @@ const ClassLogModal = ({ setYouWantedClose }: any) => {
   const handleTitleChange = (newTitle: string) => {
     setTitle(newTitle);
   };
-  // 자식 컴포넌트에게서 기간 값 가져오기
-  const dateValue = (startDate: any, endDate: any) => {
+
+  const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
     setDate((prevDate) => ({
       ...prevDate,
-      startDate: startDate,
-      endDate: endDate,
+      startDate: startDate.toISOString().slice(0, 19).replace('T', ' '),
+      endDate: endDate.toISOString().slice(0, 19).replace('T', ' '),
     }));
+    setParentsIsAllDay(isAllDay);
+  };
+
+  const handleChangeImg = (e: any) => {
+    const file = e.target.files[0];
+    console.log('file', file);
+    setImgUrl(file);
+    formData.append('classLogImages', file);
   };
 
   const handleClickSubmit = async () => {
     try {
       const logData = {
-        title,
+        title: title,
         startDate: date.startDate,
         endDate: date.endDate,
         plan: saveContents.학습계획,
         classContents: saveContents.수업내용,
         submission: saveContents.제출과제,
         magnitude: saveContents.진도표,
-        // isAllDay: false // 종일 버튼 로직 추가하기
+        isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
       };
-      await createClassLog(scheduleId, logData);
+
+      // formData.append('classLogRequestDto', JSON.stringify(logData));
+      const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+        type: 'application/json',
+      });
+      formData.append('classLogRequestDto', jsonDataTypeValue);
+
+      if (imgUrl) {
+        console.log('imgUrl', imgUrl.name);
+
+        formData.append('classLogImages', imgUrl);
+      }
+
+      const accessToken = localStorage.getItem('accessToken');
+      console.log('formData:', formData);
+
+      await axios.post(
+        `http://j9972.kr/tnote/classLog/${scheduleId}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${accessToken}`,
+            accept: 'application/json',
+          },
+        },
+      );
     } catch (err) {
       console.log(err);
     }
@@ -195,6 +221,7 @@ const ClassLogModal = ({ setYouWantedClose }: any) => {
   useEffect(() => {
     setYouWantedClose(true);
   }, []);
+
   return (
     <ModalPortal>
       <ModalNoBlackBackground>
@@ -203,7 +230,6 @@ const ClassLogModal = ({ setYouWantedClose }: any) => {
             label="학급일지"
             options={['업무일지', '상담기록', '학생 관찰 일지']}
             handleChangeOption={handleClickModal}
-            // closeModal={closeModal}
           />
           <WritingModalTop
             titleLabel={'제목'}
@@ -240,7 +266,6 @@ const ClassLogModal = ({ setYouWantedClose }: any) => {
                     ({saveContents[contentType].length} / 3000)
                   </SContentLength>
                 </SContentLine>
-
                 <STextarea
                   placeholder="텍스트를 입력해주세요"
                   value={saveContents[contentType]}
@@ -252,8 +277,12 @@ const ClassLogModal = ({ setYouWantedClose }: any) => {
           <SFileWrapper>
             <IcClip />
             <SFileText>파일 첨부</SFileText>
-
-            <SFileUploadInput placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다." />
+            <SFileUploadInput
+              placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다."
+              type="file"
+              // accept="image/*"
+              onChange={handleChangeImg}
+            />
             <SUploadBtn>업로드</SUploadBtn>
           </SFileWrapper>
           <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
