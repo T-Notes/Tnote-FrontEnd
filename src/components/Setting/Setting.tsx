@@ -6,7 +6,7 @@ import {
 } from '../../components/common/styled/ModalLayout';
 import instanceAxios from '../../utils/InstanceAxios';
 import { useEffect, useState } from 'react';
-import { getUserInfo, logout } from '../../utils/lib/api';
+import { deletedAccount, getUserInfo, logout } from '../../utils/lib/api';
 import styled from 'styled-components';
 import {
   IcAfter,
@@ -241,6 +241,7 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
       if (result.isConfirmed) {
         // 계정 영구 삭제 버튼 클릭 시
         const email = result.value; // 입력된 이메일 값 가져오기
+        deletedAccount(email); // 계정탈퇴 요청
       }
     });
   };

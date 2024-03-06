@@ -257,3 +257,20 @@ export const logout = async () => {
     return response;
   } catch {}
 };
+
+// 계정탈퇴
+
+export const deletedAccount = async (email: string) => {
+  try {
+    const response = await instanceAxios
+      .delete('/tnote/user', {
+        data: { email }, // 요청 바디에 이메일을 포함
+      })
+      .then((res) => {
+        console.log(res);
+        localStorage.clear();
+        window.location.reload();
+      });
+    return response;
+  } catch {}
+};
