@@ -252,6 +252,7 @@ export const logout = async () => {
     const response = instanceAxios.post('/tnote/user/logout').then((res) => {
       console.log(1, 'res:', res);
       localStorage.clear();
+      window.location.reload();
     });
     return response;
   } catch {}
