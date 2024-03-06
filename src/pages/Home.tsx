@@ -27,14 +27,7 @@ const SHomeSemester = styled.div`
 `;
 const Home = () => {
   const navigate = useNavigate();
-  // 스케줄 id를 전역에 저장.
-  // 홈페이지에서 해당 값을 url에 담기
-  const handleClickLogout = () => {
-    const res = instanceAxios.post('/tnote/user/logout').then((res) => {
-      console.log(1, 'res:', res);
-      localStorage.clear();
-    });
-  };
+
   const handleClickLinkToAddSemesterPage = () => {
     navigate('/semesterSetup');
   };
@@ -51,7 +44,6 @@ const Home = () => {
       <ScheduleCalendar />
       <TaskSidebar />
       <WriteButton />
-      <button onClick={handleClickLogout}>로그아읏</button>
     </SHomeWrapper>
   );
 };
