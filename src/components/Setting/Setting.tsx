@@ -1,3 +1,5 @@
+import Swal from 'sweetalert2';
+
 import {
   ModalLayout,
   ModalBackground,
@@ -9,11 +11,14 @@ import styled from 'styled-components';
 import {
   IcAfter,
   IcClose,
+  IcOffToggle,
   IcOnToggle,
   IcProfileLarge,
+  IcWarning,
 } from '../../assets/icons';
 import EditProfile from './EditProfile';
 import ModalPortal from '../../utils/ModalPortal';
+import { result } from 'lodash';
 
 const SSettingWrapper = styled.div`
   border: 1px solid var(--Black-Black50, #d5d5d5);
@@ -114,7 +119,11 @@ const SAlarmContainer = styled.div`
   align-items: center;
   padding-top: 30px;
 `;
-const SToggleIcon = styled(IcOnToggle)`
+const SOnToggleIcon = styled(IcOnToggle)`
+  margin-left: auto;
+  cursor: pointer;
+`;
+const SOffToggleIcon = styled(IcOffToggle)`
   margin-left: auto;
   cursor: pointer;
 `;
@@ -125,7 +134,7 @@ const SDeletedAccountContainer = styled.div`
   padding-bottom: 20px;
   border-bottom: 1px solid #a6a6a6;
 `;
-const SMoveRightIcon = styled(IcAfter)`
+const SAfterIcon = styled(IcAfter)`
   margin-left: auto;
   cursor: pointer;
 `;
@@ -184,6 +193,13 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     setIsOpenEditModal(false);
   };
 
+  // 알람 제어 함수
+  const handleOnAlarm = () => {
+    setUserData((prev) => ({ ...prev, alarm: true }));
+  };
+  const handleOffAlarm = () => {
+    setUserData((prev) => ({ ...prev, alarm: false }));
+  };
   const handleClickLogout = async () => {
     await logout().then((res) => {
       window.alert('로그아웃되셨습니다.');
@@ -204,8 +220,30 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
       } catch {}
     };
     getUserData();
-  }, []);
+  }, [userId]);
 
+  // 계정 탈퇴
+  const handleClickDeleteAccount = () => {
+    Swal.fire({
+      iconHtml: `<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="none">
+      <circle cx="30" cy="30" r="30" fill="#FF4343"/>
+      <path d="M32.4632 37L34.474 17.9761C34.7551 15.3168 32.6703 13 29.9962 13C27.3248 13 25.2409 15.3123 25.5176 17.9693L27.5 37H32.4632Z" fill="white"/>
+      <circle cx="30" cy="44" r="3" fill="white"/>
+    </svg>`,
+      title: '계정 삭제',
+      html: '계정을 삭제할 시 모든 데이터가 지워지며<br>해당 작업을 복구 할 수 없습니다.<br>정말 탈퇴를 원하시면 이메일을 입력해주세요.',
+      input: 'email', // 이메일 입력란 추가
+      inputPlaceholder: 'abcde@gmail.com', // 입력란 placeholder 설정
+      showCancelButton: true,
+      confirmButtonText: '계정 영구 삭제',
+      cancelButtonText: '취소',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // 계정 영구 삭제 버튼 클릭 시
+        const email = result.value; // 입력된 이메일 값 가져오기
+      }
+    });
+  };
   return (
     <ModalPortal>
       <ModalBackground>
@@ -253,7 +291,11 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
                   교사 업무관리 앱에서 제공하는 알림을 끄거나 켤 수 있습니다.
                 </SCaption>
               </SColumn>
-              <SToggleIcon />
+              {userData.alarm ? (
+                <SOnToggleIcon onClick={handleOffAlarm} />
+              ) : (
+                <SOffToggleIcon onClick={handleOnAlarm} />
+              )}
             </SAlarmContainer>
             <SDeletedAccountContainer>
               <SColumn>
@@ -262,7 +304,7 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
                   계정을 영구적으로 삭제하고 모든 데이터를 지웁니다.
                 </SCaption>
               </SColumn>
-              <SMoveRightIcon />
+              <SAfterIcon onClick={handleClickDeleteAccount} />
             </SDeletedAccountContainer>
             <SVersion>버전: vwer12.3</SVersion>
             <SInfoButtonContainer>
