@@ -64,7 +64,7 @@ const Todo = () => {
   };
 
   // todo 삭제
-  const handleDelete = async (todoId: number | null) => {
+  const handleDelete = async (todoId: number | undefined) => {
     // console.log('todoId:', todoId);
     await removeTodo(scheduleId, todoId);
     setIsAddTodo(!isAddTodo);
