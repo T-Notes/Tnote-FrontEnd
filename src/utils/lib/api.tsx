@@ -192,6 +192,7 @@ export const createClassLog = async (
       `/tnote/classLog/${scheduleId}`,
       LogData,
     );
+    return response;
   } catch {
     throw new Error('학급일지 생성 에러가 발생했습니다.');
   }
@@ -207,6 +208,7 @@ export const createWorkLog = async (
       `/tnote/proceeding/${scheduleId}`,
       LogData,
     );
+    return response;
   } catch {
     throw new Error('학급일지 생성 에러가 발생했습니다.');
   }
@@ -222,6 +224,7 @@ export const createStudentObservation = async (
       `/tnote/observation/${scheduleId}`,
       LogData,
     );
+    return response;
   } catch {
     throw new Error('학급일지 생성 에러가 발생했습니다.');
   }
@@ -236,7 +239,20 @@ export const createConsultationRecords = async (
       `/tnote/consultation/${scheduleId}`,
       LogData,
     );
+    return response;
   } catch {
     throw new Error('학급일지 생성 에러가 발생했습니다.');
   }
+};
+
+// 로그아웃
+
+export const logout = async () => {
+  try {
+    const response = instanceAxios.post('/tnote/user/logout').then((res) => {
+      console.log(1, 'res:', res);
+      localStorage.clear();
+    });
+    return response;
+  } catch {}
 };
