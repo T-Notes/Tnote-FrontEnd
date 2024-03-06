@@ -59,7 +59,7 @@ const TimetableTemplate = () => {
           classDay: '수요일',
           classLocation: '3학년 1반 교실',
           memo: '힘내자',
-          semesterName: null,
+          semesterName: '',
         },
       ],
       startDate: '2024-01-01',

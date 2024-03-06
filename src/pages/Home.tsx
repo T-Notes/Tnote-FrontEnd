@@ -41,7 +41,7 @@ const Home = () => {
   return (
     <SHomeWrapper>
       <SHomeSemester>
-        <SemesterMenu onClick={handleClickLinkToAddSemesterPage} />
+        <SemesterMenu onClickAddBtn={handleClickLinkToAddSemesterPage} />
         <SDayAndScheduleWrapper>
           <RemainingDays />
           <TodaySchedule />

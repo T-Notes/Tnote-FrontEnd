@@ -22,25 +22,28 @@ const SAddAndSetup = styled.div`
   margin-left: auto;
 `;
 interface SemesterMenu {
-  onClick: () => void;
+  onClickAddBtn: () => void;
 }
-const SemesterMenu = ({ onClick }: SemesterMenu) => {
-  const { scheduleId } = useParams();
-  const location = useLocation();
-  // const scheduleId = useRecoilValue(scheduleIdState);
+const SemesterMenu = ({ onClickAddBtn }: SemesterMenu) => {
+  // const { scheduleId } = useParams();
+  const scheduleId = useRecoilValue(scheduleIdState); // 학기 추가 안했을 시 아직 null
+  console.log(1, scheduleId); // 학기 추가 안했을 시 아직 null
 
-  // 페이지 별 추가 라우팅 설정
-  let toPath = '/semesterSetup';
-  if (
-    location.pathname === '/home' ||
-    location.pathname === `/home/${scheduleId}`
-  ) {
-    toPath = '/semesterSetup';
-  } else if (location.pathname === '/timetable') {
-    toPath = `/timetable`; // 학기 추가 전에 과목 추가를 누르면 어떻게 이동시킬것인가
-  } else if (location.pathname === `/timetable/${scheduleId}`) {
-    toPath = `/timetable/${scheduleId}`;
-  }
+  const location = useLocation(); // 현재 url정보에 접근
+
+  //'추가버튼' 라우팅 설정 (학기 추가 회원과 학기 추가 안한 회원 별 + 페이지에 따른 라우팅)
+  // 시간표 페이지에서 추가버튼 클릭 시 페이지 이동이 아니기 때문에 해당 코드 주석
+  // let toPath = '';
+  // if (
+  //   location.pathname === '/home' ||
+  //   location.pathname === `/home/${scheduleId}`
+  // ) {
+  //   toPath = '/semesterSetup';
+  // } else if (location.pathname === '/timetable') {
+  //   toPath = `/timetable`; // 학기 추가 전에 과목 추가를 누르면 어떻게 이동시킬것인가
+  // } else if (location.pathname === `/timetable/${scheduleId}`) {
+  //   toPath = `/timetable/${scheduleId}`;
+  // }
 
   // 아이디가 있으면 => /semesterSetup/${scheduleId}
   // 아이디가 없으면 /semesterSetup으로 이동
@@ -50,7 +53,7 @@ const SemesterMenu = ({ onClick }: SemesterMenu) => {
 
       <SAddAndSetup>
         {/* <Link to={toPath}> */}
-        <SButton onClick={onClick}>추가</SButton>
+        <SButton onClick={onClickAddBtn}>추가</SButton>
         {/* </Link> */}
         <Link
           to={scheduleId ? `/semesterSetup/${scheduleId}` : '/semesterSetup'}

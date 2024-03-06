@@ -34,7 +34,7 @@ const Timetable = () => {
     <>
       <STimetableWrapper>
         <div>
-          <SemesterMenu onClick={handleOpenAddClass} />
+          <SemesterMenu onClickAddBtn={handleOpenAddClass} />
           <TimetableHeader />
           <TimetableTemplate />
         </div>
