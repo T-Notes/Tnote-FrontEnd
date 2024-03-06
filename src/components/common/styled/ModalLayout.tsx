@@ -10,6 +10,7 @@ export const ModalBackground = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 5;
 `;
 
 export const ModalNoBlackBackground = styled.div`
@@ -21,6 +22,7 @@ export const ModalNoBlackBackground = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 5;
 `;
 export const WarningModalLayout = styled.div`
   border: 1px solid var(--Black-Black50, #d5d5d5);

@@ -79,16 +79,24 @@ const SUserEmail = styled.div`
 
 const HomeNavigationBar = () => {
   const { scheduleId } = useParams();
-  const id = localStorage.getItem('userId');
+  const userId = localStorage.getItem('userId');
   const { isToggle, handleChangeToggle } = useToggle();
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
+  const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false);
 
+  const openSettingModal = () => {
+    setIsOpenSetting(true);
+  };
+
+  const closeSettingModal = () => {
+    setIsOpenSetting(false);
+  };
   // 렌더링 되자마자 회원정보 가져오기
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const response = await getUserInfo(id);
+        const response = await getUserInfo(userId);
         setEmail(response.data.email);
         setName(response.data.name);
       } catch {}
@@ -97,44 +105,45 @@ const HomeNavigationBar = () => {
   }, []);
 
   return (
-    <SLeftSidebar>
-      <SLogo>
-        <IcLogo />
-      </SLogo>
-      <>
-        <Link to={scheduleId ? `/home/${scheduleId}` : '/home'}>
-          <SCategory>
-            <IcHome />
-            <SCategoryText>홈화면</SCategoryText>
-          </SCategory>
-        </Link>
+    <>
+      <SLeftSidebar>
+        <SLogo>
+          <IcLogo />
+        </SLogo>
+        <>
+          <Link to={scheduleId ? `/home/${scheduleId}` : '/home'}>
+            <SCategory>
+              <IcHome />
+              <SCategoryText>홈화면</SCategoryText>
+            </SCategory>
+          </Link>
 
-        {/* 아카이브 이동 라우팅 변경하기 */}
-        <Link to="/home">
-          <SCategory>
-            <IcArchive />
-            <SCategoryText>아카이브</SCategoryText>
-          </SCategory>
-        </Link>
-        <Link to={scheduleId ? `/timetable/${scheduleId}` : '/timetable'}>
-          <SCategory>
-            <IcTimetable />
-            <SCategoryText>시간표</SCategoryText>
-          </SCategory>
-        </Link>
-      </>
-      <SUserProfileInfoWrapper>
-        <IcProfile />
-        <SUserProfile>
-          <SUserName onClick={handleChangeToggle}>
-            {`${name} 선생님`}
-            <SUserEmail>{email}</SUserEmail>
-          </SUserName>
-        </SUserProfile>
-
-        {isToggle && <Setting />}
-      </SUserProfileInfoWrapper>
-    </SLeftSidebar>
+          {/* 아카이브 이동 라우팅 변경하기 */}
+          <Link to="/home">
+            <SCategory>
+              <IcArchive />
+              <SCategoryText>아카이브</SCategoryText>
+            </SCategory>
+          </Link>
+          <Link to={scheduleId ? `/timetable/${scheduleId}` : '/timetable'}>
+            <SCategory>
+              <IcTimetable />
+              <SCategoryText>시간표</SCategoryText>
+            </SCategory>
+          </Link>
+        </>
+        <SUserProfileInfoWrapper>
+          <IcProfile />
+          <SUserProfile>
+            <SUserName onClick={openSettingModal}>
+              {`${name} 선생님`}
+              <SUserEmail>{email}</SUserEmail>
+            </SUserName>
+          </SUserProfile>
+        </SUserProfileInfoWrapper>
+      </SLeftSidebar>
+      {isOpenSetting && <Setting closeSettingModal={closeSettingModal} />}
+    </>
   );
 };
 
