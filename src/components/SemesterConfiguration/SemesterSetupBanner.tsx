@@ -79,7 +79,7 @@ const SemesterSetupBanner = () => {
       }
     };
     fetchData();
-  }, [semesterList]); // 컴포넌트가 처음 마운트될 때만 실행
+  }, []); // 컴포넌트가 처음 마운트될 때만 실행
 
   // 학기 자동 생성 기준
   const addSemesterName = () => {

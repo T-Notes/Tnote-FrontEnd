@@ -11,6 +11,8 @@ import {
 } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
 import { lowerFirst } from 'lodash';
+import { useRecoilValue } from 'recoil';
+import { scheduleIdState } from '../../utils/lib/recoil/scheduleIdState';
 
 const SInput = styled.input`
   color: ${({ theme }) => theme.colors.gray700};
@@ -34,7 +36,7 @@ interface TodoProps {
 }
 
 const Todo = () => {
-  const { scheduleId } = useParams();
+  const scheduleId = useRecoilValue(scheduleIdState);
   const [isAddTodo, setIsAddTodo] = useState<boolean>(false);
   const [todoArray, setTodoArray] = useState<any[]>([]);
   const [todoContent, setTodoContent] = useState<string>('');
@@ -62,11 +64,12 @@ const Todo = () => {
   };
 
   // todo 삭제
-  const handleDelete = async (todoId: number | undefined) => {
+  const handleDelete = async (todoId: number | null) => {
     // console.log('todoId:', todoId);
     await removeTodo(scheduleId, todoId);
     setIsAddTodo(!isAddTodo);
   };
+
   // console.log(todoArray);
 
   // 외부 클릭 시 수정 요청
@@ -106,25 +109,31 @@ const Todo = () => {
 
   // 조회
   useEffect(() => {
-    const getTodoData = async () => {
-      await getTodo(scheduleId).then((res) => {
-        console.log('todo', res.data);
-        setTodoArray(res.data);
-      });
-    };
-    getTodoData();
-  }, [isAddTodo]);
+    if (scheduleId) {
+      const getTodoData = async () => {
+        await getTodo(scheduleId).then((res) => {
+          console.log('todo', res.data);
+          setTodoArray(res.data);
+        });
+      };
+      getTodoData();
+    }
+  }, [isAddTodo, scheduleId]);
 
   // + 버튼으로 post 요청
   const handleAddTodo = async () => {
-    const todoData = {
-      date: new Date().toISOString().split('T')[0],
-      content: '',
-    };
-    await createTodo(scheduleId, todoData).then((res) => {
-      // console.log('todo Id', res.data.id);
-      setIsAddTodo(!isAddTodo);
-    });
+    if (scheduleId) {
+      const todoData = {
+        date: new Date().toISOString().split('T')[0],
+        content: '',
+      };
+      await createTodo(scheduleId, todoData).then((res) => {
+        // console.log('todo Id', res.data.id);
+        setIsAddTodo(!isAddTodo);
+      });
+    } else {
+      window.alert('학기 추가 후 이용가능한 서비스입니다.');
+    }
   };
 
   return (

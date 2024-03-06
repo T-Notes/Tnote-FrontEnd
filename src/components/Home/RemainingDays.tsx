@@ -40,19 +40,20 @@ const RemainingDays = () => {
   console.log('remainingDate:', date);
 
   useEffect(() => {
-    console.log(1, '렌더링!');
-    const remainingDayData = async () => {
-      try {
-        console.log(2, '렌더링!');
-        const response = await getRemainingDayData(scheduleId, date);
-        console.log('남은학기일수', response.data);
+    if (scheduleId) {
+      const remainingDayData = async () => {
+        try {
+          console.log(2, '렌더링!');
+          const response = await getRemainingDayData(scheduleId, date);
+          console.log('남은학기일수', response.data);
 
-        setRemainingDay(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    remainingDayData();
+          setRemainingDay(response.data);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      remainingDayData();
+    }
   }, [scheduleId]);
 
   return (
