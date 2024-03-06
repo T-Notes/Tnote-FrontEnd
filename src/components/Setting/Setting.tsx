@@ -7,16 +7,18 @@ import { useEffect, useState } from 'react';
 import { getUserInfo, logout } from '../../utils/lib/api';
 import styled from 'styled-components';
 import {
+  IcAfter,
   IcClose,
-  IcMoveRight,
   IcOnToggle,
   IcProfileLarge,
 } from '../../assets/icons';
+import EditProfile from './EditProfile';
+import ModalPortal from '../../utils/ModalPortal';
 
 const SSettingWrapper = styled.div`
   border: 1px solid var(--Black-Black50, #d5d5d5);
   background-color: #fff;
-
+  position: relative;
   width: 600px;
   border-radius: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -123,7 +125,7 @@ const SDeletedAccountContainer = styled.div`
   padding-bottom: 20px;
   border-bottom: 1px solid #a6a6a6;
 `;
-const SMoveRightIcon = styled(IcMoveRight)`
+const SMoveRightIcon = styled(IcAfter)`
   margin-left: auto;
   cursor: pointer;
 `;
@@ -162,8 +164,9 @@ interface SettingProps {
   closeSettingModal: () => void;
 }
 const Setting = ({ closeSettingModal }: SettingProps) => {
-  // const [email, setEmail] = useState<string>('');
   const userId = localStorage.getItem('userId');
+  // 수정 폼 모달
+  const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserData>({
     email: '',
     name: '',
@@ -172,6 +175,15 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     career: undefined,
     alarm: false,
   });
+
+  // 수정 폼 모달 제어함수
+  const openEditModal = () => {
+    setIsOpenEditModal(true);
+  };
+  const closeEditModal = () => {
+    setIsOpenEditModal(false);
+  };
+
   const handleClickLogout = async () => {
     await logout().then((res) => {
       window.alert('로그아웃되셨습니다.');
@@ -192,95 +204,75 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
       } catch {}
     };
     getUserData();
-  });
+  }, []);
 
-  const handleLogout = () => {
-    try {
-      instanceAxios.post('/tnote/user/logout').then((res) => {
-        console.log('로그아웃 성공!');
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // const handleDeleteAccount = () => {
-  //   try {
-  //     instanceAxios.delete('/tnote/user', {
-  //       data: {
-  //         email: email,
-  //       },
-  //     });
-  //   } catch (err) {
-  //     console.log('err', err);
-  //   }
-  // };
-  // onUpdate={() => {}}
-  // 고민 사항 1. 모달위에 모달이 페이지 형식으로 겹쳐지는게 가능..?
   return (
-    <ModalBackground onClick={closeSettingModal}>
-      <SSettingWrapper onClick={(e: any) => e.stopPropagation()}>
-        <>
-          <SSettingHeader>
-            <IcClose onClick={closeSettingModal} className="pointer" />
-            <SH1>Setting</SH1>
-          </SSettingHeader>
+    <ModalPortal>
+      <ModalBackground>
+        <SSettingWrapper>
+          <>
+            <SSettingHeader>
+              <IcClose onClick={closeSettingModal} className="pointer" />
+              <SH1>Setting</SH1>
+            </SSettingHeader>
 
-          <SMySetting>내 설정</SMySetting>
-          <SEmailContainer>
-            <SColumn>
-              <SLabel>연동된 이메일</SLabel>
-              <SCaption>{userData.email}</SCaption>
-            </SColumn>
-            <SButton onClick={handleClickLogout}>로그아웃</SButton>
-          </SEmailContainer>
-          <SUserInfoContainer>
-            <IcProfileLarge />
+            <SMySetting>내 설정</SMySetting>
+            <SEmailContainer>
+              <SColumn>
+                <SLabel>연동된 이메일</SLabel>
+                <SCaption>{userData.email}</SCaption>
+              </SColumn>
+              <SButton onClick={handleClickLogout}>로그아웃</SButton>
+            </SEmailContainer>
+            <SUserInfoContainer>
+              <IcProfileLarge />
 
-            <SUserInfoData>
-              <SRowContainer>
-                <SNameCaption>이름:</SNameCaption>
-                <SCaption>{userData.name}</SCaption>
-              </SRowContainer>
-              <br />
-              <SRowContainer>
+              <SUserInfoData>
                 <SRowContainer>
-                  <SCareerCaption>연차:</SCareerCaption>
-                  <SCaption>{userData.career}</SCaption>
+                  <SNameCaption>이름:</SNameCaption>
+                  <SCaption>{userData.name}</SCaption>
                 </SRowContainer>
+                <br />
                 <SRowContainer>
-                  <SSubjectCaption>담당과목:</SSubjectCaption>
-                  <SCaption>{userData.subject}</SCaption>
+                  <SRowContainer>
+                    <SCareerCaption>연차:</SCareerCaption>
+                    <SCaption>{userData.career}</SCaption>
+                  </SRowContainer>
+                  <SRowContainer>
+                    <SSubjectCaption>담당과목:</SSubjectCaption>
+                    <SCaption>{userData.subject}</SCaption>
+                  </SRowContainer>
                 </SRowContainer>
-              </SRowContainer>
-            </SUserInfoData>
-            <SButton>수정</SButton>
-          </SUserInfoContainer>
-          <SAlarmContainer>
-            <SColumn>
-              <SLabel>알람받기</SLabel>
-              <SCaption>
-                교사 업무관리 앱에서 제공하는 알림을 끄거나 켤 수 있습니다.
-              </SCaption>
-            </SColumn>
-            <SToggleIcon />
-          </SAlarmContainer>
-          <SDeletedAccountContainer>
-            <SColumn>
-              <SLabel>계정 삭제</SLabel>
-              <SCaption>
-                계정을 영구적으로 삭제하고 모든 데이터를 지웁니다.
-              </SCaption>
-            </SColumn>
-            <SMoveRightIcon />
-          </SDeletedAccountContainer>
-          <SVersion>버전: vwer12.3</SVersion>
-          <SInfoButtonContainer>
-            <SInfoButton>개인정보 정책</SInfoButton>
-          </SInfoButtonContainer>
-        </>
-      </SSettingWrapper>
-    </ModalBackground>
+              </SUserInfoData>
+              <SButton onClick={openEditModal}>수정</SButton>
+            </SUserInfoContainer>
+            <SAlarmContainer>
+              <SColumn>
+                <SLabel>알람받기</SLabel>
+                <SCaption>
+                  교사 업무관리 앱에서 제공하는 알림을 끄거나 켤 수 있습니다.
+                </SCaption>
+              </SColumn>
+              <SToggleIcon />
+            </SAlarmContainer>
+            <SDeletedAccountContainer>
+              <SColumn>
+                <SLabel>계정 삭제</SLabel>
+                <SCaption>
+                  계정을 영구적으로 삭제하고 모든 데이터를 지웁니다.
+                </SCaption>
+              </SColumn>
+              <SMoveRightIcon />
+            </SDeletedAccountContainer>
+            <SVersion>버전: vwer12.3</SVersion>
+            <SInfoButtonContainer>
+              <SInfoButton>개인정보 정책</SInfoButton>
+            </SInfoButtonContainer>
+          </>
+          {isOpenEditModal && <EditProfile closeEditModal={closeEditModal} />}
+        </SSettingWrapper>
+      </ModalBackground>
+    </ModalPortal>
   );
 };
 export default Setting;

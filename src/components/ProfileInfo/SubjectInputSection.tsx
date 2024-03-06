@@ -58,9 +58,9 @@ const SubjectInputSection = (props: SubjectSectionProps) => {
       />
 
       {isToggle ? (
-        <IcCloseDropdown onClick={handleChangeToggle} />
+        <IcCloseDropdown onClick={handleChangeToggle} className="pointer" />
       ) : (
-        <IcOpenDropdown onClick={handleChangeToggle} />
+        <IcOpenDropdown onClick={handleChangeToggle} className="pointer" />
       )}
 
       {isToggle && (
