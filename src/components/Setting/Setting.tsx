@@ -154,7 +154,7 @@ interface UserData {
   name: string;
   school: string;
   subject: string;
-  career: number;
+  career: number | undefined;
   alarm: boolean;
 }
 
@@ -169,7 +169,7 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     name: '',
     school: '',
     subject: '',
-    career: 0,
+    career: undefined,
     alarm: false,
   });
   const handleClickLogout = async () => {
