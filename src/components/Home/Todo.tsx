@@ -36,7 +36,7 @@ interface TodoProps {
 }
 
 const Todo = () => {
-  const scheduleId = useRecoilValue(scheduleIdState);
+  const { id } = useRecoilValue(scheduleIdState);
   const [isAddTodo, setIsAddTodo] = useState<boolean>(false);
   const [todoArray, setTodoArray] = useState<any[]>([]);
   const [todoContent, setTodoContent] = useState<string>('');
@@ -66,7 +66,7 @@ const Todo = () => {
   // todo 삭제
   const handleDelete = async (todoId: number | undefined) => {
     // console.log('todoId:', todoId);
-    await removeTodo(scheduleId, todoId);
+    await removeTodo(id, todoId);
     setIsAddTodo(!isAddTodo);
   };
 
@@ -81,7 +81,7 @@ const Todo = () => {
       content: todoContent,
       status: true,
     };
-    await updateTodo(scheduleId, todoId, patchTodoData);
+    await updateTodo(id, todoId, patchTodoData);
   };
 
   // 외부 클릭 시 수정 요청을 위한 이벤트 핸들러
@@ -109,25 +109,25 @@ const Todo = () => {
 
   // 조회
   useEffect(() => {
-    if (scheduleId) {
+    if (id) {
       const getTodoData = async () => {
-        await getTodo(scheduleId).then((res) => {
+        await getTodo(id).then((res) => {
           console.log('todo', res.data);
           setTodoArray(res.data);
         });
       };
       getTodoData();
     }
-  }, [isAddTodo, scheduleId]);
+  }, [isAddTodo, id]);
 
   // + 버튼으로 post 요청
   const handleAddTodo = async () => {
-    if (scheduleId) {
+    if (id) {
       const todoData = {
         date: new Date().toISOString().split('T')[0],
         content: '',
       };
-      await createTodo(scheduleId, todoData).then((res) => {
+      await createTodo(id, todoData).then((res) => {
         // console.log('todo Id', res.data.id);
         setIsAddTodo(!isAddTodo);
       });

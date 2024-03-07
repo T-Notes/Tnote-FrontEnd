@@ -59,7 +59,7 @@ const SemesterSetupBanner = () => {
   const [semesterList, setSemesterList] = useState<SemesterListProps[]>([]);
   const { year, month } = useCurrentDate();
   // const { scheduleId } = useParams();
-  const [scheduleId, setScheduleId] = useRecoilState(scheduleIdState);
+  const [schedule, setSchedule] = useRecoilState(scheduleIdState);
   // post와 조회를 분리하기 위함
   const [isPostSemester, setIsPostSemester] = useState<boolean>(false);
 
@@ -89,7 +89,10 @@ const SemesterSetupBanner = () => {
           endDate: '',
         };
         const getScheduleId = await createSemester(data); // await 키워드를 통해 api 요청의 응답이 돌아오기 전까지 다음 코드가 실행되지 않음 (동기적)
-        setScheduleId(getScheduleId.id); // 전역에다가 스케줄 Id 저장
+        setSchedule({
+          id: getScheduleId.id,
+          name: getScheduleId.semesterName,
+        }); // 전역에다가 스케줄 Id 저장
         setIsPostSemester((prev) => !prev);
       }
     } catch (error) {
@@ -110,7 +113,7 @@ const SemesterSetupBanner = () => {
       {/* 홈으로 이동 시 어디로 라우팅 되는걸까? */}
       <SBannerText>
         <SSetup>
-          <Link to={scheduleId ? `/home/${scheduleId}` : '/home'}>
+          <Link to={schedule.id ? `/home/${schedule.id}` : '/home'}>
             <IcGoBack />
           </Link>
           <SHeader>설정</SHeader>

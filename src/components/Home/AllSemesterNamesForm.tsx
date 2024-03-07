@@ -4,7 +4,7 @@ import { getAllSemesterNames } from '../../utils/lib/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import DropdownInput from '../common/DropdownInput';
 import SemesterDropdownList from './SemesterDropdownList';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { scheduleIdState } from '../../utils/lib//recoil/scheduleIdState';
 
 interface Semester {
@@ -42,8 +42,10 @@ const AllSemesterNamesForm = () => {
   const [semesterOptions, setSemesterOptions] = useState<any[]>([]); // 조회된 학기 리스트 가져오기
   const [selectedSemester, setSelectedSemester] = useState<string>(''); // 유저가 클릭한 학기
   const [isDropdownSemester, setIsDropdownSemester] = useState<boolean>(false); // 드롭다운
-  const [scheduleId, setScheduleId] = useRecoilState(scheduleIdState); // 전역 스케줄 아이디
-
+  const [schedule, setSchedule] = useRecoilState(scheduleIdState); // 전역 스케줄 아이디
+  console.log('jj', schedule);
+  const { id } = useRecoilValue(scheduleIdState);
+  console.log('jk', id);
   // 드롭다운 제어 함수
   const openDropdownSemester = () => {
     setIsDropdownSemester(true);
@@ -55,16 +57,17 @@ const AllSemesterNamesForm = () => {
   // 조회리스트 가져오기
   // 예상 문제 발생시점: 조회할 것이 없을때 에러를 낼듯
   useEffect(() => {
-    if (storedSemester) {
+    if (schedule.id) {
       const getSemesterNames = async () => {
         try {
           const response = await getAllSemesterNames();
+          console.log(5, 'response', response);
           setSemesterOptions(response);
         } catch {}
       };
       getSemesterNames();
     }
-  }, []); // 의존성 배열 넣기
+  }, [schedule.id]); // 의존성 배열 넣기
 
   // 선택된 학기값
   const handleClickSemester = (semester: string, semesterId: string) => {
@@ -73,7 +76,7 @@ const AllSemesterNamesForm = () => {
     if (selectedSemesterId) {
       navigate(`/home/${selectedSemesterId.id}`);
     }
-    setScheduleId(selectedSemesterId.id); // 전역에 스케줄아이디 저장
+    // setSchedule({ id: selectedSemesterId.id }); // 전역에 스케줄아이디 저장
     // localStorage.setItem('selectedSemester', semester); // 선택된 학기값을 로컬 스토리지에 저장
     setSelectedSemester(semester);
     closeDropdownSemester();
@@ -89,7 +92,7 @@ const AllSemesterNamesForm = () => {
     <>
       <DropdownInput
         placeholder="학기를 추가해주세요"
-        value={selectedSemester}
+        value={selectedSemester || '유저 선택 전'}
         size="small"
         theme={{ background: 'white' }}
         dropdownList={

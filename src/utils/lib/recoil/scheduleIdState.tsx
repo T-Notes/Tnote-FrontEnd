@@ -1,6 +1,13 @@
 import { atom } from 'recoil';
 
-export const scheduleIdState = atom<string | undefined>({
+interface scheduleState {
+  id: string | undefined;
+  name: string | undefined;
+}
+export const scheduleIdState = atom<scheduleState>({
   key: 'scheduleIdState',
-  default: '',
+  default: {
+    id: '',
+    name: '',
+  },
 });
