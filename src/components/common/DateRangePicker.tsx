@@ -36,7 +36,6 @@ const SDate = styled.div`
 // 달력 스타일링
 const SCalender = styled(DatePicker)`
   display: flex;
-
   border: none;
   border-bottom: 1px solid #e8e8e8;
   width: 270px;
@@ -56,14 +55,14 @@ const STildeIcon = styled.p`
   color: ${({ theme }) => theme.colors.gray000};
 `;
 interface DateProps {
-  onStartDateChange: (startDate: any, endDate: any) => void;
+  onStartDateChange: (startDate: Date, endDate: Date) => void;
 }
 const DateRangePicker = ({ onStartDateChange }: DateProps) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 
   // 날짜를 "yyyy-mm-dd" 형식의 문자열로 변환하는 함수
-  const formatDate = (date: Date): string => {
+  const formatDate = (date: Date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
@@ -83,8 +82,15 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
   useEffect(() => {
     const formattedStartDate = formatDate(startDate);
     const formattedEndDate = formatDate(endDate);
-    onStartDateChange(formattedStartDate, formattedEndDate);
+    console.log(typeof formattedStartDate, typeof formattedEndDate); // string
+
+    onStartDateChange(startDate, endDate);
+    // onStartDateChange(
+    //   JSON.stringify(formattedStartDate),
+    //   JSON.stringify(formattedEndDate),
+    // );
   }, [startDate, endDate]);
+  console.log('startDate', startDate);
 
   return (
     <SWrapper>
@@ -98,7 +104,7 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
       <>
         <SDatePickerBox>
           <>
-            <SCalender
+            <DatePicker
               selected={startDate} //선택된 날짜를 나타내는 속성
               onChange={(date) => handleDateChange(date as Date, endDate)} //날짜가 선택되었을때 호출되는 콜백 함수
               minDate={new Date('2000-01-01')} // minDate 이전 날짜 선택 불가
