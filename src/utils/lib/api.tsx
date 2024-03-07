@@ -54,7 +54,7 @@ export const getRemainingDayData = async (
     );
     console.log('response:', response);
 
-    return response;
+    return response.data;
   } catch (error) {
     console.log('남은 학기 일수 조회 에러', error);
     throw new Error('해당 학기의 남은 일수를 조회하는데 에러가 발생했습니다.');
@@ -136,12 +136,20 @@ export const removeTodo = async (
     throw new Error('todo 삭제 에러가 발생했습니다.');
   }
 };
-
+interface CreateSemester {
+  semesterName: string;
+  lastClass: string;
+  email: string;
+  startDate: string;
+  endDate: string;
+}
 // 학기 추가하기
-export const createSemester = async (semesterData: object) => {
+export const createSemester = async (semesterData: CreateSemester) => {
   try {
     const response = await instanceAxios.post('/tnote/schedule', semesterData);
-    return response.data;
+    console.log(response.data);
+
+    return response.data.data;
   } catch {
     throw new Error('학기 리스트 생성 에러가 발생했습니다.');
   }
@@ -167,7 +175,7 @@ export const updateSemester = async (
       `/tnote/schedule/${scheduleId}`,
       semesterData,
     );
-    return response;
+    return response.data;
   } catch {
     throw new Error('학기 수정 에러가 발생했습니다.');
   }
