@@ -25,9 +25,10 @@ interface SemesterMenu {
   onClickAddBtn: () => void;
 }
 const SemesterMenu = ({ onClickAddBtn }: SemesterMenu) => {
-  // const { scheduleId } = useParams();
-  const { id } = useRecoilValue(scheduleIdState); // 학기 추가 안했을 시 아직 null
-  console.log(1, id); // 학기 추가 안했을 시 아직 null
+  const { scheduleId } = useParams();
+  console.log(scheduleId);
+
+  // const { id } = useRecoilValue(scheduleIdState); // 학기 추가 안했을 시 아직 null
 
   const location = useLocation(); // 현재 url정보에 접근
 
@@ -41,7 +42,9 @@ const SemesterMenu = ({ onClickAddBtn }: SemesterMenu) => {
         {/* <Link to={toPath}> */}
         <SButton onClick={onClickAddBtn}>추가</SButton>
         {/* </Link> */}
-        <Link to={id ? `/semesterSetup/${id}` : '/semesterSetup'}>
+        <Link
+          to={scheduleId ? `/semesterSetup/${scheduleId}` : '/semesterSetup'}
+        >
           <SButton>설정</SButton>
         </Link>
       </SAddAndSetup>

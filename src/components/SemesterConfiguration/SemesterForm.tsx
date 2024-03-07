@@ -112,6 +112,7 @@ interface SemesterDataProps {
 const SemesterForm = () => {
   const { scheduleId } = useParams(); // 베너에서 id값을 달아서 가져옴
   const { isToggle, setIsToggle, handleChangeToggle } = useToggle();
+
   const navigate = useNavigate();
   const [semesterData, setSemesterData] = useState<SemesterDataProps>({
     id: null, // 없는 값
@@ -193,6 +194,8 @@ const SemesterForm = () => {
       startDate: data.startDate,
       endDate: data.endDate,
     }));
+    localStorage.setItem('semesterName', data.semesterName);
+    window.location.reload();
     // navigate(`/home/${scheduleId}`); // 여기서 객체 렌더링 문제가 나는 거였음 ㅜㅜ 페이지 이동을 하면서
   };
 

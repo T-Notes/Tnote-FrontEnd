@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { IcAddBlack, IcGoBack } from '../../assets/icons';
 import { useEffect, useState } from 'react';
@@ -55,11 +55,11 @@ interface SemesterListProps {
 }
 
 const SemesterSetupBanner = () => {
+  const navigate = useNavigate();
   const email = useRecoilValue(userDataState); // 이메일이 꼭 필요할까?
   const [semesterList, setSemesterList] = useState<SemesterListProps[]>([]);
   const { year, month } = useCurrentDate();
-  // const { scheduleId } = useParams();
-  const [schedule, setSchedule] = useRecoilState(scheduleIdState);
+  const scheduleId = localStorage.getItem('semesterId');
   // post와 조회를 분리하기 위함
   const [isPostSemester, setIsPostSemester] = useState<boolean>(false);
 
@@ -89,10 +89,8 @@ const SemesterSetupBanner = () => {
           endDate: '',
         };
         const getScheduleId = await createSemester(data); // await 키워드를 통해 api 요청의 응답이 돌아오기 전까지 다음 코드가 실행되지 않음 (동기적)
-        setSchedule({
-          id: getScheduleId.id,
-          name: getScheduleId.semesterName,
-        }); // 전역에다가 스케줄 Id 저장
+        localStorage.setItem('semesterId', getScheduleId.id);
+        localStorage.setItem('semesterName', getScheduleId.semesterName);
         setIsPostSemester((prev) => !prev);
       }
     } catch (error) {
@@ -113,14 +111,13 @@ const SemesterSetupBanner = () => {
       {/* 홈으로 이동 시 어디로 라우팅 되는걸까? */}
       <SBannerText>
         <SSetup>
-          <Link to={schedule.id ? `/home/${schedule.id}` : '/home'}>
+          <Link to={scheduleId ? `/home/${scheduleId}` : '/home'}>
             <IcGoBack />
           </Link>
           <SHeader>설정</SHeader>
         </SSetup>
         <SText>
           <SCaption>학기 설정</SCaption>
-
           {semesterList.map((semester) => (
             <div key={semester.id}>
               <Link to={`/semesterSetup/${semester.id}`}>
