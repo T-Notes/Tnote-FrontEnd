@@ -6,9 +6,9 @@ import { useEffect, useState } from 'react';
 import instanceAxios from '../../utils/InstanceAxios';
 import { createSemester, getAllSemesterNames } from '../../utils/lib/api';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataState } from '../../utils/lib/recoil/userDataState';
-
+import { scheduleIdState } from '../../utils/lib/recoil/scheduleIdState';
 const SHeader = styled.h1`
   ${({ theme }) => theme.fonts.h2}
 `;
@@ -58,63 +58,52 @@ const SemesterSetupBanner = () => {
   const email = useRecoilValue(userDataState); // 이메일이 꼭 필요할까?
   const [semesterList, setSemesterList] = useState<SemesterListProps[]>([]);
   const { year, month } = useCurrentDate();
-  const { scheduleId } = useParams();
-
-  // 문제: 처음 추가할 때도 리스트 조회 요청을 보내서 500이 뜸
-  // 추가한 학기가 있을때만 조회하는 것으로 수정
-  useEffect(() => {
-    // 추가된 학기가 있을 때만 조회 요청 보내기
-    const fetchData = async () => {
-      try {
-        const hasSemesters = semesterList.length > 0;
-        if (!hasSemesters) {
-          const data = await getAllSemesterNames();
-          setSemesterList(data);
-        }
-      } catch (error) {
-        console.log(
-          '전체 학기 리스트를 조회하는데 에러가 발생했습니다.',
-          error,
-        );
-      }
-    };
-    fetchData();
-  }, []); // 컴포넌트가 처음 마운트될 때만 실행
+  // const { scheduleId } = useParams();
+  const [scheduleId, setScheduleId] = useRecoilState(scheduleIdState);
+  // post와 조회를 분리하기 위함
+  const [isPostSemester, setIsPostSemester] = useState<boolean>(false);
 
   // 학기 자동 생성 기준
-  const addSemesterName = () => {
-    let newSemesterName = '';
+  const autoCreateSemester = () => {
+    let createdSemester = '';
     // month가 1~ 6월이면 상반기 =>  2학기 생성
     if (1 <= month && month <= 6) {
-      newSemesterName = `${year}년 2학기`;
+      createdSemester = `${year}년 2학기`;
       // month가 7~12월이면 하반기 => 1학기 생성
     } else if (7 <= month && month <= 12) {
-      newSemesterName = `${year}년 1학기`;
+      createdSemester = `${year}년 1학기`;
     }
-    return newSemesterName;
+    return createdSemester;
   };
 
   // 학기 Post
   const handleAddSemester = async () => {
-    const newSemesterName = addSemesterName();
+    const createdSemester = autoCreateSemester();
     try {
-      if (newSemesterName) {
+      if (createdSemester) {
         const data = {
-          semesterName: newSemesterName,
+          semesterName: createdSemester,
           lastClass: '',
           email: '',
           startDate: '',
           endDate: '',
         };
-        await createSemester(data);
-        const updatedSemesterList = await getAllSemesterNames();
-
-        setSemesterList(updatedSemesterList);
+        const getScheduleId = await createSemester(data); // await 키워드를 통해 api 요청의 응답이 돌아오기 전까지 다음 코드가 실행되지 않음 (동기적)
+        setScheduleId(getScheduleId.id); // 전역에다가 스케줄 Id 저장
+        setIsPostSemester((prev) => !prev);
       }
     } catch (error) {
       console.log('학기 추가에 실패했습니다.', error);
     }
   };
+  // 조회
+  useEffect(() => {
+    const getSemester = async () => {
+      const updatedSemesterList = await getAllSemesterNames();
+      setSemesterList(updatedSemesterList);
+    };
+    getSemester();
+  }, [isPostSemester]);
 
   return (
     <SWrapper>
@@ -129,11 +118,11 @@ const SemesterSetupBanner = () => {
         <SText>
           <SCaption>학기 설정</SCaption>
 
-          {semesterList.map((data) => (
-            <div key={data.id}>
-              <Link to={`/semesterSetup/${data.id}`}>
+          {semesterList.map((semester) => (
+            <div key={semester.id}>
+              <Link to={`/semesterSetup/${semester.id}`}>
                 <ul>
-                  <li>{data.semesterName}</li>
+                  <li>{semester.semesterName}</li>
                 </ul>
               </Link>
             </div>
