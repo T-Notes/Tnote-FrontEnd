@@ -20,7 +20,6 @@ const instanceAxios: AxiosInstance = axios.create({
 instanceAxios.interceptors.response.use(
   (response) => {
     //##응답이 전달되기 전에 작업 수행
-    console.log(1, response);
 
     return response;
   },
@@ -38,29 +37,29 @@ instanceAxios.interceptors.response.use(
       try {
         console.log(4, '갱신요청');
         const refreshToken = localStorage.getItem('refreshToken');
-        const response = await axios.post(
-          'http://j9972.kr/tnote/refresh',
-          {},
-          {
-            headers: {
-              'Content-Type': 'application/json;charset=UTF-8',
-              Accept: 'application/json',
-              RefreshToken: refreshToken,
-            },
+        // console.log('refreshToken', refreshToken); // 잘 받아와짐
+
+        const response = await axios.get('http://j9972.kr/tnote/refresh', {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            RefreshToken: refreshToken,
           },
-        );
+        });
         // 새로운 엑세스 토큰 저장
         const newAccessToken = response.data.accessToken;
+        console.log(5, 'newAccessToken:', newAccessToken);
         localStorage.setItem('accessToken', newAccessToken);
 
         // 갱신된 토큰으로 요청을 재시도합니다.
         error.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
         return axios(error.config); // 다시 해당 요청을 보냅니다.
       } catch (refreshError) {
-        console.log(5, '갱신실패');
+        console.log(6, '갱신실패');
         console.error('토큰 갱신 실패', refreshError);
         // 토큰 갱신에 실패한 경우 로그아웃 또는 다른 처리를 수행합니다.
-        localStorage.clear();
+        // localStorage.clear();
+        // window.location.reload();
       }
     }
 
