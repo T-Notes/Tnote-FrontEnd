@@ -21,6 +21,7 @@ import {
   updateSemester,
 } from '../../utils/lib/api';
 import DropdownInput from '../common/DropdownInput';
+import Swal from 'sweetalert2';
 
 const SWrapper = styled.div`
   display: flex;
@@ -121,24 +122,7 @@ const SemesterForm = () => {
     startDate: new Date(), // 왜 null?
     endDate: new Date(),
   });
-  interface DataProps {
-    id: number | null;
-    semesterName: string;
-    lastClass: string;
-    email: string;
-    subjects: null;
-    startDate: Date;
-    endDate: Date;
-  }
-  const [testDate, setTestDate] = useState<DataProps>({
-    id: null, // 없는 값
-    semesterName: '',
-    lastClass: '',
-    email: '',
-    subjects: null, // 없는 값
-    startDate: new Date(),
-    endDate: new Date(),
-  });
+
   const handleChangeSemesterName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const semesterName = e.target.value;
     setSemesterData((prev) => ({ ...prev, semesterName: semesterName }));
@@ -183,14 +167,6 @@ const SemesterForm = () => {
       startDate: data.startDate,
       endDate: data.endDate,
     }));
-
-    // setSemesterDataServer((prev) => ({
-    //   ...prev,
-    //   semesterName: data.semesterName,
-    //   lastClass: data.lastClass,
-    //   startDate: data.startDate,
-    //   endDate: data.endDate,
-    // }));
   };
 
   // 유저가 저장한 값 가져오기
@@ -204,17 +180,12 @@ const SemesterForm = () => {
   // 여기서 받은 응답을 그대로 렌더링한다는 에러가 뜸.
   const handleUpdateSemester = async () => {
     console.log(1, '저장 실행');
+    console.log(2, semesterData.startDate);
 
     const editSemester = await updateSemester(scheduleId, semesterData);
     const data = editSemester.data;
     console.log(2, data);
-    // setTestDate((prev) => ({
-    //   ...prev,
-    //   semesterName: data.semesterName,
-    //   lastClass: data.lastClass,
-    //   startDate: new Date(data.startDate),
-    //   endDate: new Date(data.endDate),
-    // }));
+
     setSemesterData((prev) => ({
       ...prev,
       semesterName: data.semesterName,
@@ -222,12 +193,14 @@ const SemesterForm = () => {
       startDate: data.startDate,
       endDate: data.endDate,
     }));
-    // navigate(`/home/${scheduleId}`);
+    // navigate(`/home/${scheduleId}`); // 여기서 객체 렌더링 문제가 나는 거였음 ㅜㅜ 페이지 이동을 하면서
   };
 
   // 학기 삭제하기
   const handleDeleteSemester = async () => {
     await removeSemester(scheduleId);
+    navigate('/semesterSetup');
+    window.location.reload();
   };
 
   return (
@@ -237,20 +210,21 @@ const SemesterForm = () => {
         <SLabel>학기 이름</SLabel>
         <SInput
           placeholder="EX: 2024년 1학기"
-          value={testDate.semesterName}
+          value={semesterData.semesterName}
           onChange={handleChangeSemesterName}
         />
         <SLabel>학기 기간 설정</SLabel>
 
-        <DateRangePicker onStartDateChange={handleParentStartDateChange} />
-        {/* <div>{semesterData.startDate}</div>
-        <div>{semesterData.endDate}</div> */}
-
+        <DateRangePicker
+          // serverStartDate={semesterData.startDate}
+          onStartDateChange={handleParentStartDateChange}
+        />
+        <div>{JSON.stringify(semesterData.startDate)}</div>
         <SLabel>마지막 교시</SLabel>
 
         <SDropdownWrapper>
           <SLastClassInput
-            value={testDate.lastClass}
+            value={semesterData.lastClass}
             readOnly
             placeholder="교시를 선택해주세요"
           />

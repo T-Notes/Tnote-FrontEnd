@@ -60,6 +60,17 @@ interface DateProps {
 const DateRangePicker = ({ onStartDateChange }: DateProps) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  // const [value, setValue] = useState(serverStartDate || new Date());
+  // console.log(1, value);
+
+  // useEffect(() => {
+  //   if (serverStartDate) {
+  //     console.log(2, serverStartDate);
+  //     setValue(serverStartDate);
+  //   } else {
+  //     setValue(new Date());
+  //   }
+  // }, []);
 
   // 날짜를 "yyyy-mm-dd" 형식의 문자열로 변환하는 함수
   const formatDate = (date: Date) => {
@@ -72,25 +83,28 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
   const handleDateChange = (start: Date, end: Date) => {
     setStartDate(start);
     setEndDate(end);
+    // setValue(start);
 
     if (end < start) {
       alert('시작일보다 종료일이 빠릅니다.');
     }
   };
 
+  // console.log(3, value);
+
   // 부모 컴포넌트에 날짜 데이터를 "yyyy-mm-dd" 형식으로 보내기
   useEffect(() => {
     const formattedStartDate = formatDate(startDate);
     const formattedEndDate = formatDate(endDate);
-    console.log(typeof formattedStartDate, typeof formattedEndDate); // string
+    // console.log(typeof formattedStartDate, typeof formattedEndDate); // string
 
     onStartDateChange(startDate, endDate);
     // onStartDateChange(
     //   JSON.stringify(formattedStartDate),
     //   JSON.stringify(formattedEndDate),
     // );
+    // console.log(4, value);
   }, [startDate, endDate]);
-  console.log('startDate', startDate);
 
   return (
     <SWrapper>
@@ -104,16 +118,11 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
       <>
         <SDatePickerBox>
           <>
-            <DatePicker
+            <SCalender
               selected={startDate} //선택된 날짜를 나타내는 속성
               onChange={(date) => handleDateChange(date as Date, endDate)} //날짜가 선택되었을때 호출되는 콜백 함수
               minDate={new Date('2000-01-01')} // minDate 이전 날짜 선택 불가
               // maxDate={new Date(endDate)}
-              // 아래 속성들은 글쓰기 모달에서만 필요한 값.
-              // showTimeSelect // 시간 선택 옵션 표시
-              // timeFormat="HH:mm" // 시간 표시 형식을 지정하는 문자열 (24시간 형식)
-              // timeIntervals={30} // 시간 선택 옵션에서 표시할 분 간격
-              // timeCaption="시간"
               shouldCloseOnSelect={true} // 날짜 클릭 시 자동으로 닫히는 속성
               dateFormat="yyyy-MM-dd" // 날짜 표시 형식
             />
@@ -124,9 +133,6 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
             selected={endDate}
             onChange={(date) => handleDateChange(startDate, date as Date)}
             minDate={new Date(startDate)}
-            // showTimeSelect
-            // timeFormat="HH:mm"
-            // timeIntervals={30}
             dateFormat="yyyy-MM-dd"
             shouldCloseOnSelect={true}
           />
