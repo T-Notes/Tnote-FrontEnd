@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from '../pages/Home';
 import Landing from '../pages/Landing';
 import ProfileInfo from '../pages/ProfileInfo';
-import AddSemester from '../pages/AddSemester';
 import Timetable from '../pages/Timetable';
 import HomeLayout from './HomeLayout';
 import SemesterSetup from '../pages/SemesterSetup';
@@ -26,7 +25,6 @@ const Router = () => {
           />
           {/* 유저가 학기 추가를 하기 전이라 id가 없을때 보여줄 페이지 */}
           <Route path="/semesterSetup" element={<SemesterSetup />} />
-          <Route path="/addSemester" element={<AddSemester />} />
 
           {/* 학기 추가 후 시간표 페이지 클릭 */}
           <Route path="/timetable/:scheduleId" element={<Timetable />} />
