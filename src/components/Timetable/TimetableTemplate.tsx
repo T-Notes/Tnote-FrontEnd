@@ -43,29 +43,29 @@ const TimetableTemplate = () => {
   const { scheduleId } = useParams();
   const [lastClass, setLastClass] = useState('9');
   const lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
-
+  const [subjectsList, setSubjectList] = useState<any[]>([]);
   //임시더미데이터
-  const data = [
-    {
-      id: 2,
-      semesterName: '3학년2학기',
-      lastClass: '9교시',
-      email: 'jh485200@gmail.com',
-      subjects: [
-        {
-          id: 2,
-          subjectName: '물리',
-          classTime: '3교시',
-          classDay: '수요일',
-          classLocation: '3학년 1반 교실',
-          memo: '힘내자',
-          semesterName: '',
-        },
-      ],
-      startDate: '2024-01-01',
-      endDate: '2024-03-01',
-    },
-  ];
+  // const data = [
+  //   {
+  //     id: 2,
+  //     semesterName: '3학년2학기',
+  //     lastClass: '9교시',
+  //     email: 'jh485200@gmail.com',
+  //     subjects: [
+  //       {
+  //         id: 2,
+  //         subjectName: '물리',
+  //         classTime: '3교시',
+  //         classDay: '수요일',
+  //         classLocation: '3학년 1반 교실',
+  //         memo: '힘내자',
+  //         semesterName: '',
+  //       },
+  //     ],
+  //     startDate: '2024-01-01',
+  //     endDate: '2024-03-01',
+  //   },
+  // ];
 
   // api 연결 후 주석 제거
   useEffect(() => {
@@ -75,8 +75,9 @@ const TimetableTemplate = () => {
           .get(`/tnote/schedule/week/${scheduleId}`)
           .then((res) => {
             const getData = res.data;
-            console.log(3, getData.data[0].lastClass);
-
+            const subjectArray = getData.data;
+            console.log(3, getData.data);
+            setSubjectList(subjectArray);
             setLastClass(getData.data[0].lastClass);
           });
       } catch (err) {
@@ -121,6 +122,20 @@ const TimetableTemplate = () => {
   // lastClass 값에 따라 필요한 시간표만 추출
   const filteredTimetables = timetables.slice(0, lastClassNumber);
 
+  // 두 값을 비교 후 맞다면 true를, 아니라면 false를 반환하는 함수를 만들자
+  // 배열의 값과  filteredTimetables의 값이 맞다면 렌더링하기
+  const isSameClassDay = (
+    day1: string | undefined,
+    day2: string | undefined,
+  ) => {
+    return day1 === day2;
+  };
+  const isSameClassTime = (
+    time1: string | undefined,
+    time2: string | undefined,
+  ) => {
+    return time1 === time2;
+  };
   // 1교시~9교시 까지의 리스트 만들기
   // 유저에게 넘어온 lastClass 에 맞게 보여주기
   return (
@@ -145,9 +160,9 @@ const TimetableTemplate = () => {
             {days.map((d) => (
               <SDaysWrapper key={d.id}>
                 {/* 여기서 data의 정보를 넣어줌 */}
-                {data.map((userData) => (
-                  <div key={userData.id}>
-                    {userData.subjects
+                {subjectsList.map((subjects) => (
+                  <div key={subjects.id}>
+                    {subjects.subjects // 배열 [{},{},{},{}]
                       .filter(
                         (subject: any) =>
                           subject.classTime === t.class &&
