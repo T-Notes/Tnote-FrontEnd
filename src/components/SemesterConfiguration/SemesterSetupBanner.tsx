@@ -55,11 +55,13 @@ interface SemesterListProps {
 }
 
 const SemesterSetupBanner = () => {
+  const { scheduleId } = useParams();
   const navigate = useNavigate();
   const email = useRecoilValue(userDataState); // 이메일이 꼭 필요할까?
   const [semesterList, setSemesterList] = useState<SemesterListProps[]>([]);
   const { year, month } = useCurrentDate();
-  const scheduleId = localStorage.getItem('semesterId');
+  // const scheduleId = localStorage.getItem('semesterId');
+
   // post와 조회를 분리하기 위함
   const [isPostSemester, setIsPostSemester] = useState<boolean>(false);
 
@@ -78,19 +80,19 @@ const SemesterSetupBanner = () => {
 
   // 학기 Post
   const handleAddSemester = async () => {
-    const createdSemester = autoCreateSemester();
+    const createdSemester = autoCreateSemester(); // 학기 자동생성 함수 호출
     try {
       if (createdSemester) {
         const data = {
           semesterName: createdSemester,
           lastClass: '',
           email: '',
-          startDate: '',
-          endDate: '',
+          startDate: new Date(),
+          endDate: new Date(),
         };
-        const getScheduleId = await createSemester(data); // await 키워드를 통해 api 요청의 응답이 돌아오기 전까지 다음 코드가 실행되지 않음 (동기적)
-        localStorage.setItem('semesterId', getScheduleId.id);
-        localStorage.setItem('semesterName', getScheduleId.semesterName);
+        await createSemester(data); // await 키워드를 통해 api 요청의 응답이 돌아오기 전까지 다음 코드가 실행되지 않음 (동기적)
+        // localStorage.setItem('semesterId', getScheduleId.id);
+        // localStorage.setItem('semesterName', getScheduleId.semesterName);
         setIsPostSemester((prev) => !prev);
       }
     } catch (error) {

@@ -28,8 +28,6 @@ const SemesterMenu = ({ onClickAddBtn }: SemesterMenu) => {
   const { scheduleId } = useParams();
   console.log(scheduleId);
 
-  // const { id } = useRecoilValue(scheduleIdState); // 학기 추가 안했을 시 아직 null
-
   const location = useLocation(); // 현재 url정보에 접근
 
   // 아이디가 있으면 => /semesterSetup/${scheduleId}

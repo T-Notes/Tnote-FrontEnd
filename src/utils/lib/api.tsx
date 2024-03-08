@@ -140,8 +140,8 @@ interface CreateSemester {
   semesterName: string;
   lastClass: string;
   email: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
 }
 // 학기 추가하기
 export const createSemester = async (semesterData: CreateSemester) => {
