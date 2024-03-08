@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Dropdown } from '../common/Dropdown';
-import { getAllSemesterNames } from '../../utils/lib/api';
+import { getAllSemesterNames, getSemesterData } from '../../utils/lib/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import DropdownInput from '../common/DropdownInput';
 import SemesterDropdownList from './SemesterDropdownList';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { scheduleIdState } from '../../utils/lib//recoil/scheduleIdState';
+import { lowerFirst } from 'lodash';
 
 interface Semester {
   id: string;
@@ -37,16 +38,12 @@ interface Semester {
 
 const AllSemesterNamesForm = () => {
   const navigate = useNavigate();
-  const semesterName = localStorage.getItem('semesterName'); // 유저가 학기를 설정해놓았다면 로컬스토리지에서 가져오기
-
+  const { scheduleId } = useParams();
+  const user = localStorage.getItem('userId');
   const [semesterOptions, setSemesterOptions] = useState<any[]>([]); // 조회된 학기 리스트 가져오기
   const [selectedSemester, setSelectedSemester] = useState<string>(''); // 유저가 클릭한 학기
   const [isDropdownSemester, setIsDropdownSemester] = useState<boolean>(false); // 드롭다운
-  // const [schedule, setSchedule] = useRecoilState(scheduleIdState); // 전역 스케줄 아이디
-
-  // console.log('jj', schedule);
-  // const { id } = useRecoilValue(scheduleIdState);
-  // console.log('jk', id);
+  const [defaultSemester, setDefaultSemester] = useState<string>('');
   // 드롭다운 제어 함수
   const openDropdownSemester = () => {
     setIsDropdownSemester(true);
@@ -58,16 +55,17 @@ const AllSemesterNamesForm = () => {
   // 조회리스트 가져오기
   // 예상 문제 발생시점: 조회할 것이 없을때 에러를 낼듯
   useEffect(() => {
-    if (semesterName) {
+    if (user) {
       const getSemesterNames = async () => {
         try {
           const response = await getAllSemesterNames();
           setSemesterOptions(response);
+          console.log(semesterOptions);
         } catch {}
       };
       getSemesterNames();
     }
-  }, [semesterName]); // 의존성 배열 넣기
+  }, [user]); // 의존성 배열 넣기
 
   // 선택된 학기값
   const handleClickSemester = (semesterName: string, semesterId: string) => {
@@ -81,18 +79,23 @@ const AllSemesterNamesForm = () => {
     setSelectedSemester(semesterName);
     closeDropdownSemester();
   };
-
+  // url에 학기 Id가 있다면 해당 학기 정보 조회 후 value에 값 넣기
   useEffect(() => {
-    if (semesterName) {
-      setSelectedSemester(semesterName); // 페이지가 로드될 때 로컬 스토리지에서 선택된 학기값을 가져와 상태에 설정
+    if (scheduleId) {
+      const getSemesterName = async () => {
+        const response = await getSemesterData(scheduleId);
+        const defaultSemesterName = response.data[0].semesterName;
+        setDefaultSemester(defaultSemesterName);
+      };
+      getSemesterName();
     }
-  }, []);
+  }, [scheduleId]);
 
   return (
     <>
       <DropdownInput
         placeholder="학기를 추가해주세요"
-        value={selectedSemester}
+        value={defaultSemester || selectedSemester}
         size="small"
         theme={{ background: 'white' }}
         dropdownList={
