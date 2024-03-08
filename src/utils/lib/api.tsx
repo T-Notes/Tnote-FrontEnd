@@ -282,3 +282,24 @@ export const deletedAccount = async (email: string) => {
     return response;
   } catch {}
 };
+interface SubjectDate {
+  subjectName: string;
+  classTime: string;
+  classDay: string;
+  classLocation: string;
+  memo: string;
+  color: string;
+}
+// 과목 post
+export const crateSubject = async (
+  scheduleId: string | undefined,
+  data: SubjectDate,
+) => {
+  try {
+    const response = await instanceAxios.post(
+      `/tnote/subjects/${scheduleId}`,
+      data,
+    );
+    return response.data;
+  } catch {}
+};

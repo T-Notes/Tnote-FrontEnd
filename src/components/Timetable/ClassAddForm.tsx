@@ -2,8 +2,6 @@ import styled from 'styled-components';
 import { useToggle } from '../../utils/useHooks/useToggle';
 
 import {
-  IcCloseDropdown,
-  IcOpenDropdown,
   IcClose,
   IcSelectedIcon,
   IcBlueColor,
@@ -22,6 +20,7 @@ import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 import { useSetRecoilState } from 'recoil';
 import { useNavigate, useParams } from 'react-router-dom';
 import DropdownInput from '../common/DropdownInput';
+import { crateSubject } from '../../utils/lib/api';
 
 const SClassAddFormWrapper = styled.div`
   display: flex;
@@ -128,7 +127,7 @@ const ClassAddForm = ({ onCloseAddClass }: IsClassAddProps) => {
   const { scheduleId } = useParams();
   const navigate = useNavigate();
   const [subjectName, setSubjectName] = useState<string>('');
-  const [classTime, setClassTime] = useState<number>();
+  const [classTime, setClassTime] = useState<string>('');
   const [classDay, setClassDay] = useState<string>('');
   const [classLocation, setClassLocation] = useState<string>('');
   const [color, setColor] = useState<string>('');
@@ -145,15 +144,15 @@ const ClassAddForm = ({ onCloseAddClass }: IsClassAddProps) => {
     setIsClassDayDropdownOpen(false);
   };
   const classNum = [
-    { id: 1, class: 1 },
-    { id: 2, class: 2 },
-    { id: 3, class: 3 },
-    { id: 4, class: 4 },
-    { id: 5, class: 5 },
-    { id: 6, class: 6 },
-    { id: 7, class: 7 },
-    { id: 8, class: 8 },
-    { id: 9, class: 9 },
+    { id: 1, class: '1' },
+    { id: 2, class: '2' },
+    { id: 3, class: '3' },
+    { id: 4, class: '4' },
+    { id: 5, class: '5' },
+    { id: 6, class: '6' },
+    { id: 7, class: '7' },
+    { id: 8, class: '8' },
+    { id: 9, class: '9' },
   ];
 
   const ClassColor = [
@@ -192,27 +191,19 @@ const ClassAddForm = ({ onCloseAddClass }: IsClassAddProps) => {
     setMemo(e.target.value);
   };
 
-  const handleSaveClassForm = () => {
-    instanceAxios
-      .post(`/tnote/subjects/${scheduleId}`, {
-        subjectName: subjectName,
-        classTime: classTime,
-        classDay: classDay,
-        classLocation: classLocation,
-        memo: memo,
-        color: selectedColor,
-        date: '2024-01-01',
-        scheduleId: scheduleId,
-      })
-      .then((res) => {
-        console.log('수업 과목 저장에 성공했습니다!');
-        console.log(res);
-      });
+  const handleSaveClassForm = async () => {
+    const data = {
+      subjectName: subjectName,
+      classTime: classTime,
+      classDay: classDay,
+      classLocation: classLocation,
+      memo: memo,
+      color: selectedColor,
+    };
+    await crateSubject(scheduleId, data);
+    onCloseAddClass(); // 저장 후 추가 툴팁 닫아주기
   };
 
-  // const handleBackPage = () => {
-  //   navigate(`/timetable/${scheduleId}`);
-  // };
   return (
     <SClassAddFormWrapper>
       <SClassAddFormLayout>
