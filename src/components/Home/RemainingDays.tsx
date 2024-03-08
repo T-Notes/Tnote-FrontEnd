@@ -33,7 +33,7 @@ const SRemainingDay = styled.p``;
 
 const RemainingDays = () => {
   const { scheduleId } = useParams(); //현재 url에서 추출한 동적으로 변하는 id값
-  const [remainingDay, setRemainingDay] = useState<string | undefined>('');
+  const [remainingDay, setRemainingDay] = useState<number>(0);
   // 고민1. formattedDate형식으로 넘겨주면 되는건가?
   const { currentDate } = useCurrentDate();
   const date = currentDate.toISOString().split('T')[0];
@@ -60,7 +60,9 @@ const RemainingDays = () => {
     <SRemainingDayWrapper>
       <SFont>이번 학기 남은 일수</SFont>
       <SDayBox>
-        <SRemainingDay>{remainingDay || '생성된 학기 없음'}</SRemainingDay>
+        <SRemainingDay>
+          {remainingDay !== null ? remainingDay : '생성된 학기 없음'}
+        </SRemainingDay>
       </SDayBox>
     </SRemainingDayWrapper>
   );
