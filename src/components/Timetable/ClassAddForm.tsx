@@ -121,22 +121,27 @@ const SDropdownInput = styled(DropdownInput)`
 `;
 interface IsClassAddProps {
   onCloseAddClass: () => void;
+  setReloadTrigger: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ClassAddForm = ({ onCloseAddClass }: IsClassAddProps) => {
+const ClassAddForm = ({
+  onCloseAddClass,
+  setReloadTrigger,
+}: IsClassAddProps) => {
   const { scheduleId } = useParams();
   const navigate = useNavigate();
   const [subjectName, setSubjectName] = useState<string>('');
   const [classTime, setClassTime] = useState<string>('');
-  const [classDay, setClassDay] = useState<string>('');
+  const [classDay, setClassDay] = useState<string>('MONDAY');
   const [classLocation, setClassLocation] = useState<string>('');
   const [color, setColor] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [memo, setMemo] = useState<string>('');
-
   const { currentDate } = useCurrentDate();
   const date = currentDate;
   const [isClassDayDropdownOpen, setIsClassDayDropdownOpen] = useState(false);
+  // const [reloadTrigger, setReloadTrigger] = useState(false); // 화면 reload 추가
+
   const openClassDayDropdown = () => {
     setIsClassDayDropdownOpen(true);
   };
@@ -194,13 +199,14 @@ const ClassAddForm = ({ onCloseAddClass }: IsClassAddProps) => {
   const handleSaveClassForm = async () => {
     const data = {
       subjectName: subjectName,
-      classTime: classTime,
+      classTime: `${classTime}교시`,
       classDay: classDay,
       classLocation: classLocation,
       memo: memo,
       color: selectedColor,
     };
     await crateSubject(scheduleId, data);
+    setReloadTrigger((prev) => !prev);
     onCloseAddClass(); // 저장 후 추가 툴팁 닫아주기
   };
 

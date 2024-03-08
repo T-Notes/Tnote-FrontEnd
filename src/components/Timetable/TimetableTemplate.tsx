@@ -38,34 +38,16 @@ const SClassAndTime = styled.td`
   color: #5b5b5b;
   font-weight: 700;
 `;
-const TimetableTemplate = () => {
+
+interface TimetableTemplate {
+  reloadTrigger: boolean;
+}
+const TimetableTemplate = ({ reloadTrigger }: TimetableTemplate) => {
   const { isToggle, handleChangeToggle } = useToggle();
   const { scheduleId } = useParams();
   const [lastClass, setLastClass] = useState('9');
   const lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
   const [subjectsList, setSubjectList] = useState<any[]>([]);
-  //임시더미데이터
-  // const data = [
-  //   {
-  //     id: 2,
-  //     semesterName: '3학년2학기',
-  //     lastClass: '9교시',
-  //     email: 'jh485200@gmail.com',
-  //     subjects: [
-  //       {
-  //         id: 2,
-  //         subjectName: '물리',
-  //         classTime: '3교시',
-  //         classDay: '수요일',
-  //         classLocation: '3학년 1반 교실',
-  //         memo: '힘내자',
-  //         semesterName: '',
-  //       },
-  //     ],
-  //     startDate: '2024-01-01',
-  //     endDate: '2024-03-01',
-  //   },
-  // ];
 
   // api 연결 후 주석 제거
   useEffect(() => {
@@ -75,8 +57,8 @@ const TimetableTemplate = () => {
           .get(`/tnote/schedule/week/${scheduleId}`)
           .then((res) => {
             const getData = res.data;
-            const subjectArray = getData.data;
-            console.log(3, getData.data);
+            const subjectArray = getData.data[0].subjects;
+            console.log(3, getData.data[0].subjects);
             setSubjectList(subjectArray);
             setLastClass(getData.data[0].lastClass);
           });
@@ -85,7 +67,7 @@ const TimetableTemplate = () => {
       }
     };
     getTimetable();
-  }, [scheduleId]);
+  }, [scheduleId, reloadTrigger]);
 
   useEffect(() => {
     if (lastClass === '') {
@@ -160,25 +142,22 @@ const TimetableTemplate = () => {
             {days.map((d) => (
               <SDaysWrapper key={d.id}>
                 {/* 여기서 data의 정보를 넣어줌 */}
-                {subjectsList.map((subjects) => (
-                  <div key={subjects.id}>
-                    {subjects.subjects // 배열 [{},{},{},{}]
-                      .filter(
-                        (subject: any) =>
-                          subject.classTime === t.class &&
-                          subject.classDay === d.day,
-                      )
-                      .map((subject: any) => (
-                        <SSubjectBox
-                          key={subject.id}
-                          onClick={handleChangeToggle}
-                        >
-                          <p>{subject.classLocation}</p>
-                          <p>{subject.subjectName}</p>
+                {subjectsList.map((item) => {
+                  if (
+                    isSameClassDay(item.classDay, d.day) &&
+                    isSameClassTime(item.classTime, t.class)
+                  ) {
+                    return (
+                      <div key={item.id}>
+                        <SSubjectBox onClick={handleChangeToggle}>
+                          <p>{item.classLocation}</p>
+                          <p>{item.subjectName}</p>
                         </SSubjectBox>
-                      ))}
-                  </div>
-                ))}
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
               </SDaysWrapper>
             ))}
           </tr>

@@ -22,6 +22,7 @@ const STimetableWrapper = styled.div`
 const STimetable = styled.div``;
 const Timetable = () => {
   const [isAddClass, setIsAddClass] = useState<boolean>(false);
+  const [reloadTrigger, setReloadTrigger] = useState<boolean>(false); // 화면 reload 추가
 
   const handleOpenAddClass = () => {
     setIsAddClass(true);
@@ -36,12 +37,15 @@ const Timetable = () => {
         <div>
           <SemesterMenu onClickAddBtn={handleOpenAddClass} />
           <TimetableHeader />
-          <TimetableTemplate />
+          <TimetableTemplate reloadTrigger={reloadTrigger} />
         </div>
       </STimetableWrapper>
       {isAddClass && (
         <>
-          <ClassAddForm onCloseAddClass={handleCloseAddClass} />
+          <ClassAddForm
+            onCloseAddClass={handleCloseAddClass}
+            setReloadTrigger={setReloadTrigger}
+          />
         </>
       )}
     </>
