@@ -13,14 +13,18 @@ import {
   IcPurpleColor,
 } from '../../assets/icons';
 import ClassDayList from './ClassDayList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../common/styled/Button';
 import instanceAxios from '../../utils/InstanceAxios';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 import { useSetRecoilState } from 'recoil';
 import { useNavigate, useParams } from 'react-router-dom';
 import DropdownInput from '../common/DropdownInput';
-import { crateSubject } from '../../utils/lib/api';
+import {
+  crateSubject,
+  editSubject,
+  getSelectedSubjectData,
+} from '../../utils/lib/api';
 
 const SClassAddFormWrapper = styled.div`
   display: flex;
@@ -122,17 +126,23 @@ const SDropdownInput = styled(DropdownInput)`
 interface IsClassAddProps {
   onCloseAddClass: () => void;
   setReloadTrigger: React.Dispatch<React.SetStateAction<boolean>>;
+  isEditMode: boolean;
+  setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+  subjectId: string;
 }
 
 const ClassAddForm = ({
   onCloseAddClass,
   setReloadTrigger,
+  isEditMode,
+  setIsEditMode,
+  subjectId,
 }: IsClassAddProps) => {
   const { scheduleId } = useParams();
   const navigate = useNavigate();
   const [subjectName, setSubjectName] = useState<string>('');
   const [classTime, setClassTime] = useState<string>('');
-  const [classDay, setClassDay] = useState<string>('MONDAY');
+  const [classDay, setClassDay] = useState<string>('');
   const [classLocation, setClassLocation] = useState<string>('');
   const [color, setColor] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
@@ -141,6 +151,7 @@ const ClassAddForm = ({
   const date = currentDate;
   const [isClassDayDropdownOpen, setIsClassDayDropdownOpen] = useState(false);
   // const [reloadTrigger, setReloadTrigger] = useState(false); // 화면 reload 추가
+  const [enDay, setEnDay] = useState<string>('');
 
   const openClassDayDropdown = () => {
     setIsClassDayDropdownOpen(true);
@@ -178,6 +189,23 @@ const ClassAddForm = ({
   };
 
   const handleSelectedClassDay = (day: any) => {
+    console.log(day);
+
+    if (day === '월요일') {
+      setEnDay('MONDAY');
+    } else if (day === '화요일') {
+      setEnDay('TUESDAY');
+    } else if (day === '수요일') {
+      setEnDay('WEDNESDAY');
+    } else if (day === '목요일') {
+      setEnDay('THURSDAY');
+    } else if (day === '금요일') {
+      setEnDay('FRIDAY');
+    } else if (day === '토요일') {
+      setEnDay('SATURDAY');
+    } else if (day === '일요일') {
+      setEnDay('SUNDAY');
+    }
     setClassDay(day);
     closeClassDayDropdown();
   };
@@ -197,18 +225,52 @@ const ClassAddForm = ({
   };
 
   const handleSaveClassForm = async () => {
-    const data = {
+    const postData = {
       subjectName: subjectName,
       classTime: `${classTime}교시`,
-      classDay: classDay,
+      classDay: enDay,
       classLocation: classLocation,
       memo: memo,
       color: selectedColor,
     };
-    await crateSubject(scheduleId, data);
-    setReloadTrigger((prev) => !prev);
-    onCloseAddClass(); // 저장 후 추가 툴팁 닫아주기
+    const pathData = {
+      subjectName: subjectName,
+      classTime: classTime,
+      classDay: enDay,
+      classLocation: classLocation,
+      memo: memo,
+      color: selectedColor,
+    };
+    if (isEditMode) {
+      // 수정 요청
+      await editSubject(scheduleId, subjectId, pathData);
+      setReloadTrigger((prev) => !prev);
+      onCloseAddClass(); // 저장 후 추가 툴팁 닫아주기
+    } else {
+      // post 요청
+      await crateSubject(scheduleId, postData);
+      setReloadTrigger((prev) => !prev);
+      onCloseAddClass(); // 저장 후 추가 툴팁 닫아주기
+    }
   };
+  useEffect(() => {
+    if (isEditMode) {
+      console.log('isEditMode가 true!');
+      const selectedSubjectData = async () => {
+        const response = await getSelectedSubjectData(scheduleId, subjectId);
+        const data = response.data;
+        console.log(response.data);
+        // 수정하는 상황일때
+        setSubjectName(data.subjectName);
+        setClassTime(data.classTime);
+        setClassDay(data.classDay);
+        setClassLocation(data.classLocation);
+        // setSelectedColor(data) // 색깔이 안옴
+        setMemo(data.memo);
+      };
+      selectedSubjectData();
+    }
+  }, []);
 
   return (
     <SClassAddFormWrapper>
@@ -246,7 +308,7 @@ const ClassAddForm = ({
                 size="mini"
                 theme={{ background: 'white' }}
                 placeholder="수업 요일을 선택해주세요"
-                value={classDay || ''}
+                value={classDay}
                 isDropdown={isClassDayDropdownOpen}
                 openDropdown={openClassDayDropdown}
                 closeDropdown={closeClassDayDropdown}

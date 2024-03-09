@@ -20,9 +20,12 @@ const STimetableWrapper = styled.div`
   bottom: 0;
 `;
 const STimetable = styled.div``;
+
 const Timetable = () => {
   const [isAddClass, setIsAddClass] = useState<boolean>(false);
   const [reloadTrigger, setReloadTrigger] = useState<boolean>(false); // 화면 reload 추가
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [subjectId, setSubjectId] = useState<string>('');
 
   const handleOpenAddClass = () => {
     setIsAddClass(true);
@@ -30,14 +33,26 @@ const Timetable = () => {
 
   const handleCloseAddClass = () => {
     setIsAddClass(false);
+    setIsEditMode(false); // 과목 추가/수정 모달 닫으면 다시 초기화
   };
+  console.log(1, 'isEditMode:', isEditMode);
+  console.log(2, 'subjectId:', subjectId);
+
   return (
     <>
       <STimetableWrapper>
         <div>
           <SemesterMenu onClickAddBtn={handleOpenAddClass} />
           <TimetableHeader />
-          <TimetableTemplate reloadTrigger={reloadTrigger} />
+          <TimetableTemplate
+            setReloadTrigger={setReloadTrigger}
+            reloadTrigger={reloadTrigger}
+            handleOpenAddClass={handleOpenAddClass}
+            setIsEditMode={setIsEditMode}
+            isEditMode={isEditMode}
+            setSubjectId={setSubjectId}
+            subjectId={subjectId}
+          />
         </div>
       </STimetableWrapper>
       {isAddClass && (
@@ -45,6 +60,9 @@ const Timetable = () => {
           <ClassAddForm
             onCloseAddClass={handleCloseAddClass}
             setReloadTrigger={setReloadTrigger}
+            setIsEditMode={setIsEditMode}
+            isEditMode={isEditMode}
+            subjectId={subjectId}
           />
         </>
       )}

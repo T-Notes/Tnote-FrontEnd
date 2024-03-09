@@ -40,39 +40,67 @@ const SClassAndTime = styled.td`
 `;
 
 interface TimetableTemplate {
+  setReloadTrigger: React.Dispatch<React.SetStateAction<boolean>>;
   reloadTrigger: boolean;
+  handleOpenAddClass: () => void;
+  setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+  setSubjectId: React.Dispatch<React.SetStateAction<string>>;
+  subjectId: string;
+  isEditMode: boolean;
 }
-const TimetableTemplate = ({ reloadTrigger }: TimetableTemplate) => {
-  const { isToggle, handleChangeToggle } = useToggle();
+const TimetableTemplate = ({
+  reloadTrigger,
+  setReloadTrigger,
+  handleOpenAddClass,
+  setIsEditMode,
+  setSubjectId,
+  subjectId,
+  isEditMode,
+}: TimetableTemplate) => {
   const { scheduleId } = useParams();
   const [lastClass, setLastClass] = useState('9');
   const lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
   const [subjectsList, setSubjectList] = useState<any[]>([]);
+  // 과목 조회 모달 상태관리
+  const [isOpenSubjectDataModal, setIsOpenSubjectDataModal] =
+    useState<boolean>(false);
+  // const [subjectId, setSubjectId] = useState<string>('');
+
+  const openSubjectDataModal = (subjectId: string) => {
+    setSubjectId(subjectId);
+
+    setIsOpenSubjectDataModal(true);
+  };
+
+  const closeSubjectDataModal = () => {
+    setIsOpenSubjectDataModal(false);
+  };
 
   // api 연결 후 주석 제거
   useEffect(() => {
-    const getTimetable = async () => {
-      try {
-        await instanceAxios
-          .get(`/tnote/schedule/week/${scheduleId}`)
-          .then((res) => {
-            const getData = res.data;
-            const subjectArray = getData.data[0].subjects;
-            console.log(3, getData.data[0].subjects);
-            setSubjectList(subjectArray);
-            setLastClass(getData.data[0].lastClass);
-          });
-      } catch (err) {
-        console.log('시간표 조회에 실패했습니다.', err);
-      }
-    };
-    getTimetable();
+    if (scheduleId) {
+      const getTimetable = async () => {
+        try {
+          await instanceAxios
+            .get(`/tnote/schedule/week/${scheduleId}`)
+            .then((res) => {
+              const getData = res.data;
+              const subjectArray = getData.data[0].subjects;
+
+              setSubjectList(subjectArray);
+              setLastClass(getData.data[0].lastClass);
+            });
+        } catch (err) {
+          console.log('시간표 조회에 실패했습니다.', err);
+        }
+      };
+      getTimetable();
+    }
   }, [scheduleId, reloadTrigger]);
 
   useEffect(() => {
     if (lastClass === '') {
       // 유저가 선택하기 전이라면 기본 값 9교시로 설정.
-      console.log('기본값 9교시');
     } else {
       // 유저가 마지막 교시를 선택했다면, 해당 교시까지의 시간표 출력.
 
@@ -148,12 +176,13 @@ const TimetableTemplate = ({ reloadTrigger }: TimetableTemplate) => {
                     isSameClassTime(item.classTime, t.class)
                   ) {
                     return (
-                      <div key={item.id}>
-                        <SSubjectBox onClick={handleChangeToggle}>
-                          <p>{item.classLocation}</p>
-                          <p>{item.subjectName}</p>
-                        </SSubjectBox>
-                      </div>
+                      <SSubjectBox
+                        key={item.id}
+                        onClick={() => openSubjectDataModal(item.id)}
+                      >
+                        <p>{item.classLocation}</p>
+                        <p>{item.subjectName}</p>
+                      </SSubjectBox>
                     );
                   }
                   return null;
@@ -162,7 +191,16 @@ const TimetableTemplate = ({ reloadTrigger }: TimetableTemplate) => {
             ))}
           </tr>
         ))}
-        {isToggle && <ClassInfoPopup onChangeToggle={handleChangeToggle} />}
+        {isOpenSubjectDataModal && (
+          <ClassInfoPopup
+            closeSubjectDataModal={closeSubjectDataModal}
+            subjectId={subjectId}
+            setReloadTrigger={setReloadTrigger}
+            handleOpenAddClass={handleOpenAddClass}
+            setIsEditMode={setIsEditMode}
+            isEditMode={isEditMode}
+          />
+        )}
       </tbody>
     </STimetableWrapper>
   );

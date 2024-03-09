@@ -282,7 +282,7 @@ export const deletedAccount = async (email: string) => {
     return response;
   } catch {}
 };
-interface SubjectDate {
+export interface SubjectDate {
   subjectName: string;
   classTime: string;
   classDay: string;
@@ -301,5 +301,45 @@ export const crateSubject = async (
       data,
     );
     return response.data;
+  } catch {}
+};
+
+// 특정 과목 조회
+
+export const getSelectedSubjectData = async (
+  scheduleId: string | undefined,
+  subjectsId: string | undefined,
+) => {
+  try {
+    const response = await instanceAxios.get(
+      `/tnote/subjects/details/${scheduleId}/${subjectsId}`,
+    );
+    return response.data;
+  } catch {}
+};
+
+//과목 수정
+export const editSubject = async (
+  scheduleId: string | undefined,
+  subjectsId: string | undefined,
+  data: SubjectDate,
+) => {
+  try {
+    const response = await instanceAxios.patch(
+      `/tnote/subjects/${scheduleId}/${subjectsId}`,
+      data,
+    );
+    return response.data;
+  } catch {}
+};
+// 과목 삭제
+
+export const deletedSubject = async (
+  scheduleId: string | undefined,
+  subjectsId: string | undefined,
+) => {
+  try {
+    await instanceAxios.delete(`/tnote/subjects/${scheduleId}/${subjectsId}`);
+    window.alert('과목 삭제');
   } catch {}
 };
