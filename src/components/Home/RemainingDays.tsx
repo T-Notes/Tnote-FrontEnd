@@ -61,7 +61,7 @@ const RemainingDays = () => {
       <SFont>이번 학기 남은 일수</SFont>
       <SDayBox>
         <SRemainingDay>
-          {remainingDay !== null ? remainingDay : '생성된 학기 없음'}
+          {typeof remainingDay === 'number' ? remainingDay : '생성된 학기 없음'}
         </SRemainingDay>
       </SDayBox>
     </SRemainingDayWrapper>
