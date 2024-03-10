@@ -240,10 +240,13 @@ const ClassAddForm = ({
       classLocation: classLocation,
       memo: memo,
       color: selectedColor,
+      scheduleId: scheduleId,
     };
     if (isEditMode) {
+      console.log('수정!');
+
       // 수정 요청
-      await editSubject(scheduleId, subjectId, pathData);
+      await editSubject(subjectId, pathData);
       setReloadTrigger((prev) => !prev);
       onCloseAddClass(); // 저장 후 추가 툴팁 닫아주기
     } else {

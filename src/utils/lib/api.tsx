@@ -320,13 +320,12 @@ export const getSelectedSubjectData = async (
 
 //과목 수정
 export const editSubject = async (
-  scheduleId: string | undefined,
   subjectsId: string | undefined,
   data: SubjectDate,
 ) => {
   try {
     const response = await instanceAxios.patch(
-      `/tnote/subjects/${scheduleId}/${subjectsId}`,
+      `/tnote/subjects/${subjectsId}`,
       data,
     );
     return response.data;
