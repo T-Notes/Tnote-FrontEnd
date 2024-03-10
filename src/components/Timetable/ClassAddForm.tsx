@@ -142,7 +142,7 @@ const ClassAddForm = ({
   const navigate = useNavigate();
   const [subjectName, setSubjectName] = useState<string>('');
   const [classTime, setClassTime] = useState<string>('');
-  const [classDay, setClassDay] = useState<string>('');
+  const [classDay, setClassDay] = useState<string>(''); //  유저에게 보여질 상태
   const [classLocation, setClassLocation] = useState<string>('');
   const [color, setColor] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
@@ -151,7 +151,7 @@ const ClassAddForm = ({
   const date = currentDate;
   const [isClassDayDropdownOpen, setIsClassDayDropdownOpen] = useState(false);
   // const [reloadTrigger, setReloadTrigger] = useState(false); // 화면 reload 추가
-  const [enDay, setEnDay] = useState<string>('');
+  const [enDay, setEnDay] = useState<string>(''); // 서버에 보낼 상태
 
   const openClassDayDropdown = () => {
     setIsClassDayDropdownOpen(true);
@@ -189,24 +189,11 @@ const ClassAddForm = ({
   };
 
   const handleSelectedClassDay = (day: any) => {
-    console.log(day);
+    const enDay = handleChangeKoreanToEnglishDay(day);
+    console.log(3, enDay);
+    setEnDay(enDay); // 서버에 보낼 상태
+    setClassDay(day); // 유저에게 보여질 상태
 
-    if (day === '월요일') {
-      setEnDay('MONDAY');
-    } else if (day === '화요일') {
-      setEnDay('TUESDAY');
-    } else if (day === '수요일') {
-      setEnDay('WEDNESDAY');
-    } else if (day === '목요일') {
-      setEnDay('THURSDAY');
-    } else if (day === '금요일') {
-      setEnDay('FRIDAY');
-    } else if (day === '토요일') {
-      setEnDay('SATURDAY');
-    } else if (day === '일요일') {
-      setEnDay('SUNDAY');
-    }
-    setClassDay(day);
     closeClassDayDropdown();
   };
 
@@ -256,6 +243,27 @@ const ClassAddForm = ({
       onCloseAddClass(); // 저장 후 추가 툴팁 닫아주기
     }
   };
+
+  // 한국어를 영어로 변환하는 함수
+  const handleChangeKoreanToEnglishDay = (ko: string) => {
+    let enDay = '';
+    if (ko === '월요일') {
+      enDay = 'MONDAY';
+    } else if (ko === '화요일') {
+      enDay = 'TUESDAY';
+    } else if (ko === '수요일') {
+      enDay = 'WEDNESDAY';
+    } else if (ko === '목요일') {
+      enDay = 'THURSDAY';
+    } else if (ko === '금요일') {
+      enDay = 'FRIDAY';
+    } else if (ko === '토요일') {
+      enDay = 'SATURDAY';
+    } else if (ko === '일요일') {
+      enDay = 'SUNDAY';
+    }
+    return enDay;
+  };
   useEffect(() => {
     if (isEditMode) {
       console.log('isEditMode가 true!');
@@ -266,7 +274,12 @@ const ClassAddForm = ({
         // 수정하는 상황일때
         setSubjectName(data.subjectName);
         setClassTime(data.classTime);
-        setClassDay(data.classDay);
+
+        const enDay = handleChangeKoreanToEnglishDay(data.classDay);
+        console.log(2, '영어로 변환?', classDay);
+        setEnDay(enDay); // 서버에 보내는 상태
+        setClassDay(data.classDay); // 유저에게 보여지는 상태
+
         setClassLocation(data.classLocation);
         // setSelectedColor(data) // 색깔이 안옴
         setMemo(data.memo);
@@ -311,7 +324,7 @@ const ClassAddForm = ({
                 size="mini"
                 theme={{ background: 'white' }}
                 placeholder="수업 요일을 선택해주세요"
-                value={classDay}
+                value={classDay} // 유저에게 보여질 상태
                 isDropdown={isClassDayDropdownOpen}
                 openDropdown={openClassDayDropdown}
                 closeDropdown={closeClassDayDropdown}
