@@ -163,7 +163,6 @@ const ScheduleCalendar = ({ reload }: Reload) => {
     if (scheduleId) {
       const getMonthlyLogs = async () => {
         const response = await getAllLogs(scheduleId, new Date());
-        console.log(2, response.data.proceedings);
         setClassLogs(response.data.classLogs);
         setWorkLogs(response.data.proceedings);
         setConsultations(response.data.consultations);
@@ -229,12 +228,8 @@ const ScheduleCalendar = ({ reload }: Reload) => {
                 }
               })}
               {workLogs.map((item) => {
-                console.log('map!');
-
                 const itemDate = new Date(item.startDate);
                 if (isSameDay(itemDate, day)) {
-                  console.log(3, '렌더링!');
-
                   return (
                     <SLogContainer key={item.id}>
                       <SLog color={getRandomColor()}>{item.title}</SLog>
