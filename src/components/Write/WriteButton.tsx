@@ -19,7 +19,11 @@ const SWriteBtn = styled.button`
   color: ${({ theme }) => theme.colors.white};
   ${({ theme }) => theme.fonts.caption3};
 `;
-const WriteButton = () => {
+
+interface Reload {
+  setReload: React.Dispatch<React.SetStateAction<boolean>>;
+}
+const WriteButton = ({ setReload }: Reload) => {
   const [isOpenWriteFormModal, setIsOpenWriteFormModal] =
     useState<boolean>(false);
 
@@ -36,6 +40,7 @@ const WriteButton = () => {
         <ClassLogModal
           closeWriteModal={closeWriteModal}
           handleClickModal={handleClickModal}
+          setReload={setReload}
         />,
       );
     } else if (openModalContent === '업무일지') {
@@ -43,6 +48,7 @@ const WriteButton = () => {
         <WorkLogModal
           closeWriteModal={closeWriteModal}
           handleClickModal={handleClickModal}
+          setReload={setReload}
         />,
       );
     } else if (openModalContent === '상담기록') {
@@ -50,6 +56,7 @@ const WriteButton = () => {
         <ConsultationRecordsModal
           closeWriteModal={closeWriteModal}
           handleClickModal={handleClickModal}
+          setReload={setReload}
         />,
       );
     } else if (openModalContent === '학생 관찰 일지') {
@@ -57,6 +64,7 @@ const WriteButton = () => {
         <StudentRecordsModal
           closeWriteModal={closeWriteModal}
           handleClickModal={handleClickModal}
+          setReload={setReload}
         />,
       );
     }

@@ -122,8 +122,13 @@ interface SaveContents {
 interface CloseProps {
   closeWriteModal: () => void;
   handleClickModal: (openModalContent: string) => void;
+  setReload: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
+const ClassLogModal = ({
+  closeWriteModal,
+  handleClickModal,
+  setReload,
+}: CloseProps) => {
   const formData = new FormData();
   const { scheduleId } = useParams();
   const [title, setTitle] = useState<string>(''); //제목 상태
@@ -209,15 +214,12 @@ const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
           },
         },
       );
+      setReload((prev) => !prev);
       closeWriteModal();
     } catch (err) {
       console.log(err);
     }
   };
-
-  // useEffect(() => {
-  //   setYouWantedClose(true);
-  // }, []);
 
   return (
     <ModalPortal>

@@ -7,6 +7,13 @@ import { tr } from 'date-fns/locale';
 import TodoListInput from './TodoListInput';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 import Todo from '../Home/Todo';
+import {
+  getAllClassLog,
+  getAllProceedings,
+  getAllConsultations,
+  getAllObservation,
+} from '../../utils/lib/api';
+import { useParams } from 'react-router-dom';
 
 const STaskSidebarWrapper = styled.div`
   display: flex;
@@ -36,15 +43,46 @@ const SDateFont = styled.div`
   padding-bottom: 20px;
 `;
 
-const TaskSidebar = () => {
-  // 버튼을 클릭하면 input창이 나타난다.
-  // input창이 빈값이 아니고, 외부를 클릭했다면 post
-  // 해당 input창은 비워지기
-  // 유저가 입력한 값은 get으로 가져오기.
-
-  // 컴포넌트는 1) headless 기반의 추상화 하기 2) 한 가지 역할만 하기(또는 그의 조합) 3) 도메인(=비즈니스 로직) 분리하기
-
+interface Task {
+  id: number;
+  title: string;
+  studentName: string;
+  createdAt: string;
+}
+interface Reload {
+  reload: boolean;
+}
+// 금일 해당하는 내용의 task들이 노출되어야 함.
+const TaskSidebar = ({ reload }: Reload) => {
+  const { scheduleId } = useParams();
   const { year, month, day } = useCurrentDate(); // 데이터 추상화 (headless 기반의 추상화 하기)
+  const [classLogContent, setClassLogContent] = useState<Task[]>([]);
+  const [workLogContent, setWorkLogContent] = useState<Task[]>([]);
+  const [consultationsContent, setConsultationsContent] = useState<Task[]>([]);
+  const [observationContent, setObservationContent] = useState<Task[]>([]);
+
+  useEffect(() => {
+    if (scheduleId) {
+      const fetchData = async () => {
+        try {
+          const classLogResponse = await getAllClassLog(scheduleId);
+          const workLogResponse = await getAllProceedings(scheduleId);
+          const consultationsResponse = await getAllConsultations(scheduleId);
+          const observationResponse = await getAllObservation(scheduleId);
+          console.log(1, consultationsResponse.data.consultations);
+          console.log(2, observationResponse.data.observations);
+
+          setClassLogContent(classLogResponse.data.classLogs);
+          setWorkLogContent(workLogResponse.data.proceedings);
+          setConsultationsContent(consultationsResponse.data.consultations);
+          setObservationContent(observationResponse.data.observations);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+      fetchData();
+    }
+  }, [reload, scheduleId]);
 
   return (
     <STaskSidebarWrapper>
@@ -54,9 +92,32 @@ const TaskSidebar = () => {
         <Todo />
       </div>
       <SFont>학급 일지</SFont>
+      {classLogContent.map((classLog) => (
+        <div key={classLog.id}>
+          <div>
+            {classLog.title}
+            <p>{classLog.createdAt}</p>
+          </div>
+        </div>
+      ))}
       <SFont>업무 일지</SFont>
+      {workLogContent.map((workLog) => (
+        <div key={workLog.id}>
+          <div>{workLog.title}</div>
+        </div>
+      ))}
       <SFont>관찰 일지</SFont>
+      {observationContent.map((observation) => (
+        <div key={observation.id}>
+          <div>{observation.studentName}</div>
+        </div>
+      ))}
       <SFont>상담 일지</SFont>
+      {consultationsContent.map((consultation) => (
+        <div key={consultation.id}>
+          <div>{consultation.studentName}</div>
+        </div>
+      ))}
     </STaskSidebarWrapper>
   );
 };

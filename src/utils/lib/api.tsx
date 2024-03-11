@@ -342,3 +342,61 @@ export const deletedSubject = async (
     window.alert('과목 삭제');
   } catch {}
 };
+
+// 학급일지 전체 조회
+
+export const getAllClassLog = async (scheduleId: string | undefined) => {
+  try {
+    const response = await instanceAxios.get(
+      `/tnote/classLog/${scheduleId}/classLogs?page=0&size=4`,
+    );
+    return response.data;
+  } catch {}
+};
+
+// 업무일지 전체조회
+export const getAllProceedings = async (scheduleId: string | undefined) => {
+  try {
+    const response = await instanceAxios.get(
+      `/tnote/proceeding/${scheduleId}/proceedings?page=0&size=4`,
+    );
+    return response.data;
+  } catch {}
+};
+
+// 상담기록 전체 조회
+export const getAllConsultations = async (scheduleId: string | undefined) => {
+  try {
+    const response = await instanceAxios.get(
+      `/tnote/consultation/${scheduleId}/consultations?page=0&size=4`,
+    );
+    return response.data;
+  } catch {}
+};
+
+// 학생관찰일지 전채 조회
+export const getAllObservation = async (scheduleId: string | undefined) => {
+  try {
+    const response = await instanceAxios.get(
+      `/tnote/observation/${scheduleId}/observations?page=0&size=4`,
+    );
+    return response.data;
+  } catch {}
+};
+
+// 월별 모든 일지 가져오기
+
+export const getAllLogs = async (
+  scheduleId: string | undefined,
+  date: Date,
+) => {
+  try {
+    const response = await instanceAxios.get(
+      `/tnote/home/${scheduleId}/monthlyLogs`,
+      {
+        params: date,
+      },
+    );
+    return response.data;
+  } catch {}
+};

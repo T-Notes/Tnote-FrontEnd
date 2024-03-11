@@ -31,6 +31,9 @@ const Home = () => {
   const handleClickLinkToAddSemesterPage = () => {
     navigate('/semesterSetup');
   };
+  // reload 상태 관리
+  const [reload, setReload] = useState<boolean>(false);
+
   return (
     <SHomeWrapper>
       <SHomeSemester>
@@ -42,8 +45,8 @@ const Home = () => {
       </SHomeSemester>
 
       <ScheduleCalendar />
-      <TaskSidebar />
-      <WriteButton />
+      <TaskSidebar reload={reload} />
+      <WriteButton setReload={setReload} />
     </SHomeWrapper>
   );
 };

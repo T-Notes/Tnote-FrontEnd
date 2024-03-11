@@ -166,8 +166,13 @@ const SScroll = styled.div`
 export interface CloseProps {
   closeWriteModal: () => void;
   handleClickModal: (openModalContent: string) => void;
+  setReload: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
+const WorkLogModal = ({
+  closeWriteModal,
+  handleClickModal,
+  setReload,
+}: CloseProps) => {
   const { scheduleId } = useParams();
 
   const [title, setTitle] = useState<string>(''); //제목 상태
@@ -243,6 +248,7 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
           },
         },
       );
+      setReload((prev) => !prev);
       closeWriteModal();
     } catch (err) {
       console.log(err);
