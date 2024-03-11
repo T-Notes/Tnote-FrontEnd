@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useModal, WriteModal } from '../../utils/useHooks/useModal';
-import { useToggle } from '../../utils/useHooks/useToggle';
 import { ModalBackground } from '../common/styled/ModalLayout';
 import ClassLogModal from './ClassLogModal';
 import ConsultationRecordsModal from './ConsultationRecordsModal';
@@ -22,10 +20,9 @@ const SWriteBtn = styled.button`
   ${({ theme }) => theme.fonts.caption3};
 `;
 const WriteButton = () => {
-  // const { isOpen, openModal, closeModal } = useModal();
   const [isOpenWriteFormModal, setIsOpenWriteFormModal] =
     useState<boolean>(false);
-  // 모달이 열릴것인지 상태 확인
+
   const [isOpenWriteModal, setIsOpenWriteModal] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<React.ReactNode | null>(
     null,
@@ -75,12 +72,6 @@ const WriteButton = () => {
   const closeWriteModal = () => {
     setIsOpenWriteModal(false);
   };
-  // const [writeModal, setWriteModal] = useState<WriteModal>({
-  //   isOpen: false,
-  //   content: null,
-  //   isClose: true,
-  // });
-  //여기서 모달 열리는 부분 상태를 정의 handleClickModal
 
   const openWriteFormModal = () => {
     setIsOpenWriteFormModal(true);
@@ -90,10 +81,6 @@ const WriteButton = () => {
     setIsOpenWriteFormModal(false);
   };
 
-  // useEffect(() => {
-  //   if (writeModal.isOpen) closeModal();
-  // }, [writeModal]);
-
   return (
     <>
       <SWriteBtn onClick={openWriteFormModal}>글쓰기</SWriteBtn>
@@ -101,17 +88,11 @@ const WriteButton = () => {
         <WriteFormModal
           closeWriteFormModal={closeWriteFormModal}
           handleClickModal={handleClickModal}
-          // isOpen={isOpen}
-          // closeModal={closeModal}
-          // setWriteModal={setWriteModal}
         />
       )}
       {modalContent && isOpenWriteModal ? (
         <ModalBackground>{modalContent}</ModalBackground>
       ) : null}
-      {/* {writeModal.isOpen && !writeModal.isClose ? (
-        <ModalBackground>{writeModal.content}</ModalBackground>
-      ) : null} */}
     </>
   );
 };

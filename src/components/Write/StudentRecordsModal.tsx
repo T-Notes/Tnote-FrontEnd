@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { IcClip, IcPen } from '../../assets/icons';
 import { createStudentObservation } from '../../utils/lib/api';
 import ModalPortal from '../../utils/ModalPortal';
-// import { useWriteModal } from '../../utils/useHooks/useModal';
 import { Button } from '../common/styled/Button';
 import {
   ModalLayout,
@@ -122,7 +121,7 @@ const StudentRecordsModal = ({
   handleClickModal,
 }: CloseProps) => {
   const { scheduleId } = useParams();
-  // const { writeModal, handleClickModal } = useWriteModal();
+
   const [title, setTitle] = useState<string>(''); //제목 상태
   const [observationContent, setObservationContent] = useState<string>('');
   const [teachingPlan, setTeachingPlan] = useState<string>('');
@@ -238,7 +237,6 @@ const StudentRecordsModal = ({
 
             <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
           </SScroll>
-          {/* {writeModal.isOpen && writeModal.content} */}
         </SModalLayout>
       </ModalNoBlackBackground>
     </ModalPortal>

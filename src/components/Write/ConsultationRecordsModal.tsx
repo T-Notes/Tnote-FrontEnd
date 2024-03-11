@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { IcClip, IcPen, IcSmallDatePicker, IcTitle } from '../../assets/icons';
 import { createConsultationRecords } from '../../utils/lib/api';
 import ModalPortal from '../../utils/ModalPortal';
-// import { useWriteModal } from '../../utils/useHooks/useModal';
 import { Button } from '../common/styled/Button';
 import {
   ModalLayout,
@@ -171,7 +170,7 @@ const ConsultationRecordsModal = ({
   handleClickModal,
 }: CloseProps) => {
   const { scheduleId } = useParams();
-  // const { writeModal, handleClickModal } = useWriteModal();
+
   const [title, setTitle] = useState<string>(''); //제목 상태
   const [counselingContent, setCounselingContent] = useState<string>('');
   const [counselingResult, setCounselingResult] = useState<string>('');
@@ -367,8 +366,6 @@ const ConsultationRecordsModal = ({
             <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
           </SScroll>
         </SModalLayout>
-
-        {/* {writeModal.isOpen && writeModal.content} */}
       </ModalNoBlackBackground>
     </ModalPortal>
   );

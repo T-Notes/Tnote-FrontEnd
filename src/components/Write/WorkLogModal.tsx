@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { IcClip, IcMap, IcPen } from '../../assets/icons';
 import { createWorkLog } from '../../utils/lib/api';
 import ModalPortal from '../../utils/ModalPortal';
-// import { useWriteModal } from '../../utils/useHooks/useModal';
 import { Button } from '../common/styled/Button';
 import {
   ModalBackground,
@@ -169,7 +168,7 @@ export interface CloseProps {
 }
 const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
   const { scheduleId } = useParams();
-  // const { writeModal, handleClickModal } = useWriteModal();
+
   const [title, setTitle] = useState<string>(''); //제목 상태
   const [place, setPlace] = useState<string>('');
   const [date, setDate] = useState({
@@ -283,8 +282,6 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
             </SFileWrapper>
             <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
           </SScroll>
-
-          {/* {writeModal.isOpen && writeModal.content} */}
         </SModalLayout>
       </ModalNoBlackBackground>
     </ModalPortal>
