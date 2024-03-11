@@ -1,5 +1,5 @@
 import { ChangeEvent, ReactEventHandler, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import ArchiveList from '../components/Archive/ArchiveList';
 import SearchInput from '../components/common/SearchInput';
@@ -23,6 +23,7 @@ interface SearchValue {
   semesterName: string;
 }
 const Archive = () => {
+  const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchValueList, setSetSearchValueList] = useState<SearchValue[]>([]);
 
@@ -37,7 +38,7 @@ const Archive = () => {
   const handleSemesterSearch = async () => {
     const getSearchValue = await getSemesterSearchValue(searchValue);
     setSetSearchValueList(getSearchValue.data);
-    console.log(2, getSearchValue);
+    console.log(2, getSearchValue.data.length);
   };
 
   const debouncedSearch = _debounce(handleSemesterSearch, 1000);
@@ -52,6 +53,10 @@ const Archive = () => {
     }
   }, [searchValue]);
 
+  const handleSelectedSemester = (semesterId: number, semesterName: string) => {
+    console.log(1, semesterId);
+    navigate(`/archiveContainer/${semesterId}`);
+  };
   return (
     <SArchiveWrapper>
       <div>내 아카이브</div>
@@ -68,7 +73,12 @@ const Archive = () => {
         <>
           <SSearchValueContainer>
             {searchValueList.map((item) => (
-              <div key={item.id}>
+              <div
+                key={item.id}
+                onClick={() =>
+                  handleSelectedSemester(item.id, item.semesterName)
+                }
+              >
                 <div>{item.semesterName}</div>
               </div>
             ))}
