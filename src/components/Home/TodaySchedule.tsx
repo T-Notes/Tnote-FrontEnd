@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { getTodayTimetable } from '../../utils/lib/api';
 
 const STodayScheduleWrapper = styled.div`
   display: flex;
@@ -27,6 +29,7 @@ const SSchedule = styled.div`
   background-color: ${({ theme }) => theme.colors.blue400};
 `;
 const TodaySchedule = () => {
+  const { scheduleId } = useParams();
   const [lastClass, setLastClass] = useState<string>('9교시');
   const lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
 
@@ -53,7 +56,14 @@ const TodaySchedule = () => {
       for (let hour = 1; hour <= lastClassNumber; hour++) {}
     }
   }, [lastClass]);
-
+  // 오늘 수업일정 조회
+  useEffect(() => {
+    const getTodaySchedule = async () => {
+      const response = await getTodayTimetable(scheduleId);
+      console.log(5, response);
+    };
+    getTodaySchedule();
+  }, [scheduleId]);
   return (
     <>
       <STodayScheduleWrapper>

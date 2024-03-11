@@ -434,3 +434,13 @@ export const getSearchLogsValue = async (
     return response.data;
   } catch {}
 };
+
+// 오늘 수업 시간표 조회
+export const getTodayTimetable = async (scheduleId: string | undefined) => {
+  try {
+    const response = await instanceAxios.get(`/tnote/subjects/${scheduleId}`);
+    return response.data;
+  } catch {
+    throw new Error('오늘 시간표 조회 실패');
+  }
+};
