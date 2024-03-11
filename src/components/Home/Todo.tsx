@@ -36,7 +36,8 @@ interface TodoProps {
 }
 
 const Todo = () => {
-  const { id } = useRecoilValue(scheduleIdState);
+  const { scheduleId } = useParams();
+  // const { id } = useRecoilValue(scheduleIdState);
   const [isAddTodo, setIsAddTodo] = useState<boolean>(false);
   const [todoArray, setTodoArray] = useState<any[]>([]);
   const [todoContent, setTodoContent] = useState<string>('');
@@ -66,7 +67,7 @@ const Todo = () => {
   // todo 삭제
   const handleDelete = async (todoId: number | undefined) => {
     // console.log('todoId:', todoId);
-    await removeTodo(id, todoId);
+    await removeTodo(scheduleId, todoId);
     setIsAddTodo(!isAddTodo);
   };
 
@@ -81,7 +82,7 @@ const Todo = () => {
       content: todoContent,
       status: true,
     };
-    await updateTodo(id, todoId, patchTodoData);
+    await updateTodo(scheduleId, todoId, patchTodoData);
   };
 
   // 외부 클릭 시 수정 요청을 위한 이벤트 핸들러
@@ -109,28 +110,26 @@ const Todo = () => {
 
   // 조회
   useEffect(() => {
-    if (id) {
+    if (scheduleId) {
       const getTodoData = async () => {
-        await getTodo(id).then((res) => {
-          console.log('todo', res.data);
-          setTodoArray(res.data);
-        });
+        const response = await getTodo(scheduleId);
+        console.log('!!!', response);
+
+        setTodoArray(response.data);
       };
       getTodoData();
     }
-  }, [isAddTodo, id]);
+  }, [isAddTodo, scheduleId]);
 
   // + 버튼으로 post 요청
   const handleAddTodo = async () => {
-    if (id) {
+    if (scheduleId) {
       const todoData = {
         date: new Date().toISOString().split('T')[0],
         content: '',
       };
-      await createTodo(id, todoData).then((res) => {
-        // console.log('todo Id', res.data.id);
-        setIsAddTodo(!isAddTodo);
-      });
+      await createTodo(scheduleId, todoData);
+      setIsAddTodo(!isAddTodo);
     } else {
       window.alert('학기 추가 후 이용가능한 서비스입니다.');
     }

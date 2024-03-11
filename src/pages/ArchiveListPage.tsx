@@ -5,17 +5,49 @@ import ArchiveList from '../components/Archive/ArchiveList';
 import SearchInput from '../components/common/SearchInput';
 import { getSemesterSearchValue } from '../utils/lib/api';
 import _debounce from 'lodash/debounce';
+import { IcDelete, IcGrayPen, IcPen } from '../assets/icons';
 
 const SArchiveWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 230px;
+  right: 300px;
+  bottom: 0;
 `;
 const SSearchValueContainer = styled.div`
   border: 1px solid red;
 `;
+const SArchiveHeader = styled.div`
+  padding-top: 70px;
+  display: flex;
+  align-items: center;
+`;
+const SEdit = styled.button`
+  display: flex;
+  align-items: center;
+  padding-right: 15px;
+  padding-left: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border: 1px solid #a6a6a6;
+  border-radius: 50px;
+  color: #a6a6a6;
+  margin-left: 20px;
+
+  font-size: 16px;
+  font-weight: 500;
+`;
+const SDelete = styled(SEdit)``;
+
+const SSearchInput = styled(SearchInput)`
+  margin-left: auto;
+`;
+const Sh1 = styled.h1`
+  ${({ theme }) => theme.fonts.h2}
+  margin-right: auto;
+`;
 // 사용 api
-//  학기 검색 부분
+//  학기 검색 부분 o
 // 학기 삭제
 // 학기 수정
 interface SearchValue {
@@ -59,16 +91,25 @@ const Archive = () => {
   };
   return (
     <SArchiveWrapper>
-      <div>내 아카이브</div>
-      <SearchInput
-        size="small"
-        theme={{ background: 'blue400' }}
-        handleSearchInputChange={handleChangeSearchValue}
-        placeholder="텍스트를 입력하세요"
-        value={searchValue}
-      />
-      <button>수정</button>
-      <button>삭제</button>
+      <SArchiveHeader>
+        <Sh1>내 아카이브</Sh1>
+        <SearchInput
+          size="small"
+          theme={{ background: 'blue400' }}
+          handleSearchInputChange={handleChangeSearchValue}
+          placeholder="텍스트를 입력하세요"
+          value={searchValue}
+        />
+        <SEdit>
+          수정
+          <IcGrayPen />
+        </SEdit>
+        <SDelete>
+          삭제
+          <IcDelete />
+        </SDelete>
+      </SArchiveHeader>
+
       {searchValueList.length > 0 ? (
         <>
           <SSearchValueContainer>
