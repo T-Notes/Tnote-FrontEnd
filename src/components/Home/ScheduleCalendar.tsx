@@ -1,6 +1,7 @@
 import '../../App.css';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import _debounce from 'lodash/debounce';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { ko } from 'date-fns/locale';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 import {
@@ -18,7 +19,7 @@ import {
 import SearchInput from '../common/SearchInput';
 import { Button } from '../common/styled/Button';
 import { useParams } from 'react-router-dom';
-import { getAllLogs } from '../../utils/lib/api';
+import { getAllLogs, getSearchLogsValue } from '../../utils/lib/api';
 
 const SCalendarWrapper = styled.div`
   width: 100%;
@@ -125,6 +126,8 @@ const ScheduleCalendar = ({ reload }: Reload) => {
   const [consultations, setConsultations] = useState<Task[]>([]);
   const [workLogs, setWorkLogs] = useState<Task[]>([]);
   const [observations, setObservations] = useState<Task[]>([]);
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchValueList, setSetSearchValueList] = useState<any[]>([]);
 
   const { currentDate, handlePrevMonth, handleNextMonth, setCurrentDate } =
     useCurrentDate();
@@ -172,6 +175,32 @@ const ScheduleCalendar = ({ reload }: Reload) => {
     }
   }, [scheduleId, reload]);
 
+  const handleChangeSearchValue = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchValue(value);
+    if (!value) {
+      setSetSearchValueList([]); // 검색어가 비어있을 때 검색 결과를 초기화
+    }
+  };
+
+  const handleLogsSearch = async () => {
+    const getSearchValue = await getSearchLogsValue(searchValue, searchValue);
+    setSetSearchValueList(getSearchValue.data);
+    console.log(2, getSearchValue.data);
+  };
+
+  const debouncedSearch = _debounce(handleLogsSearch, 1000);
+
+  useEffect(() => {
+    if (searchValue) {
+      debouncedSearch();
+
+      return () => {
+        debouncedSearch.cancel();
+      };
+    }
+  }, [searchValue]);
+
   return (
     <SCalendarWrapper>
       <SCalendarHeaderWrapper>
@@ -186,72 +215,78 @@ const ScheduleCalendar = ({ reload }: Reload) => {
         <SearchInput
           size="small"
           theme={{ background: 'blue400' }}
-          handleSearchInputChange={() => ''}
+          handleSearchInputChange={handleChangeSearchValue}
           placeholder="텍스트를 입력하세요"
-          value={''}
+          value={searchValue}
         />
       </SCalendarHeaderWrapper>
-
-      <SCalendarDate>
-        <SWeekBox>
-          {['일', '월', '화', '수', '목', '금', '토'].map((week, index) => (
-            <SWeek key={index}>{week}</SWeek>
-          ))}
-        </SWeekBox>
-        <SDaysBox>
-          {days.map((day, index) => (
-            <SDays
-              key={index}
-              className={isSameMonth(day, currentDate) ? 'white' : 'lightGray'}
-            >
-              <div className={isToday(day) ? 'today' : ''}>
-                {format(day, 'd')}
-              </div>
-              {classLogs.map((item) => {
-                const itemDate = new Date(item.startDate);
-                if (isSameDay(itemDate, day)) {
-                  return (
-                    <SLogContainer key={item.id}>
-                      <SLog color={getRandomColor()}>{item.title}</SLog>
-                    </SLogContainer>
-                  );
+      {searchValueList.length > 0 ? (
+        <>
+          <div>검색결과 렌더링 중...</div>
+        </>
+      ) : (
+        <SCalendarDate>
+          <SWeekBox>
+            {['일', '월', '화', '수', '목', '금', '토'].map((week, index) => (
+              <SWeek key={index}>{week}</SWeek>
+            ))}
+          </SWeekBox>
+          <SDaysBox>
+            {days.map((day, index) => (
+              <SDays
+                key={index}
+                className={
+                  isSameMonth(day, currentDate) ? 'white' : 'lightGray'
                 }
-              })}
-              {consultations.map((item) => {
-                const itemDate = new Date(item.startDate);
-                if (isSameDay(itemDate, day)) {
-                  return (
-                    <SLogContainer key={item.id}>
-                      <SLog color={getRandomColor()}>{item.studentName}</SLog>
-                    </SLogContainer>
-                  );
-                }
-              })}
-              {workLogs.map((item) => {
-                const itemDate = new Date(item.startDate);
-                if (isSameDay(itemDate, day)) {
-                  return (
-                    <SLogContainer key={item.id}>
-                      <SLog color={getRandomColor()}>{item.title}</SLog>
-                    </SLogContainer>
-                  );
-                }
-              })}
-              {observations.map((item) => {
-                const itemDate = new Date(item.startDate);
-                if (isSameDay(itemDate, day)) {
-                  return (
-                    <SLogContainer key={item.id}>
-                      <SLog color={getRandomColor()}>{item.studentName}</SLog>
-                    </SLogContainer>
-                  );
-                }
-              })}
-            </SDays>
-          ))}
-        </SDaysBox>
-      </SCalendarDate>
-      {/* <AddScheduleBtn /> */}
+              >
+                <div className={isToday(day) ? 'today' : ''}>
+                  {format(day, 'd')}
+                </div>
+                {classLogs.map((item) => {
+                  const itemDate = new Date(item.startDate);
+                  if (isSameDay(itemDate, day)) {
+                    return (
+                      <SLogContainer key={item.id}>
+                        <SLog color={getRandomColor()}>{item.title}</SLog>
+                      </SLogContainer>
+                    );
+                  }
+                })}
+                {consultations.map((item) => {
+                  const itemDate = new Date(item.startDate);
+                  if (isSameDay(itemDate, day)) {
+                    return (
+                      <SLogContainer key={item.id}>
+                        <SLog color={getRandomColor()}>{item.studentName}</SLog>
+                      </SLogContainer>
+                    );
+                  }
+                })}
+                {workLogs.map((item) => {
+                  const itemDate = new Date(item.startDate);
+                  if (isSameDay(itemDate, day)) {
+                    return (
+                      <SLogContainer key={item.id}>
+                        <SLog color={getRandomColor()}>{item.title}</SLog>
+                      </SLogContainer>
+                    );
+                  }
+                })}
+                {observations.map((item) => {
+                  const itemDate = new Date(item.startDate);
+                  if (isSameDay(itemDate, day)) {
+                    return (
+                      <SLogContainer key={item.id}>
+                        <SLog color={getRandomColor()}>{item.studentName}</SLog>
+                      </SLogContainer>
+                    );
+                  }
+                })}
+              </SDays>
+            ))}
+          </SDaysBox>
+        </SCalendarDate>
+      )}
     </SCalendarWrapper>
   );
 };

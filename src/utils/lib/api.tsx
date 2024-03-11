@@ -412,3 +412,25 @@ export const getSemesterSearchValue = async (semesterName: string) => {
     throw new Error('학기 검색 실패');
   }
 };
+
+// 최근 조회한 일지
+export const getRecentLogs = async () => {
+  try {
+    const response = await instanceAxios.get('/tnote/home/recentLogs');
+    return response.data;
+  } catch {}
+};
+
+// 일지 검색
+
+export const getSearchLogsValue = async (
+  semesterName: string,
+  title: string,
+) => {
+  try {
+    const response = await instanceAxios.get('/tnote/home/searching', {
+      params: { semesterName: semesterName, title: title },
+    });
+    return response.data;
+  } catch {}
+};
