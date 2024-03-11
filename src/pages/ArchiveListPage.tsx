@@ -1,11 +1,14 @@
 import { ChangeEvent, ReactEventHandler, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import ArchiveList from '../components/Archive/ArchiveList';
+import ArchiveList, {
+  SSemesterContainer,
+} from '../components/Archive/ArchiveList';
 import SearchInput from '../components/common/SearchInput';
 import { getSemesterSearchValue } from '../utils/lib/api';
 import _debounce from 'lodash/debounce';
 import { IcDelete, IcGrayPen, IcPen } from '../assets/icons';
+import WriteButton from '../components/Write/WriteButton';
 
 const SArchiveWrapper = styled.div`
   position: absolute;
@@ -15,7 +18,7 @@ const SArchiveWrapper = styled.div`
   bottom: 0;
 `;
 const SSearchValueContainer = styled.div`
-  border: 1px solid red;
+  margin-top: 40px;
 `;
 const SArchiveHeader = styled.div`
   padding-top: 70px;
@@ -58,6 +61,7 @@ const Archive = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchValueList, setSetSearchValueList] = useState<SearchValue[]>([]);
+  const [reload, setReload] = useState<boolean>(false);
 
   const handleChangeSearchValue = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -114,22 +118,21 @@ const Archive = () => {
         <>
           <SSearchValueContainer>
             {searchValueList.map((item) => (
-              <div
+              <SSemesterContainer
                 key={item.id}
                 onClick={() =>
                   handleSelectedSemester(item.id, item.semesterName)
                 }
               >
                 <div>{item.semesterName}</div>
-              </div>
+              </SSemesterContainer>
             ))}
           </SSearchValueContainer>
         </>
       ) : (
         <ArchiveList />
       )}
-
-      {/* 전체학기 리스트 */}
+      <WriteButton setReload={setReload} />
     </SArchiveWrapper>
   );
 };

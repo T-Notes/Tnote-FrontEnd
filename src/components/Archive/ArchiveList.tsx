@@ -7,7 +7,7 @@ import { getAllSemesterNames } from '../../utils/lib/api';
 const SArchiveListWrapper = styled.div`
   margin-top: 40px;
 `;
-const SSemesterContainer = styled.div`
+export const SSemesterContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding-top: 15px;
