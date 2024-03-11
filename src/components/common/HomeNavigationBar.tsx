@@ -119,7 +119,7 @@ const HomeNavigationBar = () => {
           </Link>
 
           {/* 아카이브 이동 라우팅 변경하기 */}
-          <Link to="/home">
+          <Link to={scheduleId ? `/archive/${scheduleId}` : '/archive'}>
             <SCategory>
               <IcArchive />
               <SCategoryText>아카이브</SCategoryText>

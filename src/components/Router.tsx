@@ -6,6 +6,7 @@ import Timetable from '../pages/Timetable';
 import HomeLayout from './HomeLayout';
 import SemesterSetup from '../pages/SemesterSetup';
 import Callback from '../utils/Callback';
+import Archive from '../pages/Archive';
 
 const Router = () => {
   return (
@@ -30,6 +31,8 @@ const Router = () => {
           <Route path="/timetable/:scheduleId" element={<Timetable />} />
           {/* 학기 추가 전 시간표 페이지 클릭 */}
           <Route path="/timetable" element={<Timetable />} />
+          <Route path="/archive" element={<Archive />} />
+          <Route path="/archive/:scheduleId" element={<Archive />} />
           {/* 과목 추가 클릭 후 페이지 */}
         </Route>
       </Routes>
