@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -130,6 +131,8 @@ const StudentRecordsModal = ({
     endDate: '',
   });
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
+  const [imgUrl, setImgUrl] = useState<File>();
+  const formData = new FormData();
 
   const handleTitleChange = (newTitle: string) => {
     setTitle(newTitle);
@@ -162,10 +165,45 @@ const StudentRecordsModal = ({
         guidance: teachingPlan,
         isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
       };
-      await createStudentObservation(scheduleId, logData);
+      const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+        type: 'application/json',
+      });
+      formData.append('observationRequestDto', jsonDataTypeValue);
+
+      if (imgUrl) {
+        formData.append('observationImages', imgUrl);
+      }
+
+      const accessToken = localStorage.getItem('accessToken');
+
+      await axios.post(
+        `http://j9972.kr/tnote/observation/${scheduleId}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${accessToken}`,
+            accept: 'application/json',
+          },
+        },
+      );
+      closeWriteModal();
     } catch (err) {
       console.log(err);
     }
+  };
+  const handleChangeContentImg = (e: any) => {
+    const file = e.target.files[0];
+    console.log('file', file);
+    setImgUrl(file);
+    formData.append('classLogImages', file);
+  };
+
+  const handleChangeValueImg = (e: any) => {
+    const file = e.target.files[0];
+    console.log('file', file);
+    setImgUrl(file);
+    formData.append('classLogImages', file);
   };
   return (
     <ModalPortal>
@@ -206,7 +244,11 @@ const StudentRecordsModal = ({
               <IcClip />
               <SFileText>파일 첨부</SFileText>
 
-              <SFileUploadInput placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다." />
+              <SFileUploadInput
+                placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다."
+                type="file"
+                onChange={handleChangeContentImg}
+              />
               <SUploadBtn>업로드</SUploadBtn>
             </SFileWrapper>
             <STeachingPlan>
@@ -230,7 +272,11 @@ const StudentRecordsModal = ({
                 <IcClip />
                 <SFileText>파일 첨부</SFileText>
 
-                <SFileUploadInput placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다." />
+                <SFileUploadInput
+                  placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다."
+                  type="file"
+                  onChange={handleChangeValueImg}
+                />
                 <SUploadBtn>업로드</SUploadBtn>
               </SFileWrapper>
             </STeachingPlan>

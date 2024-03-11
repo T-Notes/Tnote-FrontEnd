@@ -63,7 +63,6 @@ const WriteButton = () => {
     setIsOpenWriteModal(true);
     closeWriteFormModal();
   };
-  console.log(2, modalContent);
 
   const openWriteModal = () => {
     setIsOpenWriteModal(true);

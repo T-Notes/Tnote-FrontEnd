@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -182,8 +183,26 @@ const ConsultationRecordsModal = ({
     useState<string>('');
   const [selectedTargetButton, setSelectedTargetButton] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
+  const [imgUrl, setImgUrl] = useState<File>();
+  const formData = new FormData();
+
+  const handleChangeContentImg = (e: any) => {
+    const file = e.target.files[0];
+
+    setImgUrl(file);
+    formData.append('classLogImages', file);
+  };
+
+  const handleChangeValueImg = (e: any) => {
+    const file = e.target.files[0];
+
+    setImgUrl(file);
+    formData.append('classLogImages', file);
+  };
 
   const handleCounselingButtonClick = (buttonName: string) => {
+    console.log(1, buttonName); // 영어로 값이 들어옴
+
     setSelectedCounselingButton(buttonName);
   };
 
@@ -225,7 +244,29 @@ const ConsultationRecordsModal = ({
         consultationResult: counselingResult,
         isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
       };
-      await createConsultationRecords(scheduleId, logData);
+      const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+        type: 'application/json',
+      });
+      formData.append('requestDto', jsonDataTypeValue);
+
+      if (imgUrl) {
+        formData.append('consutationImages', imgUrl);
+      }
+
+      const accessToken = localStorage.getItem('accessToken');
+
+      await axios.post(
+        `http://j9972.kr/tnote/consultation/${scheduleId}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${accessToken}`,
+            accept: 'application/json',
+          },
+        },
+      );
+      closeWriteModal();
     } catch (err) {
       console.log(err);
     }
@@ -257,32 +298,32 @@ const ConsultationRecordsModal = ({
                 </SLabel>
                 <SCounselingCategoryBox>
                   <SCounselingCategory
-                    selected={selectedCounselingButton === '교우관계'}
-                    onClick={() => handleCounselingButtonClick('교우관계')}
+                    selected={selectedCounselingButton === 'FRIENDSHIP'}
+                    onClick={() => handleCounselingButtonClick('FRIENDSHIP')}
                   >
                     교우관계
                   </SCounselingCategory>
                   <SCounselingCategory
-                    selected={selectedCounselingButton === '성적'}
-                    onClick={() => handleCounselingButtonClick('성적')}
+                    selected={selectedCounselingButton === 'GRADE'}
+                    onClick={() => handleCounselingButtonClick('GRADE')}
                   >
                     성적
                   </SCounselingCategory>
                   <SCounselingCategory
-                    selected={selectedCounselingButton === '가정'}
-                    onClick={() => handleCounselingButtonClick('가정')}
+                    selected={selectedCounselingButton === 'HOME'}
+                    onClick={() => handleCounselingButtonClick('HOME')}
                   >
                     가정
                   </SCounselingCategory>
                   <SCounselingCategory
-                    selected={selectedCounselingButton === '건강'}
-                    onClick={() => handleCounselingButtonClick('건강')}
+                    selected={selectedCounselingButton === 'HEALTH'}
+                    onClick={() => handleCounselingButtonClick('HEALTH')}
                   >
                     건강
                   </SCounselingCategory>
                   <SCounselingCategory
-                    selected={selectedCounselingButton === '기타'}
-                    onClick={() => handleCounselingButtonClick('기타')}
+                    selected={selectedCounselingButton === 'ETC'}
+                    onClick={() => handleCounselingButtonClick('ETC')}
                   >
                     기타
                   </SCounselingCategory>
@@ -296,14 +337,14 @@ const ConsultationRecordsModal = ({
                 </SLabel>
                 <SCounselingCategoryBox>
                   <STargetCategory
-                    selected={selectedTargetButton === '학생'}
-                    onClick={() => handleTargetButtonClick('학생')}
+                    selected={selectedTargetButton === 'STUDENT'}
+                    onClick={() => handleTargetButtonClick('STUDENT')}
                   >
                     학생
                   </STargetCategory>
                   <STargetCategory
-                    selected={selectedTargetButton === '학부모'}
-                    onClick={() => handleTargetButtonClick('학부모')}
+                    selected={selectedTargetButton === 'PATENTS'}
+                    onClick={() => handleTargetButtonClick('PATENTS')}
                   >
                     학부모
                   </STargetCategory>
@@ -332,7 +373,11 @@ const ConsultationRecordsModal = ({
               <IcClip />
               <SFileText>파일 첨부</SFileText>
 
-              <SFileUploadInput placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다." />
+              <SFileUploadInput
+                placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다."
+                type="file"
+                onChange={handleChangeContentImg}
+              />
               <SUploadBtn>업로드</SUploadBtn>
             </SFileWrapper>
             <SCounselingResult>
@@ -358,7 +403,11 @@ const ConsultationRecordsModal = ({
                 <IcClip />
                 <SFileText>파일 첨부</SFileText>
 
-                <SFileUploadInput placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다." />
+                <SFileUploadInput
+                  placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다."
+                  type="file"
+                  onChange={handleChangeValueImg}
+                />
                 <SUploadBtn>업로드</SUploadBtn>
               </SFileWrapper>
             </SCounselingResult>

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -177,9 +178,20 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
   });
   const [workContents, setWorkContents] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
+  const [imgUrl, setImgUrl] = useState<File>();
+  const formData = new FormData();
+
+  const handleChangeImg = (e: any) => {
+    const file = e.target.files[0];
+    console.log('file', file);
+    setImgUrl(file);
+    formData.append('classLogImages', file);
+  };
+
   const handleTitleChange = (newTitle: string) => {
     setTitle(newTitle);
   };
+
   // 자식 컴포넌트에게서 기간 값 가져오기
   const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
     setDate((prevDate) => ({
@@ -209,7 +221,29 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
         workContents: workContents,
         isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
       };
-      await createWorkLog(scheduleId, logData);
+      const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+        type: 'application/json',
+      });
+      formData.append('proceedingRequestDto', jsonDataTypeValue);
+
+      if (imgUrl) {
+        formData.append('proceedingImages', imgUrl);
+      }
+
+      const accessToken = localStorage.getItem('accessToken');
+
+      await axios.post(
+        `http://j9972.kr/tnote/proceeding/${scheduleId}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${accessToken}`,
+            accept: 'application/json',
+          },
+        },
+      );
+      closeWriteModal();
     } catch (err) {
       console.log(err);
     }
@@ -277,7 +311,12 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
               <IcClip />
               <SFileText>파일 첨부</SFileText>
 
-              <SFileUploadInput placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다." />
+              <SFileUploadInput
+                placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다."
+                type="file"
+                // accept="image/*"
+                onChange={handleChangeImg}
+              />
               <SUploadBtn>업로드</SUploadBtn>
             </SFileWrapper>
             <SSubmit onClick={handleClickSubmit}>등록</SSubmit>

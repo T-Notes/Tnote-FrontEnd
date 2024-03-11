@@ -187,20 +187,16 @@ const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
         isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
       };
 
-      // formData.append('classLogRequestDto', JSON.stringify(logData));
       const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
         type: 'application/json',
       });
       formData.append('classLogRequestDto', jsonDataTypeValue);
 
       if (imgUrl) {
-        console.log('imgUrl', imgUrl.name);
-
         formData.append('classLogImages', imgUrl);
       }
 
       const accessToken = localStorage.getItem('accessToken');
-      console.log('formData:', formData);
 
       await axios.post(
         `http://j9972.kr/tnote/classLog/${scheduleId}`,
@@ -213,6 +209,7 @@ const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
           },
         },
       );
+      closeWriteModal();
     } catch (err) {
       console.log(err);
     }
