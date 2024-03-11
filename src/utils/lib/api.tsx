@@ -400,3 +400,15 @@ export const getAllLogs = async (
     return response.data;
   } catch {}
 };
+
+// 학기 검색
+export const getSemesterSearchValue = async (semesterName: string) => {
+  try {
+    const response = await instanceAxios.get('/tnote/home/semester', {
+      params: { semesterName: semesterName }, // 객체 형태로 전달,
+    });
+    return response.data;
+  } catch (err) {
+    throw new Error('학기 검색 실패');
+  }
+};
