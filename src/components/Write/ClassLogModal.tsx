@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { logModalState } from '../../utils/lib/atom';
 import WritingModalTop from './WriteModalTop';
 import WriteDropdown from './WriteDropdown';
-import { useWriteModal } from '../../utils/useHooks/useModal';
+// import { useWriteModal } from '../../utils/useHooks/useModal';
 import ModalPortal from '../../utils/ModalPortal';
 import {
   ModalBackground,
@@ -121,15 +121,16 @@ interface SaveContents {
   진도표: string;
 }
 interface CloseProps {
-  closeModal: () => void;
+  closeWriteModal: () => void;
+  handleClickModal: (openModalContent: string) => void;
 }
-const ClassLogModal = ({ setYouWantedClose }: any) => {
+const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
   const formData = new FormData();
   const { scheduleId } = useParams();
   const [title, setTitle] = useState<string>(''); //제목 상태
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File>();
-  const { writeModal, handleClickModal } = useWriteModal();
+  // const { writeModal, handleClickModal } = useWriteModal();
   const [contentType, setContentType] =
     useState<keyof SaveContents>('학습계획'); //현재 모달에서 어떤 종류의 탭을 입력하고 있는지를 나타낸다.
   const [saveContents, setSaveContents] = useState<SaveContents>({
@@ -218,9 +219,9 @@ const ClassLogModal = ({ setYouWantedClose }: any) => {
     }
   };
 
-  useEffect(() => {
-    setYouWantedClose(true);
-  }, []);
+  // useEffect(() => {
+  //   setYouWantedClose(true);
+  // }, []);
 
   return (
     <ModalPortal>
@@ -229,7 +230,8 @@ const ClassLogModal = ({ setYouWantedClose }: any) => {
           <WriteDropdown
             label="학급일지"
             options={['업무일지', '상담기록', '학생 관찰 일지']}
-            handleChangeOption={handleClickModal}
+            handleClickModal={handleClickModal}
+            closeWriteModal={closeWriteModal}
           />
           <WritingModalTop
             titleLabel={'제목'}
@@ -286,7 +288,7 @@ const ClassLogModal = ({ setYouWantedClose }: any) => {
             <SUploadBtn>업로드</SUploadBtn>
           </SFileWrapper>
           <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
-          {writeModal.isOpen && writeModal.content}
+          {/* {writeModal.isOpen && writeModal.content} */}
         </SModalLayout>
       </ModalNoBlackBackground>
     </ModalPortal>

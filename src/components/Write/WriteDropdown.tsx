@@ -56,18 +56,18 @@ const SDropdownItem = styled.li`
 export interface WritingModalProps {
   label: string;
   options: string[];
-  handleChangeOption: (option: string) => void;
-  // closeModal: () => void;
+  handleClickModal: (option: string) => void;
+  closeWriteModal: () => void;
 }
 
 const WriteDropdown = (props: WritingModalProps) => {
-  const { label, options, handleChangeOption } = props;
+  const { label, options, handleClickModal, closeWriteModal } = props;
 
   const { isToggle, handleChangeToggle } = useToggle();
 
   return (
     <SModalTop>
-      <IcClose className="pointer" onClick={() => ''} />
+      <IcClose className="pointer" onClick={closeWriteModal} />
       <SDropdownLabel>
         <div>{label}</div>
         <SDropdownToggle onClick={handleChangeToggle}>
@@ -80,7 +80,7 @@ const WriteDropdown = (props: WritingModalProps) => {
               <SDropdownItem
                 key={option}
                 onClick={() => {
-                  handleChangeOption(option);
+                  handleClickModal(option);
                 }}
               >
                 {option}

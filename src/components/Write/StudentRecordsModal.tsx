@@ -4,12 +4,13 @@ import styled from 'styled-components';
 import { IcClip, IcPen } from '../../assets/icons';
 import { createStudentObservation } from '../../utils/lib/api';
 import ModalPortal from '../../utils/ModalPortal';
-import { useWriteModal } from '../../utils/useHooks/useModal';
+// import { useWriteModal } from '../../utils/useHooks/useModal';
 import { Button } from '../common/styled/Button';
 import {
   ModalLayout,
   ModalNoBlackBackground,
 } from '../common/styled/ModalLayout';
+import { CloseProps } from './WorkLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 
@@ -116,9 +117,12 @@ const STeachingPlan = styled.div`
   border-top: 1px solid #d5d5d5;
 `;
 
-const StudentRecordsModal = () => {
+const StudentRecordsModal = ({
+  closeWriteModal,
+  handleClickModal,
+}: CloseProps) => {
   const { scheduleId } = useParams();
-  const { writeModal, handleClickModal } = useWriteModal();
+  // const { writeModal, handleClickModal } = useWriteModal();
   const [title, setTitle] = useState<string>(''); //제목 상태
   const [observationContent, setObservationContent] = useState<string>('');
   const [teachingPlan, setTeachingPlan] = useState<string>('');
@@ -171,7 +175,8 @@ const StudentRecordsModal = () => {
           <WriteDropdown
             label="학생 관찰 일지"
             options={['학급일지', '업무일지', '상담기록']}
-            handleChangeOption={handleClickModal}
+            handleClickModal={handleClickModal}
+            closeWriteModal={closeWriteModal}
           />
           <WritingModalTop
             titleLabel={'학생 이름'}
@@ -233,7 +238,7 @@ const StudentRecordsModal = () => {
 
             <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
           </SScroll>
-          {writeModal.isOpen && writeModal.content}
+          {/* {writeModal.isOpen && writeModal.content} */}
         </SModalLayout>
       </ModalNoBlackBackground>
     </ModalPortal>

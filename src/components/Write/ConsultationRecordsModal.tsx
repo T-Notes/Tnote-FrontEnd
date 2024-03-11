@@ -4,12 +4,13 @@ import styled from 'styled-components';
 import { IcClip, IcPen, IcSmallDatePicker, IcTitle } from '../../assets/icons';
 import { createConsultationRecords } from '../../utils/lib/api';
 import ModalPortal from '../../utils/ModalPortal';
-import { useWriteModal } from '../../utils/useHooks/useModal';
+// import { useWriteModal } from '../../utils/useHooks/useModal';
 import { Button } from '../common/styled/Button';
 import {
   ModalLayout,
   ModalNoBlackBackground,
 } from '../common/styled/ModalLayout';
+import { CloseProps } from './WorkLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 
@@ -165,9 +166,12 @@ const SCounselingResult = styled.div`
   padding-top: 30px;
   border-top: 1px solid #d5d5d5;
 `;
-const ConsultationRecordsModal = () => {
+const ConsultationRecordsModal = ({
+  closeWriteModal,
+  handleClickModal,
+}: CloseProps) => {
   const { scheduleId } = useParams();
-  const { writeModal, handleClickModal } = useWriteModal();
+  // const { writeModal, handleClickModal } = useWriteModal();
   const [title, setTitle] = useState<string>(''); //제목 상태
   const [counselingContent, setCounselingContent] = useState<string>('');
   const [counselingResult, setCounselingResult] = useState<string>('');
@@ -234,7 +238,8 @@ const ConsultationRecordsModal = () => {
           <WriteDropdown
             label="상담기록"
             options={['학급일지', '업무일지', '학생 관찰 일지']}
-            handleChangeOption={handleClickModal}
+            handleClickModal={handleClickModal}
+            closeWriteModal={closeWriteModal}
           />
           <WritingModalTop
             titleLabel={'학생 이름'}
@@ -363,7 +368,7 @@ const ConsultationRecordsModal = () => {
           </SScroll>
         </SModalLayout>
 
-        {writeModal.isOpen && writeModal.content}
+        {/* {writeModal.isOpen && writeModal.content} */}
       </ModalNoBlackBackground>
     </ModalPortal>
   );

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { IcClip, IcMap, IcPen } from '../../assets/icons';
 import { createWorkLog } from '../../utils/lib/api';
 import ModalPortal from '../../utils/ModalPortal';
-import { useWriteModal } from '../../utils/useHooks/useModal';
+// import { useWriteModal } from '../../utils/useHooks/useModal';
 import { Button } from '../common/styled/Button';
 import {
   ModalBackground,
@@ -163,12 +163,13 @@ const SScroll = styled.div`
   /* height: 300px; */
   overflow-y: scroll;
 `;
-interface CloseProps {
-  closeModal: () => void;
+export interface CloseProps {
+  closeWriteModal: () => void;
+  handleClickModal: (openModalContent: string) => void;
 }
-const WorkLogModal = () => {
+const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
   const { scheduleId } = useParams();
-  const { writeModal, handleClickModal } = useWriteModal();
+  // const { writeModal, handleClickModal } = useWriteModal();
   const [title, setTitle] = useState<string>(''); //제목 상태
   const [place, setPlace] = useState<string>('');
   const [date, setDate] = useState({
@@ -222,8 +223,8 @@ const WorkLogModal = () => {
           <WriteDropdown
             label="업무일지"
             options={['학급일지', '상담기록', '학생 관찰 일지']}
-            handleChangeOption={handleClickModal}
-            // closeModal={closeModal}
+            handleClickModal={handleClickModal}
+            closeWriteModal={closeWriteModal}
           />
           <WritingModalTop
             titleLabel={'제목'}
@@ -283,7 +284,7 @@ const WorkLogModal = () => {
             <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
           </SScroll>
 
-          {writeModal.isOpen && writeModal.content}
+          {/* {writeModal.isOpen && writeModal.content} */}
         </SModalLayout>
       </ModalNoBlackBackground>
     </ModalPortal>

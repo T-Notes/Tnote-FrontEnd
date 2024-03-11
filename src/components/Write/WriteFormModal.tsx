@@ -10,7 +10,7 @@ import {
 import { useState, useEffect } from 'react';
 import ClassLogModal from './ClassLogModal';
 import WorkLogModal from './WorkLogModal';
-import { useWriteModal, WriteModal } from '../../utils/useHooks/useModal';
+// import { useWriteModal, WriteModal } from '../../utils/useHooks/useModal';
 
 const SWriteForm = styled(ModalLayout)`
   display: flex;
@@ -35,20 +35,25 @@ const SCaption = styled.p`
   ${({ theme }) => theme.fonts.caption}
 `;
 interface WriteProps {
-  isOpen: boolean;
-  closeModal: () => void;
-  setWriteModal: (writeModal: WriteModal) => void;
+  closeWriteFormModal: () => void;
+  handleClickModal: (openModalContent: string) => void;
+  // isOpen: boolean;
+  // closeModal: () => void;
+  // setWriteModal: (writeModal: WriteModal) => void;
 }
 
-const WriteFormModal = ({ isOpen, closeModal, setWriteModal }: WriteProps) => {
-  const { writeModal, handleClickModal } = useWriteModal();
+const WriteFormModal = ({
+  closeWriteFormModal,
+  handleClickModal,
+}: WriteProps) => {
+  // const { writeModal, handleClickModal } = useWriteModal();
 
-  useEffect(() => {
-    setWriteModal(writeModal);
-  }, [writeModal]);
+  // useEffect(() => {
+  //   setWriteModal(writeModal);
+  // }, [writeModal]);
 
   return (
-    <ModalBackground onClick={closeModal}>
+    <ModalBackground onClick={closeWriteFormModal}>
       <SWriteForm onClick={(e: any) => e.stopPropagation()}>
         <SItem>
           <IcClassLog

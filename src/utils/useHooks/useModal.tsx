@@ -26,34 +26,34 @@ export interface WriteModal {
   content: React.ReactNode | null;
 }
 
-export const useWriteModal = () => {
-  const [writeModal, setWriteModal] = useState<WriteModal>({
-    isOpen: false,
-    isClose: true,
-    content: null,
-  });
+// export const useWriteModal = () => {
+//   const [writeModal, setWriteModal] = useState<WriteModal>({
+//     isOpen: false,
+//     isClose: true,
+//     content: null,
+//   });
 
-  const [youWantedClose, setYouWantedClose] = useState(false);
+//   const [youWantedClose, setYouWantedClose] = useState(false);
 
-  const handleClickModal = (option: string) => {
-    console.log(1, 'option:', option);
+//   const handleClickModal = (option: string) => {
+//     console.log(1, 'option:', option);
 
-    let modalContent = null;
-    if (option === '학급일지') {
-      modalContent = <ClassLogModal setYouWantedClose={setYouWantedClose} />;
-    } else if (option === '업무일지') {
-      modalContent = <WorkLogModal />;
-    } else if (option === '상담기록') {
-      modalContent = <ConsultationRecordsModal />;
-    } else if (option === '학생 관찰 일지') {
-      modalContent = <StudentRecordsModal />;
-    }
+//     let modalContent = null;
+//     if (option === '학급일지') {
+//       modalContent = <ClassLogModal />;
+//     } else if (option === '업무일지') {
+//       modalContent = <WorkLogModal />;
+//     } else if (option === '상담기록') {
+//       modalContent = <ConsultationRecordsModal />;
+//     } else if (option === '학생 관찰 일지') {
+//       modalContent = <StudentRecordsModal />;
+//     }
 
-    //모달 상태 업데이트
-    if (youWantedClose)
-      setWriteModal({ isOpen: false, content: modalContent, isClose: true });
-    else setWriteModal({ isOpen: true, content: modalContent, isClose: false });
-  };
+//     //모달 상태 업데이트
+//     if (youWantedClose)
+//       setWriteModal({ isOpen: false, content: modalContent, isClose: true });
+//     else setWriteModal({ isOpen: true, content: modalContent, isClose: false });
+//   };
 
-  return { writeModal, setWriteModal, handleClickModal };
-};
+//   return { writeModal, setWriteModal, handleClickModal };
+// };
