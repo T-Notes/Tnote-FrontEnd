@@ -1,6 +1,6 @@
 import '../../App.css';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ko } from 'date-fns/locale';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 import {
@@ -17,6 +17,8 @@ import {
 } from 'date-fns';
 import SearchInput from '../common/SearchInput';
 import { Button } from '../common/styled/Button';
+import { useParams } from 'react-router-dom';
+import { getAllLogs } from '../../utils/lib/api';
 
 const SCalendarWrapper = styled.div`
   width: 100%;
@@ -108,7 +110,22 @@ const SLog = styled.div<{ color: string }>`
   padding: 3px;
   background-color: ${({ color }) => color};
 `;
-const ScheduleCalendar = () => {
+interface Task {
+  id: number;
+  title: string;
+  studentName: string;
+  startDate: Date;
+}
+interface Reload {
+  reload: boolean;
+}
+const ScheduleCalendar = ({ reload }: Reload) => {
+  const { scheduleId } = useParams();
+  const [classLogs, setClassLogs] = useState<Task[]>([]);
+  const [consultations, setConsultations] = useState<Task[]>([]);
+  const [workLogs, setWorkLogs] = useState<Task[]>([]);
+  const [observations, setObservations] = useState<Task[]>([]);
+
   const { currentDate, handlePrevMonth, handleNextMonth, setCurrentDate } =
     useCurrentDate();
 
@@ -140,29 +157,22 @@ const ScheduleCalendar = () => {
       return color; // 색상 반환
     };
   })();
-  const dummyData = [
-    { id: 1, content: '김주혁 학생 상담', date: '2024-03-13' },
-    {
-      id: 2,
-      content: '방과후 안내',
-      date: '2024-03-04',
-    },
-    {
-      id: 3,
-      content: '학부모 상담',
-      date: '2024-03-04',
-    },
-    {
-      id: 4,
-      content: '최윤지 상담',
-      date: '2024-03-02',
-    },
-    {
-      id: 5,
-      content: '최윤지 상담',
-      date: '2024-03-07',
-    },
-  ];
+
+  // 월별 전체 조회하기
+  useEffect(() => {
+    if (scheduleId) {
+      const getMonthlyLogs = async () => {
+        const response = await getAllLogs(scheduleId, new Date());
+        console.log(2, response.data.proceedings);
+        setClassLogs(response.data.classLogs);
+        setWorkLogs(response.data.proceedings);
+        setConsultations(response.data.consultations);
+        setObservations(response.data.observations);
+      };
+      getMonthlyLogs();
+    }
+  }, [scheduleId, reload]);
+
   return (
     <SCalendarWrapper>
       <SCalendarHeaderWrapper>
@@ -198,16 +208,49 @@ const ScheduleCalendar = () => {
               <div className={isToday(day) ? 'today' : ''}>
                 {format(day, 'd')}
               </div>
-              {dummyData.map((item) => {
-                const itemDate = new Date(item.date);
+              {classLogs.map((item) => {
+                const itemDate = new Date(item.startDate);
                 if (isSameDay(itemDate, day)) {
                   return (
                     <SLogContainer key={item.id}>
-                      <SLog color={getRandomColor()}>{item.content}</SLog>
+                      <SLog color={getRandomColor()}>{item.title}</SLog>
                     </SLogContainer>
                   );
                 }
-                return null;
+              })}
+              {consultations.map((item) => {
+                const itemDate = new Date(item.startDate);
+                if (isSameDay(itemDate, day)) {
+                  return (
+                    <SLogContainer key={item.id}>
+                      <SLog color={getRandomColor()}>{item.studentName}</SLog>
+                    </SLogContainer>
+                  );
+                }
+              })}
+              {workLogs.map((item) => {
+                console.log('map!');
+
+                const itemDate = new Date(item.startDate);
+                if (isSameDay(itemDate, day)) {
+                  console.log(3, '렌더링!');
+
+                  return (
+                    <SLogContainer key={item.id}>
+                      <SLog color={getRandomColor()}>{item.title}</SLog>
+                    </SLogContainer>
+                  );
+                }
+              })}
+              {observations.map((item) => {
+                const itemDate = new Date(item.startDate);
+                if (isSameDay(itemDate, day)) {
+                  return (
+                    <SLogContainer key={item.id}>
+                      <SLog color={getRandomColor()}>{item.studentName}</SLog>
+                    </SLogContainer>
+                  );
+                }
               })}
             </SDays>
           ))}

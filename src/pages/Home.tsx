@@ -44,7 +44,7 @@ const Home = () => {
         </SDayAndScheduleWrapper>
       </SHomeSemester>
 
-      <ScheduleCalendar />
+      <ScheduleCalendar reload={reload} />
       <TaskSidebar reload={reload} />
       <WriteButton setReload={setReload} />
     </SHomeWrapper>
