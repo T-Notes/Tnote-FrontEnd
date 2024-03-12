@@ -58,11 +58,13 @@ const TodaySchedule = () => {
   }, [lastClass]);
   // 오늘 수업일정 조회
   useEffect(() => {
-    const getTodaySchedule = async () => {
-      const response = await getTodayTimetable(scheduleId);
-      console.log(5, response);
-    };
-    getTodaySchedule();
+    if (scheduleId) {
+      const getTodaySchedule = async () => {
+        const response = await getTodayTimetable(scheduleId);
+        console.log(5, response);
+      };
+      getTodaySchedule();
+    }
   }, [scheduleId]);
   return (
     <>
