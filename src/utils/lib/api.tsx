@@ -444,3 +444,30 @@ export const getTodayTimetable = async (scheduleId: string | undefined) => {
     throw new Error('오늘 시간표 조회 실패');
   }
 };
+
+// 날짜별 일지 정보 조회
+export const getFilteredLogsByDate = async (
+  scheduleId: string | undefined,
+  startDate: string,
+  endDate: string,
+  logType: string,
+) => {
+  try {
+    const response = await instanceAxios.get(
+      `tnote/home/${scheduleId}/dateLogs`,
+      {
+        params: {
+          startDate: startDate,
+          endDate: endDate,
+          page: 0,
+          size: 8,
+          logType: logType,
+        },
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    throw new Error('필터된 일지를 조회하는데 실패했습니다.');
+  }
+};

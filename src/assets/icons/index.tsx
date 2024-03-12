@@ -42,3 +42,5 @@ export { ReactComponent as IcOnToggle } from './onToggleIcon.svg';
 export { ReactComponent as IcOffToggle } from './offToggleIcon.svg';
 export { ReactComponent as IcDelete } from './deleteIcon.svg';
 export { ReactComponent as IcGrayPen } from './lightGrayPen.svg';
+export { ReactComponent as IcFile } from './fileIcon.svg';
+export { ReactComponent as IcBlackDelete } from './blackDeleteIcon.svg';
