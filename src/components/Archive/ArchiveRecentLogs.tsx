@@ -115,6 +115,7 @@ const SLogContainer = styled.div`
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 5px;
+  cursor: pointer;
 `;
 const SCreatedAt = styled.div`
   margin-left: auto;
@@ -338,10 +339,12 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
                 {isShowCheckBox &&
                   (checkedLogs[item.id] ? (
                     <IcCheckedBox
+                      className="pointer"
                       onClick={() => handleClickCheckBox(item.id)}
                     />
                   ) : (
                     <IcUncheckedBox
+                      className="pointer"
                       onClick={() => handleClickCheckBox(item.id)}
                     />
                   ))}
