@@ -81,7 +81,6 @@ const TodoListInput = (todoId: number) => {
   //   };
   // }, []);
   useEffect(() => {
-    console.log('content!');
     const handleClickOutside = (e: any) => {
       if (inputRef.current && !inputRef.current.contains(e.target)) {
         const patchTodo = async () => {

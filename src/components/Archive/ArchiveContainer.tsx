@@ -23,7 +23,6 @@ const ArchiveContainer = () => {
     if (scheduleId) {
       const getSemesterName = async () => {
         const response = await getSemesterData(scheduleId);
-        console.log(response.data[0].semesterName);
         const data = response.data[0];
         setSemesterName(data.semesterName);
       };

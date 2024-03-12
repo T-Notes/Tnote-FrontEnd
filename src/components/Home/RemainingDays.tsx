@@ -37,15 +37,12 @@ const RemainingDays = () => {
   // 고민1. formattedDate형식으로 넘겨주면 되는건가?
   const { currentDate } = useCurrentDate();
   const date = currentDate.toISOString().split('T')[0];
-  console.log('remainingDate:', date);
 
   useEffect(() => {
     if (scheduleId) {
       const remainingDayData = async () => {
         try {
-          console.log(2, '렌더링!');
           const response = await getRemainingDayData(scheduleId, date);
-          console.log('남은학기일수', response.data);
 
           setRemainingDay(response.data);
         } catch (err) {

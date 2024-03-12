@@ -190,7 +190,7 @@ const ClassAddForm = ({
 
   const handleSelectedClassDay = (day: any) => {
     const enDay = handleChangeKoreanToEnglishDay(day);
-    console.log(3, enDay);
+
     setEnDay(enDay); // 서버에 보낼 상태
     setClassDay(day); // 유저에게 보여질 상태
 
@@ -230,8 +230,6 @@ const ClassAddForm = ({
       scheduleId: scheduleId,
     };
     if (isEditMode) {
-      console.log('수정!');
-
       // 수정 요청
       await editSubject(subjectId, pathData);
       setReloadTrigger((prev) => !prev);
@@ -266,17 +264,16 @@ const ClassAddForm = ({
   };
   useEffect(() => {
     if (isEditMode) {
-      console.log('isEditMode가 true!');
       const selectedSubjectData = async () => {
         const response = await getSelectedSubjectData(scheduleId, subjectId);
         const data = response.data;
-        console.log(response.data);
+
         // 수정하는 상황일때
         setSubjectName(data.subjectName);
         setClassTime(data.classTime);
 
         const enDay = handleChangeKoreanToEnglishDay(data.classDay);
-        console.log(2, '영어로 변환?', classDay);
+
         setEnDay(enDay); // 서버에 보내는 상태
         setClassDay(data.classDay); // 유저에게 보여지는 상태
 

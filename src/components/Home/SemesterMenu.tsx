@@ -26,7 +26,6 @@ interface SemesterMenu {
 }
 const SemesterMenu = ({ onClickAddBtn }: SemesterMenu) => {
   const { scheduleId } = useParams();
-  console.log(scheduleId);
 
   const location = useLocation(); // 현재 url정보에 접근
 

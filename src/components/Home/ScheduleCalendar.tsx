@@ -186,7 +186,6 @@ const ScheduleCalendar = ({ reload }: Reload) => {
   const handleLogsSearch = async () => {
     const getSearchValue = await getSearchLogsValue(searchValue, searchValue);
     setSetSearchValueList(getSearchValue.data);
-    console.log(2, getSearchValue.data);
   };
 
   const debouncedSearch = _debounce(handleLogsSearch, 1000);

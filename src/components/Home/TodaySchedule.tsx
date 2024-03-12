@@ -48,7 +48,6 @@ const TodaySchedule = () => {
   useEffect(() => {
     if (lastClass === '') {
       // 유저가 선택하기 전이라면 기본 값 9교시로 설정.
-      console.log('기본값 9교시');
     } else {
       // 유저가 마지막 교시를 선택했다면, 해당 교시까지의 시간표 출력.
 
@@ -61,7 +60,6 @@ const TodaySchedule = () => {
     if (scheduleId) {
       const getTodaySchedule = async () => {
         const response = await getTodayTimetable(scheduleId);
-        console.log(5, response);
       };
       getTodaySchedule();
     }

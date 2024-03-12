@@ -17,7 +17,7 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
       const getRecentData = async () => {
         const response = await getRecentLogs();
         const data = response.data;
-        console.log(2, response.data.logType);
+
         setRecentLogsList(response.data);
       };
       getRecentData();
@@ -26,7 +26,7 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
   const [newTimestamp, setNewTimestamp] = useState<string>('');
   const handleChangeTimestamp = (timestamp: string) => {
     const newTimestamp = timestamp.slice(0, 10);
-    console.log(3, newTimestamp);
+
     setNewTimestamp(newTimestamp);
   };
   return (

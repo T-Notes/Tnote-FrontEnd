@@ -51,8 +51,6 @@ const Todo = () => {
     e: React.ChangeEvent<HTMLInputElement>,
     todoId: number,
   ) => {
-    console.log(1, todoId);
-
     const newContent = e.target.value;
     setTodoArray((prevTodoArray) => {
       return prevTodoArray.map((todoItem) => {
@@ -66,17 +64,12 @@ const Todo = () => {
 
   // todo 삭제
   const handleDelete = async (todoId: number | undefined) => {
-    // console.log('todoId:', todoId);
     await removeTodo(scheduleId, todoId);
     setIsAddTodo(!isAddTodo);
   };
 
-  // console.log(todoArray);
-
   // 외부 클릭 시 수정 요청
   const handleUpdateTodo = async (todoId: number | undefined) => {
-    console.log(2, todoContent);
-
     const patchTodoData = {
       date: new Date().toISOString().split('T')[0],
       content: todoContent,
@@ -113,7 +106,6 @@ const Todo = () => {
     if (scheduleId) {
       const getTodoData = async () => {
         const response = await getTodo(scheduleId);
-        console.log('!!!', response);
 
         setTodoArray(response.data);
       };

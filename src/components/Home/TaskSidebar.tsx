@@ -69,8 +69,6 @@ const TaskSidebar = ({ reload }: Reload) => {
           const workLogResponse = await getAllProceedings(scheduleId);
           const consultationsResponse = await getAllConsultations(scheduleId);
           const observationResponse = await getAllObservation(scheduleId);
-          console.log(1, consultationsResponse.data.consultations);
-          console.log(2, observationResponse.data.observations);
 
           setClassLogContent(classLogResponse.data.classLogs);
           setWorkLogContent(workLogResponse.data.proceedings);

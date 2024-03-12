@@ -141,8 +141,7 @@ const SemesterForm = () => {
   // 예상 문제 지점
   const handleParentStartDateChange = (startDate: Date, endDate: Date) => {
     // 받은 startDate 값을 부모 컴포넌트의 상태로 업데이트
-    console.log('startDate', typeof startDate); //2024-03-01 string
-    console.log('startDate', typeof JSON.stringify(startDate)); //"2024-03-01" string
+
     const startDateObject = new Date(startDate);
     const endDateObject = new Date(endDate);
     // 뿌려줄 데이터
@@ -159,7 +158,6 @@ const SemesterForm = () => {
     const semesterData = await getSemesterData(scheduleId);
 
     const data = semesterData.data[0];
-    // console.log('타입', typeof data.startDate);
 
     setSemesterData((prev) => ({
       ...prev,
@@ -180,12 +178,8 @@ const SemesterForm = () => {
   // 학기 수정하기
   // 여기서 받은 응답을 그대로 렌더링한다는 에러가 뜸.
   const handleUpdateSemester = async () => {
-    console.log(1, '저장 실행');
-    console.log(2, semesterData.startDate);
-
     const editSemester = await updateSemester(scheduleId, semesterData);
     const data = editSemester.data;
-    console.log(2, data);
 
     setSemesterData((prev) => ({
       ...prev,

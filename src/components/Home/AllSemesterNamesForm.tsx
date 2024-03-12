@@ -39,7 +39,6 @@ const AllSemesterNamesForm = () => {
         try {
           const response = await getAllSemesterNames();
           setSemesterOptions(response);
-          console.log(semesterOptions);
         } catch {}
       };
       getSemesterNames();
@@ -50,7 +49,6 @@ const AllSemesterNamesForm = () => {
   const handleClickSemester = (semesterName: string, semesterId: string) => {
     const selectedSemesterId = semesterOptions.find((s) => s.id === semesterId);
     // 선택한 스케줄 id url에 담기
-    console.log(4, currentUrl.pathname);
 
     if (selectedSemesterId) {
       // 현재 페이지에 따라서, navigate 달라짐
