@@ -9,6 +9,7 @@ import Callback from '../utils/Callback';
 import ArchiveListPage from '../pages/ArchiveListPage';
 import ArchiveContainer from './Archive/ArchiveContainer';
 import ArchivePage from '../pages/ArchivePage';
+import ArchiveClassLog from '../pages/ArchiveClassLog';
 
 const Router = () => {
   return (
@@ -35,6 +36,10 @@ const Router = () => {
           <Route path="/timetable" element={<Timetable />} />
           <Route path="/archive" element={<ArchiveListPage />} />
           <Route path="/archive/:scheduleId" element={<ArchiveListPage />} />
+          <Route
+            path="/archive/classLog/:classLogId"
+            element={<ArchiveClassLog />}
+          />
           <Route
             path="/archiveContainer/:scheduleId"
             element={<ArchivePage />}

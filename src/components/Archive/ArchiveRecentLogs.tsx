@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   IcBlackDelete,
@@ -148,6 +149,7 @@ interface newRecentLogs {
   createdAt: string;
 }
 const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
+  const navigate = useNavigate();
   const [newRecentLogs, setNewRecentLogs] = useState<newRecentLogs[]>([]);
   const [filteredLogsList, setFilteredLogsList] = useState<any[]>([]);
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] =
@@ -335,7 +337,10 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
           filteredLogsList.map((item, index) => {
             const newTimestamp = item.createdAt.slice(0, 10);
             return (
-              <SLogContainer key={index}>
+              <SLogContainer
+                key={index}
+                onClick={() => navigate(`/archive/classLog/${item.id}`)}
+              >
                 {isShowCheckBox &&
                   (checkedLogs[item.id] ? (
                     <IcCheckedBox
