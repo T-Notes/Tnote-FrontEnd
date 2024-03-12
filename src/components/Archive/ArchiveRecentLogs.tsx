@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
   IcBlackDelete,
+  IcCheckedBox,
   IcCloseDropdownSmall,
   IcDelete,
   IcFile,
   IcOpenDropdownSmall,
+  IcUncheckedBox,
 } from '../../assets/icons';
 import instanceAxios from '../../utils/InstanceAxios';
 import {
@@ -14,6 +16,7 @@ import {
   getAllProceedings,
   getAllConsultations,
   getAllObservation,
+  getTodo,
 } from '../../utils/lib/api';
 
 const SArchiveRecentLogsWrapper = styled.div`
@@ -72,12 +75,12 @@ const SFilter = styled.button`
   border: 1px solid #a6a6a6;
   border-radius: 50px;
   color: #5b5b5b;
-  margin-right: 60px;
   font-size: 16px;
   font-weight: 500;
 `;
 const SArchiveButtons = styled.div`
   margin-top: 30px;
+  margin-bottom: 20px;
   margin-left: auto;
   display: flex;
 `;
@@ -103,7 +106,31 @@ const SDropdownItem = styled.li`
     border-radius: 4px;
   }
 `;
-
+const SLogContainer = styled.div`
+  display: flex;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 20px;
+  color: #5b5b5b;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 5px;
+`;
+const SCreatedAt = styled.div`
+  margin-left: auto;
+`;
+const SLogContainerHeader = styled.div`
+  display: flex;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #f7f9fc;
+`;
+const SDate = styled.div`
+  margin-left: auto;
+`;
 interface Archive {
   scheduleId: string | undefined;
 }
@@ -125,7 +152,24 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] =
     useState<boolean>(false);
   const options = ['학급일지', '업무일지', 'To-Do', '상담기록', '학생관찰기록'];
+  const [isShowCheckBox, setIsShowCheckBox] = useState<boolean>(false);
+  const [isSelectedCheckBox, setIsSelectedCheckBox] = useState<number>();
+  const [checkedLogs, setCheckedLogs] = useState<{ [key: number]: boolean }>(
+    {},
+  );
+  const [currentFilteredOption, setCurrentFilteredOption] =
+    useState<string>('');
 
+  const handleClickShowCheckBox = () => {
+    setIsShowCheckBox((prev) => !prev);
+  };
+  const handleClickCheckBox = (id: number) => {
+    setIsSelectedCheckBox(id);
+    setCheckedLogs((prev) => ({
+      ...prev,
+      [id]: !prev[id], // 토글
+    }));
+  };
   // 최신조회
   useEffect(() => {
     if (scheduleId) {
@@ -167,7 +211,7 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
     if (scheduleId) {
       const getClassLogData = async () => {
         const res = await getAllClassLog(scheduleId);
-        console.log(1, res.data.classLogs);
+
         setFilteredLogsList(res.data.classLogs);
       };
       getClassLogData();
@@ -175,7 +219,7 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
   }, [scheduleId]);
 
   const handleClickModal = async (option: string) => {
-    console.log(option);
+    setCurrentFilteredOption(option);
     try {
       let res;
       switch (option) {
@@ -195,6 +239,11 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
           res = await getAllObservation(scheduleId);
           setFilteredLogsList(res.data.observations);
           break;
+        case 'To-Do':
+          res = await getTodo(scheduleId);
+          console.log(res.data);
+          setFilteredLogsList(res.data);
+          break;
         default:
           break;
       }
@@ -203,6 +252,32 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
       console.error(error);
     }
   };
+
+  const handleDelete = () => {
+    // 클릭한 값 삭제 기능
+    if (isSelectedCheckBox) {
+      console.log(1, isSelectedCheckBox);
+
+      if (currentFilteredOption === '학급일지') {
+        instanceAxios.delete(`/tnote/classLog/${isSelectedCheckBox}`);
+      }
+      if (currentFilteredOption === '업무일지') {
+        instanceAxios.delete(`/tnote/proceeding/${isSelectedCheckBox}`);
+      }
+      if (currentFilteredOption === 'To-Do') {
+        instanceAxios.delete(
+          `/tnote/todos/${scheduleId}/${isSelectedCheckBox}`,
+        );
+      }
+      if (currentFilteredOption === '상담기록') {
+        instanceAxios.delete(`/tnote/consultation/${isSelectedCheckBox}`);
+      }
+      if (currentFilteredOption === '학생관찰기록') {
+        instanceAxios.delete(`/tnote/observation/${isSelectedCheckBox}`);
+      }
+    }
+  };
+
   return (
     <SArchiveRecentLogsWrapper>
       <STitle>최근 조회</STitle>
@@ -219,7 +294,8 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
         })}
       </SRecentSearchContainer>
       <SArchiveButtons>
-        <SDelete>
+        <SDelete onClick={handleClickShowCheckBox}>선택</SDelete>
+        <SDelete onClick={handleDelete}>
           삭제
           <IcBlackDelete />
         </SDelete>
@@ -231,7 +307,6 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
           ) : (
             <IcOpenDropdownSmall onClick={openFilterDropdown} />
           )}
-          {/* 문제 부분 */}
           {isFilterDropdownOpen && (
             <SDropdownList>
               {options.map((option) => (
@@ -249,18 +324,40 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
         </SFilter>
       </SArchiveButtons>
       {/* 일지 전체 조회 */}
-      {filteredLogsList &&
-        filteredLogsList.map((item, index) => {
-          console.log(filteredLogsList);
+      <div>
+        <SLogContainerHeader>
+          <div>이름</div>
+          <SDate>날짜</SDate>
+        </SLogContainerHeader>
 
-          return (
-            <div key={index}>
-              <div>{item.title || item.studentName}</div>
-              <div>{item.classContents}</div>
-              <div>{item.createdAt}</div>
-            </div>
-          );
-        })}
+        {filteredLogsList &&
+          filteredLogsList.map((item, index) => {
+            const newTimestamp = item.createdAt.slice(0, 10);
+            return (
+              <SLogContainer key={index}>
+                {isShowCheckBox &&
+                  (checkedLogs[item.id] ? (
+                    <IcCheckedBox
+                      onClick={() => handleClickCheckBox(item.id)}
+                    />
+                  ) : (
+                    <IcUncheckedBox
+                      onClick={() => handleClickCheckBox(item.id)}
+                    />
+                  ))}
+
+                <div>{item.title || item.studentName}</div>
+                <div>
+                  {item.classContents ||
+                    item.workContents ||
+                    item.consultationContents ||
+                    item.observationContents}
+                </div>
+                <SCreatedAt>{newTimestamp}</SCreatedAt>
+              </SLogContainer>
+            );
+          })}
+      </div>
     </SArchiveRecentLogsWrapper>
   );
 };
