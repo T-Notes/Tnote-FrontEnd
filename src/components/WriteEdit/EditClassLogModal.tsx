@@ -201,11 +201,11 @@ interface SaveContents {
 }
 const EditClassLogModal = ({ onClose, logId }: Edit) => {
   const formData = new FormData();
-  const [title, setTitle] = useState<string>(''); //제목 상태
-  const [date, setDate] = useState({
-    startDate: '',
-    endDate: '',
-  });
+  // const [title, setTitle] = useState<string>(''); //제목 상태
+  // const [date, setDate] = useState({
+  //   startDate: '',
+  //   endDate: '',
+  // });
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File>();
 
@@ -263,14 +263,11 @@ const EditClassLogModal = ({ onClose, logId }: Edit) => {
     getDetailData();
   }, []);
 
-  const handleTitleChange = (newTitle: string) => {
-    setTitle(newTitle);
-  };
   const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
-    setDate((prevDate) => ({
-      ...prevDate,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
+    setClassLogData((prev) => ({
+      ...prev,
+      startDate: startDate,
+      endDate: endDate,
     }));
     setParentsIsAllDay(isAllDay);
   };
@@ -280,8 +277,6 @@ const EditClassLogModal = ({ onClose, logId }: Edit) => {
       ...prev,
       title: newTitle,
     }));
-    // setTitle(newTitle); // title.length 보여주기 위함
-    // onTitleChange(newTitle);
   };
 
   const handleChangeImg = (e: any) => {
@@ -293,17 +288,17 @@ const EditClassLogModal = ({ onClose, logId }: Edit) => {
 
   const handleEdit = async () => {
     try {
-      const logData = {
+      const updateLogData = {
         title: classLogData.title,
-        startDate: date.startDate,
-        endDate: date.endDate,
+        startDate: classLogData.startDate,
+        endDate: classLogData.endDate,
         plan: saveContents.학습계획,
         classContents: saveContents.수업내용,
         submission: saveContents.제출과제,
         magnitude: saveContents.진도표,
         isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
       };
-      const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+      const jsonDataTypeValue = new Blob([JSON.stringify(updateLogData)], {
         type: 'application/json',
       });
       formData.append('classLogUpdateRequestDto', jsonDataTypeValue);
