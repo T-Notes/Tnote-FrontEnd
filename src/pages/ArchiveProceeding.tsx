@@ -109,6 +109,8 @@ const ArchiveProceeding = () => {
   const handleClickEdit = () => {
     setIsEdit((prev) => !prev);
   };
+  const [reload, setReload] = useState<boolean>(false);
+
   useEffect(() => {
     const getDetailData = async () => {
       const res = await getProceedingDetailData(logId);
@@ -145,7 +147,11 @@ const ArchiveProceeding = () => {
       </SArchiveClassLog>
       <ModalPortal>
         {isEdit && (
-          <EditProceedingModal onClose={handleClickEdit} logId={logId} />
+          <EditProceedingModal
+            onClose={handleClickEdit}
+            logId={logId}
+            setReload={setReload}
+          />
         )}
       </ModalPortal>
     </SArchiveClassLogWrapper>

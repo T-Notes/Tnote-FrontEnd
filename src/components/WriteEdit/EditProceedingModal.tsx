@@ -168,6 +168,7 @@ const SScroll = styled.div`
 interface Edit {
   onClose: () => void;
   logId: string | undefined;
+  setReload: React.Dispatch<React.SetStateAction<boolean>>;
 }
 interface Proceeding {
   title: string;
@@ -177,14 +178,7 @@ interface Proceeding {
   location: string;
   proceedingImageUrls: string[];
 }
-const EditProceedingModal = ({ onClose, logId }: Edit) => {
-  const [title, setTitle] = useState<string>(''); //제목 상태
-  const [place, setPlace] = useState<string>('');
-  const [date, setDate] = useState({
-    startDate: '',
-    endDate: '',
-  });
-  const [workContents, setWorkContents] = useState<string>('');
+const EditProceedingModal = ({ onClose, logId, setReload }: Edit) => {
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File>();
   const formData = new FormData();
@@ -204,18 +198,14 @@ const EditProceedingModal = ({ onClose, logId }: Edit) => {
     formData.append('classLogImages', file);
   };
 
-  const handleTitleChange = (newTitle: string) => {
-    setTitle(newTitle);
-  };
   const handleTitleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setProceedingData((prev) => ({ ...prev, title: newTitle }));
-    // setTitle(newTitle); // title.length 보여주기 위함
   };
   // 자식 컴포넌트에게서 기간 값 가져오기
   const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
-    setDate((prevDate) => ({
-      ...prevDate,
+    setProceedingData((prev) => ({
+      ...prev,
       startDate: startDate,
       endDate: endDate,
     }));
@@ -225,25 +215,23 @@ const EditProceedingModal = ({ onClose, logId }: Edit) => {
   const handlePlaceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setProceedingData((prev) => ({ ...prev, location: newTitle }));
-    // setPlace(newTitle); // title.length 보여주기 위함
   };
 
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    // setWorkContents(e.target.value);
     setProceedingData((prev) => ({ ...prev, workContents: e.target.value }));
   };
 
   const handleClickEdit = async () => {
     try {
-      const logData = {
+      const updateLogData = {
         title: proceedingData.title,
-        startDate: date.startDate,
-        endDate: date.endDate,
+        startDate: proceedingData.startDate,
+        endDate: proceedingData.endDate,
         location: proceedingData.location,
         workContents: proceedingData.workContents,
         isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
       };
-      const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+      const jsonDataTypeValue = new Blob([JSON.stringify(updateLogData)], {
         type: 'application/json',
       });
       formData.append('updateRequestDto', jsonDataTypeValue);
@@ -261,7 +249,7 @@ const EditProceedingModal = ({ onClose, logId }: Edit) => {
           accept: 'application/json',
         },
       });
-      //   setReload((prev) => !prev);
+      setReload((prev) => !prev);
       onClose();
     } catch (err) {
       console.log(err);
@@ -295,10 +283,8 @@ const EditProceedingModal = ({ onClose, logId }: Edit) => {
           onTitleInputChange={handleTitleInputChange}
           title={proceedingData.title.length}
           value={proceedingData.title}
+          onDateChange={dateValue}
         />
-        <>
-          <WriteDatePicker onStartDateChange={dateValue} />
-        </>
         <SScroll>
           <SContentWrap>
             <SType>
@@ -351,7 +337,6 @@ const EditProceedingModal = ({ onClose, logId }: Edit) => {
             <SFileUploadInput
               placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다."
               type="file"
-              // accept="image/*"
               onChange={handleChangeImg}
             />
             <SUploadBtn>업로드</SUploadBtn>

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { IcSmallDatePicker, IcTitle } from '../../assets/icons';
+import WriteDatePicker from '../Write/WriteDatePicker';
 
 const SWrapper = styled.div`
   /* border: 1px solid red; */
@@ -59,9 +60,17 @@ interface EditTitleAndDate {
   onTitleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   title: number;
   value: string;
+  onDateChange: (startDate: any, endDate: any, isAllDay: boolean) => void;
 }
 const EditModalTitleAndDate = (props: EditTitleAndDate) => {
-  const { titleLabel, dateLabel, onTitleInputChange, title, value } = props;
+  const {
+    titleLabel,
+    dateLabel,
+    onTitleInputChange,
+    title,
+    value,
+    onDateChange,
+  } = props;
   return (
     <>
       <SWrapper>
@@ -87,9 +96,9 @@ const EditModalTitleAndDate = (props: EditTitleAndDate) => {
             {dateLabel}
             <SPointText>*</SPointText>
           </SLabel>
-          {/* <div>
-            <WriteDatePicker onStartDateChange={onStartDateChange} />
-          </div> */}
+          <div>
+            <WriteDatePicker onStartDateChange={onDateChange} />
+          </div>
         </SPeriod>
       </SWrapper>
     </>
