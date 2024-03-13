@@ -52,7 +52,6 @@ export const getRemainingDayData = async (
         params: { date: date },
       },
     );
-    console.log('response:', response);
 
     return response.data;
   } catch (error) {
@@ -374,7 +373,7 @@ export const getAllConsultations = async (scheduleId: string | undefined) => {
   } catch {}
 };
 
-// 학생관찰일지 전채 조회
+// 학생관찰일지 전체 조회
 export const getAllObservation = async (scheduleId: string | undefined) => {
   try {
     const response = await instanceAxios.get(
@@ -423,22 +422,24 @@ export const getRecentLogs = async () => {
 
 // 일지 검색
 
-export const getSearchLogsValue = async (
-  semesterName: string,
-  title: string,
-) => {
+export const getSearchLogsValue = async (keyword: string) => {
   try {
     const response = await instanceAxios.get('/tnote/home/searching', {
-      params: { semesterName: semesterName, title: title },
+      params: { keyword: keyword },
     });
     return response.data;
   } catch {}
 };
 
 // 오늘 수업 시간표 조회
-export const getTodayTimetable = async (scheduleId: string | undefined) => {
+export const getTodayTimetable = async (
+  scheduleId: string | undefined,
+  day: string,
+) => {
   try {
-    const response = await instanceAxios.get(`/tnote/subjects/${scheduleId}`);
+    const response = await instanceAxios.get(`/tnote/subjects/${scheduleId}`, {
+      params: { day: day },
+    });
     return response.data;
   } catch {
     throw new Error('오늘 시간표 조회 실패');
@@ -470,4 +471,64 @@ export const getFilteredLogsByDate = async (
   } catch (error) {
     throw new Error('필터된 일지를 조회하는데 실패했습니다.');
   }
+};
+
+// 학급일지 상세조회
+export const getClassLogDetailData = async (classLogId: string | undefined) => {
+  try {
+    const response = await instanceAxios.get(`/tnote/classLog/${classLogId}`);
+    return response.data;
+  } catch {}
+};
+
+// 업무일지 상세조회
+export const getProceedingDetailData = async (
+  proceedingId: string | undefined,
+) => {
+  try {
+    const response = await instanceAxios.get(
+      `/tnote/proceeding/${proceedingId}`,
+    );
+    return response.data;
+  } catch {}
+};
+// 학급일지 수정하기
+
+export const patchClassLog = async (
+  classLogId: string | undefined,
+  LogData: object,
+) => {
+  try {
+    const response = instanceAxios.patch(
+      `/tnote/classLog/${classLogId}`,
+      LogData,
+    );
+    return response;
+  } catch {
+    throw new Error('학급일지 생성 에러가 발생했습니다.');
+  }
+};
+
+// 상담기록 상세조회
+export const getConsultationDetailData = async (
+  consultationId: string | undefined,
+) => {
+  try {
+    const response = await instanceAxios.get(
+      `/tnote/consultation/${consultationId}`,
+    );
+    return response.data;
+  } catch {}
+};
+
+//학생 관찰일지 상세조회
+export const getObservationDetailData = async (
+  observationId: string | undefined,
+) => {
+  try {
+    const response = await instanceAxios.get(
+      `/tnote/observation/${observationId}`,
+    );
+    return response.data;
+  } catch {}
 };
