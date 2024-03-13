@@ -39,17 +39,20 @@ const Router = () => {
           <Route path="/timetable" element={<Timetable />} />
           <Route path="/archive" element={<ArchiveListPage />} />
           <Route path="/archive/:scheduleId" element={<ArchiveListPage />} />
-          <Route path="/archive/classLog/:id" element={<ArchiveClassLog />} />
           <Route
-            path="/archive/proceeding/:id"
+            path="/archive/classLog/:logId"
+            element={<ArchiveClassLog />}
+          />
+          <Route
+            path="/archive/proceeding/:logId"
             element={<ArchiveProceeding />}
           />
           <Route
-            path="/archive/consultation/:id"
+            path="/archive/consultation/:logId"
             element={<ArchiveConsultation />}
           />
           <Route
-            path="/archive/observation/:id"
+            path="/archive/observation/:logId"
             element={<ArchiveObservation />}
           />
           <Route
