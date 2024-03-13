@@ -19,6 +19,7 @@ import {
 import EditProfile from './EditProfile';
 import ModalPortal from '../../utils/ModalPortal';
 import { result } from 'lodash';
+import { useNavigate } from 'react-router-dom';
 
 const SSettingWrapper = styled.div`
   border: 1px solid var(--Black-Black50, #d5d5d5);
@@ -173,6 +174,7 @@ interface SettingProps {
   closeSettingModal: () => void;
 }
 const Setting = ({ closeSettingModal }: SettingProps) => {
+  const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
   // 수정 폼 모달
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
@@ -241,7 +243,8 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
       if (result.isConfirmed) {
         // 계정 영구 삭제 버튼 클릭 시
         const email = result.value; // 입력된 이메일 값 가져오기
-        deletedAccount(email); // 계정탈퇴 요청
+        deletedAccount(); // 계정탈퇴 요청
+        // navigate('/');
       }
     });
   };

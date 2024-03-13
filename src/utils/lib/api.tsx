@@ -82,7 +82,7 @@ export const getSchoolSearchValue = async (
 
 // todo
 interface TodoProps {
-  date: string;
+  date: Date;
   content: string;
 }
 export const createTodo = async (
@@ -116,9 +116,11 @@ export const updateTodo = async (
   }
 };
 
-export const getTodo = async (scheduleId: string | undefined) => {
+export const getTodo = async (scheduleId: string | undefined, date: Date) => {
   try {
-    const response = await instanceAxios.get(`/tnote/todos/${scheduleId}`);
+    const response = await instanceAxios.get(`/tnote/todos/${scheduleId}`, {
+      params: { date: date },
+    });
     return response.data;
   } catch (error) {
     throw new Error('todo list를 조회하는데 에러가 발생했습니다.');
@@ -267,17 +269,11 @@ export const logout = async () => {
 
 // 계정탈퇴
 
-export const deletedAccount = async (email: string) => {
+export const deletedAccount = async () => {
   try {
-    const response = await instanceAxios
-      .delete('/tnote/user', {
-        data: { email }, // 요청 바디에 이메일을 포함
-      })
-      .then((res) => {
-        console.log(res);
-        localStorage.clear();
-        window.location.reload();
-      });
+    const response = await instanceAxios.delete('/tnote/user');
+    console.log(response);
+    localStorage.clear();
     return response;
   } catch {}
 };
