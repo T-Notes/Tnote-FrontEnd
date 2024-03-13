@@ -107,6 +107,7 @@ interface Archive {
 }
 const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const navigate = useNavigate();
+
   const [filteredLogsList, setFilteredLogsList] = useState<any[]>([]);
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] =
     useState<boolean>(false);
@@ -181,6 +182,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
       getClassLogData();
     }
   }, [scheduleId]);
+
   const handleDelete = () => {
     // 클릭한 값 삭제 기능
     if (isSelectedCheckBox) {
@@ -206,6 +208,18 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
     }
   };
 
+  // 클릭한 값으로 페이지 변환 함수
+  const handleChangePageAtLogs = (id: number) => {
+    if (currentFilteredOption === '학급일지' || currentFilteredOption === '') {
+      navigate(`/archive/classLog/${id}`);
+    } else if (currentFilteredOption === '업무일지') {
+      navigate(`/archive/proceeding/${id}`);
+    } else if (currentFilteredOption === '상담기록') {
+      navigate(`/archive/consultation/${id}`);
+    } else if (currentFilteredOption === '학생관찰기록') {
+      navigate(`/archive/observation/${id}`);
+    }
+  };
   return (
     <>
       <SArchiveButtons>
@@ -251,7 +265,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
             return (
               <SLogContainer
                 key={index}
-                onClick={() => navigate(`/archive/classLog/${item.id}`)}
+                onClick={() => handleChangePageAtLogs(item.id)}
               >
                 {isShowCheckBox &&
                   (checkedLogs[item.id] ? (

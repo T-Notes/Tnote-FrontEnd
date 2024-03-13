@@ -10,6 +10,9 @@ import ArchiveListPage from '../pages/ArchiveListPage';
 import ArchiveContainer from './Archive/ArchiveContainer';
 import ArchivePage from '../pages/ArchivePage';
 import ArchiveClassLog from '../pages/ArchiveClassLog';
+import ArchiveProceeding from '../pages/ArchiveProceeding';
+import ArchiveConsultation from '../pages/ArchiveConsultation';
+import ArchiveObservation from '../pages/ArchiveObservation';
 
 const Router = () => {
   return (
@@ -36,9 +39,18 @@ const Router = () => {
           <Route path="/timetable" element={<Timetable />} />
           <Route path="/archive" element={<ArchiveListPage />} />
           <Route path="/archive/:scheduleId" element={<ArchiveListPage />} />
+          <Route path="/archive/classLog/:id" element={<ArchiveClassLog />} />
           <Route
-            path="/archive/classLog/:classLogId"
-            element={<ArchiveClassLog />}
+            path="/archive/proceeding/:id"
+            element={<ArchiveProceeding />}
+          />
+          <Route
+            path="/archive/consultation/:id"
+            element={<ArchiveConsultation />}
+          />
+          <Route
+            path="/archive/observation/:id"
+            element={<ArchiveObservation />}
           />
           <Route
             path="/archiveContainer/:scheduleId"
