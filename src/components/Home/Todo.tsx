@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { IcAddWhite, IcClose } from '../../assets/icons';
 import { Button } from '../common/styled/Button';
-import TodoListInput from './TodoListInput';
+
 import {
   createTodo,
   getTodo,
@@ -71,7 +71,7 @@ const Todo = () => {
   // 외부 클릭 시 수정 요청
   const handleUpdateTodo = async (todoId: number | undefined) => {
     const patchTodoData = {
-      date: new Date().toISOString().split('T')[0],
+      date: new Date(),
       content: todoContent,
       status: true,
     };
@@ -105,8 +105,7 @@ const Todo = () => {
   useEffect(() => {
     if (scheduleId) {
       const getTodoData = async () => {
-        const response = await getTodo(scheduleId);
-
+        const response = await getTodo(scheduleId, new Date());
         setTodoArray(response.data);
       };
       getTodoData();
@@ -117,7 +116,7 @@ const Todo = () => {
   const handleAddTodo = async () => {
     if (scheduleId) {
       const todoData = {
-        date: new Date().toISOString().split('T')[0],
+        date: new Date(),
         content: '',
       };
       await createTodo(scheduleId, todoData);

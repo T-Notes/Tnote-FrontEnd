@@ -4,7 +4,7 @@ import { Button } from '../common/styled/Button';
 import { IcAddWhite } from '../../assets/icons';
 import { useEffect, useState } from 'react';
 import { tr } from 'date-fns/locale';
-import TodoListInput from './TodoListInput';
+
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 import Todo from '../Home/Todo';
 import {

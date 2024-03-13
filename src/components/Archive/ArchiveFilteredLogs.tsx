@@ -159,7 +159,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
           setFilteredLogsList(res.data.observations);
           break;
         case 'To-Do':
-          res = await getTodo(scheduleId);
+          res = await getTodo(scheduleId, new Date());
           console.log(res.data);
           setFilteredLogsList(res.data);
           break;
