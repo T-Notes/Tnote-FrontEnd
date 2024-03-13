@@ -55,11 +55,15 @@ const TodaySchedule = () => {
       for (let hour = 1; hour <= lastClassNumber; hour++) {}
     }
   }, [lastClass]);
+
   // 오늘 수업일정 조회
   useEffect(() => {
     if (scheduleId) {
       const getTodaySchedule = async () => {
-        const response = await getTodayTimetable(scheduleId);
+        try {
+          const response = await getTodayTimetable(scheduleId, 'MONDAY');
+          console.log('오늘 시간표 조회', response);
+        } catch {}
       };
       getTodaySchedule();
     }
