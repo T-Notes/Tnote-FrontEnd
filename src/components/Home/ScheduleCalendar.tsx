@@ -184,8 +184,9 @@ const ScheduleCalendar = ({ reload }: Reload) => {
   };
 
   const handleLogsSearch = async () => {
-    const getSearchValue = await getSearchLogsValue(searchValue, searchValue);
+    const getSearchValue = await getSearchLogsValue(searchValue);
     setSetSearchValueList(getSearchValue.data);
+    console.log(getSearchValue.data);
   };
 
   const debouncedSearch = _debounce(handleLogsSearch, 1000);
@@ -222,6 +223,7 @@ const ScheduleCalendar = ({ reload }: Reload) => {
       {searchValueList.length > 0 ? (
         <>
           <div>검색결과 렌더링 중...</div>
+          {/* <div>{searchValueList}</div> */}
         </>
       ) : (
         <SCalendarDate>
