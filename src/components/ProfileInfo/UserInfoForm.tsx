@@ -127,7 +127,7 @@ const UserInfoForm = () => {
         alarm: userData.alarm,
       };
 
-      await updateUserInfo(userId, updatedUserData).then((res) => {
+      await updateUserInfo(updatedUserData).then((res) => {
         // 추가 회원정보 입력
         navigate(`/home`);
       });
