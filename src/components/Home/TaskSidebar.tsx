@@ -12,6 +12,7 @@ import {
   getAllProceedings,
   getAllConsultations,
   getAllObservation,
+  getAllTaskByDate,
 } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
 
@@ -25,6 +26,7 @@ const STaskSidebarWrapper = styled.div`
   right: 0;
   top: 0;
   padding-left: 20px;
+  padding-right: 20px;
 
   @media (max-width: 1080px) {
     display: none;
@@ -36,13 +38,47 @@ const SFont = styled.div`
   padding-top: 20px;
   padding-bottom: 20px;
 `;
+
 const SDateFont = styled.div`
   font-size: 20px;
   font-weight: 500;
   padding-top: 20px;
   padding-bottom: 20px;
 `;
-
+const SLogs = styled.div`
+  display: flex;
+  padding: 10px;
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  margin-bottom: 5px;
+`;
+const SLogContent = styled.div`
+  font-size: 15px;
+  font-weight: 500;
+  color: #2f2f2f;
+`;
+const SLogCreatedAt = styled.p`
+  margin-left: auto;
+  font-size: 15px;
+  color: #a6a6a6;
+`;
+const SFlex = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const SLogLength = styled.div`
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 5px;
+  background-color: #baa2fc;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  border-radius: 10px;
+  color: white;
+`;
 interface Task {
   id: number;
   title: string;
@@ -60,20 +96,24 @@ const TaskSidebar = ({ reload }: Reload) => {
   const [workLogContent, setWorkLogContent] = useState<Task[]>([]);
   const [consultationsContent, setConsultationsContent] = useState<Task[]>([]);
   const [observationContent, setObservationContent] = useState<Task[]>([]);
+  const [clickedOutside, setClickedOutside] = useState<boolean>(false);
 
+  // todo 외부 클릭 시 수정 요청 함수
+  const handleUpdateOutside = () => {
+    console.log('바깥을 클릭1');
+    setClickedOutside(true); // 클릭 상태 변경
+  };
   useEffect(() => {
     if (scheduleId) {
       const fetchData = async () => {
         try {
-          const classLogResponse = await getAllClassLog(scheduleId);
-          const workLogResponse = await getAllProceedings(scheduleId);
-          const consultationsResponse = await getAllConsultations(scheduleId);
-          const observationResponse = await getAllObservation(scheduleId);
-
-          setClassLogContent(classLogResponse.data.classLogs);
-          setWorkLogContent(workLogResponse.data.proceedings);
-          setConsultationsContent(consultationsResponse.data.consultations);
-          setObservationContent(observationResponse.data.observations);
+          const allData = await getAllTaskByDate(scheduleId, new Date());
+          const logData = allData.data;
+          console.log('모든!', logData.proceedings);
+          setClassLogContent(logData.classLogs);
+          setWorkLogContent(logData.proceedings);
+          setConsultationsContent(logData.consultations);
+          setObservationContent(logData.observations);
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -83,38 +123,71 @@ const TaskSidebar = ({ reload }: Reload) => {
   }, [reload, scheduleId]);
 
   return (
-    <STaskSidebarWrapper>
+    <STaskSidebarWrapper onClick={handleUpdateOutside}>
       <SDateFont>{`${year}년 ${month + 1}월 ${day}일`}</SDateFont>
       <div>
         <SFont>To do</SFont>
-        <Todo />
+        <Todo
+          clickedOutside={clickedOutside}
+          setClickedOutside={setClickedOutside}
+        />
       </div>
-      <SFont>학급 일지</SFont>
+      <SFlex>
+        <SFont>학급 일지</SFont>
+        <SLogLength>{classLogContent.length}</SLogLength>
+      </SFlex>
+
       {classLogContent.map((classLog) => (
-        <div key={classLog.id}>
-          <div>
-            {classLog.title}
-            <p>{classLog.createdAt}</p>
-          </div>
-        </div>
+        <SLogs key={classLog.id}>
+          <SLogContent>{classLog.title}</SLogContent>
+          <SLogCreatedAt>{`${classLog.createdAt.slice(
+            0,
+            10,
+          )} 작성`}</SLogCreatedAt>
+        </SLogs>
       ))}
-      <SFont>업무 일지</SFont>
+
+      <SFlex>
+        <SFont>업무 일지</SFont>
+        <SLogLength>{workLogContent.length}</SLogLength>
+      </SFlex>
+
       {workLogContent.map((workLog) => (
-        <div key={workLog.id}>
-          <div>{workLog.title}</div>
-        </div>
+        <SLogs key={workLog.id}>
+          <SLogContent>{workLog.title}</SLogContent>
+          <SLogCreatedAt>{`${workLog.createdAt.slice(
+            0,
+            10,
+          )} 작성`}</SLogCreatedAt>
+        </SLogs>
       ))}
-      <SFont>관찰 일지</SFont>
+      <SFlex>
+        <SFont>관찰 일지</SFont>
+        <SLogLength>{observationContent.length}</SLogLength>
+      </SFlex>
+
       {observationContent.map((observation) => (
-        <div key={observation.id}>
-          <div>{observation.studentName}</div>
-        </div>
+        <SLogs key={observation.id}>
+          <SLogContent>{observation.studentName}</SLogContent>
+          <SLogCreatedAt>{`${observation.createdAt.slice(
+            0,
+            10,
+          )} 작성`}</SLogCreatedAt>
+        </SLogs>
       ))}
-      <SFont>상담 일지</SFont>
+      <SFlex>
+        <SFont>상담 일지</SFont>
+        <SLogLength>{consultationsContent.length}</SLogLength>
+      </SFlex>
+
       {consultationsContent.map((consultation) => (
-        <div key={consultation.id}>
-          <div>{consultation.studentName}</div>
-        </div>
+        <SLogs key={consultation.id}>
+          <SLogContent>{consultation.studentName}</SLogContent>
+          <SLogCreatedAt>{`${consultation.createdAt.slice(
+            0,
+            10,
+          )} 작성`}</SLogCreatedAt>
+        </SLogs>
       ))}
     </STaskSidebarWrapper>
   );

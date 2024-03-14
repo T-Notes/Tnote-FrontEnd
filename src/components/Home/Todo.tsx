@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { IcAddWhite, IcClose } from '../../assets/icons';
 import { Button } from '../common/styled/Button';
 
@@ -15,8 +15,11 @@ import { useRecoilValue } from 'recoil';
 import { scheduleIdState } from '../../utils/lib/recoil/scheduleIdState';
 
 const SInput = styled.input`
-  color: ${({ theme }) => theme.colors.gray700};
-  ${({ theme }) => theme.fonts.caption};
+  font-size: 15px;
+  font-weight: 500;
+  color: #2f2f2f;
+  /* color: ${({ theme }) => theme.colors.gray700}; */
+  /* ${({ theme }) => theme.fonts.caption}; */
 `;
 const SAddTodo = styled(Button)`
   background-color: ${({ theme }) => theme.colors.purple100};
@@ -24,33 +27,30 @@ const SAddTodo = styled(Button)`
   height: 40px;
   color: ${({ theme }) => theme.colors.white};
 `;
-// 이 영역 제외를 클릭하면 수정 요청
-const STodoWrapper = styled.div`
-  border: 1px solid red;
-`;
+const STodoContainer = styled.div``;
 
 interface TodoProps {
   date: string;
   content: string;
   status: boolean;
 }
-
-const Todo = () => {
+interface TodoOutside {
+  clickedOutside: boolean;
+  setClickedOutside: React.Dispatch<SetStateAction<boolean>>;
+}
+const Todo = ({ clickedOutside, setClickedOutside }: TodoOutside) => {
   const { scheduleId } = useParams();
-  // const { id } = useRecoilValue(scheduleIdState);
+
   const [isAddTodo, setIsAddTodo] = useState<boolean>(false);
   const [todoArray, setTodoArray] = useState<any[]>([]);
   const [todoContent, setTodoContent] = useState<string>('');
+  const [todoId, setTodoId] = useState<number>();
 
-  // const [todo, setTodo] = useState<TodoProps>({
-  //   date: '',
-  //   content: '',
-  //   status: false,
-  // });
   const handleChangeTodoInput = (
     e: React.ChangeEvent<HTMLInputElement>,
     todoId: number,
   ) => {
+    setTodoId(todoId);
     const newContent = e.target.value;
     setTodoArray((prevTodoArray) => {
       return prevTodoArray.map((todoItem) => {
@@ -68,45 +68,30 @@ const Todo = () => {
     setIsAddTodo(!isAddTodo);
   };
 
-  // 외부 클릭 시 수정 요청
-  const handleUpdateTodo = async (todoId: number | undefined) => {
-    const patchTodoData = {
-      date: new Date(),
-      content: todoContent,
-      status: true,
-    };
-    await updateTodo(scheduleId, todoId, patchTodoData);
-  };
-
-  // 외부 클릭 시 수정 요청을 위한 이벤트 핸들러
-  const handleClickOutside = (e: any, todoId: number | undefined) => {
-    if (todoId && !e.target.closest('.todo-item')) {
-      handleUpdateTodo(todoId);
+  //수정
+  useEffect(() => {
+    if (clickedOutside) {
+      // 부모에서 클릭 이벤트 발생 시
+      const patchTodoData = {
+        date: new Date(),
+        content: todoContent,
+        status: true,
+      };
+      if (todoId) {
+        updateTodo(scheduleId, todoId, patchTodoData); // 수정 요청 보내기
+        setClickedOutside(false); // 클릭 상태 초기화
+      }
     }
-  };
-
-  // 외부 클릭 시 이벤트 추가
-  //  useEffect(() => {
-  //     console.log('content!');
-  //     const handleClickOutside = (e: any) => {
-  //       if (inputRef.current && !inputRef.current.contains(e.target)) {
-  //         handleAddTodo();
-  //       }
-  //     };
-
-  //     document.addEventListener('mousedown', handleClickOutside);
-
-  //     return () => {
-  //       document.removeEventListener('mousedown', handleClickOutside);
-  //     };
-  //   }, []);
+  }, [clickedOutside, todoContent, scheduleId, todoId]);
 
   // 조회
   useEffect(() => {
     if (scheduleId) {
       const getTodoData = async () => {
-        const response = await getTodo(scheduleId, new Date());
-        setTodoArray(response.data);
+        try {
+          const response = await getTodo(scheduleId, new Date());
+          setTodoArray(response.data);
+        } catch {}
       };
       getTodoData();
     }
@@ -127,21 +112,24 @@ const Todo = () => {
   };
 
   return (
-    <>
-      {todoArray.map((todoItem) => (
-        <div className="todo-item" key={todoItem.id}>
-          <SInput
-            placeholder="todo list 작성하세요"
-            defaultValue={todoItem.content}
-            onChange={(e: any) => handleChangeTodoInput(e, todoItem.id)}
-          />
-          <IcClose onClick={() => handleDelete(todoItem.id)} />
-        </div>
-      ))}
+    <div>
+      <STodoContainer>
+        {todoArray.map((todoItem) => (
+          <div className="todo-item" key={todoItem.id}>
+            <SInput
+              placeholder="todo list 작성하세요"
+              defaultValue={todoItem.content}
+              onChange={(e: any) => handleChangeTodoInput(e, todoItem.id)}
+            />
+            <IcClose onClick={() => handleDelete(todoItem.id)} />
+          </div>
+        ))}
+      </STodoContainer>
+
       <SAddTodo onClick={handleAddTodo}>
         <IcAddWhite />
       </SAddTodo>
-    </>
+    </div>
   );
 };
 
