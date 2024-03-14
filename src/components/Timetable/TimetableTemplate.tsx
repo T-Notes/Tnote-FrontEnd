@@ -16,8 +16,6 @@ const STimetableWrapper = styled.table`
 const SDaysWrapper = styled.td`
   border-bottom: 1px solid #ddd;
   border-right: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
   width: 145px;
   height: 60px;
 `;
@@ -28,9 +26,26 @@ const SThead = styled.td`
   color: #5b5b5b;
   font-weight: 700;
 `;
-const SSubjectBox = styled.div`
+// 색상 이름과 코드가 매핑된 배열
+const colorMapping: { [key: string]: string } = {
+  파란색: '#0EA5E91A',
+  보라색: '#E5E6FE',
+  노란색: '#FEF5E6',
+  빨간색: '#FEE6E6',
+  초록색: '#E6FEE7',
+  분홍색: '#FEE6F9',
+  회색: '#D9D9D9',
+};
+
+const SSubjectBox = styled.div<{ color: string }>`
   cursor: pointer;
-  border: 1px solid red;
+  font-size: 12px;
+  height: 100%;
+  gap: 4px;
+  padding-top: 11px;
+  padding-left: 10px;
+  color: #5b5b5b;
+  background-color: ${({ color }) => color || '#fffff'};
 `;
 const SClassAndTime = styled.td`
   padding: 10px;
@@ -38,7 +53,9 @@ const SClassAndTime = styled.td`
   color: #5b5b5b;
   font-weight: 700;
 `;
-
+const SLocation = styled.p`
+  font-weight: 600;
+`;
 interface TimetableTemplate {
   setReloadTrigger: React.Dispatch<React.SetStateAction<boolean>>;
   reloadTrigger: boolean;
@@ -64,7 +81,7 @@ const TimetableTemplate = ({
   // 과목 조회 모달 상태관리
   const [isOpenSubjectDataModal, setIsOpenSubjectDataModal] =
     useState<boolean>(false);
-  // const [subjectId, setSubjectId] = useState<string>('');
+  const [color, setColor] = useState<string>('');
 
   const openSubjectDataModal = (subjectId: string) => {
     setSubjectId(subjectId);
@@ -86,7 +103,8 @@ const TimetableTemplate = ({
             .then((res) => {
               const getData = res.data;
               const subjectArray = getData.data[0].subjects;
-
+              console.log(1, subjectArray);
+              setColor(subjectArray.map((item: any) => item.color));
               setSubjectList(subjectArray);
               setLastClass(getData.data[0].lastClass);
             });
@@ -175,13 +193,17 @@ const TimetableTemplate = ({
                     isSameClassDay(item.classDay, d.day) &&
                     isSameClassTime(item.classTime, t.class)
                   ) {
+                    const backgroundColor = colorMapping[item.color] || '';
+
                     return (
                       <SSubjectBox
                         key={item.id}
                         onClick={() => openSubjectDataModal(item.id)}
+                        color={backgroundColor}
                       >
-                        <p>{item.classLocation}</p>
+                        <SLocation>{item.classLocation}</SLocation>
                         <p>{item.subjectName}</p>
+                        <p>{`메모: ${item.memo}`}</p>
                       </SSubjectBox>
                     );
                   }
