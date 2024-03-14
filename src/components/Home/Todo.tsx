@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { SetStateAction, useEffect, useState } from 'react';
-import { IcAddWhite, IcClose } from '../../assets/icons';
+import { IcAddWhite, IcCloseSmall } from '../../assets/icons';
 import { Button } from '../common/styled/Button';
 
 import {
@@ -27,7 +27,13 @@ const SAddTodo = styled(Button)`
   height: 40px;
   color: ${({ theme }) => theme.colors.white};
 `;
-const STodoContainer = styled.div``;
+const STodoContainer = styled.div`
+  display: flex;
+
+  .icon {
+    margin-left: auto;
+  }
+`;
 
 interface TodoProps {
   date: string;
@@ -113,18 +119,21 @@ const Todo = ({ clickedOutside, setClickedOutside }: TodoOutside) => {
 
   return (
     <div>
-      <STodoContainer>
+      <>
         {todoArray.map((todoItem) => (
-          <div className="todo-item" key={todoItem.id}>
+          <STodoContainer className="todo-item" key={todoItem.id}>
             <SInput
               placeholder="todo list 작성하세요"
               defaultValue={todoItem.content}
               onChange={(e: any) => handleChangeTodoInput(e, todoItem.id)}
             />
-            <IcClose onClick={() => handleDelete(todoItem.id)} />
-          </div>
+            <IcCloseSmall
+              onClick={() => handleDelete(todoItem.id)}
+              className="icon"
+            />
+          </STodoContainer>
         ))}
-      </STodoContainer>
+      </>
 
       <SAddTodo onClick={handleAddTodo}>
         <IcAddWhite />

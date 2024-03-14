@@ -7,6 +7,7 @@ export { ReactComponent as IcSearch } from './searchIcon.svg';
 export { ReactComponent as IcOpenDropdown } from './openDropdownIcon.svg';
 export { ReactComponent as IcCloseDropdown } from './closeDropdownIcon.svg';
 export { ReactComponent as IcClose } from './closeIcon.svg';
+export { ReactComponent as IcCloseSmall } from './closeSmallIcon.svg';
 export { ReactComponent as IcGoBack } from './backBtnIcon.svg';
 export { ReactComponent as IcAddBlack } from './addBtnBlackIcon.svg';
 export { ReactComponent as IcAddWhite } from './addBtnWhiteIcon.svg';
