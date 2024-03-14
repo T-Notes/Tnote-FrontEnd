@@ -1,15 +1,9 @@
 import instanceAxios from '../InstanceAxios';
 
 // 회원 추가정보 작성
-export const updateUserInfo = async (
-  userId: string | null,
-  userData: object,
-) => {
+export const updateUserInfo = async (userData: object) => {
   try {
-    const response = await instanceAxios.patch(
-      `/tnote/user/${userId}`,
-      userData,
-    );
+    const response = await instanceAxios.patch(`/tnote/user`, userData);
     return response.data;
   } catch (error) {
     console.error('회원 추가정보 작성 에러', error);
@@ -49,7 +43,7 @@ export const getRemainingDayData = async (
     const response = await instanceAxios.get(
       `/tnote/schedule/leftClassDays/${scheduleId}`,
       {
-        params: { date: date },
+        params: date,
       },
     );
 
@@ -119,7 +113,7 @@ export const updateTodo = async (
 export const getTodo = async (scheduleId: string | undefined, date: Date) => {
   try {
     const response = await instanceAxios.get(`/tnote/todos/${scheduleId}`, {
-      params: { date: date },
+      params: date,
     });
     return response.data;
   } catch (error) {
@@ -433,9 +427,9 @@ export const getTodayTimetable = async (
   day: string,
 ) => {
   try {
-    const response = await instanceAxios.get(`/tnote/subjects/${scheduleId}`, {
-      params: { day: day },
-    });
+    const response = await instanceAxios.get(
+      `/tnote/subjects/${scheduleId}/${day}`,
+    );
     return response.data;
   } catch {
     throw new Error('오늘 시간표 조회 실패');
@@ -524,6 +518,23 @@ export const getObservationDetailData = async (
   try {
     const response = await instanceAxios.get(
       `/tnote/observation/${observationId}`,
+    );
+    return response.data;
+  } catch {}
+};
+
+// 날짜별 일지정보 조회
+
+export const getAllTaskByDate = async (
+  scheduleId: string | undefined,
+  date: Date,
+) => {
+  try {
+    const response = await instanceAxios.get(
+      `/tnote/home/${scheduleId}/dailyLogs`,
+      {
+        params: date,
+      },
     );
     return response.data;
   } catch {}
