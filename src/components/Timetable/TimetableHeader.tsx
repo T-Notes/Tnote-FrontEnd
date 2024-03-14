@@ -1,7 +1,9 @@
 import { tr } from 'date-fns/locale';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-
+import { getRemainingDayData } from '../../utils/lib/api';
+import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 const STimetableHeader = styled.h1`
   padding-top: 20px;
   font-size: 20px;
@@ -14,12 +16,36 @@ interface IsClassAddProps {
   onClassAdd: () => void;
 }
 const TimetableHeader = () => {
+  const { scheduleId } = useParams(); //현재 url에서 추출한 동적으로 변하는 id값
+  const { currentDate } = useCurrentDate();
+  const date = currentDate.toISOString().split('T')[0];
+  const [remainingDay, setRemainingDay] = useState<number>(0);
+
+  useEffect(() => {
+    if (scheduleId) {
+      const remainingDayData = async () => {
+        try {
+          const response = await getRemainingDayData(scheduleId, new Date());
+
+          setRemainingDay(response.data);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      remainingDayData();
+    }
+  }, [scheduleId]);
+
   return (
     <>
       <STimetableHeader>
         <span>
           {' '}
-          이번 학기의 총 수업 횟수는 <SColorBlue> {'00'}회 </SColorBlue>
+          이번 학기의 남은 학기 일수는{' '}
+          <SColorBlue>
+            {' '}
+            {typeof remainingDay === 'number' ? remainingDay : '0'}일{' '}
+          </SColorBlue>
           입니다.
         </span>
       </STimetableHeader>
