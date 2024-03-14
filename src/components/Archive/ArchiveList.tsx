@@ -35,7 +35,6 @@ const ArchiveList = () => {
   const [semesterId, setSemesterId] = useState<number>();
 
   const handleSelectedSemester = (selectedSemesterId: number) => {
-    console.log(1, selectedSemesterId);
     navigate(`/archiveContainer/${selectedSemesterId}`);
   };
   useEffect(() => {

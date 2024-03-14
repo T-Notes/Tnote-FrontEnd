@@ -216,7 +216,7 @@ const SemesterForm = () => {
           // serverStartDate={semesterData.startDate}
           onStartDateChange={handleParentStartDateChange}
         />
-        <div>{JSON.stringify(semesterData.startDate)}</div>
+        {/* <div>{JSON.stringify(semesterData.startDate)}</div> */}
         <SLabel>마지막 교시</SLabel>
 
         <SDropdownWrapper>
