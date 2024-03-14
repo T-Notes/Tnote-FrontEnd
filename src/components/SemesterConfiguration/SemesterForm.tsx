@@ -190,7 +190,6 @@ const SemesterForm = () => {
     }));
     localStorage.setItem('semesterName', data.semesterName);
     window.location.reload();
-    // navigate(`/home/${scheduleId}`); // 여기서 객체 렌더링 문제가 나는 거였음 ㅜㅜ 페이지 이동을 하면서
   };
 
   // 학기 삭제하기
