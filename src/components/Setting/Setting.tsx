@@ -244,7 +244,7 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
         // 계정 영구 삭제 버튼 클릭 시
         const email = result.value; // 입력된 이메일 값 가져오기
         deletedAccount(); // 계정탈퇴 요청
-        // navigate('/');
+        navigate('/');
       }
     });
   };
