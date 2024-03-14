@@ -109,7 +109,7 @@ const WriteDatePicker = ({ onStartDateChange }: DateProps) => {
           selected={startDate} //선택된 날짜를 나타내는 속성
           onChange={(date) => handleDateChange(date as Date, endDate)} //날짜가 선택되었을때 호출되는 콜백 함수
           minDate={new Date('2000-01-01')} // minDate 이전 날짜 선택 불가
-          maxDate={new Date(endDate)}
+          // maxDate={new Date(endDate)}
           // 아래 속성들은 글쓰기 모달에서만 필요한 값.
           showTimeSelect // 시간 선택 옵션 표시
           timeFormat="HH:mm" // 시간 표시 형식을 지정하는 문자열 (24시간 형식)
@@ -122,7 +122,7 @@ const WriteDatePicker = ({ onStartDateChange }: DateProps) => {
         <SCalender
           selected={endDate}
           onChange={(date) => handleDateChange(startDate, date as Date)}
-          minDate={new Date(startDate)}
+          // minDate={new Date(startDate)}
           showTimeSelect
           timeFormat="HH:mm"
           timeIntervals={30}
