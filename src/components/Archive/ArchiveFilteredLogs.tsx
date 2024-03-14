@@ -111,7 +111,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const [filteredLogsList, setFilteredLogsList] = useState<any[]>([]);
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] =
     useState<boolean>(false);
-  const options = ['학급일지', '업무일지', 'To-Do', '상담기록', '학생관찰기록'];
+  const options = ['학급일지', '업무일지', '상담기록', '학생관찰기록'];
   const [isShowCheckBox, setIsShowCheckBox] = useState<boolean>(false);
   const [currentFilteredOption, setCurrentFilteredOption] =
     useState<string>('');
@@ -158,11 +158,11 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
           res = await getAllObservation(scheduleId);
           setFilteredLogsList(res.data.observations);
           break;
-        case 'To-Do':
-          res = await getTodo(scheduleId, new Date());
-          console.log(res.data);
-          setFilteredLogsList(res.data);
-          break;
+        // case 'To-Do':
+        //   res = await getTodo(scheduleId, new Date());
+        //   console.log(res.data);
+        //   setFilteredLogsList(res.data);
+        //   break;
         default:
           break;
       }
@@ -194,11 +194,11 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
       if (currentFilteredOption === '업무일지') {
         instanceAxios.delete(`/tnote/proceeding/${isSelectedCheckBox}`);
       }
-      if (currentFilteredOption === 'To-Do') {
-        instanceAxios.delete(
-          `/tnote/todos/${scheduleId}/${isSelectedCheckBox}`,
-        );
-      }
+      // if (currentFilteredOption === 'To-Do') {
+      //   instanceAxios.delete(
+      //     `/tnote/todos/${scheduleId}/${isSelectedCheckBox}`,
+      //   );
+      // }
       if (currentFilteredOption === '상담기록') {
         instanceAxios.delete(`/tnote/consultation/${isSelectedCheckBox}`);
       }
