@@ -35,8 +35,6 @@ const Timetable = () => {
     setIsAddClass(false);
     setIsEditMode(false); // 과목 추가/수정 모달 닫으면 다시 초기화
   };
-  console.log(1, 'isEditMode:', isEditMode);
-  console.log(2, 'subjectId:', subjectId);
 
   return (
     <>
