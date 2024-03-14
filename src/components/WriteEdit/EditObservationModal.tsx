@@ -153,12 +153,12 @@ const EditObservationModal = ({ onClose, logId, setReload }: Edit) => {
   const handleChangeValueImg = (e: any) => {
     const file = e.target.files[0];
     setImgUrl(file);
-    formData.append('classLogImages', file);
+    formData.append('observationImages', file);
   };
   const handleChangeContentImg = (e: any) => {
     const file = e.target.files[0];
     setImgUrl(file);
-    formData.append('classLogImages', file);
+    formData.append('observationImages', file);
   };
 
   // 자식 컴포넌트에게서 기간 값 가져오기

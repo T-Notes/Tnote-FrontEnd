@@ -210,14 +210,14 @@ const EditConsultationModal = ({ onClose, logId, setReload }: Edit) => {
   const handleChangeContentImg = (e: any) => {
     const file = consultationLogData.consultationImageUrls[0];
     setImgUrl(file);
-    formData.append('classLogImages', file);
+    formData.append('consultationImages', file);
   };
 
   const handleChangeValueImg = (e: any) => {
     // const file = e.target.files[0];
     const file = consultationLogData.consultationImageUrls[0];
     setImgUrl(file);
-    formData.append('classLogImages', file);
+    formData.append('consultationImages', file);
   };
 
   const handleCounselingButtonClick = (buttonName: string) => {
@@ -284,7 +284,7 @@ const EditConsultationModal = ({ onClose, logId, setReload }: Edit) => {
       const jsonDataTypeValue = new Blob([JSON.stringify(updateLogData)], {
         type: 'application/json',
       });
-      formData.append('consultationUpdateRequestDto', jsonDataTypeValue);
+      formData.append('requestDto', jsonDataTypeValue);
 
       if (imgUrl) {
         formData.append('consultationImages', imgUrl);

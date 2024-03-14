@@ -195,7 +195,7 @@ const EditProceedingModal = ({ onClose, logId, setReload }: Edit) => {
     const file = e.target.files[0];
     console.log('file', file);
     setImgUrl(file);
-    formData.append('classLogImages', file);
+    formData.append('proceedingImages', file);
   };
 
   const handleTitleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
