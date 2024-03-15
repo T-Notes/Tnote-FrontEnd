@@ -32,7 +32,9 @@ const KakaoLoginBtn = ({ onWarning, isChecked }: LoginProps) => {
   const [token, setToken] = useState<any>();
   const handleLogin = () => {
     if (isChecked) {
-      window.location.assign('http://j9972.kr/oauth2/authorization/kakao'); //카카오 oauth url이동 주소
+      window.location.assign(
+        'https://businessyoon.store/oauth2/authorization/kakao',
+      ); //카카오 oauth url이동 주소
     } else {
       onWarning(true);
     }
