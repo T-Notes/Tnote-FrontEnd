@@ -13,6 +13,8 @@ import { useParams } from 'react-router-dom';
 import { lowerFirst } from 'lodash';
 import { useRecoilValue } from 'recoil';
 import { scheduleIdState } from '../../utils/lib/recoil/scheduleIdState';
+import Swal from 'sweetalert2';
+import { text } from 'stream/consumers';
 
 const SInput = styled.input`
   font-size: 15px;
@@ -113,7 +115,10 @@ const Todo = ({ clickedOutside, setClickedOutside }: TodoOutside) => {
       await createTodo(scheduleId, todoData);
       setIsAddTodo(!isAddTodo);
     } else {
-      window.alert('학기 추가 후 이용가능한 서비스입니다.');
+      Swal.fire({
+        title: '학기가 있어야 합니다.',
+        text: '학기 추가 혹은 학기 선택을 먼저 해주십시오.',
+      });
     }
   };
 

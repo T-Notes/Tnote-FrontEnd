@@ -1,8 +1,10 @@
+import { text } from 'node:stream/consumers';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import { IcGoBack } from '../../assets/icons';
 import { getSemesterData } from '../../utils/lib/api';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
@@ -58,6 +60,13 @@ const ArchiveContainer = () => {
       getSemesterName();
     }
   }, [scheduleId]);
+
+  const handleNoFeature = () => {
+    Swal.fire({
+      title: '서비스 개발 중',
+      text: '죄송합니다. 아직 이용하 실 수 없는 서비스입니다.',
+    });
+  };
   return (
     <SArchiveContainerWrapper>
       <SArchiveTitle>
@@ -68,10 +77,12 @@ const ArchiveContainer = () => {
       </SArchiveTitle>
       <SArchiveDateContainer>
         <SArchiveCurrentDate>{`${year}년 ${month}월 ${day}일`}</SArchiveCurrentDate>
-        <SSelectDateButton>오늘</SSelectDateButton>
-        <SSelectDateButton>일주일</SSelectDateButton>
-        <SSelectDateButton>한달</SSelectDateButton>
-        <SSelectDateButton>직접지정</SSelectDateButton>
+        <SSelectDateButton onClick={handleNoFeature}>오늘</SSelectDateButton>
+        <SSelectDateButton onClick={handleNoFeature}>일주일</SSelectDateButton>
+        <SSelectDateButton onClick={handleNoFeature}>한달</SSelectDateButton>
+        <SSelectDateButton onClick={handleNoFeature}>
+          직접지정
+        </SSelectDateButton>
       </SArchiveDateContainer>
       <ArchiveRecentLogs scheduleId={scheduleId} />
     </SArchiveContainerWrapper>
