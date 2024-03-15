@@ -246,8 +246,8 @@ const EditClassLogModal = ({ onClose, logId, setReload }: Edit) => {
       setClassLogData({
         id: res.data.id,
         title: res.data.title,
-        startDate: res.data.startDate.slice(0, 10),
-        endDate: res.data.endDate.slice(0, 10),
+        startDate: res.data.startDate,
+        endDate: res.data.endDate,
         classContents: res.data.classContents,
         magnitude: res.data.magnitude,
         plan: res.data.plan,

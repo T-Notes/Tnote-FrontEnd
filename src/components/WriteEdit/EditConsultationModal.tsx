@@ -319,8 +319,8 @@ const EditConsultationModal = ({ onClose, logId, setReload }: Edit) => {
         consultationResult: res.data.consultationResult,
         counselingField: res.data.counselingField,
         counselingType: res.data.counselingType,
-        startDate: res.data.startDate.slice(0, 10),
-        endDate: res.data.endDate.slice(0, 10),
+        startDate: res.data.startDate,
+        endDate: res.data.endDate,
         consultationImageUrls: res.data.consultationImageUrls,
       });
     };

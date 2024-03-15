@@ -229,8 +229,8 @@ const EditObservationModal = ({ onClose, logId, setReload }: Edit) => {
       setObservationData({
         studentName: res.data.studentName,
         observationContents: res.data.observationContents,
-        startDate: res.data.startDate.slice(0, 10),
-        endDate: res.data.endDate.slice(0, 10),
+        startDate: res.data.startDate,
+        endDate: res.data.endDate,
         guidance: res.data.guidance,
         observationImageUrls: res.data.observationImageUrls,
       });

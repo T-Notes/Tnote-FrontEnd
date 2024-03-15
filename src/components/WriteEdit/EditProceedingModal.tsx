@@ -268,8 +268,8 @@ const EditProceedingModal = ({ onClose, logId, setReload }: Edit) => {
       setProceedingData({
         title: res.data.title,
         workContents: res.data.workContents,
-        startDate: res.data.startDate.slice(0, 10),
-        endDate: res.data.endDate.slice(0, 10),
+        startDate: res.data.startDate,
+        endDate: res.data.endDate,
         location: res.data.location,
         proceedingImageUrls: res.data.proceedingImageUrls,
       });
