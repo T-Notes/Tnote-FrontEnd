@@ -36,14 +36,15 @@ const TimetableHeader = () => {
         }
       };
       remainingDayData();
+
+      const getData = async () => {
+        const res = await instanceAxios.get(
+          `/tnote/schedule/leftClasses/${scheduleId}`,
+        );
+        setData(res.data.data);
+      };
+      getData();
     }
-    const getData = async () => {
-      const res = await instanceAxios.get(
-        `/tnote/schedule/leftClasses/${scheduleId}`,
-      );
-      setData(res.data.data);
-    };
-    getData();
   }, [scheduleId]);
 
   return (
