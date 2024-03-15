@@ -1,10 +1,4 @@
 import axios, { AxiosInstance } from 'axios';
-import jwtDecode from 'jwt-decode';
-import { Navigate } from 'react-router-dom';
-
-interface JwtPayload {
-  exp: number;
-}
 
 const instanceAxios: AxiosInstance = axios.create({
   baseURL: 'https://j9972.kr', //기본 url설정
@@ -37,7 +31,6 @@ instanceAxios.interceptors.response.use(
       try {
         console.log(4, '갱신요청');
         const refreshToken = localStorage.getItem('refreshToken');
-        // console.log('refreshToken', refreshToken); // 잘 받아와짐
 
         const response = await axios.get('http://j9972.kr/tnote/refresh', {
           headers: {
