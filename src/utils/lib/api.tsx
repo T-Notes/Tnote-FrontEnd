@@ -37,13 +37,13 @@ export const getAllSemesterNames = async () => {
 
 export const getRemainingDayData = async (
   scheduleId: string | undefined,
-  date: any,
+  date: string,
 ) => {
   try {
     const response = await instanceAxios.get(
       `/tnote/schedule/leftClassDays/${scheduleId}`,
       {
-        params: date,
+        params: { date: date },
       },
     );
 
@@ -527,13 +527,13 @@ export const getObservationDetailData = async (
 
 export const getAllTaskByDate = async (
   scheduleId: string | undefined,
-  date: Date,
+  date: string,
 ) => {
   try {
     const response = await instanceAxios.get(
       `/tnote/home/${scheduleId}/dailyLogs`,
       {
-        params: date,
+        params: { date: date },
       },
     );
     return response.data;

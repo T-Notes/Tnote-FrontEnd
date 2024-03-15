@@ -32,6 +32,19 @@ const TodaySchedule = () => {
   const { scheduleId } = useParams();
   const [lastClass, setLastClass] = useState<string>('9교시');
   const lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
+  const [todayClass, setTodayClass] = useState();
+  const currentDae = new Date();
+  const dayOfWeek = currentDae.getDay();
+  const daysOfWeek = [
+    'SUNDAY',
+    'MONDAY',
+    'TUESDAY',
+    'WEDNESDAY',
+    'THURSDAY',
+    'FRIDAY',
+    'SATURDAY',
+  ];
+  const today = daysOfWeek[dayOfWeek];
 
   const timetables: any = {
     1: '1교시',
@@ -61,8 +74,10 @@ const TodaySchedule = () => {
     if (scheduleId) {
       const getTodaySchedule = async () => {
         try {
-          const response = await getTodayTimetable(scheduleId, 'MONDAY');
-          console.log('오늘 시간표 조회', response);
+          const response = await getTodayTimetable(scheduleId, today);
+          console.log('오늘 시간표 조회', response.data); //  출력
+          setTodayClass(response.data);
+          // {id: 24, subjectName: '수학', classTime: '3교시', classDay: '목요일', classLocation: '3반', …}
         } catch {}
       };
       getTodaySchedule();
