@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import ArchiveContainer from '../components/Archive/ArchiveContainer';
 
@@ -9,6 +10,7 @@ const SArchiveWrapper = styled.div`
   bottom: 0;
 `;
 const ArchivePage = () => {
+  useEffect(() => {}, []);
   return (
     <SArchiveWrapper>
       <ArchiveContainer />

@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import { IcGoBack } from '../assets/icons';
 import WorkLogModal from '../components/Write/WorkLogModal';
 import EditObservationModal from '../components/WriteEdit/EditObservationModal';
 import EditProceedingModal from '../components/WriteEdit/EditProceedingModal';
+import instanceAxios from '../utils/InstanceAxios';
 import { getObservationDetailData } from '../utils/lib/api';
 import ModalPortal from '../utils/ModalPortal';
 
@@ -128,6 +130,22 @@ const ArchiveObservation = () => {
     };
     getDetailData();
   }, [reload]);
+
+  const handleDelete = async () => {
+    await Swal.fire({
+      title: '일지 삭제',
+      text: '해당 일지내용을 삭제하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        instanceAxios.delete(`/tnote/observation/${logId}`);
+        Swal.fire('삭제가 완료되었습니다.');
+        navigate(-1);
+      }
+    });
+  };
   return (
     <>
       <SArchiveClassLogWrapper>
@@ -150,7 +168,7 @@ const ArchiveObservation = () => {
             <STextarea readOnly defaultValue={observationLogData.guidance} />
           </STextareaContainer>
           <SButtons>
-            <SDelete>삭제</SDelete>
+            <SDelete onClick={handleDelete}>삭제</SDelete>
             <SEdit onClick={handleClickEdit}>수정</SEdit>
           </SButtons>
         </SArchiveClassLog>

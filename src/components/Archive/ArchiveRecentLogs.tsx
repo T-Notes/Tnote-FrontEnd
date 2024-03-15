@@ -59,32 +59,34 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
 
   // 최신조회
   useEffect(() => {
-    if (scheduleId) {
-      const getRecentData = async () => {
-        const response = await getRecentLogs();
-        const data = response.data;
-        if (data) {
-          const promises = data.map(async (item: RecentLogs) => {
-            let recentEndPoint = '';
-            if (item.logType === 'CLASS_LOG') {
-              recentEndPoint = `/tnote/classLog/${item.logId}`;
-            } else if (item.logType === 'PROCEEDING') {
-              recentEndPoint = `/tnote/proceeding/${item.logId}`;
-            } else if (item.logType === 'OBSERVATION') {
-              recentEndPoint = `/tnote/observation/${item.logId}`;
-            } else if (item.logType === 'CONSULTATION') {
-              recentEndPoint = `/tnote/consultation/${item.logId}`;
-            }
-            const response = await instanceAxios.get(recentEndPoint);
-            return response.data.data;
-          });
-          // 모든 프로미스가 완료될 때까지 기다림
-          const endPoints = await Promise.all(promises);
-          setNewRecentLogs(endPoints);
-        }
-      };
-      getRecentData();
-    }
+    // if (scheduleId) {
+    //   const getRecentData = async () => {
+    //     const response = await getRecentLogs();
+    //     const data = response.data;
+    //     if (data) {
+    //       const promises = data.map(async (item: RecentLogs) => {
+    //         let recentEndPoint = '';
+    //         if (item.logType === 'CLASS_LOG') {
+    //           recentEndPoint = `/tnote/classLog/${item.logId}`;
+    //         } else if (item.logType === 'PROCEEDING') {
+    //           recentEndPoint = `/tnote/proceeding/${item.logId}`;
+    //         } else if (item.logType === 'OBSERVATION') {
+    //           recentEndPoint = `/tnote/observation/${item.logId}`;
+    //         } else if (item.logType === 'CONSULTATION') {
+    //           recentEndPoint = `/tnote/consultation/${item.logId}`;
+    //         }
+    //         if (recentEndPoint) {
+    //           const response = await instanceAxios.get(recentEndPoint);
+    //           return response.data.data;
+    //         }
+    //       });
+    //       // 모든 프로미스가 완료될 때까지 기다림
+    //       const endPoints = await Promise.all(promises);
+    //       setNewRecentLogs(endPoints);
+    //     }
+    //   };
+    //   getRecentData();
+    // }
   }, [scheduleId]);
 
   return (

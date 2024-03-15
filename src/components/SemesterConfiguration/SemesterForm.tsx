@@ -123,7 +123,7 @@ const SemesterForm = () => {
     startDate: new Date(), // 왜 null?
     endDate: new Date(),
   });
-
+  const [reload, setReload] = useState<boolean>(false);
   const handleChangeSemesterName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const semesterName = e.target.value;
     setSemesterData((prev) => ({ ...prev, semesterName: semesterName }));
@@ -173,7 +173,7 @@ const SemesterForm = () => {
     if (scheduleId) {
       getSemesterForm();
     }
-  }, [scheduleId]);
+  }, [scheduleId, reload]);
 
   // 학기 수정하기
   // 여기서 받은 응답을 그대로 렌더링한다는 에러가 뜸.
@@ -190,13 +190,28 @@ const SemesterForm = () => {
     }));
     localStorage.setItem('semesterName', data.semesterName);
     window.location.reload();
+    // setReload((prev) => !prev);
   };
 
   // 학기 삭제하기
+
   const handleDeleteSemester = async () => {
-    await removeSemester(scheduleId);
-    navigate('/semesterSetup');
-    window.location.reload();
+    await Swal.fire({
+      title: '학기 삭제',
+      text: '해당학기를 삭제할 시 해당 학기의 모든 데이터가 삭제되며 되돌릴 수없습니다. 학기를 삭제하시겠습니까?',
+      // icon: 'warning',
+
+      showCancelButton: true,
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소',
+    }).then((res) => {
+      if (res.isConfirmed) {
+        removeSemester(scheduleId);
+        navigate('/semesterSetup');
+        // setReload((prev) => !prev);
+        window.location.reload();
+      }
+    });
   };
 
   return (

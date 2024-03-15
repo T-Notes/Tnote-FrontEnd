@@ -1,6 +1,8 @@
+import { result } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import { IcGoBack } from '../assets/icons';
 import EditClassLogModal from '../components/WriteEdit/EditClassLogModal';
 import instanceAxios from '../utils/InstanceAxios';
@@ -137,6 +139,23 @@ const ArchiveClassLog = () => {
     };
     getDetailData();
   }, [reload]);
+
+  const handleDelete = async () => {
+    await Swal.fire({
+      title: '일지 삭제',
+      text: '해당 일지내용을 삭제하시겠습니까?',
+
+      showCancelButton: true,
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        instanceAxios.delete(`/tnote/classLog/${logId}`);
+        Swal.fire('삭제가 완료되었습니다.');
+        navigate(-1);
+      }
+    });
+  };
   return (
     <SArchiveClassLogWrapper>
       <SArchiveClassLog>
@@ -160,7 +179,7 @@ const ArchiveClassLog = () => {
           <STextarea value={classLogData.magnitude} />
         </STextareaContainer>
         <SButtons>
-          <SDelete>삭제</SDelete>
+          <SDelete onClick={handleDelete}>삭제</SDelete>
           <SEdit onClick={handleClickEdit}>수정</SEdit>
         </SButtons>
       </SArchiveClassLog>
