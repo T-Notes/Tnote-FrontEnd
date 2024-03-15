@@ -123,7 +123,7 @@ const ArchiveProceeding = () => {
       console.log(res.data);
     };
     getDetailData();
-  }, []);
+  }, [reload]);
   return (
     <SArchiveClassLogWrapper>
       <SArchiveClassLog>

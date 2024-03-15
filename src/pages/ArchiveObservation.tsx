@@ -127,7 +127,7 @@ const ArchiveObservation = () => {
       console.log(res.data);
     };
     getDetailData();
-  }, []);
+  }, [reload]);
   return (
     <>
       <SArchiveClassLogWrapper>

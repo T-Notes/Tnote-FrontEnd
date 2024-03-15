@@ -181,6 +181,7 @@ const SUploadBtn = styled(Button)`
 interface Edit {
   onClose: () => void;
   logId: string | undefined;
+  setReload: React.Dispatch<React.SetStateAction<boolean>>;
 }
 interface ClassLog {
   id: number | null;
@@ -199,7 +200,7 @@ interface SaveContents {
   제출과제: string;
   진도표: string;
 }
-const EditClassLogModal = ({ onClose, logId }: Edit) => {
+const EditClassLogModal = ({ onClose, logId, setReload }: Edit) => {
   const formData = new FormData();
   // const [title, setTitle] = useState<string>(''); //제목 상태
   // const [date, setDate] = useState({
@@ -309,13 +310,15 @@ const EditClassLogModal = ({ onClose, logId }: Edit) => {
 
       const accessToken = localStorage.getItem('accessToken');
 
-      await axios.patch(`http://j9972.kr/tnote/classLog/${logId}`, formData, {
+      await axios.patch(`https://j9972.kr/tnote/classLog/${logId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${accessToken}`,
           accept: 'application/json',
         },
       });
+      setReload((prev) => !prev);
+      onClose();
     } catch {}
   };
   return (

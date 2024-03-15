@@ -130,7 +130,7 @@ const ArchiveConsultation = () => {
       });
     };
     getDetailData();
-  }, []);
+  }, [reload]);
   return (
     <>
       <SArchiveClassLogWrapper>

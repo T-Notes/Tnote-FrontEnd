@@ -242,13 +242,17 @@ const EditProceedingModal = ({ onClose, logId, setReload }: Edit) => {
 
       const accessToken = localStorage.getItem('accessToken');
 
-      await axios.patch(`http://j9972.kr/tnote/proceeding/${logId}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${accessToken}`,
-          accept: 'application/json',
+      await axios.patch(
+        `https://j9972.kr/tnote/proceeding/${logId}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${accessToken}`,
+            accept: 'application/json',
+          },
         },
-      });
+      );
       setReload((prev) => !prev);
       onClose();
     } catch (err) {

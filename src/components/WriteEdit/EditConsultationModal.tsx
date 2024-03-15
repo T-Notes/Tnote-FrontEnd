@@ -293,7 +293,7 @@ const EditConsultationModal = ({ onClose, logId, setReload }: Edit) => {
       const accessToken = localStorage.getItem('accessToken');
 
       await axios.patch(
-        `http://j9972.kr/tnote/consultation/${logId}`,
+        `https://j9972.kr/tnote/consultation/${logId}`,
         formData,
         {
           headers: {

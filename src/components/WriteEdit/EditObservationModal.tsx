@@ -204,7 +204,7 @@ const EditObservationModal = ({ onClose, logId, setReload }: Edit) => {
       const accessToken = localStorage.getItem('accessToken');
 
       await axios.patch(
-        `http://j9972.kr/tnote/observation/${logId}`,
+        `https://j9972.kr/tnote/observation/${logId}`,
         formData,
         {
           headers: {

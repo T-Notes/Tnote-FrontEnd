@@ -106,7 +106,7 @@ const ArchiveClassLog = () => {
   const { logId } = useParams();
   const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState<boolean>(false);
-
+  const [reload, setReload] = useState<boolean>(false);
   const handleClickEdit = () => {
     setIsEdit((prev) => !prev);
   };
@@ -136,7 +136,7 @@ const ArchiveClassLog = () => {
       });
     };
     getDetailData();
-  }, []);
+  }, [reload]);
   return (
     <SArchiveClassLogWrapper>
       <SArchiveClassLog>
@@ -166,7 +166,11 @@ const ArchiveClassLog = () => {
       </SArchiveClassLog>
       <ModalPortal>
         {isEdit && (
-          <EditClassLogModal onClose={handleClickEdit} logId={logId} />
+          <EditClassLogModal
+            onClose={handleClickEdit}
+            logId={logId}
+            setReload={setReload}
+          />
         )}
       </ModalPortal>
     </SArchiveClassLogWrapper>
