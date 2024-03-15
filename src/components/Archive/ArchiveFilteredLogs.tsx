@@ -267,7 +267,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
                 key={index}
                 onClick={() => handleChangePageAtLogs(item.id)}
               >
-                {isShowCheckBox &&
+                {/* {isShowCheckBox &&
                   (checkedLogs[item.id] ? (
                     <IcCheckedBox
                       className="pointer"
@@ -278,7 +278,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
                       className="pointer"
                       onClick={() => handleClickCheckBox(item.id)}
                     />
-                  ))}
+                  ))} */}
 
                 <div>{item.title || item.studentName}</div>
                 <div>
