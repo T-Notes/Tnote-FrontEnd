@@ -15,6 +15,7 @@ import {
   getAllTaskByDate,
 } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
+import instanceAxios from '../../utils/InstanceAxios';
 
 const STaskSidebarWrapper = styled.div`
   display: flex;
@@ -87,9 +88,10 @@ interface Task {
 }
 interface Reload {
   reload: boolean;
+  clickedDate: string | undefined;
 }
 // 금일 해당하는 내용의 task들이 노출되어야 함.
-const TaskSidebar = ({ reload }: Reload) => {
+const TaskSidebar = ({ reload, clickedDate }: Reload) => {
   const { scheduleId } = useParams();
   const { year, month, day } = useCurrentDate(); // 데이터 추상화 (headless 기반의 추상화 하기)
   const [classLogContent, setClassLogContent] = useState<Task[]>([]);
@@ -98,6 +100,7 @@ const TaskSidebar = ({ reload }: Reload) => {
   const [observationContent, setObservationContent] = useState<Task[]>([]);
   const [clickedOutside, setClickedOutside] = useState<boolean>(false);
 
+  const currentDate = new Date().toISOString().slice(0, 10);
   // todo 외부 클릭 시 수정 요청 함수
   const handleUpdateOutside = () => {
     console.log('바깥을 클릭1');
@@ -107,20 +110,39 @@ const TaskSidebar = ({ reload }: Reload) => {
     if (scheduleId) {
       const fetchData = async () => {
         try {
-          const allData = await getAllTaskByDate(scheduleId, new Date());
-          const logData = allData.data;
-          console.log('모든!', logData.proceedings);
-          setClassLogContent(logData.classLogs);
-          setWorkLogContent(logData.proceedings);
-          setConsultationsContent(logData.consultations);
-          setObservationContent(logData.observations);
+          console.log(1, clickedDate);
+
+          if (typeof clickedDate !== 'undefined') {
+            console.log(2, clickedDate);
+            const params = { date: clickedDate };
+            const allData = await getAllTaskByDate(scheduleId, clickedDate);
+            console.log('allData:', allData.data);
+
+            // const allData = await instanceAxios.get(
+            //   `/tnote/home/${scheduleId}/dailyLogs`,
+            //   { params },
+            // );
+            const logData = allData.data;
+            setClassLogContent(logData.classLogs);
+            setWorkLogContent(logData.proceedings);
+            setConsultationsContent(logData.consultations);
+            setObservationContent(logData.observations);
+          } else {
+            console.log(3, clickedDate);
+            const allData = await getAllTaskByDate(scheduleId, currentDate);
+            const logData = allData.data;
+            setClassLogContent(logData.classLogs);
+            setWorkLogContent(logData.proceedings);
+            setConsultationsContent(logData.consultations);
+            setObservationContent(logData.observations);
+          }
         } catch (error) {
           console.error('Error fetching data:', error);
         }
       };
       fetchData();
     }
-  }, [reload, scheduleId]);
+  }, [reload, scheduleId, clickedDate]);
 
   return (
     <STaskSidebarWrapper onClick={handleUpdateOutside}>

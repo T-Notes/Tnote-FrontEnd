@@ -72,6 +72,7 @@ const SDays = styled.div`
     padding-right: 5px;
     border-radius: 8px;
   }
+  cursor: pointer;
 `;
 const SCalendarHeaderWrapper = styled.div`
   display: flex;
@@ -119,8 +120,9 @@ interface Task {
 }
 interface Reload {
   reload: boolean;
+  onDayClick: (clickedDate: Date) => void;
 }
-const ScheduleCalendar = ({ reload }: Reload) => {
+const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
   const { scheduleId } = useParams();
   const [classLogs, setClassLogs] = useState<Task[]>([]);
   const [consultations, setConsultations] = useState<Task[]>([]);
@@ -200,6 +202,10 @@ const ScheduleCalendar = ({ reload }: Reload) => {
       };
     }
   }, [searchValue]);
+  // const handleDayClick = (clickedDate: Date) => {
+  //   console.log('클릭한 날짜:', clickedDate);
+  //   // 여기에서 클릭한 날짜에 대한 추가적인 작업을 수행할 수 있습니다.
+  // };
 
   return (
     <SCalendarWrapper>
@@ -239,6 +245,7 @@ const ScheduleCalendar = ({ reload }: Reload) => {
                 className={
                   isSameMonth(day, currentDate) ? 'white' : 'lightGray'
                 }
+                onClick={() => onDayClick(day)}
               >
                 <div className={isToday(day) ? 'today' : ''}>
                   {format(day, 'd')}
