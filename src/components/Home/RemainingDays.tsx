@@ -34,12 +34,14 @@ const SRemainingDay = styled.p``;
 const RemainingDays = () => {
   const { scheduleId } = useParams(); //현재 url에서 추출한 동적으로 변하는 id값
   const [remainingDay, setRemainingDay] = useState<number>(0);
+  const current = new Date();
+  const newCurrent = current.toISOString().slice(0, 10);
 
   useEffect(() => {
     if (scheduleId) {
       const remainingDayData = async () => {
         try {
-          const response = await getRemainingDayData(scheduleId, new Date());
+          const response = await getRemainingDayData(scheduleId, newCurrent);
 
           setRemainingDay(response.data);
         } catch (err) {
