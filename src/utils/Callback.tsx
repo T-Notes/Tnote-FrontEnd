@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import instanceAxios from './InstanceAxios';
 
 const Callback = () => {
-  console.log('실행!');
+  console.log(1, '실행!');
   const navigate = useNavigate();
   const code = new URL(window.location.href).searchParams.get('code'); // 인가코드 받아보기
 
@@ -13,12 +13,16 @@ const Callback = () => {
   // 내 생각: 추가 회원정보 폼까지 다 작성한 유저라면, /home/id
   // 그 이외에는 전부 /profileInfo
   const getToken = async () => {
+    console.log(2, '실행');
+
     try {
       await instanceAxios
         .get(
           `https://businessyoon.store/login/oauth2/code/kakao?code=${code}&state=2vmvEBbhSq4ujp1WQbL1eh3VwSSGX6zck1AFq4XAXro%3D`,
         )
         .then((res) => {
+          console.log(3, '실행');
+
           const data = res.data.data;
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('refreshToken', data.refreshToken);
