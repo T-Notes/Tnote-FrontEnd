@@ -30,11 +30,9 @@ interface LoginProps {
 }
 const KakaoLoginBtn = ({ onWarning, isChecked }: LoginProps) => {
   const [token, setToken] = useState<any>();
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (isChecked) {
-      window.location.assign(
-        'https://businessyoon.store/oauth2/authorization/kakao',
-      ); //카카오 oauth url이동 주소
+      window.location.assign('https://j9972.kr/oauth2/authorization/kakao');
     } else {
       onWarning(true);
     }

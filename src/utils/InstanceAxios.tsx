@@ -32,7 +32,7 @@ instanceAxios.interceptors.response.use(
         console.log(4, '갱신요청');
         const refreshToken = localStorage.getItem('refreshToken');
 
-        const response = await axios.get('http://j9972.kr/tnote/refresh', {
+        const response = await axios.get('https://j9972.kr/tnote/refresh', {
           headers: {
             'Content-Type': 'application/json;charset=UTF-8',
             Accept: 'application/json',
