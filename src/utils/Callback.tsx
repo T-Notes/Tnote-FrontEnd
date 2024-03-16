@@ -16,7 +16,7 @@ const Callback = () => {
     try {
       await instanceAxios
         .get(
-          `http://j9972.kr/login/oauth2/code/kakao?code=${code}&state=2vmvEBbhSq4ujp1WQbL1eh3VwSSGX6zck1AFq4XAXro%3D`,
+          `https://businessyoon.store/login/oauth2/code/kakao?code=${code}&state=2vmvEBbhSq4ujp1WQbL1eh3VwSSGX6zck1AFq4XAXro%3D`,
         )
         .then((res) => {
           const data = res.data.data;
