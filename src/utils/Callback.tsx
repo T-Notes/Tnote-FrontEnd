@@ -18,7 +18,7 @@ const Callback = () => {
     try {
       await instanceAxios
         .get(
-          `https://businessyoon.store/login/oauth2/code/kakao?code=${code}&state=2vmvEBbhSq4ujp1WQbL1eh3VwSSGX6zck1AFq4XAXro%3D`,
+          `https://j9972.kr/login/oauth2/code/kakao?code=${code}&state=2vmvEBbhSq4ujp1WQbL1eh3VwSSGX6zck1AFq4XAXro%3D`,
         )
         .then((res) => {
           console.log(3, '실행');
