@@ -1,23 +1,23 @@
-import React from 'react';
-import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Main from './pages/Main';
-import Signup from './pages/Signup';
-import Home from './pages/Home';
-import LeftSidebar from './components/LeftSidebar';
-import MainLayout from './components/MainLayout';
+import { RecoilRoot } from 'recoil';
+import ReactModal from 'react-modal';
+import { ThemeProvider } from 'styled-components';
+
+import GlobalStyle from './styles/GlobalStyle';
+import theme from './styles/theme';
+import Router from './components/Router';
+import { RecoilEnv } from 'recoil';
+
+RecoilEnv.RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED = false;
+ReactModal.setAppElement('#root');
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/signup" element={<Signup />} />
-        {/* <Route element={<MainLayout />}> */}
-        <Route path="/home" element={<Home />} />
-        {/* </Route> */}
-      </Routes>
-    </BrowserRouter>
+    <RecoilRoot>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <Router />
+      </ThemeProvider>
+    </RecoilRoot>
   );
 }
 
