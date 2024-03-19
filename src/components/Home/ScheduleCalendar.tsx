@@ -166,14 +166,16 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
   // 월별 전체 조회하기
   useEffect(() => {
     if (scheduleId) {
-      const getMonthlyLogs = async () => {
-        const response = await getAllLogs(scheduleId, new Date());
-        setClassLogs(response.data.classLogs);
-        setWorkLogs(response.data.proceedings);
-        setConsultations(response.data.consultations);
-        setObservations(response.data.observations);
-      };
-      getMonthlyLogs();
+      try {
+        const getMonthlyLogs = async () => {
+          const response = await getAllLogs(scheduleId, new Date());
+          setClassLogs(response.data.classLogs);
+          setWorkLogs(response.data.proceedings);
+          setConsultations(response.data.consultations);
+          setObservations(response.data.observations);
+        };
+        getMonthlyLogs();
+      } catch {}
     }
   }, [scheduleId, reload]);
 

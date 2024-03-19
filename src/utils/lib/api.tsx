@@ -76,7 +76,7 @@ export const getSchoolSearchValue = async (
 
 // todo
 interface TodoProps {
-  date: Date;
+  date: string | undefined;
   content: string;
 }
 export const createTodo = async (
@@ -110,7 +110,10 @@ export const updateTodo = async (
   }
 };
 
-export const getTodo = async (scheduleId: string | undefined, date: Date) => {
+export const getTodo = async (
+  scheduleId: string | undefined,
+  date: string | undefined,
+) => {
   try {
     const response = await instanceAxios.get(`/tnote/todos/${scheduleId}`, {
       params: date,

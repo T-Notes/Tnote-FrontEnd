@@ -15,6 +15,7 @@ import { useRecoilValue } from 'recoil';
 import { scheduleIdState } from '../../utils/lib/recoil/scheduleIdState';
 import Swal from 'sweetalert2';
 import { text } from 'stream/consumers';
+import { Task } from './TaskSidebar';
 
 const SInput = styled.input`
   font-size: 15px;
@@ -45,14 +46,24 @@ interface TodoProps {
 interface TodoOutside {
   clickedOutside: boolean;
   setClickedOutside: React.Dispatch<SetStateAction<boolean>>;
+  todo: Task[];
+  setTodo: any;
+  clickedDate: string | undefined;
 }
-const Todo = ({ clickedOutside, setClickedOutside }: TodoOutside) => {
+const Todo = ({
+  clickedOutside,
+  setClickedOutside,
+  todo,
+  setTodo,
+  clickedDate,
+}: TodoOutside) => {
   const { scheduleId } = useParams();
 
   const [isAddTodo, setIsAddTodo] = useState<boolean>(false);
   const [todoArray, setTodoArray] = useState<any[]>([]);
   const [todoContent, setTodoContent] = useState<string>('');
   const [todoId, setTodoId] = useState<number>();
+  console.log('clickedDate', clickedDate);
 
   const handleChangeTodoInput = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -60,8 +71,8 @@ const Todo = ({ clickedOutside, setClickedOutside }: TodoOutside) => {
   ) => {
     setTodoId(todoId);
     const newContent = e.target.value;
-    setTodoArray((prevTodoArray) => {
-      return prevTodoArray.map((todoItem) => {
+    setTodo((prevTodoArray: any) => {
+      return prevTodoArray.map((todoItem: any) => {
         if (todoItem.id === todoId) {
           setTodoContent(newContent);
         }
@@ -81,7 +92,7 @@ const Todo = ({ clickedOutside, setClickedOutside }: TodoOutside) => {
     if (clickedOutside) {
       // 부모에서 클릭 이벤트 발생 시
       const patchTodoData = {
-        date: new Date(),
+        date: clickedDate,
         content: todoContent,
         status: true,
       };
@@ -93,26 +104,42 @@ const Todo = ({ clickedOutside, setClickedOutside }: TodoOutside) => {
   }, [clickedOutside, todoContent, scheduleId, todoId]);
 
   // 조회
+  // useEffect(() => {
+  //   if (scheduleId) {
+  //     const getTodoData = async () => {
+  //       try {
+  //         const response = await getTodo(scheduleId, new Date());
+  //         setTodoArray(response.data);
+  //       } catch {}
+  //     };
+  //     getTodoData();
+  //   }
+  // }, [isAddTodo, scheduleId]);
+
+  const getTodoData = async () => {
+    console.log(1);
+
+    try {
+      const response = await getTodo(scheduleId, clickedDate);
+      setTodoArray(response.data);
+    } catch {}
+  };
+
   useEffect(() => {
     if (scheduleId) {
-      const getTodoData = async () => {
-        try {
-          const response = await getTodo(scheduleId, new Date());
-          setTodoArray(response.data);
-        } catch {}
-      };
-      getTodoData();
+      setTodoArray(todo);
     }
-  }, [isAddTodo, scheduleId]);
+  }, []);
 
   // + 버튼으로 post 요청
   const handleAddTodo = async () => {
     if (scheduleId) {
       const todoData = {
-        date: new Date(),
+        date: clickedDate,
         content: '',
       };
       await createTodo(scheduleId, todoData);
+      getTodoData();
       setIsAddTodo(!isAddTodo);
     } else {
       Swal.fire({
@@ -125,7 +152,7 @@ const Todo = ({ clickedOutside, setClickedOutside }: TodoOutside) => {
   return (
     <div>
       <>
-        {todoArray.map((todoItem) => (
+        {todo.map((todoItem) => (
           <STodoContainer className="todo-item" key={todoItem.id}>
             <SInput
               placeholder="todo list 작성하세요"

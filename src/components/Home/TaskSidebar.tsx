@@ -80,9 +80,10 @@ const SLogLength = styled.div`
   border-radius: 10px;
   color: white;
 `;
-interface Task {
+export interface Task {
   id: number;
   title: string;
+  content: string;
   studentName: string;
   createdAt: string;
 }
@@ -99,6 +100,7 @@ const TaskSidebar = ({ reload, clickedDate }: Reload) => {
   const [consultationsContent, setConsultationsContent] = useState<Task[]>([]);
   const [observationContent, setObservationContent] = useState<Task[]>([]);
   const [clickedOutside, setClickedOutside] = useState<boolean>(false);
+  const [todo, setTodo] = useState<Task[]>([]);
 
   const currentDate = new Date().toISOString().slice(0, 10);
   // todo 외부 클릭 시 수정 요청 함수
@@ -123,6 +125,8 @@ const TaskSidebar = ({ reload, clickedDate }: Reload) => {
             //   { params },
             // );
             const logData = allData.data;
+            console.log('logData', logData.todos);
+            setTodo(logData.todos);
             setClassLogContent(logData.classLogs);
             setWorkLogContent(logData.proceedings);
             setConsultationsContent(logData.consultations);
@@ -152,6 +156,9 @@ const TaskSidebar = ({ reload, clickedDate }: Reload) => {
         <Todo
           clickedOutside={clickedOutside}
           setClickedOutside={setClickedOutside}
+          setTodo={setTodo}
+          todo={todo}
+          clickedDate={clickedDate}
         />
       </div>
       <SFlex>
