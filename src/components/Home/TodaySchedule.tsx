@@ -75,9 +75,8 @@ const TodaySchedule = () => {
       const getTodaySchedule = async () => {
         try {
           const response = await getTodayTimetable(scheduleId, today);
-          console.log('오늘 시간표 조회', response.data); //  출력
+          console.log('오늘 시간표 조회', response.data);
           setTodayClass(response.data);
-          // {id: 24, subjectName: '수학', classTime: '3교시', classDay: '목요일', classLocation: '3반', …}
         } catch {}
       };
       getTodaySchedule();
