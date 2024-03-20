@@ -191,14 +191,15 @@ const ConsultationRecordsModal = ({
     const file = e.target.files[0];
 
     setImgUrl(file);
-    formData.append('classLogImages', file);
+    formData.append('consultationImages', file);
   };
-
+  // consutationImages
+  // consultationImages
   const handleChangeValueImg = (e: any) => {
     const file = e.target.files[0];
 
     setImgUrl(file);
-    formData.append('classLogImages', file);
+    formData.append('consultationImages', file);
   };
 
   const handleCounselingButtonClick = (buttonName: string) => {
@@ -251,7 +252,7 @@ const ConsultationRecordsModal = ({
       formData.append('requestDto', jsonDataTypeValue);
 
       if (imgUrl) {
-        formData.append('consutationImages', imgUrl);
+        formData.append('consultationImages', imgUrl);
       }
 
       const accessToken = localStorage.getItem('accessToken');
