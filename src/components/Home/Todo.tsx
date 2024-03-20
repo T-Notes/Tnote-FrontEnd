@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { SetStateAction, useEffect, useState } from 'react';
 import { IcAddWhite, IcCloseSmall } from '../../assets/icons';
 import { Button } from '../common/styled/Button';
-
 import {
   createTodo,
   getTodo,
@@ -10,19 +9,13 @@ import {
   updateTodo,
 } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
-import { lowerFirst } from 'lodash';
-import { useRecoilValue } from 'recoil';
-import { scheduleIdState } from '../../utils/lib/recoil/scheduleIdState';
 import Swal from 'sweetalert2';
-import { text } from 'stream/consumers';
 import { Task } from './TaskSidebar';
 
 const SInput = styled.input`
   font-size: 15px;
   font-weight: 500;
   color: #2f2f2f;
-  /* color: ${({ theme }) => theme.colors.gray700}; */
-  /* ${({ theme }) => theme.fonts.caption}; */
 `;
 const SAddTodo = styled(Button)`
   background-color: ${({ theme }) => theme.colors.purple100};
