@@ -116,10 +116,6 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
             const params = { date: clickedDate };
             const allData = await getAllTaskByDate(scheduleId, clickedDate);
 
-            // const allData = await instanceAxios.get(
-            //   `/tnote/home/${scheduleId}/dailyLogs`,
-            //   { params },
-            // );
             const logData = allData.data;
 
             setTodo(logData.todos);
