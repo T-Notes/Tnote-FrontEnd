@@ -3,7 +3,7 @@ name: front-publish
 on:
   push:
     branches:
-      - main
+      - atomic
 
 jobs:
   build:
