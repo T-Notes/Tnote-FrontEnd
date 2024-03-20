@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { getTodayTimetable } from '../../utils/lib/api';
+import { colorMapping } from '../../utils/colorMapping';
 
 const STodayScheduleWrapper = styled.div`
   display: flex;
@@ -16,25 +17,53 @@ const SFont = styled.div`
   margin-top: 30px;
   padding-left: 10px;
 `;
-const SClass = styled.div`
-  color: ${({ theme }) => theme.colors.gray000};
-  font-size: 12px;
+const SClassContainer = styled.div`
   font-weight: 600;
-  padding: 10px;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap; /* 글자가 넘칠 경우 줄바꿈을 방지합니다. */
+  text-overflow: ellipsis; /* 넘어간 텍스트를 생략 부호(...)로 표시합니다. */
 `;
+const SClass = styled.div``;
+
 const SSchedule = styled.div`
   display: flex;
-  /* width: 250px; */
+  width: 600px;
+  color: ${({ theme }) => theme.colors.gray000};
+  padding: 15px;
   height: 80px;
   background-color: ${({ theme }) => theme.colors.blue400};
 `;
+
+const STodayClassWrapper = styled.div<{ color: string }>`
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  padding: 10px;
+  width: auto;
+  height: 100%;
+  background-color: ${({ color }) => color || '#fffff'};
+`;
+const STimetables = styled.div`
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3px;
+`;
+interface TodayClass {
+  subjectName: string;
+  classTime: string;
+  classDay: string;
+  classLocation: string;
+  color: string;
+}
 const TodaySchedule = () => {
   const { scheduleId } = useParams();
-  const [lastClass, setLastClass] = useState<string>('9교시');
-  const lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
-  const [todayClass, setTodayClass] = useState();
+  const [todayClass, setTodayClass] = useState<TodayClass[]>([]);
   const currentDae = new Date();
-  const dayOfWeek = currentDae.getDay();
+  const todayOfNumber = currentDae.getDay();
+
   const daysOfWeek = [
     'SUNDAY',
     'MONDAY',
@@ -44,7 +73,7 @@ const TodaySchedule = () => {
     'FRIDAY',
     'SATURDAY',
   ];
-  const today = daysOfWeek[dayOfWeek];
+  const today = daysOfWeek[todayOfNumber];
 
   const timetables: any = {
     1: '1교시',
@@ -58,41 +87,49 @@ const TodaySchedule = () => {
     9: '9교시',
   };
 
-  useEffect(() => {
-    if (lastClass === '') {
-      // 유저가 선택하기 전이라면 기본 값 9교시로 설정.
-    } else {
-      // 유저가 마지막 교시를 선택했다면, 해당 교시까지의 시간표 출력.
-
-      // 선택한 교시까지의 시간표 출력
-      for (let hour = 1; hour <= lastClassNumber; hour++) {}
-    }
-  }, [lastClass]);
-
   // 오늘 수업일정 조회
   useEffect(() => {
     if (scheduleId) {
       const getTodaySchedule = async () => {
         try {
           const response = await getTodayTimetable(scheduleId, today);
-          console.log('오늘 시간표 조회', response.data);
+          console.log(2, response.data);
+
           setTodayClass(response.data);
         } catch {}
       };
       getTodaySchedule();
     }
   }, [scheduleId]);
+
+  console.log(1, todayClass);
+
   return (
     <>
       <STodayScheduleWrapper>
         <SFont>오늘 수업 일정</SFont>
         <SSchedule>
-          {/* 선택한 교시까지의 시간표 출력 */}
-          {Array.from({ length: lastClassNumber }, (_, index) => index + 1).map(
-            (hour) => (
-              <SClass key={hour}>{timetables[hour]}</SClass>
-            ),
-          )}
+          {Array.from({ length: 9 }, (_, index) => index + 1).map((hour) => (
+            <SClassContainer key={hour}>
+              <SClass>
+                <STimetables>{timetables[hour]}</STimetables>
+                {todayClass.map((item, index) => {
+                  const classTimeChange = parseInt(item.classTime.slice(0, 1));
+                  const backgroundColor = colorMapping[item.color] || '';
+                  return (
+                    <div key={index}>
+                      {classTimeChange === hour ? (
+                        <STodayClassWrapper color={backgroundColor}>
+                          <div>{item.classLocation}</div>
+                          <div>{item.subjectName}</div>
+                        </STodayClassWrapper>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </SClass>
+            </SClassContainer>
+          ))}
         </SSchedule>
       </STodayScheduleWrapper>
     </>
