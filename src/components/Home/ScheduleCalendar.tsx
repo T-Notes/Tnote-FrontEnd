@@ -20,6 +20,7 @@ import SearchInput from '../common/SearchInput';
 import { Button } from '../common/styled/Button';
 import { useParams } from 'react-router-dom';
 import { getAllLogs, getSearchLogsValue } from '../../utils/lib/api';
+import ScheduleCalendarSearchValue from '../../components/search/ScheduleCalendarSearchValue';
 
 const SCalendarWrapper = styled.div`
   width: 100%;
@@ -208,6 +209,7 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
   //   console.log('클릭한 날짜:', clickedDate);
   //   // 여기에서 클릭한 날짜에 대한 추가적인 작업을 수행할 수 있습니다.
   // };
+  console.log('searchValueList', searchValueList);
 
   return (
     <SCalendarWrapper>
@@ -228,9 +230,10 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
           value={searchValue}
         />
       </SCalendarHeaderWrapper>
+
       {searchValueList.length > 0 ? (
         <>
-          <div>검색결과 렌더링 중...</div>
+          <ScheduleCalendarSearchValue searchValueList={searchValueList} />
           {/* <div>{searchValueList}</div> */}
         </>
       ) : (
