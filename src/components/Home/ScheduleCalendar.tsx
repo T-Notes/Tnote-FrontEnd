@@ -34,7 +34,7 @@ const SCalendarHeader = styled.div`
   ${({ theme }) => theme.fonts.button1}
 `;
 const SCalendarDate = styled.div`
-  height: auto; // 내용의 크기에 따라 요소의 높이를 동적으로 조절
+  height: auto;
 `;
 
 const SWeekBox = styled.div`
@@ -64,10 +64,10 @@ const SDays = styled.div`
   align-items: center;
   height: 60px;
   flex: 1;
-  flex: 1 0 14%; // 한 줄에 요소 아이템이 7개씩 들어가도록 간격 맞추기
+  flex: 1 0 14%;
   padding: 5px;
   .today {
-    color: #ffff; // border가 들어갈 크기가 안돼서 컬러로 대체
+    color: #ffff;
     background-color: #7f51fc;
     padding-left: 5px;
     padding-right: 5px;
@@ -100,7 +100,6 @@ const SYearMonth = styled.h2`
 `;
 
 const SLogContainer = styled.ul`
-  /* border: 1px solid red; */
   width: 100%;
 `;
 
@@ -135,8 +134,8 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
   const { currentDate, handlePrevMonth, handleNextMonth, setCurrentDate } =
     useCurrentDate();
 
-  const startWeek = startOfWeek(startOfMonth(currentDate)); // 이번 달 첫 주 날짜 (전월일 포함)
-  const endWeek = endOfWeek(endOfMonth(currentDate)); //이번 달 말일 날짜 (다음 달 포함)
+  const startWeek = startOfWeek(startOfMonth(currentDate));
+  const endWeek = endOfWeek(endOfMonth(currentDate));
 
   const days = [];
   let day = startWeek;
@@ -149,18 +148,18 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
 
   //   // 현재날짜로 돌아오기
   const handleCurrentDate = () => {
-    setCurrentDate(startOfMonth(new Date())); //현재 날짜로 업데이트
+    setCurrentDate(startOfMonth(new Date()));
   };
   // 랜덤 색상
   const getRandomColor = (() => {
-    const colors = ['#FEF5E6', '#FFD9D9', '#D2F0FF', '#F0EBFF']; // 사용할 색상 배열
-    let index = 0; // 현재 사용 중인 색상의 인덱스
+    const colors = ['#FEF5E6', '#FFD9D9', '#D2F0FF', '#F0EBFF'];
+    let index = 0;
 
     return () => {
-      const color = colors[index]; // 현재 인덱스의 색상을 가져옴
-      index = (index + 1) % colors.length; // 다음 인덱스를 계산하고 배열 길이로 나눠 순환
+      const color = colors[index];
+      index = (index + 1) % colors.length;
 
-      return color; // 색상 반환
+      return color;
     };
   })();
 
