@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import instanceAxios from '../../utils/InstanceAxios';
 import { useToggle } from '../../utils/useHooks/useToggle';
 import ClassInfoPopup from './ClassInfoPopup';
+import { colorMapping } from '../../utils/colorMapping';
 
 const STimetableWrapper = styled.table`
   margin-top: 30px;
@@ -27,15 +28,15 @@ const SThead = styled.td`
   font-weight: 700;
 `;
 // 색상 이름과 코드가 매핑된 배열
-const colorMapping: { [key: string]: string } = {
-  파란색: '#0EA5E91A',
-  보라색: '#E5E6FE',
-  노란색: '#FEF5E6',
-  빨간색: '#FEE6E6',
-  초록색: '#E6FEE7',
-  분홍색: '#FEE6F9',
-  회색: '#D9D9D9',
-};
+// const colorMapping: { [key: string]: string } = {
+//   파란색: '#0EA5E91A',
+//   보라색: '#E5E6FE',
+//   노란색: '#FEF5E6',
+//   빨간색: '#FEE6E6',
+//   초록색: '#E6FEE7',
+//   분홍색: '#FEE6F9',
+//   회색: '#D9D9D9',
+// };
 
 const SSubjectBox = styled.div<{ color: string }>`
   cursor: pointer;
@@ -46,6 +47,10 @@ const SSubjectBox = styled.div<{ color: string }>`
   padding-left: 10px;
   color: #5b5b5b;
   background-color: ${({ color }) => color || '#fffff'};
+  width: auto;
+  overflow: hidden;
+  white-space: nowrap; /* 글자가 넘칠 경우 줄바꿈을 방지합니다. */
+  text-overflow: ellipsis; /* 넘어간 텍스트를 생략 부호(...)로 표시합니다. */
 `;
 const SClassAndTime = styled.td`
   padding: 10px;
