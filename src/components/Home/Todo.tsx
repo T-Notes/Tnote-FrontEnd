@@ -49,6 +49,7 @@ interface TodoOutside {
   todo: Task[];
   setTodo: any;
   clickedDate: string | undefined;
+  setReload: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const Todo = ({
   clickedOutside,
@@ -56,6 +57,7 @@ const Todo = ({
   todo,
   setTodo,
   clickedDate,
+  setReload,
 }: TodoOutside) => {
   const { scheduleId } = useParams();
 
@@ -83,7 +85,7 @@ const Todo = ({
   // todo 삭제
   const handleDelete = async (todoId: number | undefined) => {
     await removeTodo(scheduleId, todoId);
-    setIsAddTodo(!isAddTodo);
+    setReload((prev) => !prev);
   };
 
   //수정
@@ -115,15 +117,6 @@ const Todo = ({
     }
   }, [isAddTodo, clickedDate]);
 
-  // const getTodoData = async () => {
-  //   console.log(1);
-
-  //   try {
-  //     const response = await getTodo(scheduleId, clickedDate);
-  //     setTodoArray(response.data);
-  //   } catch {}
-  // };
-
   // 처음 조회 시
   useEffect(() => {
     if (scheduleId) {
@@ -140,7 +133,7 @@ const Todo = ({
       };
       await createTodo(scheduleId, todoData);
       // getTodoData();
-      setIsAddTodo(!isAddTodo);
+      setReload((prev) => !prev);
     } else {
       Swal.fire({
         title: '학기가 있어야 합니다.',

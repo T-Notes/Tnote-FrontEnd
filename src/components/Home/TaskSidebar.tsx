@@ -90,9 +90,10 @@ export interface Task {
 interface Reload {
   reload: boolean;
   clickedDate: string | undefined;
+  setReload: React.Dispatch<React.SetStateAction<boolean>>;
 }
 // 금일 해당하는 내용의 task들이 노출되어야 함.
-const TaskSidebar = ({ reload, clickedDate }: Reload) => {
+const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
   const { scheduleId } = useParams();
   const { year, month, day } = useCurrentDate(); // 데이터 추상화 (headless 기반의 추상화 하기)
   const [classLogContent, setClassLogContent] = useState<Task[]>([]);
@@ -153,6 +154,7 @@ const TaskSidebar = ({ reload, clickedDate }: Reload) => {
           setTodo={setTodo}
           todo={todo}
           clickedDate={clickedDate}
+          setReload={setReload}
         />
       </div>
       <SFlex>

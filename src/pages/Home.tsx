@@ -56,7 +56,11 @@ const Home = () => {
       </SHomeSemester>
 
       <ScheduleCalendar reload={reload} onDayClick={handleDayClick} />
-      <TaskSidebar reload={reload} clickedDate={clickedDate} />
+      <TaskSidebar
+        reload={reload}
+        setReload={setReload}
+        clickedDate={clickedDate}
+      />
       <WriteButton setReload={setReload} />
     </SHomeWrapper>
   );
