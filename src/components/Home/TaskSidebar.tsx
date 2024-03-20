@@ -105,34 +105,28 @@ const TaskSidebar = ({ reload, clickedDate }: Reload) => {
   const currentDate = new Date().toISOString().slice(0, 10);
   // todo 외부 클릭 시 수정 요청 함수
   const handleUpdateOutside = () => {
-    console.log('바깥을 클릭1');
     setClickedOutside(true); // 클릭 상태 변경
   };
   useEffect(() => {
     if (scheduleId) {
       const fetchData = async () => {
         try {
-          console.log(1, clickedDate);
-
           if (typeof clickedDate !== 'undefined') {
-            console.log(2, clickedDate);
             const params = { date: clickedDate };
             const allData = await getAllTaskByDate(scheduleId, clickedDate);
-            console.log('allData:', allData.data);
 
             // const allData = await instanceAxios.get(
             //   `/tnote/home/${scheduleId}/dailyLogs`,
             //   { params },
             // );
             const logData = allData.data;
-            console.log('logData', logData.todos);
+
             setTodo(logData.todos);
             setClassLogContent(logData.classLogs);
             setWorkLogContent(logData.proceedings);
             setConsultationsContent(logData.consultations);
             setObservationContent(logData.observations);
           } else {
-            console.log(3, clickedDate);
             const allData = await getAllTaskByDate(scheduleId, currentDate);
             const logData = allData.data;
             setClassLogContent(logData.classLogs);

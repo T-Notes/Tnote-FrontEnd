@@ -63,7 +63,6 @@ const Todo = ({
   const [todoArray, setTodoArray] = useState<any[]>([]);
   const [todoContent, setTodoContent] = useState<string>('');
   const [todoId, setTodoId] = useState<number>();
-  console.log('clickedDate', clickedDate);
 
   const handleChangeTodoInput = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -104,27 +103,28 @@ const Todo = ({
   }, [clickedOutside, todoContent, scheduleId, todoId]);
 
   // 조회
-  // useEffect(() => {
-  //   if (scheduleId) {
-  //     const getTodoData = async () => {
-  //       try {
-  //         const response = await getTodo(scheduleId, new Date());
-  //         setTodoArray(response.data);
-  //       } catch {}
-  //     };
-  //     getTodoData();
-  //   }
-  // }, [isAddTodo, scheduleId]);
+  useEffect(() => {
+    if (scheduleId) {
+      const getTodoData = async () => {
+        try {
+          const response = await getTodo(scheduleId, clickedDate);
+          setTodoArray(response.data);
+        } catch {}
+      };
+      getTodoData();
+    }
+  }, [isAddTodo, clickedDate]);
 
-  const getTodoData = async () => {
-    console.log(1);
+  // const getTodoData = async () => {
+  //   console.log(1);
 
-    try {
-      const response = await getTodo(scheduleId, clickedDate);
-      setTodoArray(response.data);
-    } catch {}
-  };
+  //   try {
+  //     const response = await getTodo(scheduleId, clickedDate);
+  //     setTodoArray(response.data);
+  //   } catch {}
+  // };
 
+  // 처음 조회 시
   useEffect(() => {
     if (scheduleId) {
       setTodoArray(todo);
@@ -139,7 +139,7 @@ const Todo = ({
         content: '',
       };
       await createTodo(scheduleId, todoData);
-      getTodoData();
+      // getTodoData();
       setIsAddTodo(!isAddTodo);
     } else {
       Swal.fire({

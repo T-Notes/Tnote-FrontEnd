@@ -191,7 +191,6 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
   const handleLogsSearch = async () => {
     const getSearchValue = await getSearchLogsValue(searchValue);
     setSetSearchValueList(getSearchValue.data);
-    console.log(getSearchValue.data);
   };
 
   const debouncedSearch = _debounce(handleLogsSearch, 1000);
@@ -209,7 +208,6 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
   //   console.log('클릭한 날짜:', clickedDate);
   //   // 여기에서 클릭한 날짜에 대한 추가적인 작업을 수행할 수 있습니다.
   // };
-  console.log('searchValueList', searchValueList);
 
   return (
     <SCalendarWrapper>
