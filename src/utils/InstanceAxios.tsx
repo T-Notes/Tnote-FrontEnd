@@ -40,7 +40,9 @@ instanceAxios.interceptors.response.use(
           },
         });
         // 새로운 엑세스 토큰 저장
-        const newAccessToken = response.data.accessToken;
+        const newAccessToken = response.data.data.accessToken;
+        console.log(response.data.data.accessToken);
+
         console.log(5, 'newAccessToken:', newAccessToken);
         localStorage.setItem('accessToken', newAccessToken);
 
