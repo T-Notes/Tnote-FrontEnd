@@ -41,7 +41,8 @@ const SIcRoundBackBtn = styled(IcRoundBackBtn)`
 const TimetableChangeBtn = () => {
   const [isTodayClick, setIsTodayClick] = useState<boolean>(false);
   const [selectedButton, setSelectedButton] = useState<string>('');
-  const [dayIndex, setDayIndex] = useState<number>(1);
+  const initialState = new Date().getDay();
+  const [dayIndex, setDayIndex] = useState<number>(initialState);
 
   const handleClickTodayButton = (buttonType: string) => {
     setIsTodayClick(true);
