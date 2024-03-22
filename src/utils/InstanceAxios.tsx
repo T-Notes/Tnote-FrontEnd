@@ -25,11 +25,8 @@ instanceAxios.interceptors.response.use(
 
     // 만료된 토큰인 경우
     if (errorMessage === 'not found token') {
-      console.log(3, '토큰 만료');
-
       // 토큰 갱신 요청 보내기
       try {
-        console.log(4, '갱신요청');
         const refreshToken = localStorage.getItem('refreshToken');
 
         const response = await axios.get('https://j9972.kr/tnote/refresh', {
@@ -41,9 +38,6 @@ instanceAxios.interceptors.response.use(
         });
         // 새로운 엑세스 토큰 저장
         const newAccessToken = response.data.data.accessToken;
-        console.log(response.data.data.accessToken);
-
-        console.log(5, 'newAccessToken:', newAccessToken);
         localStorage.setItem('accessToken', newAccessToken);
 
         // 갱신된 토큰으로 요청을 재시도합니다.

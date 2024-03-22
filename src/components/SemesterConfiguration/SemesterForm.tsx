@@ -115,12 +115,12 @@ const SemesterForm = () => {
 
   const navigate = useNavigate();
   const [semesterData, setSemesterData] = useState<SemesterDataProps>({
-    id: null, // 없는 값
+    id: null,
     semesterName: '',
     lastClass: '',
     email: '',
-    subjects: null, // 없는 값
-    startDate: new Date(), // 왜 null?
+    subjects: null,
+    startDate: new Date(),
     endDate: new Date(),
   });
   const [reload, setReload] = useState<boolean>(false);
