@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import SemesterMenu from '../components/Home/SemesterMenu';
 import ClassAddForm from '../components/Timetable/ClassAddForm';
+import TimetableChangeBtn from '../components/Timetable/TimetableChangeBtn';
 import TimetableHeader from '../components/Timetable/TimetableHeader';
 import TimetableTemplate from '../components/Timetable/TimetableTemplate';
 
@@ -42,6 +43,7 @@ const Timetable = () => {
         <div>
           <SemesterMenu onClickAddBtn={handleOpenAddClass} />
           <TimetableHeader />
+          <TimetableChangeBtn />
           <TimetableTemplate
             setReloadTrigger={setReloadTrigger}
             reloadTrigger={reloadTrigger}

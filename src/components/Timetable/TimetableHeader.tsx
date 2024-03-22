@@ -52,19 +52,19 @@ const TimetableHeader = () => {
       <STimetableHeader>
         <span>
           {' '}
-          이번 학기의 남은 학기 일수는{' '}
-          <SColorBlue>
-            {' '}
-            {typeof remainingDay === 'number' ? remainingDay : '0'}일{' '}
-          </SColorBlue>
-          입니다.
-        </span>
-        <span>
-          {' '}
           이번 학기의 총 수업 횟수는{' '}
           <SColorBlue>
             {' '}
             {typeof remainingDay === 'number' ? data : '0'}회{' '}
+          </SColorBlue>
+          ,
+        </span>
+        <span>
+          {' '}
+          남은 학기 일수는{' '}
+          <SColorBlue>
+            {' '}
+            {typeof remainingDay === 'number' ? remainingDay : '0'}일{' '}
           </SColorBlue>
           입니다.
         </span>
