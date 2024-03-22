@@ -72,7 +72,7 @@ const TimetableChangeBtn = () => {
         </STimetableButton>
         <STimetableButtonWeek
           onClick={() => handleClickWeekButton('WEEK')}
-          selected={selectedButton === 'WEEK'}
+          selected={selectedButton === 'WEEK' || selectedButton === ''}
         >
           일주일
         </STimetableButtonWeek>
