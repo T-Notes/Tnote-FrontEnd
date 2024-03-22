@@ -80,8 +80,10 @@ const TimetableTemplate = ({
   isEditMode,
 }: TimetableTemplate) => {
   const { scheduleId } = useParams();
-  const [lastClass, setLastClass] = useState('9');
-  const lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
+  const [lastClass, setLastClass] = useState<string>('');
+  console.log('lastClass', lastClass);
+
+  let lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
   const [subjectsList, setSubjectList] = useState<any[]>([]);
   // 과목 조회 모달 상태관리
   const [isOpenSubjectDataModal, setIsOpenSubjectDataModal] =
@@ -107,11 +109,13 @@ const TimetableTemplate = ({
             .get(`/tnote/schedule/week/${scheduleId}`)
             .then((res) => {
               const getData = res.data;
+              console.log('확인', getData.data[0].lastClass);
+
               const subjectArray = getData.data[0].subjects;
               console.log(1, subjectArray);
               setColor(subjectArray.map((item: any) => item.color));
               setSubjectList(subjectArray);
-              setLastClass(getData.data[0].lastClass);
+              setLastClass(getData.data[0].lastClass || '9교시');
             });
         } catch (err) {
           console.log('시간표 조회에 실패했습니다.', err);
@@ -124,6 +128,7 @@ const TimetableTemplate = ({
   useEffect(() => {
     if (lastClass === '') {
       // 유저가 선택하기 전이라면 기본 값 9교시로 설정.
+      lastClassNumber = 9;
     } else {
       // 유저가 마지막 교시를 선택했다면, 해당 교시까지의 시간표 출력.
 
@@ -154,6 +159,8 @@ const TimetableTemplate = ({
   ];
   // lastClass 값에 따라 필요한 시간표만 추출
   const filteredTimetables = timetables.slice(0, lastClassNumber);
+
+  console.log(2, timetables.slice(0, lastClassNumber));
 
   // 두 값을 비교 후 맞다면 true를, 아니라면 false를 반환하는 함수를 만들자
   // 배열의 값과  filteredTimetables의 값이 맞다면 렌더링하기
