@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { css } from 'styled-components';
 import { IcRoundBackBtn, IcRoundFrontBtn } from '../../assets/icons';
 
 const SWrapper = styled.div`
@@ -7,7 +8,7 @@ const SWrapper = styled.div`
   align-items: center;
   margin-top: 20px;
 `;
-const STimetableButton = styled.button`
+const STimetableButton = styled.button<{ selected: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,11 +21,9 @@ const STimetableButton = styled.button`
   border: 1px solid #e8e8e8;
   margin-right: 10px;
   font-weight: 500;
-  color: #5b5b5b;
-  &:hover {
-    background: #ff6f6f;
-    color: white;
-  }
+
+  background-color: ${(props) => (props.selected ? '#ff6f6f' : '#ffff')};
+  color: ${(props) => (props.selected ? '#ffff' : '#5b5b5b')};
 `;
 
 const STimetableButtonWeek = styled(STimetableButton)`
@@ -41,14 +40,17 @@ const SIcRoundBackBtn = styled(IcRoundBackBtn)`
 
 const TimetableChangeBtn = () => {
   const [isTodayClick, setIsTodayClick] = useState<boolean>(false);
+  const [selectedButton, setSelectedButton] = useState<string>('');
   const [dayIndex, setDayIndex] = useState<number>(1);
 
-  const handleClickTodayButton = () => {
+  const handleClickTodayButton = (buttonType: string) => {
     setIsTodayClick(true);
+    setSelectedButton(buttonType);
   };
 
-  const handleClickWeekButton = () => {
+  const handleClickWeekButton = (buttonType: string) => {
     setIsTodayClick(false);
+    setSelectedButton(buttonType);
   };
 
   const moveDay = (direction: string) => {
@@ -62,10 +64,16 @@ const TimetableChangeBtn = () => {
   return (
     <>
       <SWrapper>
-        <STimetableButton onClick={handleClickTodayButton}>
+        <STimetableButton
+          onClick={() => handleClickTodayButton('TODAY')}
+          selected={selectedButton === 'TODAY'}
+        >
           오늘
         </STimetableButton>
-        <STimetableButtonWeek onClick={handleClickWeekButton}>
+        <STimetableButtonWeek
+          onClick={() => handleClickWeekButton('WEEK')}
+          selected={selectedButton === 'WEEK'}
+        >
           일주일
         </STimetableButtonWeek>
 
