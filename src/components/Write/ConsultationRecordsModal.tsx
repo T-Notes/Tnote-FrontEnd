@@ -2,6 +2,7 @@ import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import { IcClip, IcPen, IcSmallDatePicker, IcTitle } from '../../assets/icons';
 import { createConsultationRecords } from '../../utils/lib/api';
 import ModalPortal from '../../utils/ModalPortal';
@@ -246,6 +247,13 @@ const ConsultationRecordsModal = ({
         consultationResult: counselingResult,
         isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
       };
+
+      if (!logData.counselingField || !logData.counselingType) {
+        Swal.fire({
+          title: '입력 에러',
+          text: '상담 분야와 상담 대상을 선택해주세요.',
+        });
+      }
       const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
         type: 'application/json',
       });
