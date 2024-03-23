@@ -105,12 +105,13 @@ interface SemesterDataProps {
   lastClass: string;
   email: string;
   subjects: null;
-  // startDate: Date;
-  // endDate: Date;
 }
-
-const SemesterForm = () => {
-  const { scheduleId } = useParams(); // 베너에서 id값을 달아서 가져옴
+interface SetupProps {
+  setReload: React.Dispatch<React.SetStateAction<boolean>>;
+  reload: boolean;
+}
+const SemesterForm = ({ setReload, reload }: SetupProps) => {
+  const { scheduleId } = useParams();
   const { isToggle, setIsToggle, handleChangeToggle } = useToggle();
 
   const navigate = useNavigate();
@@ -120,11 +121,10 @@ const SemesterForm = () => {
     lastClass: '',
     email: '',
     subjects: null,
-    // startDate: new Date(),
-    // endDate: new Date(),
   });
-  const [reload, setReload] = useState<boolean>(false);
+
   const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [endDate, setEndDate] = useState<Date | null>(new Date());
 
   const handleChangeSemesterName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const semesterName = e.target.value;
@@ -137,23 +137,7 @@ const SemesterForm = () => {
       lastClass: session,
     }));
 
-    setIsToggle(false); // 마지막 교시 드롭다운 닫기
-  };
-
-  // 예상 문제 지점
-  const handleParentStartDateChange = (startDate: Date, endDate: Date) => {
-    // 받은 startDate 값을 부모 컴포넌트의 상태로 업데이트
-
-    const startDateObject = new Date(startDate);
-    const endDateObject = new Date(endDate);
-    // 뿌려줄 데이터
-    setSemesterData((prev) => ({
-      ...prev,
-      startDate: startDate,
-      endDate: endDate,
-      // startDate: JSON.stringify(startDate),
-      // endDate: JSON.stringify(endDate),
-    }));
+    setIsToggle(false);
   };
 
   const getSemesterForm = async () => {
@@ -167,10 +151,9 @@ const SemesterForm = () => {
       ...prev,
       semesterName: data.semesterName,
       lastClass: data.lastClass,
-      // startDate: data.startDate,
-      // endDate: data.endDate,
     }));
     setStartDate(new Date(data.startDate));
+    setEndDate(new Date(data.endDate));
   };
 
   // 유저가 저장한 값 가져오기
@@ -180,14 +163,12 @@ const SemesterForm = () => {
     }
   }, [scheduleId, reload]);
 
-  // 학기 수정하기
-  // 여기서 받은 응답을 그대로 렌더링한다는 에러가 뜸.
   const handleUpdateSemester = async () => {
     const patchData = {
       semesterName: semesterData.semesterName,
       lastClass: semesterData.lastClass,
       startDate: startDate,
-      endDate: new Date(),
+      endDate: endDate,
     };
     const editSemester = await updateSemester(scheduleId, patchData);
     const data = editSemester.data;
@@ -196,12 +177,10 @@ const SemesterForm = () => {
       ...prev,
       semesterName: data.semesterName,
       lastClass: data.lastClass,
-      // startDate: data.startDate,
-      // endDate: data.endDate,
     }));
     localStorage.setItem('semesterName', data.semesterName);
-    // window.location.reload();
-    // setReload((prev) => !prev);
+
+    setReload((prev) => !prev);
   };
 
   // 학기 삭제하기
@@ -219,12 +198,10 @@ const SemesterForm = () => {
       if (res.isConfirmed) {
         removeSemester(scheduleId);
         navigate('/semesterSetup');
-        // setReload((prev) => !prev);
-        window.location.reload();
+        setReload((prev) => !prev);
       }
     });
   };
-  console.log(1, startDate); //Date 형식으로 들어옴
 
   return (
     <SWrapper>
@@ -239,12 +216,12 @@ const SemesterForm = () => {
         <SLabel>학기 기간 설정</SLabel>
 
         <DateRangePicker
-          // serverStartDate={semesterData.startDate}
           setStartDate={setStartDate}
           startDate={startDate}
-          onStartDateChange={handleParentStartDateChange}
+          setEndDate={setEndDate}
+          endDate={endDate}
         />
-        {/* <div>{JSON.stringify(semesterData.startDate)}</div> */}
+
         <SLabel>마지막 교시</SLabel>
 
         <SDropdownWrapper>

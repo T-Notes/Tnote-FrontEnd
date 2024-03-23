@@ -55,43 +55,25 @@ const STildeIcon = styled.p`
   color: ${({ theme }) => theme.colors.gray000};
 `;
 interface DateProps {
-  onStartDateChange: (startDate: Date, endDate: Date) => void;
   setStartDate: React.Dispatch<React.SetStateAction<Date | null>>;
   startDate: Date | null;
+  setEndDate: React.Dispatch<React.SetStateAction<Date | null>>;
+  endDate: Date | null;
 }
 const DateRangePicker = ({
-  onStartDateChange,
   setStartDate,
   startDate,
+  setEndDate,
+  endDate,
 }: DateProps) => {
-  // const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-
-  // 날짜를 "yyyy-mm-dd" 형식의 문자열로 변환하는 함수
-  const formatDate = (date: Date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
   const handleDateChange = (start: Date, end: Date) => {
     setStartDate(start);
     setEndDate(end);
-    // setValue(start);
 
     if (end < start) {
       alert('시작일보다 종료일이 빠릅니다.');
     }
   };
-
-  // 부모 컴포넌트에 날짜 데이터를 "yyyy-mm-dd" 형식으로 보내기
-  // useEffect(() => {
-  //   const formattedStartDate = formatDate(startDate);
-  //   const formattedEndDate = formatDate(endDate);
-
-  //   onStartDateChange(startDate, endDate);
-  // }, [startDate, endDate]);
 
   return (
     <SWrapper>
@@ -106,23 +88,27 @@ const DateRangePicker = ({
         <SDatePickerBox>
           <>
             <SCalender
-              selected={startDate} //선택된 날짜를 나타내는 속성
-              onChange={(date) => setStartDate(date)} //날짜가 선택되었을때 호출되는 콜백 함수
+              selected={startDate}
+              onChange={(date) =>
+                handleDateChange(date as Date, endDate as Date)
+              }
               minDate={new Date('2000-01-01')} // minDate 이전 날짜 선택 불가
               // maxDate={new Date(endDate)}
-              shouldCloseOnSelect={true} // 날짜 클릭 시 자동으로 닫히는 속성
-              dateFormat="yyyy-MM-dd" // 날짜 표시 형식
+              shouldCloseOnSelect={true}
+              dateFormat="yyyy-MM-dd"
             />
           </>
           <STildeIcon>~</STildeIcon>
 
-          {/* <SCalender
+          <SCalender
             selected={endDate}
-            onChange={(date) => handleDateChange(startDate, date as Date)}
-            minDate={new Date(startDate)}
+            onChange={(date) =>
+              handleDateChange(startDate as Date, date as Date)
+            }
+            // minDate={new Date(startDate)}
             dateFormat="yyyy-MM-dd"
             shouldCloseOnSelect={true}
-          /> */}
+          />
         </SDatePickerBox>
       </>
     </SWrapper>

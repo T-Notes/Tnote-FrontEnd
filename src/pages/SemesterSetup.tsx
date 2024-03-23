@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import SemesterForm from '../components/SemesterConfiguration/SemesterForm';
 import SemesterSetupBanner from '../components/SemesterConfiguration/SemesterSetupBanner';
@@ -13,10 +14,11 @@ const SBody = styled.div`
 `;
 //학기 설정페이지
 const SemesterSetup = () => {
+  const [reload, setReload] = useState<boolean>(false);
   return (
     <>
       <SemesterSetupBanner />
-      <SemesterForm />
+      <SemesterForm setReload={setReload} reload={reload} />
     </>
   );
 };
