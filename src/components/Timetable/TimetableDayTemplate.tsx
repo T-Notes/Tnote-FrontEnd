@@ -50,9 +50,10 @@ const SClassText = styled.div`
 interface DayTemplateProps {
   dayIndex: number;
   lastClass: string;
+  reloadTrigger: boolean;
 }
 const TimetableDayTemplate = memo(
-  ({ dayIndex, lastClass }: DayTemplateProps) => {
+  ({ dayIndex, lastClass, reloadTrigger }: DayTemplateProps) => {
     const { scheduleId } = useParams();
     const [classList, setClassList] = useState<ClassProps[]>([]);
     let lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10);
@@ -116,7 +117,7 @@ const TimetableDayTemplate = memo(
         console.log(3, res.data);
       };
       getDayTimetable();
-    }, [dayIndex]);
+    }, [dayIndex, reloadTrigger]);
 
     useEffect(() => {
       if (lastClass === '') {

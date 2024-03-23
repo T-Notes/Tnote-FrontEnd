@@ -67,10 +67,12 @@ interface TimetableTemplate {
   handleOpenAddClass: () => void;
   setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   setSubjectId: React.Dispatch<React.SetStateAction<string>>;
+  setLastClass: React.Dispatch<React.SetStateAction<string>>;
+  lastClass: string;
   subjectId: string;
   isEditMode: boolean;
 }
-const TimetableTemplate = ({
+const TimetableWeekTemplate = ({
   reloadTrigger,
   setReloadTrigger,
   handleOpenAddClass,
@@ -78,10 +80,11 @@ const TimetableTemplate = ({
   setSubjectId,
   subjectId,
   isEditMode,
+  setLastClass,
+  lastClass,
 }: TimetableTemplate) => {
   const { scheduleId } = useParams();
-  const [lastClass, setLastClass] = useState<string>('');
-  console.log('lastClass', lastClass);
+  // const [lastClass, setLastClass] = useState<string>('');
 
   let lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
   const [subjectsList, setSubjectList] = useState<any[]>([]);
@@ -109,10 +112,9 @@ const TimetableTemplate = ({
             .get(`/tnote/schedule/week/${scheduleId}`)
             .then((res) => {
               const getData = res.data;
-              console.log('확인', getData.data[0].lastClass);
 
               const subjectArray = getData.data[0].subjects;
-              console.log(1, subjectArray);
+
               setColor(subjectArray.map((item: any) => item.color));
               setSubjectList(subjectArray);
               setLastClass(getData.data[0].lastClass || '9교시');
@@ -159,8 +161,6 @@ const TimetableTemplate = ({
   ];
   // lastClass 값에 따라 필요한 시간표만 추출
   const filteredTimetables = timetables.slice(0, lastClassNumber);
-
-  console.log(2, timetables.slice(0, lastClassNumber));
 
   // 두 값을 비교 후 맞다면 true를, 아니라면 false를 반환하는 함수를 만들자
   // 배열의 값과  filteredTimetables의 값이 맞다면 렌더링하기
@@ -240,4 +240,4 @@ const TimetableTemplate = ({
   );
 };
 
-export default TimetableTemplate;
+export default TimetableWeekTemplate;

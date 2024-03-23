@@ -2,6 +2,8 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { css } from 'styled-components';
 import { IcRoundBackBtn, IcRoundFrontBtn } from '../../assets/icons';
+import TimetableDayTemplate from './TimetableDayTemplate';
+import TimetableWeekTemplate from './TimetableWeekTemplate';
 
 const SWrapper = styled.div`
   display: flex;
@@ -38,11 +40,25 @@ const SIcRoundBackBtn = styled(IcRoundBackBtn)`
   margin-right: 15px;
 `;
 
-const TimetableChangeBtn = () => {
-  const [isTodayClick, setIsTodayClick] = useState<boolean>(false);
+interface TodayClick {
+  isTodayClick: boolean;
+  setIsTodayClick: React.Dispatch<React.SetStateAction<boolean>>;
+  reloadTrigger: boolean;
+  setReloadTrigger: React.Dispatch<React.SetStateAction<boolean>>;
+}
+const TimetableChangeBtn = ({
+  isTodayClick,
+  setIsTodayClick,
+  reloadTrigger,
+  setReloadTrigger,
+}: TodayClick) => {
   const [selectedButton, setSelectedButton] = useState<string>('');
   const initialState = new Date().getDay();
   const [dayIndex, setDayIndex] = useState<number>(initialState);
+  const [isAddClass, setIsAddClass] = useState<boolean>(false);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [subjectId, setSubjectId] = useState<string>('');
+  const [lastClass, setLastClass] = useState<string>('');
 
   const handleClickTodayButton = (buttonType: string) => {
     setIsTodayClick(true);
@@ -62,6 +78,9 @@ const TimetableChangeBtn = () => {
     }
   };
 
+  const handleOpenAddClass = () => {
+    setIsAddClass(true);
+  };
   return (
     <>
       <SWrapper>
@@ -104,6 +123,27 @@ const TimetableChangeBtn = () => {
                       : '일요일'}
         </SDay>
       </SWrapper>
+      {isTodayClick ? (
+        <TimetableDayTemplate
+          dayIndex={dayIndex}
+          lastClass={lastClass}
+          reloadTrigger={reloadTrigger}
+        />
+      ) : (
+        <TimetableWeekTemplate
+          setReloadTrigger={setReloadTrigger}
+          reloadTrigger={reloadTrigger}
+          handleOpenAddClass={handleOpenAddClass}
+          setIsEditMode={setIsEditMode}
+          isEditMode={isEditMode}
+          setSubjectId={setSubjectId}
+          subjectId={subjectId}
+          setLastClass={setLastClass}
+          lastClass={lastClass}
+        />
+      )}
+
+      {/* <TimetableWeekTemplate /> */}
     </>
   );
 };

@@ -4,7 +4,8 @@ import SemesterMenu from '../components/Home/SemesterMenu';
 import ClassAddForm from '../components/Timetable/ClassAddForm';
 import TimetableChangeBtn from '../components/Timetable/TimetableChangeBtn';
 import TimetableHeader from '../components/Timetable/TimetableHeader';
-import TimetableTemplate from '../components/Timetable/TimetableTemplate';
+import TimetableTemplate from '../components/Timetable/TimetableWeekTemplate';
+import TimetableWeekAndDay from '../components/Timetable/TimetableWeekAndDay';
 
 const SClassAddFormWrapper = styled.div`
   /* border: 1px solid red;
@@ -43,15 +44,9 @@ const Timetable = () => {
         <div>
           <SemesterMenu onClickAddBtn={handleOpenAddClass} />
           <TimetableHeader />
-          <TimetableChangeBtn />
-          <TimetableTemplate
+          <TimetableWeekAndDay
             setReloadTrigger={setReloadTrigger}
             reloadTrigger={reloadTrigger}
-            handleOpenAddClass={handleOpenAddClass}
-            setIsEditMode={setIsEditMode}
-            isEditMode={isEditMode}
-            setSubjectId={setSubjectId}
-            subjectId={subjectId}
           />
         </div>
       </STimetableWrapper>
