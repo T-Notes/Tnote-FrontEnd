@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
 import { SDateInput } from '../common/styled/Input';
 import { IcDatePicker } from '../../assets/icons';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const SWrapper = styled.div`
   display: flex;
@@ -56,21 +56,16 @@ const STildeIcon = styled.p`
 `;
 interface DateProps {
   onStartDateChange: (startDate: Date, endDate: Date) => void;
+  setStartDate: React.Dispatch<React.SetStateAction<Date | null>>;
+  startDate: Date | null;
 }
-const DateRangePicker = ({ onStartDateChange }: DateProps) => {
-  const [startDate, setStartDate] = useState(new Date());
+const DateRangePicker = ({
+  onStartDateChange,
+  setStartDate,
+  startDate,
+}: DateProps) => {
+  // const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  // const [value, setValue] = useState(serverStartDate || new Date());
-  // console.log(1, value);
-
-  // useEffect(() => {
-  //   if (serverStartDate) {
-  //     console.log(2, serverStartDate);
-  //     setValue(serverStartDate);
-  //   } else {
-  //     setValue(new Date());
-  //   }
-  // }, []);
 
   // 날짜를 "yyyy-mm-dd" 형식의 문자열로 변환하는 함수
   const formatDate = (date: Date) => {
@@ -90,21 +85,13 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
     }
   };
 
-  // console.log(3, value);
-
   // 부모 컴포넌트에 날짜 데이터를 "yyyy-mm-dd" 형식으로 보내기
-  useEffect(() => {
-    const formattedStartDate = formatDate(startDate);
-    const formattedEndDate = formatDate(endDate);
-    // console.log(typeof formattedStartDate, typeof formattedEndDate); // string
+  // useEffect(() => {
+  //   const formattedStartDate = formatDate(startDate);
+  //   const formattedEndDate = formatDate(endDate);
 
-    onStartDateChange(startDate, endDate);
-    // onStartDateChange(
-    //   JSON.stringify(formattedStartDate),
-    //   JSON.stringify(formattedEndDate),
-    // );
-    // console.log(4, value);
-  }, [startDate, endDate]);
+  //   onStartDateChange(startDate, endDate);
+  // }, [startDate, endDate]);
 
   return (
     <SWrapper>
@@ -120,7 +107,7 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
           <>
             <SCalender
               selected={startDate} //선택된 날짜를 나타내는 속성
-              onChange={(date) => handleDateChange(date as Date, endDate)} //날짜가 선택되었을때 호출되는 콜백 함수
+              onChange={(date) => setStartDate(date)} //날짜가 선택되었을때 호출되는 콜백 함수
               minDate={new Date('2000-01-01')} // minDate 이전 날짜 선택 불가
               // maxDate={new Date(endDate)}
               shouldCloseOnSelect={true} // 날짜 클릭 시 자동으로 닫히는 속성
@@ -129,13 +116,13 @@ const DateRangePicker = ({ onStartDateChange }: DateProps) => {
           </>
           <STildeIcon>~</STildeIcon>
 
-          <SCalender
+          {/* <SCalender
             selected={endDate}
             onChange={(date) => handleDateChange(startDate, date as Date)}
             minDate={new Date(startDate)}
             dateFormat="yyyy-MM-dd"
             shouldCloseOnSelect={true}
-          />
+          /> */}
         </SDatePickerBox>
       </>
     </SWrapper>

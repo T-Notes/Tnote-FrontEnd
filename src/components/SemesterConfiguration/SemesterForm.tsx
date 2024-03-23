@@ -105,8 +105,8 @@ interface SemesterDataProps {
   lastClass: string;
   email: string;
   subjects: null;
-  startDate: Date;
-  endDate: Date;
+  // startDate: Date;
+  // endDate: Date;
 }
 
 const SemesterForm = () => {
@@ -120,10 +120,12 @@ const SemesterForm = () => {
     lastClass: '',
     email: '',
     subjects: null,
-    startDate: new Date(),
-    endDate: new Date(),
+    // startDate: new Date(),
+    // endDate: new Date(),
   });
   const [reload, setReload] = useState<boolean>(false);
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
+
   const handleChangeSemesterName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const semesterName = e.target.value;
     setSemesterData((prev) => ({ ...prev, semesterName: semesterName }));
@@ -158,14 +160,17 @@ const SemesterForm = () => {
     const semesterData = await getSemesterData(scheduleId);
 
     const data = semesterData.data[0];
+    console.log(2, data.startDate);
+    console.log('fpsej');
 
     setSemesterData((prev) => ({
       ...prev,
       semesterName: data.semesterName,
       lastClass: data.lastClass,
-      startDate: data.startDate,
-      endDate: data.endDate,
+      // startDate: data.startDate,
+      // endDate: data.endDate,
     }));
+    setStartDate(new Date(data.startDate));
   };
 
   // 유저가 저장한 값 가져오기
@@ -178,18 +183,24 @@ const SemesterForm = () => {
   // 학기 수정하기
   // 여기서 받은 응답을 그대로 렌더링한다는 에러가 뜸.
   const handleUpdateSemester = async () => {
-    const editSemester = await updateSemester(scheduleId, semesterData);
+    const patchData = {
+      semesterName: semesterData.semesterName,
+      lastClass: semesterData.lastClass,
+      startDate: startDate,
+      endDate: new Date(),
+    };
+    const editSemester = await updateSemester(scheduleId, patchData);
     const data = editSemester.data;
 
     setSemesterData((prev) => ({
       ...prev,
       semesterName: data.semesterName,
       lastClass: data.lastClass,
-      startDate: data.startDate,
-      endDate: data.endDate,
+      // startDate: data.startDate,
+      // endDate: data.endDate,
     }));
     localStorage.setItem('semesterName', data.semesterName);
-    window.location.reload();
+    // window.location.reload();
     // setReload((prev) => !prev);
   };
 
@@ -213,6 +224,7 @@ const SemesterForm = () => {
       }
     });
   };
+  console.log(1, startDate); //Date 형식으로 들어옴
 
   return (
     <SWrapper>
@@ -228,6 +240,8 @@ const SemesterForm = () => {
 
         <DateRangePicker
           // serverStartDate={semesterData.startDate}
+          setStartDate={setStartDate}
+          startDate={startDate}
           onStartDateChange={handleParentStartDateChange}
         />
         {/* <div>{JSON.stringify(semesterData.startDate)}</div> */}
