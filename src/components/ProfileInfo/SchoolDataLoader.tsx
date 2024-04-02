@@ -80,20 +80,21 @@ const SchoolDataLoader = ({
 
   return (
     <>
-      {/* 고민1: 학교 검색 결과를 조회하는 api 활용 유무 */}
-      <SSearchValueWrapper>
-        {schoolSearchResults.map((school) => (
-          <SList
-            key={school[1]}
-            onClick={() => handleSelectedSchool(school[0])}
-          >
-            <SSchool>
-              <SSchoolName>{school[0]}</SSchoolName>
-              <SAdress>{school[1]}</SAdress>
-            </SSchool>
-          </SList>
-        ))}
-      </SSearchValueWrapper>
+      {schoolData.schoolName && (
+        <SSearchValueWrapper>
+          {schoolSearchResults.map((school) => (
+            <SList
+              key={school[1]}
+              onClick={() => handleSelectedSchool(school[0])}
+            >
+              <SSchool>
+                <SSchoolName>{school[0]}</SSchoolName>
+                <SAdress>{school[1]}</SAdress>
+              </SSchool>
+            </SList>
+          ))}
+        </SSearchValueWrapper>
+      )}
     </>
   );
 };

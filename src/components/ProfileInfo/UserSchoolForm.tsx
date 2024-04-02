@@ -79,7 +79,11 @@ const UserSchoolForm = (props: searchModalProps) => {
     schoolName: '',
   });
 
-  const [isRegionDropdownOpen, setIsRegionDropdownOpen] = useState(false);
+  const [isRegionDropdownOpen, setIsRegionDropdownOpen] =
+    useState<boolean>(false);
+  const [showSchoolDataLoader, setShowSchoolDataLoader] =
+    useState<boolean>(true);
+
   const openRegionDropdown = () => {
     setIsRegionDropdownOpen(true);
   };
@@ -115,6 +119,7 @@ const UserSchoolForm = (props: searchModalProps) => {
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const userInputChange = e.target.value;
+    setShowSchoolDataLoader(true);
 
     setSchoolSearchData((searchValue) => ({
       ...searchValue,
@@ -132,6 +137,7 @@ const UserSchoolForm = (props: searchModalProps) => {
       ...prevUserData,
       schoolName: schoolName,
     }));
+    setShowSchoolDataLoader(false);
   };
 
   return (
@@ -187,11 +193,12 @@ const UserSchoolForm = (props: searchModalProps) => {
                   placeholder="텍스트를 입력하세요"
                   value={schoolSearchData.schoolName}
                 ></SearchInput>
-
-                <SchoolDataLoader
-                  schoolData={schoolSearchData}
-                  handleSelectedSchool={handleSelectedSchool}
-                />
+                {showSchoolDataLoader && (
+                  <SchoolDataLoader
+                    schoolData={schoolSearchData}
+                    handleSelectedSchool={handleSelectedSchool}
+                  />
+                )}
               </SSearchWrapper>
             </SInputBox>
 
