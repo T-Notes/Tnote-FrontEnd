@@ -42,8 +42,8 @@ const SSubmit = styled(Button)`
   width: 270px;
   height: 50px;
   ${({ theme }) => theme.fonts.caption};
-  background-color: ${({ theme }) => theme.colors.gray200};
 `;
+
 const SSearchWrapper = styled.div`
   display: flex;
   width: 550px;
@@ -88,6 +88,13 @@ const UserInfoForm = () => {
     alarm: true,
   });
   const { isOpen, openModal, closeModal } = useModal();
+
+  const isUserDataValid = () => {
+    const { schoolName, subject, career } = userData;
+    return (
+      schoolName.trim() !== '' && subject.trim() !== '' && career.trim() !== ''
+    );
+  };
 
   // 자식 컴포넌트에서 유저가 선택한 학교명 받아오는 함수
   const handleSubmit = (searchInput: string) => {
@@ -173,7 +180,16 @@ const UserInfoForm = () => {
         <Link to="/">
           <SCancel>취소</SCancel>
         </Link>
-        <SSubmit onClick={handleUserInfoSubmit}>확인</SSubmit>
+        <SSubmit
+          onClick={handleUserInfoSubmit}
+          style={{
+            backgroundColor: isUserDataValid() ? '#632CFA' : '#F3F3F3',
+            color: isUserDataValid() ? '#FFFFFF' : '#A6A6A6',
+            cursor: isUserDataValid() ? 'pointer' : 'not-allowed',
+          }}
+        >
+          확인
+        </SSubmit>
       </SButtonGroup>
     </SFormWrapper>
   );

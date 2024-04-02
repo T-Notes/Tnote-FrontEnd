@@ -32,9 +32,7 @@ const SIcClose = styled.div`
 const SButton = styled(Button)`
   width: 420px;
   height: 60px;
-  background-color: ${({ theme }) => theme.colors.gray300};
 
-  color: ${({ theme }) => theme.colors.gray100};
   ${({ theme }) => theme.fonts.caption};
 `;
 
@@ -83,6 +81,7 @@ const UserSchoolForm = (props: searchModalProps) => {
     useState<boolean>(false);
   const [showSchoolDataLoader, setShowSchoolDataLoader] =
     useState<boolean>(true);
+  const [isValid, setIsValid] = useState<boolean>(false);
 
   const openRegionDropdown = () => {
     setIsRegionDropdownOpen(true);
@@ -125,6 +124,8 @@ const UserSchoolForm = (props: searchModalProps) => {
       ...searchValue,
       schoolName: userInputChange,
     }));
+
+    setIsValid(userInputChange.trim() !== '');
   };
 
   const handleSelectedSchool = (schoolName: string) => {
@@ -132,12 +133,8 @@ const UserSchoolForm = (props: searchModalProps) => {
       ...prevUserData,
       schoolName: schoolName,
     }));
-
-    setUserData((prevUserData) => ({
-      ...prevUserData,
-      schoolName: schoolName,
-    }));
     setShowSchoolDataLoader(false);
+    setIsValid(true);
   };
 
   return (
@@ -202,7 +199,14 @@ const UserSchoolForm = (props: searchModalProps) => {
               </SSearchWrapper>
             </SInputBox>
 
-            <SButton onClick={() => onClickSubmit(userData.schoolName)}>
+            <SButton
+              onClick={() => onClickSubmit(schoolSearchData.schoolName)}
+              style={{
+                backgroundColor: isValid ? '#632CFA' : '#F3F3F3',
+                color: isValid ? '#FFFFFF' : '#A6A6A6',
+                cursor: isValid ? 'pointer' : 'not-allowed',
+              }}
+            >
               확인
             </SButton>
           </SSchoolSearchWrapper>
