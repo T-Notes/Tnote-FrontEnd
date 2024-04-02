@@ -94,7 +94,7 @@ const DropdownInput = (props: DropdownProps) => {
         {isDropdown ? (
           <IcCloseDropdownSmall onClick={closeDropdown} className="pointer" />
         ) : (
-          <IcOpenDropdownSmall className="pointer" />
+          <IcOpenDropdownSmall onClick={openDropdown} className="pointer" />
         )}
         {isDropdown && dropdownList}
       </SDropdownInputWrapper>
