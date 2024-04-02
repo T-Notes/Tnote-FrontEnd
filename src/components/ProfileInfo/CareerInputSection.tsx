@@ -1,5 +1,3 @@
-import { property } from 'lodash';
-import styled from 'styled-components';
 import { Input } from '../common/styled/Input';
 
 interface CareerSectionProps {
