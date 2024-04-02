@@ -52,6 +52,7 @@ const SDropdownInputWrapper = styled.div<StyledDropdownInputProps>`
 `;
 const SDropdownInput = styled.input`
   width: 250px;
+  cursor: pointer;
   ${({ theme }) => theme.fonts.caption};
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray600};
@@ -84,14 +85,16 @@ const DropdownInput = (props: DropdownProps) => {
   return (
     <>
       <SDropdownInputWrapper size={size} theme={theme}>
-        <SDropdownInput placeholder={placeholder} value={value} readOnly />
+        <SDropdownInput
+          placeholder={placeholder}
+          value={value}
+          readOnly
+          onClick={openDropdown}
+        />
         {isDropdown ? (
-          <IcCloseDropdownSmall onClick={closeDropdown} className="pointer" /> // 드롭다운이 true니까 닫아주기
+          <IcCloseDropdownSmall onClick={closeDropdown} className="pointer" />
         ) : (
-          <IcOpenDropdownSmall
-            onClick={openDropdown} // 드롭다운이 false이므로 클릭하면 오픈하기
-            className="pointer"
-          />
+          <IcOpenDropdownSmall className="pointer" />
         )}
         {isDropdown && dropdownList}
       </SDropdownInputWrapper>

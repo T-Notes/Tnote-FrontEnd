@@ -12,7 +12,7 @@ const SInputWrapper = styled.div`
   align-items: center;
   opacity: 1;
   border-radius: 8px;
-
+  cursor: pointer;
   padding: 10px 10px 10px 16px;
   border: 1px solid #d5d5d5;
 `;
@@ -48,7 +48,7 @@ const SubjectInputSection = (props: SubjectSectionProps) => {
   } = props;
 
   return (
-    <SInputWrapper>
+    <SInputWrapper onClick={handleChangeToggle}>
       <SSubjectInput
         ref={inputRef}
         type="text"
@@ -58,9 +58,9 @@ const SubjectInputSection = (props: SubjectSectionProps) => {
       />
 
       {isToggle ? (
-        <IcCloseDropdown onClick={handleChangeToggle} className="pointer" />
+        <IcCloseDropdown className="pointer" />
       ) : (
-        <IcOpenDropdown onClick={handleChangeToggle} className="pointer" />
+        <IcOpenDropdown className="pointer" />
       )}
 
       {isToggle && (
