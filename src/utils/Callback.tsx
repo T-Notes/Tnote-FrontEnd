@@ -1,9 +1,9 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import instanceAxios from './InstanceAxios';
 
 const Callback = () => {
-  console.log(1, '실행!');
   const navigate = useNavigate();
   const code = new URL(window.location.href).searchParams.get('code'); // 인가코드 받아보기
 
@@ -13,8 +13,6 @@ const Callback = () => {
   // 내 생각: 추가 회원정보 폼까지 다 작성한 유저라면, /home/id
   // 그 이외에는 전부 /profileInfo
   const getToken = async () => {
-    console.log(2, '실행');
-
     try {
       await instanceAxios
         .get(
@@ -28,7 +26,27 @@ const Callback = () => {
           localStorage.setItem('refreshToken', data.refreshToken);
           localStorage.setItem('userId', data.userId);
 
-          navigate('/profileInfo');
+          const accessToken = localStorage.getItem('accessToken');
+          const checkMembership = axios
+            .get('https://j9972.kr/tnote/user', {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            })
+            .then((res) => {
+              console.log(5, res.data);
+              const userMessage = res.data.message;
+              if (userMessage === '성공') {
+                navigate('/home');
+              }
+            })
+            .catch((error) => {
+              const notUserMessage = error.response.data.code;
+              if (notUserMessage === 'USER_NOT_FOUND') {
+                navigate('/profileInfo');
+              }
+            });
+          checkMembership;
         });
     } catch (err) {
       console.log('err', err);
@@ -37,6 +55,19 @@ const Callback = () => {
 
   useEffect(() => {
     getToken();
+    const accessToken = localStorage.getItem('accessToken');
+    // const checkMembership = axios
+    //   .get('https://j9972.kr/tnote/user', {
+    //     headers: {
+    //       'Content-Type': 'application/json;charset=UTF-8',
+    //       Accept: 'application/json',
+    //       AccessToken: accessToken,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //   });
+    // checkMembership;
   }, [code]);
 
   return (
