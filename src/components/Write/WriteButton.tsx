@@ -11,7 +11,7 @@ const SWriteBtn = styled.button`
   width: 70px;
   height: 70px;
   position: fixed;
-  left: 200px;
+  left: 210px;
   bottom: 20px;
   border-radius: 50%;
   padding: 10px;
