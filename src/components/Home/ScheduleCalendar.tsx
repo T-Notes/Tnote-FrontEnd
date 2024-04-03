@@ -57,7 +57,6 @@ const SDaysBox = styled.div`
   flex-wrap: wrap;
 `;
 const SDays = styled.div`
-  border: 1px solid #ccc;
   font-size: 14px;
   display: flex;
   flex-direction: column;
@@ -203,10 +202,6 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
       };
     }
   }, [searchValue]);
-  // const handleDayClick = (clickedDate: Date) => {
-  //   console.log('클릭한 날짜:', clickedDate);
-  //   // 여기에서 클릭한 날짜에 대한 추가적인 작업을 수행할 수 있습니다.
-  // };
 
   return (
     <SCalendarWrapper>
@@ -231,7 +226,6 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
       {searchValueList.length > 0 ? (
         <>
           <ScheduleCalendarSearchValue searchValueList={searchValueList} />
-          {/* <div>{searchValueList}</div> */}
         </>
       ) : (
         <SCalendarDate>
