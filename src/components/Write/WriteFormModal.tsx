@@ -1,4 +1,3 @@
-import ReactModal from 'react-modal';
 import styled from 'styled-components';
 import { ModalBackground, ModalLayout } from '../common/styled/ModalLayout';
 import {
@@ -7,10 +6,6 @@ import {
   IcCounselingLog,
   IcStudentObservationLog,
 } from '../../assets/icons';
-import { useState, useEffect } from 'react';
-import ClassLogModal from './ClassLogModal';
-import WorkLogModal from './WorkLogModal';
-// import { useWriteModal, WriteModal } from '../../utils/useHooks/useModal';
 
 const SWriteForm = styled(ModalLayout)`
   display: flex;
@@ -34,50 +29,76 @@ const SItem = styled.div`
 const SCaption = styled.p`
   ${({ theme }) => theme.fonts.caption}
 `;
+
+const SIcClassLog = styled(IcClassLog)`
+  &:hover #isDisableFill {
+    fill: #9b78fb;
+  }
+  &:hover #isDisableStroke {
+    stroke: white;
+  }
+`;
+const SIcWorkLog = styled(IcWorkLog)`
+  &:hover #isDisableFill {
+    fill: #9b78fb;
+  }
+  &:hover #isDisableStroke {
+    stroke: white;
+  }
+`;
+const SIcCounselingLog = styled(IcCounselingLog)`
+  &:hover #isDisableFill {
+    fill: #9b78fb;
+  }
+  &:hover #isDisableStroke {
+    stroke: white;
+  }
+`;
+
+const SIcStudentObservationLog = styled(IcStudentObservationLog)`
+  &:hover #isDisableFill {
+    fill: #9b78fb;
+  }
+  &:hover #isDisableStroke {
+    stroke: white;
+  }
+`;
+
 interface WriteProps {
   closeWriteFormModal: () => void;
   handleClickModal: (openModalContent: string) => void;
-  // isOpen: boolean;
-  // closeModal: () => void;
-  // setWriteModal: (writeModal: WriteModal) => void;
 }
 
 const WriteFormModal = ({
   closeWriteFormModal,
   handleClickModal,
 }: WriteProps) => {
-  // const { writeModal, handleClickModal } = useWriteModal();
-
-  // useEffect(() => {
-  //   setWriteModal(writeModal);
-  // }, [writeModal]);
-
   return (
     <ModalBackground onClick={closeWriteFormModal}>
       <SWriteForm onClick={(e: any) => e.stopPropagation()}>
         <SItem>
-          <IcClassLog
+          <SIcClassLog
             className="pointer"
             onClick={() => handleClickModal('학급일지')}
           />
           <SCaption>학급일지</SCaption>
         </SItem>
         <SItem>
-          <IcWorkLog
+          <SIcWorkLog
             className="pointer"
             onClick={() => handleClickModal('업무일지')}
           />
           <SCaption>업무일지</SCaption>
         </SItem>
         <SItem>
-          <IcCounselingLog
+          <SIcCounselingLog
             className="pointer"
             onClick={() => handleClickModal('상담기록')}
           />
           <SCaption>상담기록</SCaption>
         </SItem>
         <SItem>
-          <IcStudentObservationLog
+          <SIcStudentObservationLog
             className="pointer"
             onClick={() => handleClickModal('학생 관찰 일지')}
           />
