@@ -28,6 +28,9 @@ const SLeftSidebar = styled.div`
   top: 0; /* 맨 위에 고정 */
   left: 0; /* 맨 왼쪽에 고정 */
   border-right: 1px solid #ccc; /* 우측에 경계선 추가 (선택사항) */
+  .active {
+    background-color: #f0ebff;
+  }
 `;
 const SCategory = styled.div`
   display: flex;
@@ -36,9 +39,9 @@ const SCategory = styled.div`
   padding-bottom: 10px;
   padding-left: 35px;
   cursor: pointer;
-  &:hover {
+  /* &:hover {
     background-color: #f0ebff;
-  }
+  } */
 `;
 const SLogo = styled.div`
   padding-left: 20px;
@@ -111,7 +114,15 @@ const HomeNavigationBar = () => {
           <IcLogo />
         </SLogo>
         <>
-          <Link to={scheduleId ? `/home/${scheduleId}` : '/home'}>
+          <Link
+            to={scheduleId ? `/home/${scheduleId}` : '/home'}
+            className={
+              location.pathname ===
+              (scheduleId ? `/home/${scheduleId}` : '/home')
+                ? 'active'
+                : ''
+            }
+          >
             <SCategory>
               <IcHome />
               <SCategoryText>홈화면</SCategoryText>
@@ -119,13 +130,29 @@ const HomeNavigationBar = () => {
           </Link>
 
           {/* 아카이브 이동 라우팅 변경하기 */}
-          <Link to={scheduleId ? `/archive/${scheduleId}` : '/archive'}>
+          <Link
+            to={scheduleId ? `/archive/${scheduleId}` : '/archive'}
+            className={
+              location.pathname ===
+              (scheduleId ? `/archive/${scheduleId}` : '/archive')
+                ? 'active'
+                : ''
+            }
+          >
             <SCategory>
               <IcArchive />
               <SCategoryText>아카이브</SCategoryText>
             </SCategory>
           </Link>
-          <Link to={scheduleId ? `/timetable/${scheduleId}` : '/timetable'}>
+          <Link
+            to={scheduleId ? `/timetable/${scheduleId}` : '/timetable'}
+            className={
+              location.pathname ===
+              (scheduleId ? `/timetable/${scheduleId}` : '/timetable')
+                ? 'active'
+                : ''
+            }
+          >
             <SCategory>
               <IcTimetable />
               <SCategoryText>시간표</SCategoryText>
