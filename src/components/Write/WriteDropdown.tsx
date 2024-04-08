@@ -71,7 +71,11 @@ const WriteDropdown = (props: WritingModalProps) => {
       <SDropdownLabel>
         <div>{label}</div>
         <SDropdownToggle onClick={handleChangeToggle}>
-          {isToggle ? <IcCloseDropdown /> : <IcOpenDropdown />}
+          {isToggle ? (
+            <IcCloseDropdown className="pointer" />
+          ) : (
+            <IcOpenDropdown className="pointer" />
+          )}
         </SDropdownToggle>
 
         {isToggle && (
