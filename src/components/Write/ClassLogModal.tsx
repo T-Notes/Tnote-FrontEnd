@@ -51,17 +51,24 @@ const SSubmit = styled(Button)`
   ${({ theme }) => theme.fonts.caption3};
 `;
 const SType = styled.div`
-  border-bottom: 2.5px solid #0000004d;
   margin-bottom: 20px;
+  display: flex;
 `;
-const STypeBtn = styled.button`
+const STypeBtn = styled.button<{ selected: boolean }>`
   padding: 20px 30px;
   ${({ theme }) => theme.fonts.caption3}
+  color: ${(props) => (props.selected ? '#632CFA' : '#000000')};
+  border-bottom: ${(props) =>
+    props.selected ? '2.5px solid #632CFA' : '2.5px solid #0000004d'};
+`;
+const SBorderBottom = styled.div`
+  padding-top: 20px;
+  padding-left: 166.5px;
+  border-bottom: 2.5px solid #0000004d;
 `;
 const SContentWrap = styled.div`
   padding-left: 20px;
   padding-right: 20px;
-  /* border: 1px solid red; */
 `;
 const SContentIc = styled.div`
   display: flex;
@@ -239,18 +246,31 @@ const ClassLogModal = ({
           />
           <SContentWrap>
             <SType>
-              <STypeBtn onClick={() => handleContentTypeChange('학습계획')}>
+              <STypeBtn
+                selected={contentType === '학습계획'}
+                onClick={() => handleContentTypeChange('학습계획')}
+              >
                 학습계획
               </STypeBtn>
-              <STypeBtn onClick={() => handleContentTypeChange('수업내용')}>
+              <STypeBtn
+                selected={contentType === '수업내용'}
+                onClick={() => handleContentTypeChange('수업내용')}
+              >
                 수업내용
               </STypeBtn>
-              <STypeBtn onClick={() => handleContentTypeChange('제출과제')}>
+              <STypeBtn
+                selected={contentType === '제출과제'}
+                onClick={() => handleContentTypeChange('제출과제')}
+              >
                 제출과제
               </STypeBtn>
-              <STypeBtn onClick={() => handleContentTypeChange('진도표')}>
+              <STypeBtn
+                selected={contentType === '진도표'}
+                onClick={() => handleContentTypeChange('진도표')}
+              >
                 진도표
               </STypeBtn>
+              <SBorderBottom></SBorderBottom>
             </SType>
             {contentType && (
               <>

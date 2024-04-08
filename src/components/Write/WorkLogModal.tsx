@@ -49,13 +49,20 @@ const SSubmit = styled(Button)`
 `;
 
 const SType = styled.div`
-  border-bottom: 2.5px solid #0000004d;
+  display: flex;
   margin-bottom: 20px;
 `;
 
 const STypeBtn = styled.button`
   padding: 20px 30px;
+  border-bottom: 2.5px solid #632cfa;
+  color: #632cfa;
   ${({ theme }) => theme.fonts.caption3}
+`;
+
+const SBorderBottom = styled.div`
+  padding-left: 483.7px;
+  border-bottom: 2.5px solid #0000004d;
 `;
 const SContentWrap = styled.div`
   padding-left: 20px;
@@ -275,6 +282,7 @@ const WorkLogModal = ({
             <SContentWrap>
               <SType>
                 <STypeBtn>회의록</STypeBtn>
+                <SBorderBottom></SBorderBottom>
               </SType>
               <SPlaceContentWrapper>
                 <SPlaceContent>
