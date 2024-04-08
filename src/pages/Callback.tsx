@@ -19,8 +19,6 @@ const Callback = () => {
           `https://j9972.kr/login/oauth2/code/kakao?code=${code}&state=2vmvEBbhSq4ujp1WQbL1eh3VwSSGX6zck1AFq4XAXro%3D`,
         )
         .then((res) => {
-          console.log(3, '실행');
-
           const data = res.data.data;
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('refreshToken', data.refreshToken);
@@ -34,7 +32,6 @@ const Callback = () => {
               },
             })
             .then((res) => {
-              console.log(5, res.data);
               const userMessage = res.data.message;
               if (userMessage === '성공') {
                 navigate('/home');
@@ -56,18 +53,6 @@ const Callback = () => {
   useEffect(() => {
     getToken();
     const accessToken = localStorage.getItem('accessToken');
-    // const checkMembership = axios
-    //   .get('https://j9972.kr/tnote/user', {
-    //     headers: {
-    //       'Content-Type': 'application/json;charset=UTF-8',
-    //       Accept: 'application/json',
-    //       AccessToken: accessToken,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //   });
-    // checkMembership;
   }, [code]);
 
   return (

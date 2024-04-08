@@ -33,8 +33,6 @@ const WriteButton = ({ setReload }: Reload) => {
   );
 
   const handleClickModal = (openModalContent: string) => {
-    console.log(1, openModalContent);
-
     if (openModalContent === '학급일지') {
       setModalContent(
         <ClassLogModal

@@ -93,16 +93,12 @@ const TodaySchedule = () => {
       const getTodaySchedule = async () => {
         try {
           const response = await getTodayTimetable(scheduleId, today);
-          console.log(2, response.data);
-
           setTodayClass(response.data);
         } catch {}
       };
       getTodaySchedule();
     }
   }, [scheduleId]);
-
-  console.log(1, todayClass);
 
   return (
     <>

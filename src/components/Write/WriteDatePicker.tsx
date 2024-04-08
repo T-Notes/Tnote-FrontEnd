@@ -97,8 +97,6 @@ const WriteDatePicker = ({ onStartDateChange }: DateProps) => {
 
   // 부모 컴포넌트에 날짜 data 보내기
   useEffect(() => {
-    console.log(startDate);
-
     onStartDateChange(startDate, endDate, isAllDay);
   }, [startDate, endDate, isAllDay]);
 
