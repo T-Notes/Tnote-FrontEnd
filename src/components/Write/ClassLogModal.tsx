@@ -1,30 +1,25 @@
-import { useState, ChangeEvent, useEffect } from 'react';
+import { useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { logModalState } from '../../utils/lib/atom';
+import axios from 'axios';
+import FileUpload from '../common/FileUpload';
 import WritingModalTop from './WriteModalTop';
 import WriteDropdown from './WriteDropdown';
 import ModalPortal from '../../utils/ModalPortal';
 import {
-  ModalBackground,
   ModalLayout,
   ModalNoBlackBackground,
 } from '../common/styled/ModalLayout';
 import { Button } from '../common/styled/Button';
-import { createClassLog } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
-import { IcClip, IcClose, IcPen } from '../../assets/icons';
-import axios from 'axios';
+import { IcPen } from '../../assets/icons';
+
 // styled //
 const SModalLayout = styled(ModalLayout)`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   width: 670px;
-  /* max-width: 1100px;
-  max-height: 80vh; */
   height: 600px;
-  /* padding: 30px 40px; */
 `;
 const STextarea = styled.textarea`
   height: 180px;
@@ -88,38 +83,7 @@ const SContentLength = styled.div`
   ${({ theme }) => theme.fonts.caption4};
   color: ${({ theme }) => theme.colors.gray100};
 `;
-const SFileUploadInput = styled.input`
-  ${({ theme }) => theme.fonts.caption3}
-  margin-left: 20px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #e8e8e8;
-  width: 400px;
-  &::placeholder {
-    color: #a6a6a6; /* placeholder의 색상 변경 */
-  }
-  cursor: pointer;
-`;
-const SFileWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-bottom: 25px;
-`;
-const SFileText = styled.p`
-  ${({ theme }) => theme.fonts.caption3}
-  padding-left: 5px;
-`;
-const SUploadBtn = styled(Button)`
-  border-radius: 8px;
-  width: 80px;
-  height: 38px;
-  margin-left: auto;
-  background-color: ${({ theme }) => theme.colors.gray200};
-  ${({ theme }) => theme.fonts.caption3}
-`;
-// interface //
+
 interface SaveContents {
   학습계획: string;
   수업내용: string;
@@ -138,9 +102,10 @@ const ClassLogModal = ({
 }: CloseProps) => {
   const formData = new FormData();
   const { scheduleId } = useParams();
-  const [title, setTitle] = useState<string>(''); //제목 상태
+  const [title, setTitle] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File>();
+  const [fileName, setFileName] = useState<string>('');
 
   const [contentType, setContentType] =
     useState<keyof SaveContents>('학습계획'); //현재 모달에서 어떤 종류의 탭을 입력하고 있는지를 나타낸다.
@@ -181,9 +146,9 @@ const ClassLogModal = ({
 
   const handleChangeImg = (e: any) => {
     const file = e.target.files[0];
-    console.log('file', file);
     setImgUrl(file);
     formData.append('classLogImages', file);
+    setFileName(file.name);
   };
 
   const handleClickSubmit = async () => {
@@ -196,7 +161,7 @@ const ClassLogModal = ({
         classContents: saveContents.수업내용,
         submission: saveContents.제출과제,
         magnitude: saveContents.진도표,
-        isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
+        isAllDay: parentsIsAllDay,
       };
 
       const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
@@ -294,17 +259,11 @@ const ClassLogModal = ({
               </>
             )}
           </SContentWrap>
-          <SFileWrapper>
-            <IcClip />
-            <SFileText>파일 첨부</SFileText>
-            <SFileUploadInput
-              placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다."
-              type="file"
-              // accept="image/*"
-              onChange={handleChangeImg}
-            />
-            <SUploadBtn>업로드</SUploadBtn>
-          </SFileWrapper>
+          <FileUpload
+            fileName={fileName}
+            handleChangeImg={handleChangeImg}
+            inputId="file"
+          />
           <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
         </SModalLayout>
       </ModalNoBlackBackground>

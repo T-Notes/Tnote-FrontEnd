@@ -3,9 +3,9 @@ import { ChangeEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import { IcClip, IcPen, IcSmallDatePicker, IcTitle } from '../../assets/icons';
-import { createConsultationRecords } from '../../utils/lib/api';
+import { IcPen, IcSmallDatePicker, IcTitle } from '../../assets/icons';
 import ModalPortal from '../../utils/ModalPortal';
+import FileUpload from '../common/FileUpload';
 import { Button } from '../common/styled/Button';
 import {
   ModalLayout,
@@ -128,37 +128,7 @@ const SContentLength = styled.div`
   ${({ theme }) => theme.fonts.caption4};
   color: ${({ theme }) => theme.colors.gray100};
 `;
-const SFileUploadInput = styled.input`
-  ${({ theme }) => theme.fonts.caption3}
-  margin-left: 20px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #e8e8e8;
-  width: 400px;
-  &::placeholder {
-    color: #a6a6a6; /* placeholder의 색상 변경 */
-  }
-  cursor: pointer;
-`;
-const SFileWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-bottom: 25px;
-`;
-const SFileText = styled.p`
-  ${({ theme }) => theme.fonts.caption3}
-  padding-left: 5px;
-`;
-const SUploadBtn = styled(Button)`
-  border-radius: 8px;
-  width: 80px;
-  height: 38px;
-  margin-left: auto;
-  background-color: ${({ theme }) => theme.colors.gray200};
-  ${({ theme }) => theme.fonts.caption3}
-`;
+
 const SScroll = styled.div`
   overflow-y: scroll;
 `;
@@ -174,7 +144,7 @@ const ConsultationRecordsModal = ({
 }: CloseProps) => {
   const { scheduleId } = useParams();
 
-  const [title, setTitle] = useState<string>(''); //제목 상태
+  const [title, setTitle] = useState<string>('');
   const [counselingContent, setCounselingContent] = useState<string>('');
   const [counselingResult, setCounselingResult] = useState<string>('');
   const [date, setDate] = useState({
@@ -185,22 +155,26 @@ const ConsultationRecordsModal = ({
     useState<string>('');
   const [selectedTargetButton, setSelectedTargetButton] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
-  const [imgUrl, setImgUrl] = useState<File>();
+  const [contentImgUrl, setContentImgUrl] = useState<File>();
+  const [valueImgUrl, setValueImgUrl] = useState<File>();
+  const [contentFileName, setContentFileName] = useState<string>('');
+  const [valueFileName, setValueFileName] = useState<string>('');
   const formData = new FormData();
 
   const handleChangeContentImg = (e: any) => {
     const file = e.target.files[0];
-
-    setImgUrl(file);
+    setContentImgUrl(file);
     formData.append('consultationImages', file);
+    setContentFileName(file.name);
+    console.log('content:', file.name);
   };
-  // consutationImages
-  // consultationImages
+
   const handleChangeValueImg = (e: any) => {
     const file = e.target.files[0];
-
-    setImgUrl(file);
+    setValueImgUrl(file);
     formData.append('consultationImages', file);
+    setValueFileName(file.name);
+    console.log('value:', file.name);
   };
 
   const handleCounselingButtonClick = (buttonName: string) => {
@@ -259,8 +233,12 @@ const ConsultationRecordsModal = ({
       });
       formData.append('requestDto', jsonDataTypeValue);
 
-      if (imgUrl) {
-        formData.append('consultationImages', imgUrl);
+      if (contentImgUrl) {
+        formData.append('consultationImages', contentImgUrl);
+      }
+
+      if (valueImgUrl) {
+        formData.append('consultationImages', valueImgUrl);
       }
 
       const accessToken = localStorage.getItem('accessToken');
@@ -380,17 +358,11 @@ const ConsultationRecordsModal = ({
               value={counselingContent}
               onChange={handleCounselingContentChange}
             />
-            <SFileWrapper>
-              <IcClip />
-              <SFileText>파일 첨부</SFileText>
-
-              <SFileUploadInput
-                placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다."
-                type="file"
-                onChange={handleChangeContentImg}
-              />
-              <SUploadBtn>업로드</SUploadBtn>
-            </SFileWrapper>
+            <FileUpload
+              fileName={contentFileName}
+              handleChangeImg={handleChangeContentImg}
+              inputId="contentFile"
+            />
             <SCounselingResult>
               <SContentLine>
                 <SContentIc>
@@ -410,17 +382,11 @@ const ConsultationRecordsModal = ({
                 value={counselingResult}
                 onChange={handleCounselingResultChange}
               />
-              <SFileWrapper>
-                <IcClip />
-                <SFileText>파일 첨부</SFileText>
-
-                <SFileUploadInput
-                  placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다."
-                  type="file"
-                  onChange={handleChangeValueImg}
-                />
-                <SUploadBtn>업로드</SUploadBtn>
-              </SFileWrapper>
+              <FileUpload
+                fileName={valueFileName}
+                handleChangeImg={handleChangeValueImg}
+                inputId="valueFile"
+              />
             </SCounselingResult>
 
             <SSubmit onClick={handleClickSubmit}>등록</SSubmit>

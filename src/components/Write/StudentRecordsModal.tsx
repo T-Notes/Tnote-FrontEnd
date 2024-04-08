@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { IcClip, IcPen } from '../../assets/icons';
 import { createStudentObservation } from '../../utils/lib/api';
 import ModalPortal from '../../utils/ModalPortal';
+import FileUpload from '../common/FileUpload';
 import { Button } from '../common/styled/Button';
 import {
   ModalLayout,
@@ -132,7 +133,10 @@ const StudentRecordsModal = ({
     endDate: '',
   });
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
-  const [imgUrl, setImgUrl] = useState<File>();
+  const [contentImgUrl, setContentImgUrl] = useState<File>();
+  const [valueImgUrl, setValueImgUrl] = useState<File>();
+  const [contentFileName, setContentFileName] = useState<string>('');
+  const [valueFileName, setValueFileName] = useState<string>('');
   const formData = new FormData();
 
   const handleTitleChange = (newTitle: string) => {
@@ -171,10 +175,12 @@ const StudentRecordsModal = ({
       });
       formData.append('observationRequestDto', jsonDataTypeValue);
 
-      if (imgUrl) {
-        formData.append('observationImages', imgUrl);
+      if (contentImgUrl) {
+        formData.append('observationImages', contentImgUrl);
       }
-
+      if (valueImgUrl) {
+        formData.append('observationImages', valueImgUrl);
+      }
       const accessToken = localStorage.getItem('accessToken');
 
       await axios.post(
@@ -197,15 +203,17 @@ const StudentRecordsModal = ({
   const handleChangeContentImg = (e: any) => {
     const file = e.target.files[0];
     console.log('file', file);
-    setImgUrl(file);
+    setContentImgUrl(file);
     formData.append('classLogImages', file);
+    setContentFileName(file.name);
   };
 
   const handleChangeValueImg = (e: any) => {
     const file = e.target.files[0];
     console.log('file', file);
-    setImgUrl(file);
+    setValueImgUrl(file);
     formData.append('classLogImages', file);
+    setValueFileName(file.name);
   };
   return (
     <ModalPortal>
@@ -242,17 +250,12 @@ const StudentRecordsModal = ({
               value={observationContent}
               onChange={handleObservationContentChange}
             />
-            <SFileWrapper>
-              <IcClip />
-              <SFileText>파일 첨부</SFileText>
 
-              <SFileUploadInput
-                placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다."
-                type="file"
-                onChange={handleChangeContentImg}
-              />
-              <SUploadBtn>업로드</SUploadBtn>
-            </SFileWrapper>
+            <FileUpload
+              fileName={contentFileName}
+              handleChangeImg={handleChangeContentImg}
+              inputId="contentFile"
+            />
             <STeachingPlan>
               <SContentLine>
                 <SContentIc>
@@ -270,17 +273,11 @@ const StudentRecordsModal = ({
                 value={teachingPlan}
                 onChange={handleTeachingPlanChange}
               />
-              <SFileWrapper>
-                <IcClip />
-                <SFileText>파일 첨부</SFileText>
-
-                <SFileUploadInput
-                  placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다."
-                  type="file"
-                  onChange={handleChangeValueImg}
-                />
-                <SUploadBtn>업로드</SUploadBtn>
-              </SFileWrapper>
+              <FileUpload
+                fileName={valueFileName}
+                handleChangeImg={handleChangeValueImg}
+                inputId="valueFile"
+              />
             </STeachingPlan>
 
             <SSubmit onClick={handleClickSubmit}>등록</SSubmit>

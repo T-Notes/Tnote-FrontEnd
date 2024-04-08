@@ -2,12 +2,12 @@ import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { IcClip, IcMap, IcPen } from '../../assets/icons';
-import { createWorkLog } from '../../utils/lib/api';
+import { IcMap, IcPen } from '../../assets/icons';
+
 import ModalPortal from '../../utils/ModalPortal';
+import FileUpload from '../common/FileUpload';
 import { Button } from '../common/styled/Button';
 import {
-  ModalBackground,
   ModalLayout,
   ModalNoBlackBackground,
 } from '../common/styled/ModalLayout';
@@ -67,8 +67,6 @@ const SBorderBottom = styled.div`
 const SContentWrap = styled.div`
   padding-left: 20px;
   padding-right: 20px;
-
-  /* border: 1px solid red; */
 `;
 const SContentIc = styled.div`
   display: flex;
@@ -90,51 +88,18 @@ const SContentLength = styled.div`
   ${({ theme }) => theme.fonts.caption4};
   color: ${({ theme }) => theme.colors.gray100};
 `;
-const SFileUploadInput = styled.input`
-  ${({ theme }) => theme.fonts.caption3}
-  margin-left: 20px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #e8e8e8;
-  width: 400px;
-  &::placeholder {
-    color: #a6a6a6; /* placeholder의 색상 변경 */
-  }
-  cursor: pointer;
-`;
-const SFileWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-bottom: 30px;
-`;
-const SFileText = styled.p`
-  ${({ theme }) => theme.fonts.caption3}
-  padding-left: 5px;
-`;
-const SUploadBtn = styled(Button)`
-  border-radius: 8px;
-  width: 80px;
-  height: 38px;
-  margin-left: auto;
-  background-color: ${({ theme }) => theme.colors.gray200};
-  ${({ theme }) => theme.fonts.caption3}
-`;
 
 const SPlaceInput = styled.input`
   ${({ theme }) => theme.fonts.caption3}
   border: none;
-  /* padding-left: 10px; */
   border-bottom: 1px solid #e8e8e8;
   width: 450px;
   &::placeholder {
-    color: #a6a6a6; /* placeholder의 색상 변경 */
+    color: #a6a6a6;
   }
-
   cursor: pointer;
   &:focus {
-    border-bottom: 1px solid #632cfa; /* 포커스가 있을 때 보라색으로 변경 */
+    border-bottom: 1px solid #632cfa;
   }
 `;
 const SPlaceLength = styled.div`
@@ -143,7 +108,6 @@ const SPlaceLength = styled.div`
   flex-shrink: 0;
   ${({ theme }) => theme.fonts.caption4}
   color: #A6A6A6;
-  /* 포커스가 있을 때 색상 변경 */
   ${SPlaceInput}:focus-within + & {
     color: #632cfa;
   }
@@ -167,7 +131,6 @@ const SPlace = styled.div`
 `;
 
 const SScroll = styled.div`
-  /* height: 300px; */
   overflow-y: scroll;
 `;
 export interface CloseProps {
@@ -182,7 +145,7 @@ const WorkLogModal = ({
 }: CloseProps) => {
   const { scheduleId } = useParams();
 
-  const [title, setTitle] = useState<string>(''); //제목 상태
+  const [title, setTitle] = useState<string>('');
   const [place, setPlace] = useState<string>('');
   const [date, setDate] = useState({
     startDate: '',
@@ -191,6 +154,8 @@ const WorkLogModal = ({
   const [workContents, setWorkContents] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File>();
+  const [fileName, setFileName] = useState<string>('');
+
   const formData = new FormData();
 
   const handleChangeImg = (e: any) => {
@@ -198,6 +163,7 @@ const WorkLogModal = ({
     console.log('file', file);
     setImgUrl(file);
     formData.append('classLogImages', file);
+    setFileName(file.name);
   };
 
   const handleTitleChange = (newTitle: string) => {
@@ -216,7 +182,7 @@ const WorkLogModal = ({
 
   const handlePlaceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
-    setPlace(newTitle); // title.length 보여주기 위함
+    setPlace(newTitle);
   };
 
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -231,7 +197,7 @@ const WorkLogModal = ({
         endDate: date.endDate,
         location: place,
         workContents: workContents,
-        isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
+        isAllDay: parentsIsAllDay,
       };
       const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
         type: 'application/json',
@@ -321,18 +287,11 @@ const WorkLogModal = ({
                 onChange={handleContentChange}
               />
             </SContentWrap>
-            <SFileWrapper>
-              <IcClip />
-              <SFileText>파일 첨부</SFileText>
-
-              <SFileUploadInput
-                placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다."
-                type="file"
-                // accept="image/*"
-                onChange={handleChangeImg}
-              />
-              <SUploadBtn>업로드</SUploadBtn>
-            </SFileWrapper>
+            <FileUpload
+              fileName={fileName}
+              handleChangeImg={handleChangeImg}
+              inputId="file"
+            />
             <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
           </SScroll>
         </SModalLayout>
