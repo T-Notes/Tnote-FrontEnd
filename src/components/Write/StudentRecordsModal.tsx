@@ -2,6 +2,7 @@ import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import { IcClip, IcPen } from '../../assets/icons';
 import { createStudentObservation } from '../../utils/lib/api';
 import ModalPortal from '../../utils/ModalPortal';
@@ -161,43 +162,50 @@ const StudentRecordsModal = ({
   };
 
   const handleClickSubmit = async () => {
-    try {
-      const logData = {
-        studentName: title,
-        startDate: date.startDate,
-        endDate: date.endDate,
-        observationContents: observationContent,
-        guidance: teachingPlan,
-        isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
-      };
-      const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
-        type: 'application/json',
-      });
-      formData.append('observationRequestDto', jsonDataTypeValue);
+    if (scheduleId) {
+      try {
+        const logData = {
+          studentName: title,
+          startDate: date.startDate,
+          endDate: date.endDate,
+          observationContents: observationContent,
+          guidance: teachingPlan,
+          isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
+        };
+        const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+          type: 'application/json',
+        });
+        formData.append('observationRequestDto', jsonDataTypeValue);
 
-      if (contentImgUrl) {
-        formData.append('observationImages', contentImgUrl);
-      }
-      if (valueImgUrl) {
-        formData.append('observationImages', valueImgUrl);
-      }
-      const accessToken = localStorage.getItem('accessToken');
+        if (contentImgUrl) {
+          formData.append('observationImages', contentImgUrl);
+        }
+        if (valueImgUrl) {
+          formData.append('observationImages', valueImgUrl);
+        }
+        const accessToken = localStorage.getItem('accessToken');
 
-      await axios.post(
-        `http://j9972.kr/tnote/observation/${scheduleId}`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${accessToken}`,
-            accept: 'application/json',
+        await axios.post(
+          `http://j9972.kr/tnote/observation/${scheduleId}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${accessToken}`,
+              accept: 'application/json',
+            },
           },
-        },
-      );
-      setReload((prev) => !prev);
-      closeWriteModal();
-    } catch (err) {
-      console.log(err);
+        );
+        setReload((prev) => !prev);
+        closeWriteModal();
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      Swal.fire({
+        title: '학기가 있어야 합니다.',
+        text: '학기 추가 혹은 학기 선택을 먼저 해주십시오.',
+      });
     }
   };
   const handleChangeContentImg = (e: any) => {

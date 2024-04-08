@@ -2,6 +2,7 @@ import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import { IcMap, IcPen } from '../../assets/icons';
 
 import ModalPortal from '../../utils/ModalPortal';
@@ -190,41 +191,48 @@ const WorkLogModal = ({
   };
 
   const handleClickSubmit = async () => {
-    try {
-      const logData = {
-        title,
-        startDate: date.startDate,
-        endDate: date.endDate,
-        location: place,
-        workContents: workContents,
-        isAllDay: parentsIsAllDay,
-      };
-      const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
-        type: 'application/json',
-      });
-      formData.append('proceedingRequestDto', jsonDataTypeValue);
+    if (scheduleId) {
+      try {
+        const logData = {
+          title,
+          startDate: date.startDate,
+          endDate: date.endDate,
+          location: place,
+          workContents: workContents,
+          isAllDay: parentsIsAllDay,
+        };
+        const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+          type: 'application/json',
+        });
+        formData.append('proceedingRequestDto', jsonDataTypeValue);
 
-      if (imgUrl) {
-        formData.append('proceedingImages', imgUrl);
-      }
+        if (imgUrl) {
+          formData.append('proceedingImages', imgUrl);
+        }
 
-      const accessToken = localStorage.getItem('accessToken');
+        const accessToken = localStorage.getItem('accessToken');
 
-      await axios.post(
-        `http://j9972.kr/tnote/proceeding/${scheduleId}`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${accessToken}`,
-            accept: 'application/json',
+        await axios.post(
+          `http://j9972.kr/tnote/proceeding/${scheduleId}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${accessToken}`,
+              accept: 'application/json',
+            },
           },
-        },
-      );
-      setReload((prev) => !prev);
-      closeWriteModal();
-    } catch (err) {
-      console.log(err);
+        );
+        setReload((prev) => !prev);
+        closeWriteModal();
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      Swal.fire({
+        title: '학기가 있어야 합니다.',
+        text: '학기 추가 혹은 학기 선택을 먼저 해주십시오.',
+      });
     }
   };
 

@@ -12,6 +12,7 @@ import {
 import { Button } from '../common/styled/Button';
 import { useParams } from 'react-router-dom';
 import { IcPen } from '../../assets/icons';
+import Swal from 'sweetalert2';
 
 // styled //
 const SModalLayout = styled(ModalLayout)`
@@ -152,44 +153,51 @@ const ClassLogModal = ({
   };
 
   const handleClickSubmit = async () => {
-    try {
-      const logData = {
-        title: title,
-        startDate: date.startDate,
-        endDate: date.endDate,
-        plan: saveContents.학습계획,
-        classContents: saveContents.수업내용,
-        submission: saveContents.제출과제,
-        magnitude: saveContents.진도표,
-        isAllDay: parentsIsAllDay,
-      };
+    if (scheduleId) {
+      try {
+        const logData = {
+          title: title,
+          startDate: date.startDate,
+          endDate: date.endDate,
+          plan: saveContents.학습계획,
+          classContents: saveContents.수업내용,
+          submission: saveContents.제출과제,
+          magnitude: saveContents.진도표,
+          isAllDay: parentsIsAllDay,
+        };
 
-      const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
-        type: 'application/json',
-      });
-      formData.append('classLogRequestDto', jsonDataTypeValue);
+        const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+          type: 'application/json',
+        });
+        formData.append('classLogRequestDto', jsonDataTypeValue);
 
-      if (imgUrl) {
-        formData.append('classLogImages', imgUrl);
-      }
+        if (imgUrl) {
+          formData.append('classLogImages', imgUrl);
+        }
 
-      const accessToken = localStorage.getItem('accessToken');
+        const accessToken = localStorage.getItem('accessToken');
 
-      await axios.post(
-        `http://j9972.kr/tnote/classLog/${scheduleId}`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${accessToken}`,
-            accept: 'application/json',
+        await axios.post(
+          `http://j9972.kr/tnote/classLog/${scheduleId}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${accessToken}`,
+              accept: 'application/json',
+            },
           },
-        },
-      );
-      setReload((prev) => !prev);
-      closeWriteModal();
-    } catch (err) {
-      console.log(err);
+        );
+        setReload((prev) => !prev);
+        closeWriteModal();
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      Swal.fire({
+        title: '학기가 있어야 합니다.',
+        text: '학기 추가 혹은 학기 선택을 먼저 해주십시오.',
+      });
     }
   };
 

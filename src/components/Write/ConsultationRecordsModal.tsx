@@ -210,54 +210,61 @@ const ConsultationRecordsModal = ({
   };
 
   const handleClickSubmit = async () => {
-    try {
-      const logData = {
-        studentName: title,
-        startDate: date.startDate,
-        endDate: date.endDate,
-        counselingField: selectedCounselingButton,
-        counselingType: selectedTargetButton,
-        consultationContents: counselingContent,
-        consultationResult: counselingResult,
-        isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
-      };
+    if (scheduleId) {
+      try {
+        const logData = {
+          studentName: title,
+          startDate: date.startDate,
+          endDate: date.endDate,
+          counselingField: selectedCounselingButton,
+          counselingType: selectedTargetButton,
+          consultationContents: counselingContent,
+          consultationResult: counselingResult,
+          isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
+        };
 
-      if (!logData.counselingField || !logData.counselingType) {
-        Swal.fire({
-          title: '입력 에러',
-          text: '상담 분야와 상담 대상을 선택해주세요.',
+        if (!logData.counselingField || !logData.counselingType) {
+          Swal.fire({
+            title: '입력 에러',
+            text: '상담 분야와 상담 대상을 선택해주세요.',
+          });
+        }
+        const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+          type: 'application/json',
         });
-      }
-      const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
-        type: 'application/json',
-      });
-      formData.append('requestDto', jsonDataTypeValue);
+        formData.append('requestDto', jsonDataTypeValue);
 
-      if (contentImgUrl) {
-        formData.append('consultationImages', contentImgUrl);
-      }
+        if (contentImgUrl) {
+          formData.append('consultationImages', contentImgUrl);
+        }
 
-      if (valueImgUrl) {
-        formData.append('consultationImages', valueImgUrl);
-      }
+        if (valueImgUrl) {
+          formData.append('consultationImages', valueImgUrl);
+        }
 
-      const accessToken = localStorage.getItem('accessToken');
+        const accessToken = localStorage.getItem('accessToken');
 
-      await axios.post(
-        `http://j9972.kr/tnote/consultation/${scheduleId}`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${accessToken}`,
-            accept: 'application/json',
+        await axios.post(
+          `http://j9972.kr/tnote/consultation/${scheduleId}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${accessToken}`,
+              accept: 'application/json',
+            },
           },
-        },
-      );
-      setReload((prev) => !prev);
-      closeWriteModal();
-    } catch (err) {
-      console.log(err);
+        );
+        setReload((prev) => !prev);
+        closeWriteModal();
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      Swal.fire({
+        title: '학기가 있어야 합니다.',
+        text: '학기 추가 혹은 학기 선택을 먼저 해주십시오.',
+      });
     }
   };
   return (
