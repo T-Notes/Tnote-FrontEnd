@@ -25,15 +25,22 @@ const SDayBox = styled.div`
   width: 250px;
   height: 80px;
   padding: 10px;
-  color: ${({ theme }) => theme.colors.gray100};
-  ${({ theme }) => theme.fonts.button};
+
   background-color: ${({ theme }) => theme.colors.blue400};
 `;
-const SRemainingDay = styled.p``;
+const SRemainingDay = styled.p`
+  color: ${({ theme }) => theme.colors.blue700};
+  ${({ theme }) => theme.fonts.button};
+`;
+
+const SRemainingDayText = styled.p`
+  color: ${({ theme }) => theme.colors.gray100};
+  ${({ theme }) => theme.fonts.button};
+`;
 
 const RemainingDays = () => {
   const { scheduleId } = useParams(); //현재 url에서 추출한 동적으로 변하는 id값
-  const [remainingDay, setRemainingDay] = useState<number>(0);
+  const [remainingDay, setRemainingDay] = useState<number>();
   const current = new Date();
   const newCurrent = current.toISOString().slice(0, 10);
 
@@ -44,6 +51,7 @@ const RemainingDays = () => {
           const response = await getRemainingDayData(scheduleId, newCurrent);
 
           setRemainingDay(response.data);
+          console.log(11, response.data);
         } catch (err) {
           console.log(err);
         }
@@ -56,9 +64,11 @@ const RemainingDays = () => {
     <SRemainingDayWrapper>
       <SFont>이번 학기 남은 일수</SFont>
       <SDayBox>
-        <SRemainingDay>
-          {typeof remainingDay === 'number' ? remainingDay : '생성된 학기 없음'}
-        </SRemainingDay>
+        {typeof remainingDay === 'number' ? (
+          <SRemainingDay>{remainingDay}</SRemainingDay>
+        ) : (
+          <SRemainingDayText>{'생성된 학기 없음'}</SRemainingDayText>
+        )}
       </SDayBox>
     </SRemainingDayWrapper>
   );
