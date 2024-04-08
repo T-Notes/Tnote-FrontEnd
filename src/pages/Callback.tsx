@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import instanceAxios from './InstanceAxios';
+import instanceAxios from '../utils/InstanceAxios';
 
 const Callback = () => {
   const navigate = useNavigate();
