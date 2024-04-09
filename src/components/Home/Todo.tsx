@@ -17,6 +17,25 @@ const SInput = styled.input`
   font-weight: 500;
   color: #2f2f2f;
 `;
+const SFont = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+  padding-top: 20px;
+  padding-bottom: 20px;
+`;
+const STodoTotalNumber = styled.div`
+  margin-left: 10px;
+  color: white;
+  background-color: #2dd4bf;
+  border-radius: 19px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 13px;
+`;
 const SAddTodo = styled(Button)`
   background-color: ${({ theme }) => theme.colors.purple100};
   width: 260px;
@@ -137,21 +156,24 @@ const Todo = ({
 
   return (
     <div>
-      <>
-        {todo.map((todoItem) => (
-          <STodoContainer className="todo-item" key={todoItem.id}>
-            <SInput
-              placeholder="todo list 작성하세요"
-              defaultValue={todoItem.content}
-              onChange={(e: any) => handleChangeTodoInput(e, todoItem.id)}
-            />
-            <IcCloseSmall
-              onClick={() => handleDelete(todoItem.id)}
-              className="icon"
-            />
-          </STodoContainer>
-        ))}
-      </>
+      <STodoContainer>
+        <SFont>To do</SFont>
+        <STodoTotalNumber>{todo.length}</STodoTotalNumber>
+      </STodoContainer>
+
+      {todo.map((todoItem) => (
+        <STodoContainer className="todo-item" key={todoItem.id}>
+          <SInput
+            placeholder="todo list 작성하세요"
+            defaultValue={todoItem.content}
+            onChange={(e: any) => handleChangeTodoInput(e, todoItem.id)}
+          />
+          <IcCloseSmall
+            onClick={() => handleDelete(todoItem.id)}
+            className="icon"
+          />
+        </STodoContainer>
+      ))}
 
       <SAddTodo onClick={handleAddTodo}>
         <IcAddWhite />

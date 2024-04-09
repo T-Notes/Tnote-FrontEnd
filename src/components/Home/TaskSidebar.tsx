@@ -143,7 +143,6 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
     <STaskSidebarWrapper onClick={handleUpdateOutside}>
       <SDateFont>{`${year}년 ${month}월 ${day}일`}</SDateFont>
       <div>
-        <SFont>To do</SFont>
         <Todo
           clickedOutside={clickedOutside}
           setClickedOutside={setClickedOutside}
