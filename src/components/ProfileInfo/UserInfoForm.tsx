@@ -185,7 +185,7 @@ const UserInfoForm = () => {
           style={{
             backgroundColor: isUserDataValid() ? '#632CFA' : '#F3F3F3',
             color: isUserDataValid() ? '#FFFFFF' : '#A6A6A6',
-            cursor: isUserDataValid() ? 'pointer' : 'not-allowed',
+            cursor: isUserDataValid() ? 'pointer' : 'default',
           }}
         >
           확인
