@@ -23,7 +23,7 @@ instanceAxios.interceptors.response.use(
     // 오류 응답에서 상태 코드 및 메시지를 가져옵니다.
     console.log(2, error.response.data.message);
     const errorMessage = error.response.data.message;
-    const navigate = useNavigate();
+
     // 만료된 토큰인 경우
     if (errorMessage === 'wrong token') {
       // 토큰 갱신 요청 보내기
@@ -62,7 +62,8 @@ instanceAxios.interceptors.response.use(
             }).then((result) => {
               if (result.isConfirmed) {
                 localStorage.clear();
-                navigate('/');
+                // const navigate = useNavigate();
+                // navigate('/');
               }
             });
           }
