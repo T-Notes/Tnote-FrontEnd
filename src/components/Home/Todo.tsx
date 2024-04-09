@@ -103,14 +103,14 @@ const Todo = ({
   //수정
   useEffect(() => {
     if (clickedOutside) {
+      const date = clickedDate;
       // 부모에서 클릭 이벤트 발생 시
       const patchTodoData = {
-        date: clickedDate,
         content: todoContent,
         status: true,
       };
       if (todoId) {
-        updateTodo(scheduleId, todoId, patchTodoData); // 수정 요청 보내기
+        updateTodo(scheduleId, todoId, patchTodoData, date); // 수정 요청 보내기
         setClickedOutside(false); // 클릭 상태 초기화
       }
     }
@@ -139,11 +139,11 @@ const Todo = ({
   // + 버튼으로 post 요청
   const handleAddTodo = async () => {
     if (scheduleId) {
+      const date = clickedDate;
       const todoData = {
-        date: clickedDate,
         content: '',
       };
-      await createTodo(scheduleId, todoData);
+      await createTodo(scheduleId, todoData, date);
       // getTodoData();
       setReload((prev) => !prev);
     } else {

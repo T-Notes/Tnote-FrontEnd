@@ -76,17 +76,20 @@ export const getSchoolSearchValue = async (
 
 // todo
 interface TodoProps {
-  date: string | undefined;
   content: string;
 }
 export const createTodo = async (
   scheduleId: string | undefined,
   todoData: TodoProps,
+  date: string | undefined,
 ) => {
   try {
     const response = await instanceAxios.post(
       `/tnote/todos/${scheduleId}`,
       todoData,
+      {
+        params: { date },
+      },
     );
     return response.data;
   } catch (error) {
@@ -98,11 +101,15 @@ export const updateTodo = async (
   scheduleId: string | undefined,
   todoId: number | undefined,
   todoData: TodoProps,
+  date: string | undefined,
 ) => {
   try {
     const response = await instanceAxios.patch(
       `/tnote/todos/${scheduleId}/${todoId}`,
       todoData,
+      {
+        params: { date },
+      },
     );
     return response;
   } catch (error) {
