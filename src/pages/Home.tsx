@@ -41,8 +41,6 @@ const Home = () => {
     const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // 월 (0부터 시작하므로 +1 필요)
     const day = String(currentDate.getDate()).padStart(2, '0'); // 일
     const formattedDate = `${year}-${month}-${day}`;
-    console.log(formattedDate); // 예: "2024-03-06"
-
     setClickedDate(formattedDate);
   };
   return (
