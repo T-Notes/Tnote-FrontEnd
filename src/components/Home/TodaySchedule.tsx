@@ -30,7 +30,10 @@ const SSchedule = styled.div`
   display: flex;
   width: 600px;
   color: ${({ theme }) => theme.colors.gray000};
-  padding: 15px;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
   height: 80px;
   background-color: ${({ theme }) => theme.colors.blue400};
 `;
@@ -39,10 +42,14 @@ const STodayClassWrapper = styled.div<{ color: string }>`
   display: flex;
   flex-direction: column;
   font-size: 11px;
-  padding: 10px;
+  align-items: center;
+  padding-top: 5px;
   width: auto;
-  height: 100%;
+  height: 50px;
   background-color: ${({ color }) => color || '#fffff'};
+  > div {
+    padding-bottom: 3px;
+  }
 `;
 const STimetables = styled.div`
   font-size: 13px;
@@ -61,8 +68,9 @@ interface TodayClass {
 const TodaySchedule = () => {
   const { scheduleId } = useParams();
   const [todayClass, setTodayClass] = useState<TodayClass[]>([]);
-  const currentDae = new Date();
-  const todayOfNumber = currentDae.getDay();
+  const currentDate = new Date();
+  const todayOfNumber = currentDate.getDay();
+  console.log(1, currentDate.getHours());
 
   const daysOfWeek = [
     'SUNDAY',
@@ -87,6 +95,33 @@ const TodaySchedule = () => {
     9: '9교시',
   };
 
+  // 현재시간과 교시 함수
+  const getCurrentHour = () => {
+    const currentHours = currentDate.getHours();
+    if (currentHours === 9) {
+      return '1교시';
+    } else if (currentHours === 10) {
+      return '2교시';
+    } else if (currentHours === 11) {
+      return '3교시';
+    } else if (currentHours === 12) {
+      return '4교시';
+    } else if (currentHours === 13) {
+      return '5교시';
+    } else if (currentHours === 14) {
+      return '6교시';
+    } else if (currentHours === 15) {
+      return '7교시';
+    } else if (currentHours === 17) {
+      return '8교시';
+    } else if (currentHours === 18) {
+      return '9교시';
+    } else {
+      return '';
+    }
+  };
+  const currentHour = getCurrentHour();
+
   // 오늘 수업일정 조회
   useEffect(() => {
     if (scheduleId) {
@@ -108,7 +143,14 @@ const TodaySchedule = () => {
           {Array.from({ length: 9 }, (_, index) => index + 1).map((hour) => (
             <SClassContainer key={hour}>
               <SClass>
-                <STimetables>{timetables[hour]}</STimetables>
+                <STimetables
+                  style={{
+                    color:
+                      timetables[hour] === currentHour ? '#3378FF' : 'inherit',
+                  }}
+                >
+                  {timetables[hour]}
+                </STimetables>
                 {todayClass.map((item, index) => {
                   const classTimeChange = parseInt(item.classTime.slice(0, 1));
                   const backgroundColor = colorMapping[item.color] || '';
