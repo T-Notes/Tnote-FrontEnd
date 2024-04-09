@@ -28,7 +28,7 @@ interface Semester {
 interface Archive {
   handleSelectedSemester: (selectedSemesterId: number) => void;
 }
-const ArchiveList = () => {
+const MyArchive = () => {
   const { scheduleId } = useParams();
   const navigate = useNavigate();
   const [allSemester, setAllSemester] = useState<Semester[]>([]);
@@ -60,4 +60,4 @@ const ArchiveList = () => {
   );
 };
 
-export default ArchiveList;
+export default MyArchive;

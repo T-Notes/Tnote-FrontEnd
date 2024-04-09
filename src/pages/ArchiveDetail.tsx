@@ -9,7 +9,7 @@ const SArchiveWrapper = styled.div`
   right: 300px;
   bottom: 0;
 `;
-const ArchivePage = () => {
+const ArchiveDetail = () => {
   useEffect(() => {}, []);
   return (
     <SArchiveWrapper>
@@ -18,4 +18,4 @@ const ArchivePage = () => {
   );
 };
 
-export default ArchivePage;
+export default ArchiveDetail;

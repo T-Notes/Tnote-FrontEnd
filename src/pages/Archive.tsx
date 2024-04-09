@@ -1,9 +1,7 @@
 import { ChangeEvent, ReactEventHandler, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import ArchiveList, {
-  SSemesterContainer,
-} from '../components/Archive/ArchiveList';
+import MyArchive, { SSemesterContainer } from '../components/Archive/MyArchive';
 import SearchInput from '../components/common/SearchInput';
 import { getSemesterSearchValue } from '../utils/lib/api';
 import _debounce from 'lodash/debounce';
@@ -130,7 +128,7 @@ const Archive = () => {
           </SSearchValueContainer>
         </>
       ) : (
-        <ArchiveList />
+        <MyArchive />
       )}
       <WriteButton setReload={setReload} />
     </SArchiveWrapper>
