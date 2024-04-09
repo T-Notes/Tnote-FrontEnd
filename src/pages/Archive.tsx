@@ -40,17 +40,11 @@ const SEdit = styled.button`
 `;
 const SDelete = styled(SEdit)``;
 
-const SSearchInput = styled(SearchInput)`
-  margin-left: auto;
-`;
 const Sh1 = styled.h1`
   ${({ theme }) => theme.fonts.h2}
   margin-right: auto;
 `;
-// 사용 api
-//  학기 검색 부분 o
-// 학기 삭제
-// 학기 수정
+
 interface SearchValue {
   id: number;
   semesterName: string;
@@ -65,7 +59,7 @@ const Archive = () => {
     const value = e.target.value;
     setSearchValue(value);
     if (!value) {
-      setSetSearchValueList([]); // 검색어가 비어있을 때 검색 결과를 초기화
+      setSetSearchValueList([]);
     }
   };
 
@@ -75,7 +69,7 @@ const Archive = () => {
     console.log(2, getSearchValue.data.length);
   };
 
-  const debouncedSearch = _debounce(handleSemesterSearch, 1000);
+  const debouncedSearch = _debounce(handleSemesterSearch, 500);
 
   useEffect(() => {
     if (searchValue) {
@@ -113,23 +107,20 @@ const Archive = () => {
       </SArchiveHeader>
 
       {searchValueList.length > 0 ? (
-        <>
-          <SSearchValueContainer>
-            {searchValueList.map((item) => (
-              <SSemesterContainer
-                key={item.id}
-                onClick={() =>
-                  handleSelectedSemester(item.id, item.semesterName)
-                }
-              >
-                <div>{item.semesterName}</div>
-              </SSemesterContainer>
-            ))}
-          </SSearchValueContainer>
-        </>
+        <SSearchValueContainer>
+          {searchValueList.map((item) => (
+            <SSemesterContainer
+              key={item.id}
+              onClick={() => handleSelectedSemester(item.id, item.semesterName)}
+            >
+              <div>{item.semesterName}</div>
+            </SSemesterContainer>
+          ))}
+        </SSearchValueContainer>
       ) : (
-        <MyArchive />
+        <></>
       )}
+      {!searchValue && <MyArchive />}
       <WriteButton setReload={setReload} />
     </SArchiveWrapper>
   );
