@@ -84,12 +84,8 @@ const Todo = ({
   setReload,
 }: TodoOutside) => {
   const { scheduleId } = useParams();
-
-  const [isAddTodo, setIsAddTodo] = useState<boolean>(false);
-  const [todoArray, setTodoArray] = useState<any[]>([]);
   const [todoContent, setTodoContent] = useState<string>('');
   const [todoId, setTodoId] = useState<number>();
-  const [todoStatus, setTodoStatus] = useState<boolean>(false);
 
   const handleChangeTodoInput = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -131,26 +127,6 @@ const Todo = ({
     }
   }, [clickedOutside, todoContent, scheduleId, todoId]);
 
-  // 조회
-  useEffect(() => {
-    if (scheduleId) {
-      const getTodoData = async () => {
-        try {
-          const response = await getTodo(scheduleId, clickedDate);
-          setTodoArray(response.data);
-        } catch {}
-      };
-      getTodoData();
-    }
-  }, [isAddTodo, clickedDate]);
-
-  // 처음 조회 시
-  useEffect(() => {
-    if (scheduleId) {
-      setTodoArray(todo);
-    }
-  }, []);
-
   // + 버튼으로 post 요청
   const handleAddTodo = async () => {
     if (scheduleId) {
@@ -159,7 +135,6 @@ const Todo = ({
         content: '',
       };
       await createTodo(scheduleId, todoData, date);
-      // getTodoData();
       setReload((prev) => !prev);
     } else {
       Swal.fire({
@@ -201,11 +176,7 @@ const Todo = ({
           <STodoContainer className="todo-item" key={todoItem.id}>
             <SCheckbox>
               {todoItem.status ? (
-                <IcCheckedBox
-                  onClick={() =>
-                    handleStatusChange(todoItem.id, todoItem.content)
-                  }
-                />
+                <IcCheckedBox />
               ) : (
                 <IcUncheckedBox
                   onClick={() =>
@@ -220,6 +191,7 @@ const Todo = ({
               defaultValue={todoItem.content}
               $completed={todoItem.status}
               onChange={(e: any) => handleChangeTodoInput(e, todoItem.id)}
+              readOnly={todoItem.status}
             />
             <IcCloseSmall
               onClick={() => handleDelete(todoItem.id)}
