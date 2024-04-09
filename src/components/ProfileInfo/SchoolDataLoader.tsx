@@ -66,7 +66,7 @@ const SchoolDataLoader = ({
     }
   };
   // lodash 라이브러리에서 debounce 함수 사용(모든 검색 동작에서 api호출을 하는 것을 막아줌.)
-  const debouncedSearch = _debounce(handleSchoolSearch, 1000);
+  const debouncedSearch = _debounce(handleSchoolSearch, 500);
 
   useEffect(() => {
     if (schoolData.schoolType && schoolData.region && schoolData.schoolName) {
