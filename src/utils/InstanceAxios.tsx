@@ -16,17 +16,14 @@ const instanceAxios: AxiosInstance = axios.create({
 instanceAxios.interceptors.response.use(
   (response) => {
     //##응답이 전달되기 전에 작업 수행
-
     return response;
   },
   async (error) => {
     //##응답 오류가 있는 작업 수행
     // 오류 응답에서 상태 코드 및 메시지를 가져옵니다.
-    const navigate = useNavigate(); // useNavigate() 호출 위치
-
     console.log(2, error.response.data.message);
     const errorMessage = error.response.data.message;
-
+    const navigate = useNavigate();
     // 만료된 토큰인 경우
     if (errorMessage === 'wrong token') {
       // 토큰 갱신 요청 보내기
@@ -70,9 +67,6 @@ instanceAxios.interceptors.response.use(
             });
           }
         });
-        // 토큰 갱신에 실패한 경우 로그아웃 또는 다른 처리를 수행합니다.
-        // localStorage.clear();
-        // window.location.reload();
       }
     }
 
