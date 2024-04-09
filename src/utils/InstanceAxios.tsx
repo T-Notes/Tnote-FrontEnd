@@ -1,4 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const instanceAxios: AxiosInstance = axios.create({
   baseURL: 'https://j9972.kr', //기본 url설정
@@ -10,6 +12,7 @@ const instanceAxios: AxiosInstance = axios.create({
   },
 });
 
+const navigate = useNavigate();
 //###2. 응답 인터셉터 추가하기
 instanceAxios.interceptors.response.use(
   (response) => {
@@ -24,7 +27,7 @@ instanceAxios.interceptors.response.use(
     const errorMessage = error.response.data.message;
 
     // 만료된 토큰인 경우
-    if (errorMessage === 'not found token') {
+    if (errorMessage === 'wrong token') {
       // 토큰 갱신 요청 보내기
       try {
         const refreshToken = localStorage.getItem('refreshToken');
@@ -44,8 +47,28 @@ instanceAxios.interceptors.response.use(
         error.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
         return axios(error.config); // 다시 해당 요청을 보냅니다.
       } catch (refreshError) {
-        console.log(6, '갱신실패');
         console.error('토큰 갱신 실패', refreshError);
+        Swal.fire({
+          title: '문제가 발생했습니다.',
+          text: '로그아웃 후 다시 이용해주세요.',
+          showCancelButton: true,
+          confirmButtonColor: '#632CFA',
+          cancelButtonColor: '#E8E8E8',
+          confirmButtonText: '로그아웃',
+          cancelButtonText: '취소',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire({
+              title: '로그아웃!',
+              text: '정상적으로 로그아웃 되었습니다.',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                localStorage.clear();
+                navigate('/');
+              }
+            });
+          }
+        });
         // 토큰 갱신에 실패한 경우 로그아웃 또는 다른 처리를 수행합니다.
         // localStorage.clear();
         // window.location.reload();
