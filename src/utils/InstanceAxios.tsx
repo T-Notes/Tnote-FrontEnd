@@ -12,7 +12,6 @@ const instanceAxios: AxiosInstance = axios.create({
   },
 });
 
-const navigate = useNavigate();
 //###2. 응답 인터셉터 추가하기
 instanceAxios.interceptors.response.use(
   (response) => {
@@ -23,6 +22,8 @@ instanceAxios.interceptors.response.use(
   async (error) => {
     //##응답 오류가 있는 작업 수행
     // 오류 응답에서 상태 코드 및 메시지를 가져옵니다.
+    const navigate = useNavigate(); // useNavigate() 호출 위치
+
     console.log(2, error.response.data.message);
     const errorMessage = error.response.data.message;
 
