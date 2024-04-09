@@ -12,6 +12,7 @@ import {
   ModalLayout,
   ModalNoBlackBackground,
 } from '../common/styled/ModalLayout';
+import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import { CloseProps } from './WorkLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
@@ -48,17 +49,6 @@ const SContentLine = styled.div`
   padding-bottom: 10px;
 `;
 
-const SSubmit = styled(Button)`
-  display: flex;
-  margin-left: 40%;
-  width: 150px;
-  height: 40px;
-  padding: 18px 20px;
-  background-color: ${({ theme }) => theme.colors.purple100};
-  color: ${({ theme }) => theme.colors.white};
-  ${({ theme }) => theme.fonts.caption3};
-`;
-
 const SContentIc = styled.div`
   display: flex;
   padding-left: 10px;
@@ -78,37 +68,7 @@ const SContentLength = styled.div`
   ${({ theme }) => theme.fonts.caption4};
   color: ${({ theme }) => theme.colors.gray100};
 `;
-const SFileUploadInput = styled.input`
-  ${({ theme }) => theme.fonts.caption3}
-  margin-left: 20px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #e8e8e8;
-  width: 400px;
-  &::placeholder {
-    color: #a6a6a6; /* placeholder의 색상 변경 */
-  }
-  cursor: pointer;
-`;
-const SFileWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-bottom: 25px;
-`;
-const SFileText = styled.p`
-  ${({ theme }) => theme.fonts.caption3}
-  padding-left: 5px;
-`;
-const SUploadBtn = styled(Button)`
-  border-radius: 8px;
-  width: 80px;
-  height: 38px;
-  margin-left: auto;
-  background-color: ${({ theme }) => theme.colors.gray200};
-  ${({ theme }) => theme.fonts.caption3}
-`;
+
 const SScroll = styled.div`
   overflow-y: scroll;
   margin-top: 15px;
@@ -208,6 +168,9 @@ const StudentRecordsModal = ({
       });
     }
   };
+  const isFormValid =
+    title && date.startDate && date.endDate && observationContent;
+
   const handleChangeContentImg = (e: any) => {
     const file = e.target.files[0];
     console.log('file', file);
@@ -288,7 +251,9 @@ const StudentRecordsModal = ({
               />
             </STeachingPlan>
 
-            <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
+            <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
+              등록
+            </SLogsSubmitBtn>
           </SScroll>
         </SModalLayout>
       </ModalNoBlackBackground>

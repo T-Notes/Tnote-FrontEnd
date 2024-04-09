@@ -13,6 +13,8 @@ import { Button } from '../common/styled/Button';
 import { useParams } from 'react-router-dom';
 import { IcPen } from '../../assets/icons';
 import Swal from 'sweetalert2';
+import { css } from 'styled-components';
+import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 
 // styled //
 const SModalLayout = styled(ModalLayout)`
@@ -36,16 +38,7 @@ const SContentLine = styled.div`
   display: flex;
   padding-bottom: 10px;
 `;
-const SSubmit = styled(Button)`
-  display: flex;
-  margin-left: 40%;
-  width: 150px;
-  height: 40px;
-  padding: 18px 20px;
-  background-color: ${({ theme }) => theme.colors.purple100};
-  color: ${({ theme }) => theme.colors.white};
-  ${({ theme }) => theme.fonts.caption3};
-`;
+
 const SType = styled.div`
   margin-bottom: 20px;
   display: flex;
@@ -200,6 +193,8 @@ const ClassLogModal = ({
       });
     }
   };
+  const isFormValid =
+    title && date.startDate && date.endDate && saveContents[contentType];
 
   return (
     <ModalPortal>
@@ -272,7 +267,9 @@ const ClassLogModal = ({
             handleChangeImg={handleChangeImg}
             inputId="file"
           />
-          <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
+          <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
+            등록
+          </SLogsSubmitBtn>
         </SModalLayout>
       </ModalNoBlackBackground>
     </ModalPortal>

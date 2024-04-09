@@ -11,6 +11,7 @@ import {
   ModalLayout,
   ModalNoBlackBackground,
 } from '../common/styled/ModalLayout';
+import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import { CloseProps } from './WorkLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
@@ -82,17 +83,6 @@ const STextarea = styled.textarea`
 const SContentLine = styled.div`
   display: flex;
   padding-bottom: 10px;
-`;
-
-const SSubmit = styled(Button)`
-  display: flex;
-  margin-left: 40%;
-  width: 150px;
-  height: 40px;
-  padding: 18px 20px;
-  background-color: ${({ theme }) => theme.colors.purple100};
-  color: ${({ theme }) => theme.colors.white};
-  ${({ theme }) => theme.fonts.caption3};
 `;
 
 const SType = styled.div`
@@ -267,6 +257,15 @@ const ConsultationRecordsModal = ({
       });
     }
   };
+
+  const isFormValid =
+    title &&
+    date.startDate &&
+    date.endDate &&
+    selectedCounselingButton &&
+    selectedTargetButton &&
+    counselingContent;
+
   return (
     <ModalPortal>
       <ModalNoBlackBackground>
@@ -396,7 +395,9 @@ const ConsultationRecordsModal = ({
               />
             </SCounselingResult>
 
-            <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
+            <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
+              등록
+            </SLogsSubmitBtn>
           </SScroll>
         </SModalLayout>
       </ModalNoBlackBackground>

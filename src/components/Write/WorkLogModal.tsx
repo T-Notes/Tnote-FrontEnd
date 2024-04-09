@@ -12,6 +12,7 @@ import {
   ModalLayout,
   ModalNoBlackBackground,
 } from '../common/styled/ModalLayout';
+import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 
@@ -36,17 +37,6 @@ const STextarea = styled.textarea`
 const SPlaceContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const SSubmit = styled(Button)`
-  display: flex;
-  margin-left: 40%;
-  width: 150px;
-  height: 40px;
-  padding: 18px 20px;
-  background-color: ${({ theme }) => theme.colors.purple100};
-  color: ${({ theme }) => theme.colors.white};
-  ${({ theme }) => theme.fonts.caption3};
 `;
 
 const SType = styled.div`
@@ -235,6 +225,7 @@ const WorkLogModal = ({
       });
     }
   };
+  const isFormValid = title && date.startDate && date.endDate && workContents;
 
   return (
     <ModalPortal>
@@ -300,7 +291,9 @@ const WorkLogModal = ({
               handleChangeImg={handleChangeImg}
               inputId="file"
             />
-            <SSubmit onClick={handleClickSubmit}>등록</SSubmit>
+            <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
+              등록
+            </SLogsSubmitBtn>
           </SScroll>
         </SModalLayout>
       </ModalNoBlackBackground>
