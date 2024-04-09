@@ -51,7 +51,6 @@ const RemainingDays = () => {
           const response = await getRemainingDayData(scheduleId, newCurrent);
 
           setRemainingDay(response.data);
-          console.log(11, response.data);
         } catch (err) {
           console.log(err);
         }
