@@ -144,8 +144,6 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
     const semesterData = await getSemesterData(scheduleId);
 
     const data = semesterData.data[0];
-    console.log(2, data.startDate);
-    console.log('fpsej');
 
     setSemesterData((prev) => ({
       ...prev,
@@ -179,18 +177,23 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
       lastClass: data.lastClass,
     }));
     localStorage.setItem('semesterName', data.semesterName);
-
     setReload((prev) => !prev);
+    Swal.fire({
+      title: '저장되었습니다.',
+      confirmButtonText: '확인',
+      confirmButtonColor: '#632CFA',
+    }).then((res) => {
+      if (res.isConfirmed) {
+        window.location.reload();
+      }
+    });
   };
 
   // 학기 삭제하기
-
   const handleDeleteSemester = async () => {
     await Swal.fire({
       title: '학기 삭제',
       text: '해당학기를 삭제할 시 해당 학기의 모든 데이터가 삭제되며 되돌릴 수없습니다. 학기를 삭제하시겠습니까?',
-      // icon: 'warning',
-
       showCancelButton: true,
       confirmButtonText: '삭제',
       cancelButtonText: '취소',
@@ -199,6 +202,15 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
         removeSemester(scheduleId);
         navigate('/semesterSetup');
         setReload((prev) => !prev);
+        Swal.fire({
+          title: '삭제되었습니다.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#632CFA',
+        }).then((res) => {
+          if (res.isConfirmed) {
+            window.location.reload();
+          }
+        });
       }
     });
   };

@@ -14,6 +14,8 @@ const SBody = styled.div`
 `;
 //학기 설정페이지
 const SemesterSetup = () => {
+  console.log(1, '리렌더링!');
+
   const [reload, setReload] = useState<boolean>(false);
   return (
     <>
