@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 import { SetStateAction, useEffect, useState } from 'react';
-import { IcAddWhite, IcCloseSmall } from '../../assets/icons';
+import {
+  IcAddWhite,
+  IcCheckedBox,
+  IcCloseSmall,
+  IcUncheckedBox,
+} from '../../assets/icons';
 import { Button } from '../common/styled/Button';
 import {
   createTodo,
@@ -11,11 +16,19 @@ import {
 import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { Task } from './TaskSidebar';
+import { css } from 'styled-components';
 
-const SInput = styled.input`
+const STodoWrapper = styled.div`
+  max-height: 260px;
+  overflow-y: auto;
+  overflow-x: hidden;
+`;
+const SInput = styled.input<{ $completed: boolean }>`
+  margin-left: 20px;
   font-size: 15px;
   font-weight: 500;
   color: #2f2f2f;
+  text-decoration: ${(props) => (props.$completed ? 'line-through' : 'none')};
 `;
 const SFont = styled.div`
   font-size: 18px;
@@ -38,7 +51,7 @@ const STodoTotalNumber = styled.div`
 `;
 const SAddTodo = styled(Button)`
   background-color: ${({ theme }) => theme.colors.purple100};
-  width: 260px;
+  width: 240px;
   height: 40px;
   color: ${({ theme }) => theme.colors.white};
 `;
@@ -47,14 +60,13 @@ const STodoContainer = styled.div`
 
   .icon {
     margin-left: auto;
+    margin-right: 10px;
   }
 `;
+const SCheckbox = styled.div`
+  padding-left: 7px;
+`;
 
-interface TodoProps {
-  date: string;
-  content: string;
-  status: boolean;
-}
 interface TodoOutside {
   clickedOutside: boolean;
   setClickedOutside: React.Dispatch<SetStateAction<boolean>>;
@@ -77,6 +89,7 @@ const Todo = ({
   const [todoArray, setTodoArray] = useState<any[]>([]);
   const [todoContent, setTodoContent] = useState<string>('');
   const [todoId, setTodoId] = useState<number>();
+  const [todoStatus, setTodoStatus] = useState<boolean>(false);
 
   const handleChangeTodoInput = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -100,6 +113,8 @@ const Todo = ({
     setReload((prev) => !prev);
   };
 
+  // 수정 기능
+
   //수정
   useEffect(() => {
     if (clickedOutside) {
@@ -107,7 +122,7 @@ const Todo = ({
       // 부모에서 클릭 이벤트 발생 시
       const patchTodoData = {
         content: todoContent,
-        status: true,
+        status: false,
       };
       if (todoId) {
         updateTodo(scheduleId, todoId, patchTodoData, date); // 수정 요청 보내기
@@ -154,26 +169,65 @@ const Todo = ({
     }
   };
 
+  const handleStatusChange = async (
+    todoId: number,
+    todoContent: string | undefined,
+  ) => {
+    console.log(todoId);
+
+    const date = clickedDate;
+    const patchTodoData = {
+      content: todoContent,
+      status: true,
+    };
+    const updatedTodoList = await updateTodo(
+      scheduleId,
+      todoId,
+      patchTodoData,
+      date,
+    );
+    console.log(updatedTodoList);
+  };
+
   return (
     <div>
-      <STodoContainer>
-        <SFont>To do</SFont>
-        <STodoTotalNumber>{todo.length}</STodoTotalNumber>
-      </STodoContainer>
-
-      {todo.map((todoItem) => (
-        <STodoContainer className="todo-item" key={todoItem.id}>
-          <SInput
-            placeholder="todo list 작성하세요"
-            defaultValue={todoItem.content}
-            onChange={(e: any) => handleChangeTodoInput(e, todoItem.id)}
-          />
-          <IcCloseSmall
-            onClick={() => handleDelete(todoItem.id)}
-            className="icon"
-          />
+      <STodoWrapper>
+        <STodoContainer>
+          <SFont>To do</SFont>
+          <STodoTotalNumber>{todo.length}</STodoTotalNumber>
         </STodoContainer>
-      ))}
+
+        {todo.map((todoItem) => (
+          <STodoContainer className="todo-item" key={todoItem.id}>
+            <SCheckbox>
+              {todoItem.status ? (
+                <IcCheckedBox
+                  onClick={() =>
+                    handleStatusChange(todoItem.id, todoItem.content)
+                  }
+                />
+              ) : (
+                <IcUncheckedBox
+                  onClick={() =>
+                    handleStatusChange(todoItem.id, todoItem.content)
+                  }
+                />
+              )}
+            </SCheckbox>
+
+            <SInput
+              placeholder="todo list 작성하세요"
+              defaultValue={todoItem.content}
+              $completed={todoItem.status}
+              onChange={(e: any) => handleChangeTodoInput(e, todoItem.id)}
+            />
+            <IcCloseSmall
+              onClick={() => handleDelete(todoItem.id)}
+              className="icon"
+            />
+          </STodoContainer>
+        ))}
+      </STodoWrapper>
 
       <SAddTodo onClick={handleAddTodo}>
         <IcAddWhite />

@@ -76,7 +76,7 @@ export const getSchoolSearchValue = async (
 
 // todo
 interface TodoProps {
-  content: string;
+  content: string | undefined;
 }
 export const createTodo = async (
   scheduleId: string | undefined,

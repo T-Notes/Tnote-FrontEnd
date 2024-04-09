@@ -83,6 +83,7 @@ const SLogLength = styled.div`
 export interface Task {
   id: number;
   title: string;
+  status: boolean;
   content: string;
   studentName: string;
   createdAt: string;
