@@ -131,6 +131,11 @@ const TimetableChangeBtn = ({
           dayIndex={dayIndex}
           lastClass={lastClass}
           reloadTrigger={reloadTrigger}
+          subjectId={subjectId}
+          setReloadTrigger={setReloadTrigger}
+          handleOpenAddClass={handleOpenAddClass}
+          setIsEditMode={setIsEditMode}
+          setSubjectId={setSubjectId}
         />
       ) : (
         <TimetableWeekTemplate
