@@ -58,7 +58,7 @@ const TimetableChangeBtn = ({
   const [isAddClass, setIsAddClass] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [subjectId, setSubjectId] = useState<string>('');
-  const [lastClass, setLastClass] = useState<string>('');
+  const [lastClass, setLastClass] = useState<string>('9교시');
 
   const handleClickTodayButton = (buttonType: string) => {
     setIsTodayClick(true);
