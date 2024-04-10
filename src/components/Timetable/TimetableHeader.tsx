@@ -23,7 +23,7 @@ const TimetableHeader = () => {
   const [remainingDay, setRemainingDay] = useState<number>(0);
   const current = new Date();
   const newCurrent = current.toISOString().slice(0, 10);
-  const [data, setData] = useState<number>();
+  const [data, setData] = useState<number>(0);
   useEffect(() => {
     if (scheduleId) {
       const remainingDayData = async () => {
