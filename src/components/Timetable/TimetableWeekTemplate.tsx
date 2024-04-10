@@ -213,8 +213,8 @@ const TimetableWeekTemplate = ({
                         onClick={() => openSubjectDataModal(item.id)}
                         color={backgroundColor}
                       >
-                        <SLocation>{item.classLocation}</SLocation>
-                        <p>{item.subjectName}</p>
+                        <SLocation>{item.subjectName}</SLocation>
+                        <p>{item.classLocation}</p>
                         {item.memo ? <p>{`메모: ${item.memo}`}</p> : null}
                       </SSubjectBox>
                     );
