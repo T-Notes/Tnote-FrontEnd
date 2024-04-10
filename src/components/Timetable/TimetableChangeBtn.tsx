@@ -45,12 +45,14 @@ interface TodayClick {
   setIsTodayClick: React.Dispatch<React.SetStateAction<boolean>>;
   reloadTrigger: boolean;
   setReloadTrigger: React.Dispatch<React.SetStateAction<boolean>>;
+  handleOpenAddClass: () => void;
 }
 const TimetableChangeBtn = ({
   isTodayClick,
   setIsTodayClick,
   reloadTrigger,
   setReloadTrigger,
+  handleOpenAddClass,
 }: TodayClick) => {
   const [selectedButton, setSelectedButton] = useState<string>('');
   const initialState = new Date().getDay();
@@ -77,10 +79,10 @@ const TimetableChangeBtn = ({
       setDayIndex((prevIndex) => (prevIndex > 1 ? prevIndex - 1 : 7));
     }
   };
-
-  const handleOpenAddClass = () => {
-    setIsAddClass(true);
-  };
+  // 부모로 가야함.
+  // const handleOpenAddClass = () => {
+  //   setIsAddClass(true);
+  // };
   return (
     <>
       <SWrapper>
@@ -140,6 +142,7 @@ const TimetableChangeBtn = ({
           subjectId={subjectId}
           setLastClass={setLastClass}
           lastClass={lastClass}
+          isAddClass={isAddClass}
         />
       )}
 

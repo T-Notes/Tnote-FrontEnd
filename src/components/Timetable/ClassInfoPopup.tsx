@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import instanceAxios from '../../utils/InstanceAxios';
-import ClassInfoPopupData from './ClassInfoPopupData';
 
 import {
   ModalLayout,
@@ -127,8 +126,8 @@ const ClassInfoPopup = ({
   // 수정을 클릭하면 classAddForm 다시 띄우기
   const handleUpdate = () => {
     setIsEditMode(true);
-    closeSubjectDataModal();
     handleOpenAddClass();
+    closeSubjectDataModal();
   };
   return (
     <SModalBackground>

@@ -47,6 +47,7 @@ const Timetable = () => {
           <TimetableWeekAndDay
             setReloadTrigger={setReloadTrigger}
             reloadTrigger={reloadTrigger}
+            handleOpenAddClass={handleOpenAddClass}
           />
         </div>
       </STimetableWrapper>

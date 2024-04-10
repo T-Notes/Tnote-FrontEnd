@@ -8,16 +8,21 @@ const SWrapper = styled.div``;
 interface Reload {
   reloadTrigger: boolean;
   setReloadTrigger: React.Dispatch<React.SetStateAction<boolean>>;
+  handleOpenAddClass: () => void;
 }
-const TimetableWeekAndDay = ({ setReloadTrigger, reloadTrigger }: Reload) => {
+const TimetableWeekAndDay = ({
+  setReloadTrigger,
+  reloadTrigger,
+  handleOpenAddClass,
+}: Reload) => {
   const [isTodayClick, setIsTodayClick] = useState<boolean>(false);
   const [isAddClass, setIsAddClass] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [subjectId, setSubjectId] = useState<string>('');
 
-  const handleOpenAddClass = () => {
-    setIsAddClass(true);
-  };
+  // const handleOpenAddClass = () => {
+  //   setIsAddClass(true);
+  // };
 
   return (
     <SWrapper>
@@ -26,6 +31,7 @@ const TimetableWeekAndDay = ({ setReloadTrigger, reloadTrigger }: Reload) => {
         setIsTodayClick={setIsTodayClick}
         setReloadTrigger={setReloadTrigger}
         reloadTrigger={reloadTrigger}
+        handleOpenAddClass={handleOpenAddClass}
       />
       {/* {isTodayClick ? (
         <TimetableDayTemplate />

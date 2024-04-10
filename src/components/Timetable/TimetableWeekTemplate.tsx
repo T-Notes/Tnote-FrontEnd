@@ -6,6 +6,7 @@ import instanceAxios from '../../utils/InstanceAxios';
 import { useToggle } from '../../utils/useHooks/useToggle';
 import ClassInfoPopup from './ClassInfoPopup';
 import { colorMapping } from '../../utils/colorMapping';
+import ClassAddForm from './ClassAddForm';
 
 const STimetableWrapper = styled.table`
   margin-top: 30px;
@@ -71,6 +72,7 @@ interface TimetableTemplate {
   lastClass: string;
   subjectId: string;
   isEditMode: boolean;
+  isAddClass: boolean;
 }
 const TimetableWeekTemplate = ({
   reloadTrigger,
@@ -82,6 +84,7 @@ const TimetableWeekTemplate = ({
   isEditMode,
   setLastClass,
   lastClass,
+  isAddClass,
 }: TimetableTemplate) => {
   const { scheduleId } = useParams();
   // const [lastClass, setLastClass] = useState<string>('');
@@ -236,6 +239,7 @@ const TimetableWeekTemplate = ({
           />
         )}
       </tbody>
+      {/* {isAddClass && <ClassAddForm />} */}
     </STimetableWrapper>
   );
 };
