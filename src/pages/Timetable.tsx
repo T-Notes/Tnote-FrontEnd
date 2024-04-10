@@ -5,7 +5,6 @@ import ClassAddForm from '../components/Timetable/ClassAddForm';
 import TimetableChangeBtn from '../components/Timetable/TimetableChangeBtn';
 import TimetableHeader from '../components/Timetable/TimetableHeader';
 import TimetableTemplate from '../components/Timetable/TimetableWeekTemplate';
-import TimetableWeekAndDay from '../components/Timetable/TimetableWeekAndDay';
 
 const SClassAddFormWrapper = styled.div`
   /* border: 1px solid red;
@@ -28,6 +27,7 @@ const Timetable = () => {
   const [reloadTrigger, setReloadTrigger] = useState<boolean>(false); // 화면 reload 추가
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [subjectId, setSubjectId] = useState<string>('');
+  const [isTodayClick, setIsTodayClick] = useState<boolean>(false);
 
   const handleOpenAddClass = () => {
     setIsAddClass(true);
@@ -44,11 +44,21 @@ const Timetable = () => {
         <div>
           <SemesterMenu onClickAddBtn={handleOpenAddClass} />
           <TimetableHeader />
-          <TimetableWeekAndDay
+          <TimetableChangeBtn
+            isTodayClick={isTodayClick}
+            setIsTodayClick={setIsTodayClick}
+            setReloadTrigger={setReloadTrigger}
+            setIsEditMode={setIsEditMode}
+            reloadTrigger={reloadTrigger}
+            handleOpenAddClass={handleOpenAddClass}
+            setSubjectId={setSubjectId}
+            subjectId={subjectId}
+          />
+          {/* <TimetableWeekAndDay
             setReloadTrigger={setReloadTrigger}
             reloadTrigger={reloadTrigger}
             handleOpenAddClass={handleOpenAddClass}
-          />
+          /> */}
         </div>
       </STimetableWrapper>
       {isAddClass && (

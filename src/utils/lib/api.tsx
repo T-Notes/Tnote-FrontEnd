@@ -338,7 +338,6 @@ export const deletedSubject = async (
 ) => {
   try {
     await instanceAxios.delete(`/tnote/subjects/${scheduleId}/${subjectsId}`);
-    window.alert('과목 삭제');
   } catch {}
 };
 

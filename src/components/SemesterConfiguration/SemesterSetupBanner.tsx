@@ -113,9 +113,7 @@ const SemesterSetupBanner = () => {
       {/* 홈으로 이동 시 어디로 라우팅 되는걸까? */}
       <SBannerText>
         <SSetup>
-          <Link to={scheduleId ? `/home/${scheduleId}` : '/home'}>
-            <IcGoBack />
-          </Link>
+          <IcGoBack onClick={() => navigate(-1)} className="pointer" />
           <SHeader>설정</SHeader>
         </SSetup>
         <SText>

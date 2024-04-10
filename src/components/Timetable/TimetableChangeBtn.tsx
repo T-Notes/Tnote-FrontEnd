@@ -45,21 +45,25 @@ interface TodayClick {
   setIsTodayClick: React.Dispatch<React.SetStateAction<boolean>>;
   reloadTrigger: boolean;
   setReloadTrigger: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   handleOpenAddClass: () => void;
+  setSubjectId: React.Dispatch<React.SetStateAction<string>>;
+  subjectId: string;
 }
 const TimetableChangeBtn = ({
   isTodayClick,
   setIsTodayClick,
   reloadTrigger,
   setReloadTrigger,
+  setIsEditMode,
   handleOpenAddClass,
+  setSubjectId,
+  subjectId,
 }: TodayClick) => {
-  const [selectedButton, setSelectedButton] = useState<string>('');
   const initialState = new Date().getDay();
+  const [selectedButton, setSelectedButton] = useState<string>('');
   const [dayIndex, setDayIndex] = useState<number>(initialState);
-  const [isAddClass, setIsAddClass] = useState<boolean>(false);
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [subjectId, setSubjectId] = useState<string>('');
+  // const [isAddClass, setIsAddClass] = useState<boolean>(false);
   const [lastClass, setLastClass] = useState<string>('9교시');
 
   const handleClickTodayButton = (buttonType: string) => {
@@ -79,10 +83,7 @@ const TimetableChangeBtn = ({
       setDayIndex((prevIndex) => (prevIndex > 1 ? prevIndex - 1 : 7));
     }
   };
-  // 부모로 가야함.
-  // const handleOpenAddClass = () => {
-  //   setIsAddClass(true);
-  // };
+
   return (
     <>
       <SWrapper>
@@ -130,6 +131,11 @@ const TimetableChangeBtn = ({
           dayIndex={dayIndex}
           lastClass={lastClass}
           reloadTrigger={reloadTrigger}
+          subjectId={subjectId}
+          setReloadTrigger={setReloadTrigger}
+          handleOpenAddClass={handleOpenAddClass}
+          setIsEditMode={setIsEditMode}
+          setSubjectId={setSubjectId}
         />
       ) : (
         <TimetableWeekTemplate
@@ -137,16 +143,12 @@ const TimetableChangeBtn = ({
           reloadTrigger={reloadTrigger}
           handleOpenAddClass={handleOpenAddClass}
           setIsEditMode={setIsEditMode}
-          isEditMode={isEditMode}
           setSubjectId={setSubjectId}
           subjectId={subjectId}
           setLastClass={setLastClass}
           lastClass={lastClass}
-          isAddClass={isAddClass}
         />
       )}
-
-      {/* <TimetableWeekTemplate /> */}
     </>
   );
 };

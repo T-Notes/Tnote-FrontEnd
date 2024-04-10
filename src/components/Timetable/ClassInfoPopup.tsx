@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import { IcClose } from '../../assets/icons';
 import { deletedSubject, getSelectedSubjectData } from '../../utils/lib/api';
 import ClassAddForm from './ClassAddForm';
+import Swal from 'sweetalert2';
 
 const SModalBackground = styled(ModalBackground)`
   /* background: none; */
@@ -89,7 +90,6 @@ interface ToggleProps {
   setReloadTrigger: React.Dispatch<React.SetStateAction<boolean>>;
   handleOpenAddClass: () => void;
   setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
-  isEditMode: boolean;
 }
 const ClassInfoPopup = ({
   closeSubjectDataModal,
@@ -97,7 +97,6 @@ const ClassInfoPopup = ({
   setReloadTrigger,
   handleOpenAddClass,
   setIsEditMode,
-  isEditMode,
 }: ToggleProps) => {
   const { scheduleId } = useParams();
   const [subject, setSubject] = useState<string>('');
@@ -119,9 +118,21 @@ const ClassInfoPopup = ({
   }, []);
 
   const handleDelete = async () => {
-    await deletedSubject(scheduleId, subjectId);
-    closeSubjectDataModal();
-    setReloadTrigger((prev) => !prev);
+    Swal.fire({
+      title: '과목 삭제',
+      text: '해당 과목을 삭제하시겠습니까?',
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소',
+      confirmButtonColor: '#632CFA',
+    }).then((res) => {
+      if (res.isConfirmed) {
+        deletedSubject(scheduleId, subjectId);
+        closeSubjectDataModal();
+      }
+      Swal.fire('과목이 삭제되었습니다.').then(() => {
+        setReloadTrigger((prev) => !prev);
+      });
+    });
   };
   // 수정을 클릭하면 classAddForm 다시 띄우기
   const handleUpdate = () => {

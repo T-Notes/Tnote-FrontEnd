@@ -3,8 +3,10 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { colorMapping } from '../../utils/colorMapping';
 import { getTodayTimetable } from '../../utils/lib/api';
+import ClassInfoPopup from './ClassInfoPopup';
 
 interface ClassProps {
+  id: string;
   classLocation: string;
   classTime: string;
   color: string;
@@ -51,12 +53,29 @@ interface DayTemplateProps {
   dayIndex: number;
   lastClass: string;
   reloadTrigger: boolean;
+  setSubjectId: React.Dispatch<React.SetStateAction<string>>;
+  setReloadTrigger: React.Dispatch<React.SetStateAction<boolean>>;
+  handleOpenAddClass: () => void;
+  setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+
+  subjectId: string;
 }
 const TimetableDayTemplate = memo(
-  ({ dayIndex, lastClass, reloadTrigger }: DayTemplateProps) => {
+  ({
+    dayIndex,
+    lastClass,
+    reloadTrigger,
+    setReloadTrigger,
+    handleOpenAddClass,
+    setIsEditMode,
+    subjectId,
+    setSubjectId,
+  }: DayTemplateProps) => {
     const { scheduleId } = useParams();
     const [classList, setClassList] = useState<ClassProps[]>([]);
     let lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10);
+    const [isOpenSubjectDataModal, setIsOpenSubjectDataModal] =
+      useState<boolean>(false);
 
     const dayMapping = (dayIndex: number) => {
       let day = '';
@@ -109,6 +128,16 @@ const TimetableDayTemplate = memo(
       return time1 === time2;
     };
 
+    const openSubjectDataModal = (subjectId: string) => {
+      setSubjectId(subjectId);
+
+      setIsOpenSubjectDataModal(true);
+    };
+
+    const closeSubjectDataModal = () => {
+      setIsOpenSubjectDataModal(false);
+    };
+
     useEffect(() => {
       const getDayTimetable = async () => {
         const day = dayMapping(dayIndex);
@@ -140,7 +169,11 @@ const TimetableDayTemplate = memo(
                 const backgroundColor = colorMapping[subject.color] || '';
                 if (isSameClassTime(time.class, subject.classTime)) {
                   return (
-                    <SDayTimetableWrapper key={index} color={backgroundColor}>
+                    <SDayTimetableWrapper
+                      key={index}
+                      color={backgroundColor}
+                      onClick={() => openSubjectDataModal(subject.id)}
+                    >
                       <SClassText>
                         <div>{`${subject.classLocation} ${subject.subjectName}`}</div>
                         <br />
@@ -159,6 +192,15 @@ const TimetableDayTemplate = memo(
             </SClass>
           </SDayTime>
         ))}
+        {isOpenSubjectDataModal && (
+          <ClassInfoPopup
+            closeSubjectDataModal={closeSubjectDataModal}
+            subjectId={subjectId}
+            setReloadTrigger={setReloadTrigger}
+            handleOpenAddClass={handleOpenAddClass}
+            setIsEditMode={setIsEditMode}
+          />
+        )}
       </SDayColumn>
     );
   },
