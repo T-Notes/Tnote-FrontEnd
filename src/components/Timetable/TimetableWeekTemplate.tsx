@@ -215,7 +215,7 @@ const TimetableWeekTemplate = ({
                       >
                         <SLocation>{item.classLocation}</SLocation>
                         <p>{item.subjectName}</p>
-                        <p>{`메모: ${item.memo}`}</p>
+                        {item.memo ? <p>{`메모: ${item.memo}`}</p> : null}
                       </SSubjectBox>
                     );
                   }
