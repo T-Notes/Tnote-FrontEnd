@@ -89,7 +89,6 @@ interface ToggleProps {
   setReloadTrigger: React.Dispatch<React.SetStateAction<boolean>>;
   handleOpenAddClass: () => void;
   setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
-  isEditMode: boolean;
 }
 const ClassInfoPopup = ({
   closeSubjectDataModal,
@@ -97,7 +96,6 @@ const ClassInfoPopup = ({
   setReloadTrigger,
   handleOpenAddClass,
   setIsEditMode,
-  isEditMode,
 }: ToggleProps) => {
   const { scheduleId } = useParams();
   const [subject, setSubject] = useState<string>('');

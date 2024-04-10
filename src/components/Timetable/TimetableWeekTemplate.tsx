@@ -71,8 +71,6 @@ interface TimetableTemplate {
   setLastClass: React.Dispatch<React.SetStateAction<string>>;
   lastClass: string;
   subjectId: string;
-  isEditMode: boolean;
-  isAddClass: boolean;
 }
 const TimetableWeekTemplate = ({
   reloadTrigger,
@@ -81,14 +79,10 @@ const TimetableWeekTemplate = ({
   setIsEditMode,
   setSubjectId,
   subjectId,
-  isEditMode,
   setLastClass,
   lastClass,
-  isAddClass,
 }: TimetableTemplate) => {
   const { scheduleId } = useParams();
-  // const [lastClass, setLastClass] = useState<string>('');
-
   let lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
   const [subjectsList, setSubjectList] = useState<any[]>([]);
   // 과목 조회 모달 상태관리
@@ -115,9 +109,7 @@ const TimetableWeekTemplate = ({
             .get(`/tnote/schedule/week/${scheduleId}`)
             .then((res) => {
               const getData = res.data;
-
               const subjectArray = getData.data[0].subjects;
-
               setColor(subjectArray.map((item: any) => item.color));
               setSubjectList(subjectArray);
               setLastClass(getData.data[0].lastClass || '9교시');
@@ -235,11 +227,9 @@ const TimetableWeekTemplate = ({
             setReloadTrigger={setReloadTrigger}
             handleOpenAddClass={handleOpenAddClass}
             setIsEditMode={setIsEditMode}
-            isEditMode={isEditMode}
           />
         )}
       </tbody>
-      {/* {isAddClass && <ClassAddForm />} */}
     </STimetableWrapper>
   );
 };
