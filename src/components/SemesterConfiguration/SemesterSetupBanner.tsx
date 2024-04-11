@@ -46,6 +46,11 @@ const SWrapper = styled.div`
 const SAddSemesterText = styled.div`
   cursor: pointer;
 `;
+const SSemester = styled.div<{ selected: boolean }>`
+  color: ${(props) => (props.selected ? '#632CFA' : '#5E5E5E')};
+  padding-bottom: 10px;
+`;
+
 interface SemesterListProps {
   id: number;
   semesterName: string;
@@ -57,6 +62,7 @@ const SemesterSetupBanner = () => {
   const { year, month } = useCurrentDate();
 
   const [isPostSemester, setIsPostSemester] = useState<boolean>(false);
+  const [selectedSemester, setSelectedSemester] = useState<number | null>(null);
 
   // 학기 자동 생성 기준
   const autoCreateSemester = () => {
@@ -109,13 +115,17 @@ const SemesterSetupBanner = () => {
         <SText>
           <SCaption>학기 설정</SCaption>
           {semesterList.map((semester) => (
-            <div key={semester.id}>
+            <SSemester
+              key={semester.id}
+              selected={selectedSemester === semester.id}
+              onClick={() => setSelectedSemester(semester.id)}
+            >
               <Link to={`/semesterSetup/${semester.id}`}>
                 <ul>
-                  <li>{semester.semesterName}</li>
+                  <li className="pointer">{semester.semesterName}</li>
                 </ul>
               </Link>
-            </div>
+            </SSemester>
           ))}
           <SAddSemester>
             <IcAddBlack />
