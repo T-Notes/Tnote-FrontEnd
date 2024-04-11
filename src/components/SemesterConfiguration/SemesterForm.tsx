@@ -221,7 +221,7 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
 
         <SLabel>마지막 교시</SLabel>
 
-        <SDropdownWrapper>
+        <SDropdownWrapper onClick={handleChangeToggle}>
           <SLastClassInput
             value={semesterData.lastClass}
             readOnly
@@ -230,7 +230,7 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
           {isToggle ? (
             <IcCloseDropdown onClick={handleChangeToggle} />
           ) : (
-            <IcOpenDropdown onClick={handleChangeToggle} />
+            <IcOpenDropdown />
           )}
           {isToggle && (
             <LastClassList onSelectedSession={handleClickLastClass} />
