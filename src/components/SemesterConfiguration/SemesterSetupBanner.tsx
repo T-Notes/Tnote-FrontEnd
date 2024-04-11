@@ -105,11 +105,26 @@ const SemesterSetupBanner = () => {
     getSemester();
   }, [isPostSemester]);
 
+  const handleClickBackRoute = () => {
+    if (window.location.pathname.includes('home')) {
+      navigate('/home');
+    } else if (window.location.pathname.includes('timetable')) {
+      navigate('/timetable');
+    }
+  };
+
+  const handleClickRoute = (scheduleId: number) => {
+    if (window.location.pathname.includes('home')) {
+      navigate(`/semesterSetup/home/${scheduleId}`);
+    } else if (window.location.pathname.includes('timetable')) {
+      navigate(`/semesterSetup/timetable/${scheduleId}`);
+    }
+  };
   return (
     <SWrapper>
       <SBannerText>
         <SSetup>
-          <IcGoBack onClick={() => navigate(-1)} className="pointer" />
+          <IcGoBack onClick={handleClickBackRoute} className="pointer" />
           <SHeader>설정</SHeader>
         </SSetup>
         <SText>
@@ -120,11 +135,11 @@ const SemesterSetupBanner = () => {
               selected={selectedSemester === semester.id}
               onClick={() => setSelectedSemester(semester.id)}
             >
-              <Link to={`/semesterSetup/${semester.id}`}>
-                <ul>
-                  <li className="pointer">{semester.semesterName}</li>
-                </ul>
-              </Link>
+              {/* <Link to={`/semesterSetup/${semester.id}`}> */}
+              <ul onClick={() => handleClickRoute(semester.id)}>
+                <li className="pointer">{semester.semesterName}</li>
+              </ul>
+              {/* </Link> */}
             </SSemester>
           ))}
           <SAddSemester>

@@ -26,12 +26,16 @@ const Router = () => {
           <Route path="/home/:scheduleId" element={<Home />} />
           {/* 유저가 학기 추가를 해서 id를 가지고 있을때 보여줄 페이지 */}
           <Route
-            path="/semesterSetup/:scheduleId"
+            path="/semesterSetup/home/:scheduleId"
+            element={<SemesterSetup />}
+          />
+          <Route
+            path="/semesterSetup/timetable/:scheduleId"
             element={<SemesterSetup />}
           />
           {/* 유저가 학기 추가를 하기 전이라 id가 없을때 보여줄 페이지 */}
-          <Route path="/semesterSetup" element={<SemesterSetup />} />
-
+          <Route path="/semesterSetup/home" element={<SemesterSetup />} />
+          <Route path="/semesterSetup/timetable" element={<SemesterSetup />} />
           {/* 학기 추가 후 시간표 페이지 클릭 */}
           <Route path="/timetable/:scheduleId" element={<Timetable />} />
           {/* 학기 추가 전 시간표 페이지 클릭 */}
