@@ -91,8 +91,6 @@ const Landing = () => {
           <PrivacyPolicyModal
             isOpen={isOpen}
             onRequestClose={closeModal}
-            title="개인 정보 보호 정책"
-            content={privacyPolicyContent}
             onPrivacyAgreement={handleIsCheckedTrue}
           />
         </>

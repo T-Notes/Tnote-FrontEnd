@@ -30,7 +30,7 @@ const Home = () => {
   const [clickedDate, setClickedDate] = useState<string>('');
 
   const handleClickLinkToAddSemesterPage = () => {
-    navigate('/semesterSetup');
+    navigate('/semesterSetup/home');
   };
   // reload 상태 관리
   const [reload, setReload] = useState<boolean>(false);

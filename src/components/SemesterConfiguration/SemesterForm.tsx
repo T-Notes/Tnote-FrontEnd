@@ -1,34 +1,24 @@
 import React, { useEffect, useState } from 'react';
-
+import Swal from 'sweetalert2';
 import DateRangePicker from '../common/DateRangePicker';
-
 import { Input } from '../common/styled/Input';
 import { Button } from '../common/styled/Button';
-import {
-  IcCloseDropdown,
-  IcDatePicker,
-  IcOpenDropdown,
-} from '../../assets/icons';
+import { IcCloseDropdown, IcOpenDropdown } from '../../assets/icons';
 import LastClassList from './LastClassList';
 import styled from 'styled-components';
-
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToggle } from '../../utils/useHooks/useToggle';
-
 import {
   getSemesterData,
   removeSemester,
   updateSemester,
 } from '../../utils/lib/api';
-import DropdownInput from '../common/DropdownInput';
-import Swal from 'sweetalert2';
 
 const SWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  position: fixed; /* 고정 위치 */
+  position: fixed;
   left: 500px;
-  /* align-items: center; */
 `;
 const SSemesterBody = styled.div`
   margin-top: 25px;
@@ -48,11 +38,11 @@ const SDelete = styled(Button)`
   background-color: ${({ theme }) => theme.colors.gray200};
   ${({ theme }) => theme.fonts.caption};
 `;
-const SSave = styled(Button)`
+const SSave = styled(Button)<{ disabled: boolean }>`
   width: 245px;
   height: 50px;
-  background-color: ${({ theme }) => theme.colors.purple100};
-  color: ${({ theme }) => theme.colors.white};
+  background-color: ${(props) => (props.disabled ? '#E8E8E8' : '#632CFA')};
+  color: ${(props) => (props.disabled ? '#11111' : '#ffff')};
   ${({ theme }) => theme.fonts.caption};
 `;
 const SWarningText = styled.p`
@@ -62,11 +52,6 @@ const SWarningText = styled.p`
 const SHeader = styled.h1`
   ${({ theme }) => theme.fonts.h2}
   margin-top: 30px;
-`;
-const SDateIc = styled.div`
-  display: flex;
-  font-size: 18px;
-  font-weight: 500;
 `;
 
 const SButtons = styled.div`
@@ -154,7 +139,6 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
     setEndDate(new Date(data.endDate));
   };
 
-  // 유저가 저장한 값 가져오기
   useEffect(() => {
     if (scheduleId) {
       getSemesterForm();
@@ -189,7 +173,6 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
     });
   };
 
-  // 학기 삭제하기
   const handleDeleteSemester = async () => {
     await Swal.fire({
       title: '학기 삭제',
@@ -215,6 +198,8 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
     });
   };
 
+  const isFormValid =
+    semesterData.semesterName && semesterData.lastClass && startDate && endDate;
   return (
     <SWrapper>
       <SHeader>학기 설정</SHeader>
@@ -236,7 +221,7 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
 
         <SLabel>마지막 교시</SLabel>
 
-        <SDropdownWrapper>
+        <SDropdownWrapper onClick={handleChangeToggle}>
           <SLastClassInput
             value={semesterData.lastClass}
             readOnly
@@ -245,7 +230,7 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
           {isToggle ? (
             <IcCloseDropdown onClick={handleChangeToggle} />
           ) : (
-            <IcOpenDropdown onClick={handleChangeToggle} />
+            <IcOpenDropdown />
           )}
           {isToggle && (
             <LastClassList onSelectedSession={handleClickLastClass} />
@@ -257,7 +242,9 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
       </SWarningText>
       <SButtons>
         <SDelete onClick={handleDeleteSemester}>학기 삭제</SDelete>
-        <SSave onClick={handleUpdateSemester}>저장</SSave>
+        <SSave onClick={handleUpdateSemester} disabled={!isFormValid}>
+          저장
+        </SSave>
       </SButtons>
     </SWrapper>
   );

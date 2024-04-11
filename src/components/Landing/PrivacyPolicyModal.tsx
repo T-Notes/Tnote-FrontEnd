@@ -4,6 +4,7 @@ import { ReactEventHandler, ReactNode } from 'react';
 
 import { Button } from '../common/styled/Button';
 import { policyCustomStyles } from '../common/styled/ModalLayout';
+import { privacyPolicyContent } from '../../utils/privacyPolicyContent';
 
 // styled //
 const SPrivacyPolicyBox = styled.div`
@@ -52,16 +53,12 @@ const SPrivacyPolicyCation = styled.p`
 interface PrivacyPolicyModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
-  title: string;
-  content: ReactNode;
   onPrivacyAgreement: ReactEventHandler;
 }
 
 const PrivacyPolicyModal = ({
   isOpen,
   onRequestClose,
-  title,
-  content,
   onPrivacyAgreement,
 }: PrivacyPolicyModalProps) => {
   return (
@@ -69,14 +66,13 @@ const PrivacyPolicyModal = ({
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       style={policyCustomStyles}
-      contentLabel={title}
     >
-      <SPrivacyPolicyTitle>{title}</SPrivacyPolicyTitle>
+      <SPrivacyPolicyTitle>개인 정보 보호 정책</SPrivacyPolicyTitle>
       <SPrivacyPolicyCation>
         아래 약관에 동의하시고, 다음단계로 이동하세요!
       </SPrivacyPolicyCation>
       <SPrivacyPolicyBox>
-        <SPolicyContentBox>{content}</SPolicyContentBox>
+        <SPolicyContentBox>{privacyPolicyContent}</SPolicyContentBox>
         <SPrivacyAgreementBtnBox onClick={onPrivacyAgreement}>
           동의함
         </SPrivacyAgreementBtnBox>

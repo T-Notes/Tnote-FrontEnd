@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { scheduleIdState } from '../../utils/lib/recoil/scheduleIdState';
 
 import AllSemesterNamesForm from './AllSemesterNamesForm';
 
@@ -26,24 +24,30 @@ interface SemesterMenu {
 }
 const SemesterMenu = ({ onClickAddBtn }: SemesterMenu) => {
   const { scheduleId } = useParams();
+  const navigate = useNavigate();
 
-  const location = useLocation(); // 현재 url정보에 접근
+  const handleClickRoute = () => {
+    if (scheduleId) {
+      if (window.location.pathname.includes('home')) {
+        navigate(`/semesterSetup/home/${scheduleId}`);
+      } else if (window.location.pathname.includes('timetable')) {
+        navigate(`/semesterSetup/timetable/${scheduleId}`);
+      }
+    } else if (!scheduleId) {
+      if (window.location.pathname.includes('home')) {
+        navigate(`/semesterSetup/home`);
+      } else if (window.location.pathname.includes('timetable')) {
+        navigate(`/semesterSetup/timetable`);
+      }
+    }
+  };
 
-  // 아이디가 있으면 => /semesterSetup/${scheduleId}
-  // 아이디가 없으면 /semesterSetup으로 이동
   return (
     <SSemesterMenuWrapper>
       <AllSemesterNamesForm />
-
       <SAddAndSetup>
-        {/* <Link to={toPath}> */}
         <SButton onClick={onClickAddBtn}>추가</SButton>
-        {/* </Link> */}
-        <Link
-          to={scheduleId ? `/semesterSetup/${scheduleId}` : '/semesterSetup'}
-        >
-          <SButton>설정</SButton>
-        </Link>
+        <SButton onClick={handleClickRoute}>설정</SButton>
       </SAddAndSetup>
     </SSemesterMenuWrapper>
   );
