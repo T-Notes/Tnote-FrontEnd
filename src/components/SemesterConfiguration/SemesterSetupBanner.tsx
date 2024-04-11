@@ -1,14 +1,12 @@
 import styled from 'styled-components';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-
 import { IcAddBlack, IcGoBack } from '../../assets/icons';
 import { useEffect, useState } from 'react';
-import instanceAxios from '../../utils/InstanceAxios';
 import { createSemester, getAllSemesterNames } from '../../utils/lib/api';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../utils/lib/recoil/userDataState';
-import { scheduleIdState } from '../../utils/lib/recoil/scheduleIdState';
+
 const SHeader = styled.h1`
   ${({ theme }) => theme.fonts.h2}
 `;
@@ -39,12 +37,11 @@ const SText = styled.div`
 `;
 const SWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.gray1100};
-  /* margin-right: 50px; */
   width: 250px;
   height: 100vh;
-  position: fixed; /* 고정 위치 */
-  top: 0; /* 맨 위에 고정 */
-  left: 200px; /* 맨 왼쪽에 고정 */
+  position: fixed;
+  top: 0;
+  left: 200px;
 `;
 const SAddSemesterText = styled.div`
   cursor: pointer;
@@ -55,14 +52,10 @@ interface SemesterListProps {
 }
 
 const SemesterSetupBanner = () => {
-  const { scheduleId } = useParams();
   const navigate = useNavigate();
-  const email = useRecoilValue(userDataState); // 이메일이 꼭 필요할까?
   const [semesterList, setSemesterList] = useState<SemesterListProps[]>([]);
   const { year, month } = useCurrentDate();
-  // const scheduleId = localStorage.getItem('semesterId');
 
-  // post와 조회를 분리하기 위함
   const [isPostSemester, setIsPostSemester] = useState<boolean>(false);
 
   // 학기 자동 생성 기준
@@ -80,7 +73,7 @@ const SemesterSetupBanner = () => {
 
   // 학기 Post
   const handleAddSemester = async () => {
-    const createdSemester = autoCreateSemester(); // 학기 자동생성 함수 호출
+    const createdSemester = autoCreateSemester();
     try {
       if (createdSemester) {
         const data = {
@@ -90,9 +83,7 @@ const SemesterSetupBanner = () => {
           startDate: new Date(),
           endDate: new Date(),
         };
-        await createSemester(data); // await 키워드를 통해 api 요청의 응답이 돌아오기 전까지 다음 코드가 실행되지 않음 (동기적)
-        // localStorage.setItem('semesterId', getScheduleId.id);
-        // localStorage.setItem('semesterName', getScheduleId.semesterName);
+        await createSemester(data);
         setIsPostSemester((prev) => !prev);
       }
     } catch (error) {
@@ -110,7 +101,6 @@ const SemesterSetupBanner = () => {
 
   return (
     <SWrapper>
-      {/* 홈으로 이동 시 어디로 라우팅 되는걸까? */}
       <SBannerText>
         <SSetup>
           <IcGoBack onClick={() => navigate(-1)} className="pointer" />

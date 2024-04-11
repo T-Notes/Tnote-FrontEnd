@@ -114,7 +114,6 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
       const fetchData = async () => {
         try {
           if (typeof clickedDate !== 'undefined') {
-            const params = { date: clickedDate };
             const allData = await getAllTaskByDate(scheduleId, clickedDate);
 
             const logData = allData.data;

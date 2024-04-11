@@ -7,9 +7,9 @@ const SDropdownWrapper = styled.div`
   border-radius: 8px;
   background-color: white;
   box-shadow: 0px 6px 15px 0px #00000033;
-  top: calc(100% + 4px); /* SDropdownLabel 아래로 위치 */
+  top: calc(100% + 4px);
   left: 0;
-  z-index: 3; /* SDropdownLabel 위에 나타나도록 설정 */
+  z-index: 3;
   overflow-y: scroll;
 `;
 
