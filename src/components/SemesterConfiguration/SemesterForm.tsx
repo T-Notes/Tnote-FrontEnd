@@ -48,11 +48,11 @@ const SDelete = styled(Button)`
   background-color: ${({ theme }) => theme.colors.gray200};
   ${({ theme }) => theme.fonts.caption};
 `;
-const SSave = styled(Button)`
+const SSave = styled(Button)<{ disabled: boolean }>`
   width: 245px;
   height: 50px;
-  background-color: ${({ theme }) => theme.colors.purple100};
-  color: ${({ theme }) => theme.colors.white};
+  background-color: ${(props) => (props.disabled ? '#E8E8E8' : '#632CFA')};
+  color: ${(props) => (props.disabled ? '#11111' : '#ffff')};
   ${({ theme }) => theme.fonts.caption};
 `;
 const SWarningText = styled.p`
@@ -215,6 +215,8 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
     });
   };
 
+  const isFormValid =
+    semesterData.semesterName && semesterData.lastClass && startDate && endDate;
   return (
     <SWrapper>
       <SHeader>학기 설정</SHeader>
@@ -257,7 +259,9 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
       </SWarningText>
       <SButtons>
         <SDelete onClick={handleDeleteSemester}>학기 삭제</SDelete>
-        <SSave onClick={handleUpdateSemester}>저장</SSave>
+        <SSave onClick={handleUpdateSemester} disabled={!isFormValid}>
+          저장
+        </SSave>
       </SButtons>
     </SWrapper>
   );
