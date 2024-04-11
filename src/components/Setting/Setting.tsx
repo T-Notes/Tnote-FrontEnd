@@ -20,6 +20,7 @@ import EditProfile from './EditProfile';
 import ModalPortal from '../../utils/ModalPortal';
 import { result } from 'lodash';
 import { useNavigate } from 'react-router-dom';
+import PrivacyPolicyModal from '../Landing/PrivacyPolicyModal';
 
 const SSettingWrapper = styled.div`
   border: 1px solid var(--Black-Black50, #d5d5d5);
@@ -178,6 +179,7 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
   const userId = localStorage.getItem('userId');
   // 수정 폼 모달
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
+  const [isPolicyModal, setIsPolicyModal] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserData>({
     email: '',
     name: '',
@@ -201,6 +203,10 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
   };
   const handleOffAlarm = () => {
     setUserData((prev) => ({ ...prev, alarm: false }));
+  };
+
+  const handleClickPolicyModal = () => {
+    setIsPolicyModal(true);
   };
 
   const handleClickLogout = async () => {
@@ -321,12 +327,21 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
             </SDeletedAccountContainer>
             <SVersion>버전: vwer12.3</SVersion>
             <SInfoButtonContainer>
-              <SInfoButton>개인정보 정책</SInfoButton>
+              <SInfoButton onClick={handleClickPolicyModal}>
+                개인정보 정책
+              </SInfoButton>
             </SInfoButtonContainer>
           </>
           {isOpenEditModal && <EditProfile closeEditModal={closeEditModal} />}
         </SSettingWrapper>
       </ModalBackground>
+      {isPolicyModal && (
+        <PrivacyPolicyModal
+          isOpen={isPolicyModal}
+          onRequestClose={() => setIsPolicyModal(false)}
+          onPrivacyAgreement={() => setIsPolicyModal(false)}
+        />
+      )}
     </ModalPortal>
   );
 };

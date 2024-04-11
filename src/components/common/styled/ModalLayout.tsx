@@ -44,6 +44,7 @@ export const ModalLayout = styled.div`
 export const policyCustomStyles = {
   overlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 9,
   },
   content: {
     width: '664px',
@@ -57,6 +58,7 @@ export const policyCustomStyles = {
     padding: '30px',
     border: '1px solid #D5D5D5',
     borderRadius: '20px',
+    zIndex: 10,
   },
 };
 
