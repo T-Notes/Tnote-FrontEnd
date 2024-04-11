@@ -259,13 +259,10 @@ export const createConsultationRecords = async (
 };
 
 // 로그아웃
-
 export const logout = async () => {
   try {
     const response = instanceAxios.post('/tnote/user/logout').then((res) => {
-      console.log(1, 'res:', res);
       localStorage.clear();
-      window.location.reload();
     });
     return response;
   } catch {}

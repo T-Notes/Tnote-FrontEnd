@@ -202,9 +202,18 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
   const handleOffAlarm = () => {
     setUserData((prev) => ({ ...prev, alarm: false }));
   };
+
   const handleClickLogout = async () => {
-    await logout().then((res) => {
-      window.alert('로그아웃되셨습니다.');
+    Swal.fire({
+      title: '로그아웃 하시겠습니까?',
+      confirmButtonText: '로그아웃',
+      confirmButtonColor: '#632CFA',
+    }).then((res) => {
+      if (res.isConfirmed) {
+        logout().then((res) => {
+          navigate('/');
+        });
+      }
     });
   };
   useEffect(() => {
