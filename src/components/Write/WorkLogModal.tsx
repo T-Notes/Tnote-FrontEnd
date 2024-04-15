@@ -153,7 +153,7 @@ const WorkLogModal = ({
     const file = e.target.files[0];
     console.log('file', file);
     setImgUrl(file);
-    formData.append('classLogImages', file);
+    formData.append('proceedingImages', file);
     setFileName(file.name);
   };
 
