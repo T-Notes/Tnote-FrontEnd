@@ -267,18 +267,17 @@ const ClassAddForm = ({
       const selectedSubjectData = async () => {
         const response = await getSelectedSubjectData(scheduleId, subjectId);
         const data = response.data;
+        console.log(data);
 
         // 수정하는 상황일때
         setSubjectName(data.subjectName);
-        setClassTime(data.classTime);
+        setClassTime(data.classTime.replace('교시', ''));
 
         const enDay = handleChangeKoreanToEnglishDay(data.classDay);
-
         setEnDay(enDay); // 서버에 보내는 상태
         setClassDay(data.classDay); // 유저에게 보여지는 상태
-
         setClassLocation(data.classLocation);
-        // setSelectedColor(data) // 색깔이 안옴
+        setSelectedColor(data.color);
         setMemo(data.memo);
       };
       selectedSubjectData();
