@@ -222,7 +222,7 @@ const ClassAddForm = ({
     };
     const pathData = {
       subjectName: subjectName,
-      classTime: classTime,
+      classTime: `${classTime}교시`,
       classDay: enDay,
       classLocation: classLocation,
       memo: memo,
