@@ -65,6 +65,7 @@ export const policyCustomStyles = {
 export const searchCustomStyles = {
   overlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 9,
   },
   content: {
     width: '460px',
@@ -78,6 +79,7 @@ export const searchCustomStyles = {
     padding: '20px',
     border: '1px solid #D5D5D5',
     borderRadius: '8px',
+    zIndex: 10,
   },
 };
 

@@ -175,7 +175,7 @@ const StudentRecordsModal = ({
     const file = e.target.files[0];
     console.log('file', file);
     setContentImgUrl(file);
-    formData.append('classLogImages', file);
+    formData.append('observationImages', file);
     setContentFileName(file.name);
   };
 
@@ -183,7 +183,7 @@ const StudentRecordsModal = ({
     const file = e.target.files[0];
     console.log('file', file);
     setValueImgUrl(file);
-    formData.append('classLogImages', file);
+    formData.append('observationImages', file);
     setValueFileName(file.name);
   };
   return (

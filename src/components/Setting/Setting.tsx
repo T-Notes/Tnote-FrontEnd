@@ -21,6 +21,7 @@ import ModalPortal from '../../utils/ModalPortal';
 import { result } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 import PrivacyPolicyModal from '../Landing/PrivacyPolicyModal';
+import { useRecoilValue } from 'recoil';
 
 const SSettingWrapper = styled.div`
   border: 1px solid var(--Black-Black50, #d5d5d5);
@@ -179,6 +180,7 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
   const userId = localStorage.getItem('userId');
   // 수정 폼 모달
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isPolicyModal, setIsPolicyModal] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserData>({
     email: '',
@@ -188,10 +190,12 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     career: undefined,
     alarm: false,
   });
+  const code = localStorage.getItem('code');
 
   // 수정 폼 모달 제어함수
   const openEditModal = () => {
     setIsOpenEditModal(true);
+    setIsEditMode(true);
   };
   const closeEditModal = () => {
     setIsOpenEditModal(false);
@@ -242,11 +246,6 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
   // 계정 탈퇴
   const handleClickDeleteAccount = () => {
     Swal.fire({
-      iconHtml: `<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="none">
-      <circle cx="30" cy="30" r="30" fill="#FF4343"/>
-      <path d="M32.4632 37L34.474 17.9761C34.7551 15.3168 32.6703 13 29.9962 13C27.3248 13 25.2409 15.3123 25.5176 17.9693L27.5 37H32.4632Z" fill="white"/>
-      <circle cx="30" cy="44" r="3" fill="white"/>
-    </svg>`,
       title: '계정 삭제',
       html: '계정을 삭제할 시 모든 데이터가 지워지며<br>해당 작업을 복구 할 수 없습니다.<br>정말 탈퇴를 원하시면 이메일을 입력해주세요.',
       input: 'email', // 이메일 입력란 추가
@@ -258,7 +257,7 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
       if (result.isConfirmed) {
         // 계정 영구 삭제 버튼 클릭 시
         const email = result.value; // 입력된 이메일 값 가져오기
-        deletedAccount(); // 계정탈퇴 요청
+        deletedAccount(code); // 계정탈퇴 요청
         navigate('/');
       }
     });
@@ -332,7 +331,12 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
               </SInfoButton>
             </SInfoButtonContainer>
           </>
-          {isOpenEditModal && <EditProfile closeEditModal={closeEditModal} />}
+          {isOpenEditModal && (
+            <EditProfile
+              closeEditModal={closeEditModal}
+              isEditMode={isEditMode}
+            />
+          )}
         </SSettingWrapper>
       </ModalBackground>
       {isPolicyModal && (

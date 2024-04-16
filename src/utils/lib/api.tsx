@@ -270,9 +270,9 @@ export const logout = async () => {
 
 // 계정탈퇴
 
-export const deletedAccount = async () => {
+export const deletedAccount = async (code: string | null) => {
   try {
-    const response = await instanceAxios.delete('/tnote/user');
+    const response = await instanceAxios.delete(`/tnote/user?code=${code}`);
     console.log(response);
     localStorage.clear();
     return response;

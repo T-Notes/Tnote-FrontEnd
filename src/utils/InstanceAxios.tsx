@@ -62,8 +62,7 @@ instanceAxios.interceptors.response.use(
             }).then((result) => {
               if (result.isConfirmed) {
                 localStorage.clear();
-                // const navigate = useNavigate();
-                // navigate('/');
+                window.location.href = '/';
               }
             });
           }

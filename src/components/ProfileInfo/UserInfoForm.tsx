@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import instanceAxios from '../../utils/InstanceAxios';
 import { useModal } from '../../utils/useHooks/useModal';
-import { updateUserInfo } from '../../utils/lib/api';
+import { getUserInfo, updateUserInfo } from '../../utils/lib/api';
 
 import { IcSearch } from '../../assets/icons';
 import { Input } from '../common/styled/Input';
@@ -17,6 +17,7 @@ import UserSchoolForm from './UserSchoolForm';
 import SearchInput from '../common/SearchInput';
 import { useRecoilState } from 'recoil';
 import { userDataState } from '../../utils/lib/recoil/userDataState';
+import Swal from 'sweetalert2';
 
 const SFormWrapper = styled.div`
   display: flex;
@@ -75,8 +76,11 @@ export interface UserDataProps {
   career: string;
   alarm: boolean;
 }
-
-const UserInfoForm = () => {
+interface EditProps {
+  isEditMode: boolean;
+  closeEditModal: () => void;
+}
+const UserInfoForm = ({ isEditMode, closeEditModal }: EditProps) => {
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId'); // 로컬스토리지에 담긴 UserId 받아오기
   const [user, setUser] = useRecoilState(userDataState); // 카카오 유저정보 전역관리
@@ -85,7 +89,7 @@ const UserInfoForm = () => {
     schoolName: '',
     subject: '',
     career: '',
-    alarm: true,
+    alarm: false,
   });
   const { isOpen, openModal, closeModal } = useModal();
 
@@ -122,6 +126,18 @@ const UserInfoForm = () => {
       };
       getUserName();
     }
+    if (isEditMode) {
+      const getEditUserInfo = async () => {
+        const response = await getUserInfo(userId);
+        setUserData({
+          schoolName: response.data.school,
+          subject: response.data.subject,
+          career: String(response.data.career),
+          alarm: response.data.alarm,
+        });
+      };
+      getEditUserInfo();
+    }
   }, [userId]);
 
   // 회원 추가 정보 작성 폼 전송
@@ -130,16 +146,21 @@ const UserInfoForm = () => {
       const updatedUserData = {
         schoolName: userData.schoolName,
         subject: userData.subject,
-        career: userData.career,
+        career: String(userData.career),
         alarm: userData.alarm,
       };
 
       await updateUserInfo(updatedUserData).then((res) => {
         // 추가 회원정보 입력
-        navigate(`/home`);
+        if (isEditMode) {
+          Swal.fire('수정되었습니다.');
+        } else {
+          navigate(`/home`);
+        }
       });
     } catch {}
   };
+  console.log(isEditMode);
 
   return (
     <SFormWrapper>
@@ -177,9 +198,14 @@ const UserInfoForm = () => {
         )}
       </div>
       <SButtonGroup>
-        <Link to="/">
-          <SCancel>취소</SCancel>
-        </Link>
+        {isEditMode ? (
+          <SCancel onClick={closeEditModal}>취소</SCancel>
+        ) : (
+          <Link to="/">
+            <SCancel>취소</SCancel>
+          </Link>
+        )}
+
         <SSubmit
           onClick={handleUserInfoSubmit}
           style={{

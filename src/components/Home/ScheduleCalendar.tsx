@@ -148,6 +148,7 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
   //   // 현재날짜로 돌아오기
   const handleCurrentDate = () => {
     setCurrentDate(startOfMonth(new Date()));
+    onDayClick(new Date());
   };
   // 랜덤 색상
   const getRandomColor = (() => {
