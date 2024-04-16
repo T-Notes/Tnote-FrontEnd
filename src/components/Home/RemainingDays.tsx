@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import instanceAxios from '../../utils/InstanceAxios';
 import { getRemainingDayData } from '../../utils/lib/api';
-import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 
 const SRemainingDayWrapper = styled.div`
   display: flex;

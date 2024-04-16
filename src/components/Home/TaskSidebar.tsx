@@ -95,16 +95,25 @@ interface Reload {
 }
 // 금일 해당하는 내용의 task들이 노출되어야 함.
 const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
+  console.log(2, clickedDate);
   const { scheduleId } = useParams();
-  const { year, month, day } = useCurrentDate(); // 데이터 추상화 (headless 기반의 추상화 하기)
+  const { year, month, day } = useCurrentDate();
   const [classLogContent, setClassLogContent] = useState<Task[]>([]);
   const [workLogContent, setWorkLogContent] = useState<Task[]>([]);
   const [consultationsContent, setConsultationsContent] = useState<Task[]>([]);
   const [observationContent, setObservationContent] = useState<Task[]>([]);
   const [clickedOutside, setClickedOutside] = useState<boolean>(false);
   const [todo, setTodo] = useState<Task[]>([]);
-
   const currentDate = new Date().toISOString().slice(0, 10);
+
+  const formattedDate = clickedDate
+    ? clickedDate.replace(
+        /(\d{4})-(\d{2})-(\d{2})/,
+        (match, year, month, day) =>
+          `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`,
+      )
+    : `${year}년 ${month}월 ${day}일`;
+
   // todo 외부 클릭 시 수정 요청 함수
   const handleUpdateOutside = () => {
     setClickedOutside(true); // 클릭 상태 변경
@@ -141,7 +150,9 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
 
   return (
     <STaskSidebarWrapper onClick={handleUpdateOutside}>
-      <SDateFont>{`${year}년 ${month}월 ${day}일`}</SDateFont>
+      <SDateFont>
+        {clickedDate !== '' ? formattedDate : `${year}년 ${month}월 ${day}일`}
+      </SDateFont>
       <div>
         <Todo
           clickedOutside={clickedOutside}
