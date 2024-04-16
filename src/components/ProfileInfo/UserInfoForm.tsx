@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import instanceAxios from '../../utils/InstanceAxios';
 import { useModal } from '../../utils/useHooks/useModal';
-import { updateUserInfo } from '../../utils/lib/api';
+import { getUserInfo, updateUserInfo } from '../../utils/lib/api';
 
 import { IcSearch } from '../../assets/icons';
 import { Input } from '../common/styled/Input';
@@ -76,7 +76,7 @@ export interface UserDataProps {
   alarm: boolean;
 }
 
-const UserInfoForm = () => {
+const UserInfoForm = ({ isEditMode }: { isEditMode: boolean }) => {
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId'); // 로컬스토리지에 담긴 UserId 받아오기
   const [user, setUser] = useRecoilState(userDataState); // 카카오 유저정보 전역관리
@@ -85,7 +85,7 @@ const UserInfoForm = () => {
     schoolName: '',
     subject: '',
     career: '',
-    alarm: true,
+    alarm: false,
   });
   const { isOpen, openModal, closeModal } = useModal();
 
@@ -122,6 +122,18 @@ const UserInfoForm = () => {
       };
       getUserName();
     }
+    if (isEditMode) {
+      const getEditUserInfo = async () => {
+        const response = await getUserInfo(userId);
+        setUserData({
+          schoolName: response.data.school,
+          subject: response.data.subject,
+          career: String(response.data.career),
+          alarm: response.data.alarm,
+        });
+      };
+      getEditUserInfo();
+    }
   }, [userId]);
 
   // 회원 추가 정보 작성 폼 전송
@@ -130,7 +142,7 @@ const UserInfoForm = () => {
       const updatedUserData = {
         schoolName: userData.schoolName,
         subject: userData.subject,
-        career: userData.career,
+        career: String(userData.career),
         alarm: userData.alarm,
       };
 

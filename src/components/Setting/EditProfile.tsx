@@ -33,8 +33,9 @@ const SH1 = styled.h1`
 
 interface CloseEditModal {
   closeEditModal: () => void;
+  isEditMode: boolean;
 }
-const EditProfile = ({ closeEditModal }: CloseEditModal) => {
+const EditProfile = ({ closeEditModal, isEditMode }: CloseEditModal) => {
   return (
     <>
       <SBackground>
@@ -43,7 +44,7 @@ const EditProfile = ({ closeEditModal }: CloseEditModal) => {
             <IcBefore onClick={closeEditModal} className="pointer" />
             <SH1>Setting</SH1>
           </SSettingHeader>
-          <UserInfoForm />
+          <UserInfoForm isEditMode={isEditMode} />
         </SModalLayout>
       </SBackground>
     </>
