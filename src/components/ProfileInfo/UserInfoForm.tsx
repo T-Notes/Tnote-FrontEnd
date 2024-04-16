@@ -17,6 +17,7 @@ import UserSchoolForm from './UserSchoolForm';
 import SearchInput from '../common/SearchInput';
 import { useRecoilState } from 'recoil';
 import { userDataState } from '../../utils/lib/recoil/userDataState';
+import Swal from 'sweetalert2';
 
 const SFormWrapper = styled.div`
   display: flex;
@@ -75,8 +76,11 @@ export interface UserDataProps {
   career: string;
   alarm: boolean;
 }
-
-const UserInfoForm = ({ isEditMode }: { isEditMode: boolean }) => {
+interface EditProps {
+  isEditMode: boolean;
+  closeEditModal: () => void;
+}
+const UserInfoForm = ({ isEditMode, closeEditModal }: EditProps) => {
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId'); // 로컬스토리지에 담긴 UserId 받아오기
   const [user, setUser] = useRecoilState(userDataState); // 카카오 유저정보 전역관리
@@ -148,10 +152,15 @@ const UserInfoForm = ({ isEditMode }: { isEditMode: boolean }) => {
 
       await updateUserInfo(updatedUserData).then((res) => {
         // 추가 회원정보 입력
-        navigate(`/home`);
+        if (isEditMode) {
+          Swal.fire('수정되었습니다.');
+        } else {
+          navigate(`/home`);
+        }
       });
     } catch {}
   };
+  console.log(isEditMode);
 
   return (
     <SFormWrapper>
@@ -189,9 +198,14 @@ const UserInfoForm = ({ isEditMode }: { isEditMode: boolean }) => {
         )}
       </div>
       <SButtonGroup>
-        <Link to="/">
-          <SCancel>취소</SCancel>
-        </Link>
+        {isEditMode ? (
+          <SCancel onClick={closeEditModal}>취소</SCancel>
+        ) : (
+          <Link to="/">
+            <SCancel>취소</SCancel>
+          </Link>
+        )}
+
         <SSubmit
           onClick={handleUserInfoSubmit}
           style={{

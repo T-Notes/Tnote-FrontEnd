@@ -44,7 +44,10 @@ const EditProfile = ({ closeEditModal, isEditMode }: CloseEditModal) => {
             <IcBefore onClick={closeEditModal} className="pointer" />
             <SH1>Setting</SH1>
           </SSettingHeader>
-          <UserInfoForm isEditMode={isEditMode} />
+          <UserInfoForm
+            isEditMode={isEditMode}
+            closeEditModal={closeEditModal}
+          />
         </SModalLayout>
       </SBackground>
     </>

@@ -17,7 +17,6 @@ const SText = styled.div`
 `;
 
 const ProfileInfo = () => {
-  // const [isEditMode, setIsEditMode] = useState<boolean>(false);
   return (
     <>
       <Header />
@@ -25,7 +24,7 @@ const ProfileInfo = () => {
         <SText>티노트에서 사용할</SText>
         <SText>세부 정보를 입력해주세요!</SText>
       </STextBox>
-      <UserInfoForm isEditMode={false} />
+      <UserInfoForm isEditMode={false} closeEditModal={() => ''} />
     </>
   );
 };
