@@ -1,12 +1,19 @@
-import { ChangeEvent, ReactEventHandler, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import MyArchive, { SSemesterContainer } from '../components/Archive/MyArchive';
 import SearchInput from '../components/common/SearchInput';
-import { getSemesterSearchValue } from '../utils/lib/api';
+import { getSemesterSearchValue, removeSemester } from '../utils/lib/api';
 import _debounce from 'lodash/debounce';
-import { IcDelete, IcGrayPen, IcPen } from '../assets/icons';
+import {
+  IcCheckedBox,
+  IcDelete,
+  IcGrayPen,
+  IcPen,
+  IcUncheckedBox,
+} from '../assets/icons';
 import WriteButton from '../components/Write/WriteButton';
+import Swal from 'sweetalert2';
 
 const SArchiveWrapper = styled.div`
   position: absolute;
@@ -54,6 +61,12 @@ const Archive = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchValueList, setSetSearchValueList] = useState<SearchValue[]>([]);
   const [reload, setReload] = useState<boolean>(false);
+  const [isDelete, setIsDelete] = useState<boolean>(false);
+  const [isDeleteChecked, setIsDeleteChecked] = useState<number | null>(null);
+
+  const handleDeleteModeActivate = () => {
+    setIsDelete(true);
+  };
 
   const handleChangeSearchValue = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -85,6 +98,25 @@ const Archive = () => {
     console.log(1, semesterId);
     navigate(`/archiveContainer/${semesterId}`);
   };
+
+  const handleDeletedCheck = (item: number) => {
+    console.log(item);
+
+    setIsDeleteChecked((prevIsDeleteChecked) =>
+      prevIsDeleteChecked === item ? null : item,
+    );
+  };
+
+  const handleClickDelete = async () => {
+    if (isDeleteChecked) {
+      await removeSemester(String(isDeleteChecked)).then((res) => {
+        Swal.fire('해당 학기가 삭제되었습니다.').then((res) => {
+          window.location.reload();
+        });
+        navigate('/archive');
+      });
+    } else Swal.fire('삭제할 학기를 선택해주세요');
+  };
   return (
     <SArchiveWrapper>
       <SArchiveHeader>
@@ -100,27 +132,70 @@ const Archive = () => {
           수정
           <IcGrayPen />
         </SEdit>
-        <SDelete>
-          삭제
-          <IcDelete />
-        </SDelete>
+        {isDelete ? (
+          <SDelete onClick={handleClickDelete}>
+            삭제
+            <IcDelete />
+          </SDelete>
+        ) : (
+          <SDelete onClick={handleDeleteModeActivate}>
+            삭제
+            <IcDelete />
+          </SDelete>
+        )}
       </SArchiveHeader>
 
       {searchValueList.length > 0 ? (
         <SSearchValueContainer>
           {searchValueList.map((item) => (
-            <SSemesterContainer
-              key={item.id}
-              onClick={() => handleSelectedSemester(item.id, item.semesterName)}
-            >
-              <div>{item.semesterName}</div>
-            </SSemesterContainer>
+            <>
+              {isDelete ? (
+                <>
+                  <SSemesterContainer key={item.id}>
+                    {isDeleteChecked === item.id ? (
+                      <IcCheckedBox
+                        onClick={() => handleDeletedCheck(item.id)}
+                      />
+                    ) : (
+                      <IcUncheckedBox
+                        onClick={() => handleDeletedCheck(item.id)}
+                      />
+                    )}
+
+                    <div
+                      onClick={() =>
+                        handleSelectedSemester(item.id, item.semesterName)
+                      }
+                    >
+                      {item.semesterName}
+                    </div>
+                  </SSemesterContainer>
+                </>
+              ) : (
+                <>
+                  <SSemesterContainer
+                    key={item.id}
+                    onClick={() =>
+                      handleSelectedSemester(item.id, item.semesterName)
+                    }
+                  >
+                    <div>{item.semesterName}</div>
+                  </SSemesterContainer>
+                </>
+              )}
+            </>
           ))}
         </SSearchValueContainer>
       ) : (
         <></>
       )}
-      {!searchValue && <MyArchive />}
+      {!searchValue && (
+        <MyArchive
+          isDelete={isDelete}
+          handleDeletedCheck={handleDeletedCheck}
+          isDeleteChecked={isDeleteChecked}
+        />
+      )}
       <WriteButton setReload={setReload} />
     </SArchiveWrapper>
   );
