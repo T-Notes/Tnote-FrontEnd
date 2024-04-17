@@ -145,26 +145,23 @@ const ConsultationRecordsModal = ({
     useState<string>('');
   const [selectedTargetButton, setSelectedTargetButton] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
-  const [contentImgUrl, setContentImgUrl] = useState<File>();
-  const [valueImgUrl, setValueImgUrl] = useState<File>();
-  const [contentFileName, setContentFileName] = useState<string>('');
-  const [valueFileName, setValueFileName] = useState<string>('');
+  const [valueImgUrl, setValueImgUrl] = useState<File[]>([]);
+  const [valueFileName, setValueFileName] = useState<string[]>([]);
   const formData = new FormData();
 
-  const handleChangeContentImg = (e: any) => {
-    const file = e.target.files[0];
-    setContentImgUrl(file);
-    formData.append('consultationImages', file);
-    setContentFileName(file.name);
-    console.log('content:', file.name);
-  };
-
   const handleChangeValueImg = (e: any) => {
-    const file = e.target.files[0];
-    setValueImgUrl(file);
-    formData.append('consultationImages', file);
-    setValueFileName(file.name);
-    console.log('value:', file.name);
+    const files = e.target.files;
+    const newFiles: File[] = [];
+    const newFileNames: string[] = [];
+    if (files) {
+      for (let i = 0; i < files.length; i++) {
+        newFiles.push(files[i]);
+        newFileNames.push(files[i].name);
+        formData.append('consultationImages', files[i]);
+      }
+      setValueImgUrl((prevFiles) => [...prevFiles, ...newFiles]);
+      setValueFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
+    }
   };
 
   const handleCounselingButtonClick = (buttonName: string) => {
@@ -223,14 +220,6 @@ const ConsultationRecordsModal = ({
           type: 'application/json',
         });
         formData.append('requestDto', jsonDataTypeValue);
-
-        if (contentImgUrl) {
-          formData.append('consultationImages', contentImgUrl);
-        }
-
-        if (valueImgUrl) {
-          formData.append('consultationImages', valueImgUrl);
-        }
 
         const accessToken = localStorage.getItem('accessToken');
 
@@ -363,11 +352,6 @@ const ConsultationRecordsModal = ({
               placeholder="텍스트를 입력해주세요"
               value={counselingContent}
               onChange={handleCounselingContentChange}
-            />
-            <FileUpload
-              fileName={contentFileName}
-              handleChangeImg={handleChangeContentImg}
-              inputId="contentFile"
             />
             <SCounselingResult>
               <SContentLine>

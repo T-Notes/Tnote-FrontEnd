@@ -98,8 +98,8 @@ const ClassLogModal = ({
   const { scheduleId } = useParams();
   const [title, setTitle] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
-  const [imgUrl, setImgUrl] = useState<File>();
-  const [fileName, setFileName] = useState<string>('');
+  const [imgUrl, setImgUrl] = useState<File[]>([]);
+  const [fileName, setFileName] = useState<string[]>([]);
 
   const [contentType, setContentType] =
     useState<keyof SaveContents>('학습계획'); //현재 모달에서 어떤 종류의 탭을 입력하고 있는지를 나타낸다.
@@ -139,12 +139,20 @@ const ClassLogModal = ({
   };
 
   const handleChangeImg = (e: any) => {
-    const file = e.target.files[0];
-    setImgUrl(file);
-    formData.append('classLogImages', file);
-    setFileName(file.name);
+    const files = e.target.files;
+    const newFiles: File[] = [];
+    const newFileNames: string[] = [];
+    if (files) {
+      for (let i = 0; i < files.length; i++) {
+        newFiles.push(files[i]);
+        newFileNames.push(files[i].name);
+        formData.append('classLogImages', files[i]);
+      }
+      setImgUrl((prevFiles) => [...prevFiles, ...newFiles]);
+      setFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
+    }
   };
-
+  console.log(2, fileName);
   const handleClickSubmit = async () => {
     if (scheduleId) {
       try {
@@ -164,9 +172,9 @@ const ClassLogModal = ({
         });
         formData.append('classLogRequestDto', jsonDataTypeValue);
 
-        if (imgUrl) {
-          formData.append('classLogImages', imgUrl);
-        }
+        // if (imgUrl) {
+        //   formData.append('classLogImages', imgUrl);
+        // }
 
         const accessToken = localStorage.getItem('accessToken');
 
