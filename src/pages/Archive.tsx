@@ -109,11 +109,22 @@ const Archive = () => {
 
   const handleClickDelete = async () => {
     if (isDeleteChecked) {
-      await removeSemester(String(isDeleteChecked)).then((res) => {
-        Swal.fire('해당 학기가 삭제되었습니다.').then((res) => {
-          window.location.reload();
-        });
-        navigate('/archive');
+      Swal.fire({
+        text: '정말 삭제하시겠습니까?',
+        cancelButtonText: '아니오',
+        cancelButtonColor: '#E8E8E8',
+        confirmButtonText: '네',
+        confirmButtonColor: '#632CFA',
+        showCancelButton: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          removeSemester(String(isDeleteChecked)).then((res) => {
+            Swal.fire('해당 학기가 삭제되었습니다.').then((result) => {
+              window.location.reload();
+            });
+            navigate('/archive');
+          });
+        }
       });
     } else Swal.fire('삭제할 학기를 선택해주세요');
   };

@@ -124,6 +124,7 @@ const ClassInfoPopup = ({
       confirmButtonText: '삭제',
       cancelButtonText: '취소',
       confirmButtonColor: '#632CFA',
+      showCancelButton: true,
     }).then((res) => {
       if (res.isConfirmed) {
         deletedSubject(scheduleId, subjectId);
