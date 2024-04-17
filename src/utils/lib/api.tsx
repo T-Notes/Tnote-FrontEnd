@@ -542,3 +542,13 @@ export const getAllTaskByDate = async (
     return response.data;
   } catch {}
 };
+
+//알람 토글 수정
+export const updateAlarmToggle = async (alarm: boolean) => {
+  try {
+    const response = await instanceAxios.patch('/tnote/user/alarm', {
+      alarm,
+    });
+    return response.data;
+  } catch {}
+};

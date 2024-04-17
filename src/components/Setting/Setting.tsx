@@ -6,7 +6,13 @@ import {
 } from '../../components/common/styled/ModalLayout';
 import instanceAxios from '../../utils/InstanceAxios';
 import { useEffect, useState } from 'react';
-import { deletedAccount, getUserInfo, logout } from '../../utils/lib/api';
+import {
+  deletedAccount,
+  getUserInfo,
+  logout,
+  updateAlarmToggle,
+  updateUserInfo,
+} from '../../utils/lib/api';
 import styled from 'styled-components';
 import {
   IcAfter,
@@ -202,10 +208,12 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
   };
 
   // 알람 제어 함수
-  const handleOnAlarm = () => {
+  const handleOnAlarm = async () => {
+    await updateAlarmToggle(true);
     setUserData((prev) => ({ ...prev, alarm: true }));
   };
-  const handleOffAlarm = () => {
+  const handleOffAlarm = async () => {
+    await updateAlarmToggle(false);
     setUserData((prev) => ({ ...prev, alarm: false }));
   };
 
@@ -227,6 +235,8 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     });
   };
   useEffect(() => {
+    console.log(1);
+
     const getUserData = async () => {
       try {
         const response = await getUserInfo(userId);
