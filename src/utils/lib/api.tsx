@@ -383,14 +383,11 @@ export const getAllObservation = async (scheduleId: string | undefined) => {
 
 export const getAllLogs = async (
   scheduleId: string | undefined,
-  date: Date,
+  date: string,
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/home/${scheduleId}/monthlyLogs`,
-      {
-        params: date,
-      },
+      `/tnote/home/${scheduleId}/monthlyLogs?date=${date}`,
     );
     return response.data;
   } catch {}

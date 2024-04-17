@@ -132,6 +132,7 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
 
   const { currentDate, handlePrevMonth, handleNextMonth, setCurrentDate } =
     useCurrentDate();
+  const formattedDate = currentDate.toISOString().split('T')[0];
 
   const startWeek = startOfWeek(startOfMonth(currentDate));
   const endWeek = endOfWeek(endOfMonth(currentDate));
@@ -168,7 +169,7 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
     if (scheduleId) {
       try {
         const getMonthlyLogs = async () => {
-          const response = await getAllLogs(scheduleId, new Date());
+          const response = await getAllLogs(scheduleId, formattedDate);
           setClassLogs(response.data.classLogs);
           setWorkLogs(response.data.proceedings);
           setConsultations(response.data.consultations);
@@ -177,7 +178,7 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
         getMonthlyLogs();
       } catch {}
     }
-  }, [scheduleId, reload]);
+  }, [scheduleId, reload, currentDate]);
 
   const handleChangeSearchValue = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
