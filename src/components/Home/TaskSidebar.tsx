@@ -16,6 +16,7 @@ import {
 } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
 import instanceAxios from '../../utils/InstanceAxios';
+import Swal from 'sweetalert2';
 
 const STaskSidebarWrapper = styled.div`
   display: flex;
@@ -141,6 +142,11 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
           }
         } catch (error) {
           console.error('Error fetching data:', error);
+          Swal.fire({
+            text: '학기에 포함된 날짜만 선택 가능합니다.',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#632CFA',
+          });
         }
       };
       fetchData();
