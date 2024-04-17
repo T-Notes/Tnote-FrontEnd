@@ -10,7 +10,6 @@ const SArchiveWrapper = styled.div`
   bottom: 0;
 `;
 const ArchiveDetail = () => {
-  useEffect(() => {}, []);
   return (
     <SArchiveWrapper>
       <ArchiveContainer />

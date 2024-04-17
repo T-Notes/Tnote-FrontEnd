@@ -95,7 +95,6 @@ const Archive = () => {
   }, [searchValue]);
 
   const handleSelectedSemester = (semesterId: number, semesterName: string) => {
-    console.log(1, semesterId);
     navigate(`/archiveContainer/${semesterId}`);
   };
 
@@ -139,10 +138,10 @@ const Archive = () => {
           placeholder="텍스트를 입력하세요"
           value={searchValue}
         />
-        <SEdit>
+        {/* <SEdit>
           수정
           <IcGrayPen />
-        </SEdit>
+        </SEdit> */}
         {isDelete ? (
           <SDelete onClick={handleClickDelete}>
             삭제
