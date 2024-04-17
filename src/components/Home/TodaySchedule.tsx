@@ -70,7 +70,6 @@ const TodaySchedule = () => {
   const [todayClass, setTodayClass] = useState<TodayClass[]>([]);
   const currentDate = new Date();
   const todayOfNumber = currentDate.getDay();
-  console.log(1, currentDate.getHours());
 
   const daysOfWeek = [
     'SUNDAY',

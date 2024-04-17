@@ -95,7 +95,6 @@ interface Reload {
 }
 // 금일 해당하는 내용의 task들이 노출되어야 함.
 const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
-  console.log(2, clickedDate);
   const { scheduleId } = useParams();
   const { year, month, day } = useCurrentDate();
   const [classLogContent, setClassLogContent] = useState<Task[]>([]);
