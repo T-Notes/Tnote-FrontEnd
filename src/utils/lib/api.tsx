@@ -383,14 +383,11 @@ export const getAllObservation = async (scheduleId: string | undefined) => {
 
 export const getAllLogs = async (
   scheduleId: string | undefined,
-  date: Date,
+  date: string,
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/home/${scheduleId}/monthlyLogs`,
-      {
-        params: date,
-      },
+      `/tnote/home/${scheduleId}/monthlyLogs?date=${date}`,
     );
     return response.data;
   } catch {}
@@ -542,6 +539,16 @@ export const getAllTaskByDate = async (
         params: { date: date },
       },
     );
+    return response.data;
+  } catch {}
+};
+
+//알람 토글 수정
+export const updateAlarmToggle = async (alarm: boolean) => {
+  try {
+    const response = await instanceAxios.patch('/tnote/user/alarm', {
+      alarm,
+    });
     return response.data;
   } catch {}
 };

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+
+import { IcCheckedBox, IcUncheckedBox } from '../../assets/icons';
 import { getAllSemesterNames } from '../../utils/lib/api';
 
 const SArchiveListWrapper = styled.div`
@@ -21,39 +22,63 @@ export const SSemesterContainer = styled.div`
   border-radius: 8px;
   cursor: pointer;
 `;
+const SCheckDiv = styled.div`
+  display: flex;
+  align-items: center;
+  > div {
+    padding-left: 10px;
+  }
+`;
 interface Semester {
   id: number;
   semesterName: string;
 }
 interface Archive {
-  handleSelectedSemester: (selectedSemesterId: number) => void;
+  isDelete: boolean;
+  handleDeletedCheck: (item: number) => void;
+  isDeleteChecked: number | null;
 }
-const MyArchive = () => {
-  const { scheduleId } = useParams();
+
+const MyArchive = ({
+  isDelete,
+  handleDeletedCheck,
+  isDeleteChecked,
+}: Archive) => {
   const navigate = useNavigate();
   const [allSemester, setAllSemester] = useState<Semester[]>([]);
-  const [semesterId, setSemesterId] = useState<number>();
 
   const handleSelectedSemester = (selectedSemesterId: number) => {
     navigate(`/archiveContainer/${selectedSemesterId}`);
   };
+
   useEffect(() => {
-    if (scheduleId) {
-      const getAllSemesterData = async () => {
-        const response = await getAllSemesterNames();
-        setAllSemester(response);
-      };
-      getAllSemesterData();
-    }
-  }, [scheduleId]);
+    const getAllSemesterData = async () => {
+      const response = await getAllSemesterNames();
+      setAllSemester(response);
+    };
+    getAllSemesterData();
+  }, []);
+
   return (
     <SArchiveListWrapper>
       {allSemester.map((item) => (
-        <SSemesterContainer
-          key={item.id}
-          onClick={() => handleSelectedSemester(item.id)}
-        >
-          <div>{item.semesterName}</div>
+        <SSemesterContainer key={item.id}>
+          {isDelete ? (
+            <SCheckDiv>
+              {isDeleteChecked === item.id ? (
+                <IcCheckedBox onClick={() => handleDeletedCheck(item.id)} />
+              ) : (
+                <IcUncheckedBox onClick={() => handleDeletedCheck(item.id)} />
+              )}
+              <div onClick={() => handleSelectedSemester(item.id)}>
+                {item.semesterName}
+              </div>
+            </SCheckDiv>
+          ) : (
+            <div onClick={() => handleSelectedSemester(item.id)}>
+              {item.semesterName}
+            </div>
+          )}
         </SSemesterContainer>
       ))}
     </SArchiveListWrapper>

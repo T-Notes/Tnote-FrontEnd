@@ -3,11 +3,9 @@ import { ChangeEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import { IcClip, IcPen } from '../../assets/icons';
-import { createStudentObservation } from '../../utils/lib/api';
+import { IcPen } from '../../assets/icons';
 import ModalPortal from '../../utils/ModalPortal';
 import FileUpload from '../common/FileUpload';
-import { Button } from '../common/styled/Button';
 import {
   ModalLayout,
   ModalNoBlackBackground,
@@ -94,10 +92,8 @@ const StudentRecordsModal = ({
     endDate: '',
   });
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
-  const [contentImgUrl, setContentImgUrl] = useState<File>();
-  const [valueImgUrl, setValueImgUrl] = useState<File>();
-  const [contentFileName, setContentFileName] = useState<string>('');
-  const [valueFileName, setValueFileName] = useState<string>('');
+  const [valueImgUrl, setValueImgUrl] = useState<File[]>([]);
+  const [valueFileName, setValueFileName] = useState<string[]>([]);
   const formData = new FormData();
 
   const handleTitleChange = (newTitle: string) => {
@@ -121,6 +117,21 @@ const StudentRecordsModal = ({
     setTeachingPlan(e.target.value);
   };
 
+  const handleChangeValueImg = (e: any) => {
+    const files = e.target.files;
+    const newFiles: File[] = [];
+    const newFileNames: string[] = [];
+    if (files) {
+      for (let i = 0; i < files.length; i++) {
+        newFiles.push(files[i]);
+        newFileNames.push(files[i].name);
+        formData.append('observationImages', files[i]);
+      }
+      setValueImgUrl((prevFiles) => [...prevFiles, ...newFiles]);
+      setValueFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
+    }
+  };
+
   const handleClickSubmit = async () => {
     if (scheduleId) {
       try {
@@ -137,12 +148,6 @@ const StudentRecordsModal = ({
         });
         formData.append('observationRequestDto', jsonDataTypeValue);
 
-        if (contentImgUrl) {
-          formData.append('observationImages', contentImgUrl);
-        }
-        if (valueImgUrl) {
-          formData.append('observationImages', valueImgUrl);
-        }
         const accessToken = localStorage.getItem('accessToken');
 
         await axios.post(
@@ -171,21 +176,6 @@ const StudentRecordsModal = ({
   const isFormValid =
     title && date.startDate && date.endDate && observationContent;
 
-  const handleChangeContentImg = (e: any) => {
-    const file = e.target.files[0];
-    console.log('file', file);
-    setContentImgUrl(file);
-    formData.append('observationImages', file);
-    setContentFileName(file.name);
-  };
-
-  const handleChangeValueImg = (e: any) => {
-    const file = e.target.files[0];
-    console.log('file', file);
-    setValueImgUrl(file);
-    formData.append('observationImages', file);
-    setValueFileName(file.name);
-  };
   return (
     <ModalPortal>
       <ModalNoBlackBackground>
@@ -220,12 +210,6 @@ const StudentRecordsModal = ({
               placeholder="텍스트를 입력해주세요"
               value={observationContent}
               onChange={handleObservationContentChange}
-            />
-
-            <FileUpload
-              fileName={contentFileName}
-              handleChangeImg={handleChangeContentImg}
-              inputId="contentFile"
             />
             <STeachingPlan>
               <SContentLine>

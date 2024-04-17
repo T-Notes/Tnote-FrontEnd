@@ -144,17 +144,24 @@ const WorkLogModal = ({
   });
   const [workContents, setWorkContents] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
-  const [imgUrl, setImgUrl] = useState<File>();
-  const [fileName, setFileName] = useState<string>('');
+  const [imgUrl, setImgUrl] = useState<File[]>([]);
+  const [fileName, setFileName] = useState<string[]>([]);
 
   const formData = new FormData();
 
   const handleChangeImg = (e: any) => {
-    const file = e.target.files[0];
-    console.log('file', file);
-    setImgUrl(file);
-    formData.append('proceedingImages', file);
-    setFileName(file.name);
+    const files = e.target.files;
+    const newFiles: File[] = [];
+    const newFileNames: string[] = [];
+    if (files) {
+      for (let i = 0; i < files.length; i++) {
+        newFiles.push(files[i]);
+        newFileNames.push(files[i].name);
+        formData.append('proceedingImages', files[i]);
+      }
+      setImgUrl((prevFiles) => [...prevFiles, ...newFiles]);
+      setFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
+    }
   };
 
   const handleTitleChange = (newTitle: string) => {
@@ -195,10 +202,6 @@ const WorkLogModal = ({
           type: 'application/json',
         });
         formData.append('proceedingRequestDto', jsonDataTypeValue);
-
-        if (imgUrl) {
-          formData.append('proceedingImages', imgUrl);
-        }
 
         const accessToken = localStorage.getItem('accessToken');
 
