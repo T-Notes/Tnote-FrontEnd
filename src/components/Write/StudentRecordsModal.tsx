@@ -151,7 +151,7 @@ const StudentRecordsModal = ({
         const accessToken = localStorage.getItem('accessToken');
 
         await axios.post(
-          `http://j9972.kr/tnote/observation/${scheduleId}`,
+          `https://j9972.kr/tnote/observation/${scheduleId}`,
           formData,
           {
             headers: {

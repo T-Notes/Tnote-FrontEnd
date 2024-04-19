@@ -179,7 +179,7 @@ const ClassLogModal = ({
         const accessToken = localStorage.getItem('accessToken');
 
         await axios.post(
-          `http://j9972.kr/tnote/classLog/${scheduleId}`,
+          `https://j9972.kr/tnote/classLog/${scheduleId}`,
           formData,
           {
             headers: {
