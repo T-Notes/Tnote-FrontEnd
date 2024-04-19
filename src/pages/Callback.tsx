@@ -6,9 +6,7 @@ import instanceAxios from '../utils/InstanceAxios';
 const Callback = () => {
   const navigate = useNavigate();
   const code = new URL(window.location.href).searchParams.get('code');
-  if (code !== null) {
-    localStorage.setItem('code', code);
-  }
+
   const getToken = async () => {
     try {
       await instanceAxios
@@ -20,6 +18,8 @@ const Callback = () => {
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('refreshToken', data.refreshToken);
           localStorage.setItem('userId', data.userId);
+          localStorage.setItem('oauthAccessToken', data.oauthAccessToken);
+          console.log(data.oauthAccessToken);
 
           const accessToken = localStorage.getItem('accessToken');
           const checkMembership = axios
