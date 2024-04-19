@@ -206,7 +206,7 @@ const WorkLogModal = ({
         const accessToken = localStorage.getItem('accessToken');
 
         await axios.post(
-          `http://j9972.kr/tnote/proceeding/${scheduleId}`,
+          `https://j9972.kr/tnote/proceeding/${scheduleId}`,
           formData,
           {
             headers: {

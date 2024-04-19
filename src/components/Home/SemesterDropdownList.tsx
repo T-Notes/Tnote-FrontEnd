@@ -49,11 +49,6 @@ const SemesterDropdownList = (props: SemesterOptionProps) => {
             </SItem>
           </SList>
         ))}
-        {/* {options.map((option: any) => (
-          <option key={option.id} value={option.name}>
-            {option.name}
-          </option>
-        ))} */}
       </SSemesterWrapper>
     </>
   );
