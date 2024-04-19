@@ -28,6 +28,7 @@ import { result } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 import PrivacyPolicyModal from '../Landing/PrivacyPolicyModal';
 import { useRecoilValue } from 'recoil';
+import axios from 'axios';
 
 const SSettingWrapper = styled.div`
   border: 1px solid var(--Black-Black50, #d5d5d5);
@@ -184,6 +185,7 @@ interface SettingProps {
 const Setting = ({ closeSettingModal }: SettingProps) => {
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
+  const accessToken = localStorage.getItem('accessToken');
   // 수정 폼 모달
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -267,8 +269,16 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
       if (result.isConfirmed) {
         // 계정 영구 삭제 버튼 클릭 시
         const email = result.value; // 입력된 이메일 값 가져오기
-        deletedAccount(code); // 계정탈퇴 요청
-        navigate('/');
+        // deletedAccount(code); // 계정탈퇴 요청
+        axios
+          .delete('https://j9972.kr/tnote/user', {
+            headers: {
+              oauthAccessToken: accessToken,
+            },
+          })
+          .then((res) => {
+            navigate('/');
+          });
       }
     });
   };
