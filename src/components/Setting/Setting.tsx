@@ -185,6 +185,7 @@ interface SettingProps {
 const Setting = ({ closeSettingModal }: SettingProps) => {
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
+  const oauthAccessToken = localStorage.getItem('oauthAccessToken');
   const accessToken = localStorage.getItem('accessToken');
   // 수정 폼 모달
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
@@ -273,10 +274,12 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
         axios
           .delete('https://j9972.kr/tnote/user', {
             headers: {
-              oauthAccessToken: accessToken,
+              oauthAccessToken: oauthAccessToken,
+              Authorization: `Bearer ${accessToken}`,
             },
           })
           .then((res) => {
+            localStorage.clear();
             navigate('/');
           });
       }
