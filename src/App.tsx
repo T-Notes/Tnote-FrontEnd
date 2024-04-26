@@ -1,3 +1,4 @@
+import React from 'react';
 import { RecoilRoot } from 'recoil';
 import ReactModal from 'react-modal';
 import { ThemeProvider } from 'styled-components';
