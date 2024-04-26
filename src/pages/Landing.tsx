@@ -9,12 +9,12 @@ import KakaoLoginBtn from '../components/Landing/KakaoLoginBtn';
 import PrivacyPolicyCheckbox from '../components/Landing/PrivacyPolicyCheckbox';
 import PrivacyPolicyModal from '../components/Landing/PrivacyPolicyModal';
 
-import ImgLandingBackgroundImage from '../assets/images/LandingBackgroundImage.png';
+// import ImgLandingBackgroundImage from '../../src/assets/images/LandingBackgroundImage.png';
 
 // styled //
 const SLandingWrapper = styled.div`
   // 개선 : 웹 화면 크기에 따라 달라져야 함
-  background-image: url(${ImgLandingBackgroundImage});
+  /* background-image: url(${''}); */ // 추후 수정하기
   background-size: cover;
   background-position: center;
   width: 100%;
