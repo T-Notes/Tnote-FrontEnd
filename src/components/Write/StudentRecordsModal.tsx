@@ -215,10 +215,7 @@ const StudentRecordsModal = ({
               <SContentLine>
                 <SContentIc>
                   <IcPen />
-                  <SContent>
-                    해석 및 지도방안
-                    <span>*</span>
-                  </SContent>
+                  <SContent>해석 및 지도방안</SContent>
                 </SContentIc>
                 <SContentLength>({teachingPlan.length} / 3000)</SContentLength>
               </SContentLine>

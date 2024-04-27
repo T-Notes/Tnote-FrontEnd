@@ -256,10 +256,7 @@ const WorkLogModal = ({
                 <SPlaceContent>
                   <SContentIc>
                     <IcMap />
-                    <SPlace>
-                      장소
-                      <span>*</span>
-                    </SPlace>
+                    <SPlace>장소</SPlace>
                   </SContentIc>
                   <SPlaceInput
                     type="text"

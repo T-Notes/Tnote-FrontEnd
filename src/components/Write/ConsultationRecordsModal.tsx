@@ -357,10 +357,7 @@ const ConsultationRecordsModal = ({
               <SContentLine>
                 <SContentIc>
                   <IcPen />
-                  <SContent>
-                    상담 결과
-                    <span>*</span>
-                  </SContent>
+                  <SContent>상담 결과</SContent>
                 </SContentIc>
                 <SContentLength>
                   ({counselingResult.length} / 3000)
