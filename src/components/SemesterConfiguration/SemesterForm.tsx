@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToggle } from '../../utils/useHooks/useToggle';
 import {
+  createSemester,
   getSemesterData,
   removeSemester,
   updateSemester,
@@ -98,6 +99,7 @@ interface SetupProps {
 const SemesterForm = ({ setReload, reload }: SetupProps) => {
   const { scheduleId } = useParams();
   const { isToggle, setIsToggle, handleChangeToggle } = useToggle();
+  const url = window.location.href;
 
   const navigate = useNavigate();
   const [semesterData, setSemesterData] = useState<SemesterDataProps>({
@@ -183,7 +185,12 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
     }).then((res) => {
       if (res.isConfirmed) {
         removeSemester(scheduleId);
-        navigate('/semesterSetup');
+        if (url.includes('home')) {
+          navigate('/semesterSetup/home');
+        } else if (url.includes('timetable')) {
+          navigate('/semesterSetup/timetable');
+        }
+
         setReload((prev) => !prev);
         Swal.fire({
           title: '삭제되었습니다.',
