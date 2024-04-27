@@ -19,7 +19,6 @@ const Callback = () => {
           localStorage.setItem('refreshToken', data.refreshToken);
           localStorage.setItem('userId', data.userId);
           localStorage.setItem('oauthAccessToken', data.oauthAccessToken);
-          console.log(data.oauthAccessToken);
 
           const accessToken = localStorage.getItem('accessToken');
           const checkMembership = axios
