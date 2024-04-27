@@ -47,3 +47,4 @@ export { ReactComponent as IcFile } from './fileIcon.svg';
 export { ReactComponent as IcBlackDelete } from './blackDeleteIcon.svg';
 export { ReactComponent as IcRoundBackBtn } from './roundBackButtonIcon.svg';
 export { ReactComponent as IcRoundFrontBtn } from './roundFrontButtonIcon.svg';
+export { ReactComponent as IcBackgroundIconGroup } from './backgroundIconGroup.svg';
