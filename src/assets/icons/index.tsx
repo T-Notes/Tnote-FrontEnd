@@ -16,10 +16,7 @@ export { ReactComponent as IcProfile } from './profileIcon.svg';
 export { ReactComponent as IcProfileLarge } from './profileIconLarge.svg';
 export { ReactComponent as IcAfter } from './afterIcon.svg';
 export { ReactComponent as IcBefore } from './beforeIcon.svg';
-export { ReactComponent as IcWorkLog } from './workLogIcon.svg';
-export { ReactComponent as IcClassLog } from './classLogIcon.svg';
-export { ReactComponent as IcCounselingLog } from './counselingIcon.svg';
-export { ReactComponent as IcStudentObservationLog } from './studentObservationIcon.svg';
+
 export { ReactComponent as IcTitle } from './titleIcon.svg';
 export { ReactComponent as IcPen } from './penIcon.svg';
 export { ReactComponent as IcLogoHeader } from './logoHeaderIcon.svg';
