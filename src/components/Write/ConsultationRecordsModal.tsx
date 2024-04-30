@@ -130,7 +130,6 @@ const SCounselingResult = styled.div`
 const ConsultationRecordsModal = ({
   closeWriteModal,
   handleClickModal,
-  setReload,
 }: CloseProps) => {
   const { scheduleId } = useParams();
 
@@ -234,7 +233,7 @@ const ConsultationRecordsModal = ({
             },
           },
         );
-        setReload((prev) => !prev);
+        window.location.reload();
         closeWriteModal();
       } catch (err) {
         console.log(err);
@@ -357,10 +356,7 @@ const ConsultationRecordsModal = ({
               <SContentLine>
                 <SContentIc>
                   <IcPen />
-                  <SContent>
-                    상담 결과
-                    <span>*</span>
-                  </SContent>
+                  <SContent>상담 결과</SContent>
                 </SContentIc>
                 <SContentLength>
                   ({counselingResult.length} / 3000)

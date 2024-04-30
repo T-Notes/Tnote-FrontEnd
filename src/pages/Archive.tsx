@@ -12,7 +12,6 @@ import {
   IcPen,
   IcUncheckedBox,
 } from '../assets/icons';
-import WriteButton from '../components/Write/WriteButton';
 import Swal from 'sweetalert2';
 
 const SArchiveWrapper = styled.div`
@@ -206,7 +205,6 @@ const Archive = () => {
           isDeleteChecked={isDeleteChecked}
         />
       )}
-      <WriteButton setReload={setReload} />
     </SArchiveWrapper>
   );
 };

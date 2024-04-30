@@ -80,7 +80,6 @@ const STeachingPlan = styled.div`
 const StudentRecordsModal = ({
   closeWriteModal,
   handleClickModal,
-  setReload,
 }: CloseProps) => {
   const { scheduleId } = useParams();
 
@@ -161,7 +160,7 @@ const StudentRecordsModal = ({
             },
           },
         );
-        setReload((prev) => !prev);
+        window.location.reload();
         closeWriteModal();
       } catch (err) {
         console.log(err);
@@ -215,10 +214,7 @@ const StudentRecordsModal = ({
               <SContentLine>
                 <SContentIc>
                   <IcPen />
-                  <SContent>
-                    해석 및 지도방안
-                    <span>*</span>
-                  </SContent>
+                  <SContent>해석 및 지도방안</SContent>
                 </SContentIc>
                 <SContentLength>({teachingPlan.length} / 3000)</SContentLength>
               </SContentLine>

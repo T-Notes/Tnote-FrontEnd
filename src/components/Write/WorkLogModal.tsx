@@ -127,13 +127,8 @@ const SScroll = styled.div`
 export interface CloseProps {
   closeWriteModal: () => void;
   handleClickModal: (openModalContent: string) => void;
-  setReload: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const WorkLogModal = ({
-  closeWriteModal,
-  handleClickModal,
-  setReload,
-}: CloseProps) => {
+const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
   const { scheduleId } = useParams();
 
   const [title, setTitle] = useState<string>('');
@@ -216,7 +211,7 @@ const WorkLogModal = ({
             },
           },
         );
-        setReload((prev) => !prev);
+        window.location.reload();
         closeWriteModal();
       } catch (err) {
         console.log(err);
@@ -256,10 +251,7 @@ const WorkLogModal = ({
                 <SPlaceContent>
                   <SContentIc>
                     <IcMap />
-                    <SPlace>
-                      장소
-                      <span>*</span>
-                    </SPlace>
+                    <SPlace>장소</SPlace>
                   </SContentIc>
                   <SPlaceInput
                     type="text"

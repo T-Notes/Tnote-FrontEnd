@@ -2,10 +2,10 @@ import React from 'react';
 
 export {};
 
-// declare module '*.jpg';
-// declare module '*.png';
-// declare module '*.jpeg';
-// declare module '*.gif';
+declare module '*.jpg';
+declare module '*.png';
+declare module '*.jpeg';
+declare module '*.gif';
 
 // // declare module '*.svg' {
 // //   import React = require('react');

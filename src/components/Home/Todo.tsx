@@ -23,6 +23,9 @@ const STodoWrapper = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
 `;
+const STodoHeader = styled.div`
+  display: flex;
+`;
 const SInput = styled.input<{ $completed: boolean }>`
   margin-left: 20px;
   font-size: 15px;
@@ -57,7 +60,8 @@ const SAddTodo = styled(Button)`
 `;
 const STodoContainer = styled.div`
   display: flex;
-
+  padding-top: 8px;
+  padding-bottom: 8px;
   .icon {
     margin-left: auto;
     margin-right: 10px;
@@ -154,10 +158,10 @@ const Todo = memo(
     return (
       <div>
         <STodoWrapper>
-          <STodoContainer>
+          <STodoHeader>
             <SFont>To do</SFont>
             <STodoTotalNumber>{todo.length}</STodoTotalNumber>
-          </STodoContainer>
+          </STodoHeader>
 
           {todo.map((todoItem) => (
             <STodoContainer className="todo-item" key={todoItem.id}>

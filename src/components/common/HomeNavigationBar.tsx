@@ -1,19 +1,23 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { userDataId } from '../../utils/lib/atom';
-import { userDataState } from '../../utils/lib/recoil/userDataState';
 import {
   IcArchive,
   IcHome,
   IcLogo,
+  IcNavigationClose,
+  IcNavigationOpen,
   IcProfile,
   IcTimetable,
 } from '../../assets/icons';
 import { getUserInfo } from '../../utils/lib/api';
 import Setting from '../Setting/Setting';
-import { useToggle } from '../../utils/useHooks/useToggle';
+import WriteDropdownList from '../Write/WriteDropdownList';
+import ClassLogModal from '../Write/ClassLogModal';
+import WorkLogModal from '../Write/WorkLogModal';
+import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
+import StudentRecordsModal from '../Write/StudentRecordsModal';
+import { ModalBackground } from './styled/ModalLayout';
 
 //** styled **//
 const SLeftSidebar = styled.div`
@@ -31,6 +35,10 @@ const SLeftSidebar = styled.div`
   .active {
     background-color: #f0ebff;
   }
+`;
+const SHomeCategoryGroup = styled.div`
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 15px;
 `;
 const SCategory = styled.div`
   display: flex;
@@ -63,11 +71,15 @@ const SUserProfileInfoWrapper = styled.div`
   border-top: 1px solid #d5d5d5;
   position: fixed;
   bottom: 0;
-  padding: 15px;
+  padding: 8px;
 `;
 const SUserProfile = styled.div`
-  margin-left: 3px;
+  width: 140px;
+  height: auto;
   cursor: pointer;
+
+  margin-left: 5px;
+  overflow-wrap: break-word;
 `;
 const SUserName = styled.div`
   font-size: 16px;
@@ -79,14 +91,39 @@ const SUserEmail = styled.div`
   font-weight: 500;
   color: ${({ theme }) => theme.colors.gray800};
 `;
+const SWriteBtn = styled.div`
+  width: 130px;
+  height: 40px;
+  margin-left: 30px;
+  padding: 8px 20px 8px 24px;
+  background-color: #632cfa;
+  color: white;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  opacity: 1;
+  position: relative;
+`;
+const SDropdownIcon = styled.div`
+  margin-left: auto;
+`;
 
-const HomeNavigationBar = () => {
+interface Reload {
+  setReload: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const HomeNavigationBar = ({ setReload }: Reload) => {
   const { scheduleId } = useParams();
   const userId = localStorage.getItem('userId');
-  const { isToggle, handleChangeToggle } = useToggle();
+
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false);
+  const [isDropdown, setIsDropdown] = useState<boolean>(false);
+  const [modalContent, setModalContent] = useState<React.ReactNode | null>(
+    null,
+  );
+  const [isOpenWriteModal, setIsOpenWriteModal] = useState<boolean>(false);
 
   const openSettingModal = () => {
     setIsOpenSetting(true);
@@ -107,58 +144,108 @@ const HomeNavigationBar = () => {
     getUserData();
   }, []);
 
+  const dropdownToggle = () => {
+    setIsDropdown((prev) => !prev);
+  };
+
+  const closeWriteModal = () => {
+    setIsOpenWriteModal(false);
+  };
+  const handleClickModal = (openModalContent: string) => {
+    if (openModalContent === '학급일지') {
+      setModalContent(
+        <ClassLogModal
+          closeWriteModal={closeWriteModal}
+          handleClickModal={handleClickModal}
+        />,
+      );
+    } else if (openModalContent === '업무일지') {
+      setModalContent(
+        <WorkLogModal
+          closeWriteModal={closeWriteModal}
+          handleClickModal={handleClickModal}
+        />,
+      );
+    } else if (openModalContent === '상담기록') {
+      setModalContent(
+        <ConsultationRecordsModal
+          closeWriteModal={closeWriteModal}
+          handleClickModal={handleClickModal}
+        />,
+      );
+    } else if (openModalContent === '학생 관찰 일지') {
+      setModalContent(
+        <StudentRecordsModal
+          closeWriteModal={closeWriteModal}
+          handleClickModal={handleClickModal}
+        />,
+      );
+    }
+    setIsOpenWriteModal(true);
+  };
   return (
     <>
       <SLeftSidebar>
-        <SLogo>
-          <IcLogo />
-        </SLogo>
-        <>
-          <Link
-            to={scheduleId ? `/home/${scheduleId}` : '/home'}
-            className={
-              location.pathname ===
-              (scheduleId ? `/home/${scheduleId}` : '/home')
-                ? 'active'
-                : ''
-            }
-          >
-            <SCategory>
-              <IcHome />
-              <SCategoryText>홈화면</SCategoryText>
-            </SCategory>
-          </Link>
+        <SHomeCategoryGroup>
+          <SLogo>
+            <IcLogo />
+          </SLogo>
+          <>
+            <Link
+              to={scheduleId ? `/home/${scheduleId}` : '/home'}
+              className={
+                location.pathname ===
+                (scheduleId ? `/home/${scheduleId}` : '/home')
+                  ? 'active'
+                  : ''
+              }
+            >
+              <SCategory>
+                <IcHome />
+                <SCategoryText>홈화면</SCategoryText>
+              </SCategory>
+            </Link>
 
-          {/* 아카이브 이동 라우팅 변경하기 */}
-          <Link
-            to={scheduleId ? `/archive/${scheduleId}` : '/archive'}
-            className={
-              location.pathname ===
-              (scheduleId ? `/archive/${scheduleId}` : '/archive')
-                ? 'active'
-                : ''
-            }
-          >
-            <SCategory>
-              <IcArchive />
-              <SCategoryText>아카이브</SCategoryText>
-            </SCategory>
-          </Link>
-          <Link
-            to={scheduleId ? `/timetable/${scheduleId}` : '/timetable'}
-            className={
-              location.pathname ===
-              (scheduleId ? `/timetable/${scheduleId}` : '/timetable')
-                ? 'active'
-                : ''
-            }
-          >
-            <SCategory>
-              <IcTimetable />
-              <SCategoryText>시간표</SCategoryText>
-            </SCategory>
-          </Link>
-        </>
+            <Link
+              to={scheduleId ? `/archive/${scheduleId}` : '/archive'}
+              className={
+                location.pathname ===
+                (scheduleId ? `/archive/${scheduleId}` : '/archive')
+                  ? 'active'
+                  : ''
+              }
+            >
+              <SCategory>
+                <IcArchive />
+                <SCategoryText>아카이브</SCategoryText>
+              </SCategory>
+            </Link>
+            <Link
+              to={scheduleId ? `/timetable/${scheduleId}` : '/timetable'}
+              className={
+                location.pathname ===
+                (scheduleId ? `/timetable/${scheduleId}` : '/timetable')
+                  ? 'active'
+                  : ''
+              }
+            >
+              <SCategory>
+                <IcTimetable />
+                <SCategoryText>시간표</SCategoryText>
+              </SCategory>
+            </Link>
+          </>
+        </SHomeCategoryGroup>
+
+        <SWriteBtn onClick={dropdownToggle} className="pointer">
+          글쓰기
+          <SDropdownIcon>
+            {isDropdown ? <IcNavigationClose /> : <IcNavigationOpen />}
+          </SDropdownIcon>
+          {isDropdown && (
+            <WriteDropdownList handleClickModal={handleClickModal} />
+          )}
+        </SWriteBtn>
         <SUserProfileInfoWrapper>
           <IcProfile />
           <SUserProfile>
@@ -170,6 +257,10 @@ const HomeNavigationBar = () => {
         </SUserProfileInfoWrapper>
       </SLeftSidebar>
       {isOpenSetting && <Setting closeSettingModal={closeSettingModal} />}
+
+      {modalContent && isOpenWriteModal ? (
+        <ModalBackground>{modalContent}</ModalBackground>
+      ) : null}
     </>
   );
 };

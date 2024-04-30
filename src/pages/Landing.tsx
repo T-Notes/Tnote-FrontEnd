@@ -8,13 +8,14 @@ import LandingLayout from '../components/Landing/LandingLayout';
 import KakaoLoginBtn from '../components/Landing/KakaoLoginBtn';
 import PrivacyPolicyCheckbox from '../components/Landing/PrivacyPolicyCheckbox';
 import PrivacyPolicyModal from '../components/Landing/PrivacyPolicyModal';
+import { IcBackgroundIconGroup } from '../assets/icons';
 
-// import ImgLandingBackgroundImage from '../../src/assets/images/LandingBackgroundImage.png';
+// import LandingBackgroundImage from '../assets/images/LandingBackgroundImage.png';
 
 // styled //
 const SLandingWrapper = styled.div`
   // 개선 : 웹 화면 크기에 따라 달라져야 함
-  /* background-image: url(${''}); */ // 추후 수정하기
+  /* background-image: url(${'../assets/images/LandingBackgroundImage.png'}); // 추후 수정하기 */
   background-size: cover;
   background-position: center;
   width: 100%;
@@ -70,6 +71,7 @@ const Landing = () => {
   }, [isWarning]);
   return (
     <SLandingWrapper>
+      <IcBackgroundIconGroup />
       <LandingLayout />
       <KakaoLoginBtn onWarning={setIsWarning} isChecked={isToggle} />
       <SUnderbar />

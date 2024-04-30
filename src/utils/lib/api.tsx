@@ -145,11 +145,11 @@ interface CreateSemester {
   semesterName: string;
   lastClass: string;
   email: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: Date | string;
+  endDate: Date | string;
 }
 // 학기 추가하기
-export const createSemester = async (semesterData: CreateSemester) => {
+export const createSemester = async (semesterData: object) => {
   try {
     const response = await instanceAxios.post('/tnote/schedule', semesterData);
     console.log(response.data);

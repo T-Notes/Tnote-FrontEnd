@@ -61,7 +61,7 @@ const SDays = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 60px;
+  height: 80px;
   flex: 1;
   flex: 1 0 14%;
   padding: 5px;
