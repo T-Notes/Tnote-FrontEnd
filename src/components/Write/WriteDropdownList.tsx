@@ -26,13 +26,17 @@ const SItem = styled.li`
   font-weight: 500;
   cursor: pointer;
 `;
-const WriteDropdownList = () => {
-  const options = ['학급일지', '업무일지', '상담 기록', '학생 관찰 일지'];
+const WriteDropdownList = ({
+  handleClickModal,
+}: {
+  handleClickModal: (option: string) => void;
+}) => {
+  const options = ['학급일지', '업무일지', '상담기록', '학생 관찰 일지'];
   return (
     <>
       <SWrapper>
         {options.map((option, idx) => (
-          <SList key={idx}>
+          <SList key={idx} onClick={() => handleClickModal(option)}>
             <SItem>{option}</SItem>
           </SList>
         ))}

@@ -80,7 +80,6 @@ const STeachingPlan = styled.div`
 const StudentRecordsModal = ({
   closeWriteModal,
   handleClickModal,
-  setReload,
 }: CloseProps) => {
   const { scheduleId } = useParams();
 
@@ -161,7 +160,7 @@ const StudentRecordsModal = ({
             },
           },
         );
-        setReload((prev) => !prev);
+        window.location.reload();
         closeWriteModal();
       } catch (err) {
         console.log(err);

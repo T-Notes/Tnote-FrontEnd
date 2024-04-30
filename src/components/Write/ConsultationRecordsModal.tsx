@@ -130,7 +130,6 @@ const SCounselingResult = styled.div`
 const ConsultationRecordsModal = ({
   closeWriteModal,
   handleClickModal,
-  setReload,
 }: CloseProps) => {
   const { scheduleId } = useParams();
 
@@ -234,7 +233,7 @@ const ConsultationRecordsModal = ({
             },
           },
         );
-        setReload((prev) => !prev);
+        window.location.reload();
         closeWriteModal();
       } catch (err) {
         console.log(err);

@@ -3,21 +3,21 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   IcArchive,
-  IcCloseDropdownSmall,
   IcHome,
   IcLogo,
   IcNavigationClose,
   IcNavigationOpen,
-  IcOpenDropdownSmall,
   IcProfile,
-  IcProfileLarge,
   IcTimetable,
 } from '../../assets/icons';
 import { getUserInfo } from '../../utils/lib/api';
 import Setting from '../Setting/Setting';
-import { Dropdown } from './Dropdown';
-import DropdownInput from './DropdownInput';
-import WriteDropdownList from '../Home/WriteDropdownList';
+import WriteDropdownList from '../Write/WriteDropdownList';
+import ClassLogModal from '../Write/ClassLogModal';
+import WorkLogModal from '../Write/WorkLogModal';
+import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
+import StudentRecordsModal from '../Write/StudentRecordsModal';
+import { ModalBackground } from './styled/ModalLayout';
 
 //** styled **//
 const SLeftSidebar = styled.div`
@@ -108,7 +108,11 @@ const SDropdownIcon = styled.div`
   margin-left: auto;
 `;
 
-const HomeNavigationBar = () => {
+interface Reload {
+  setReload: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const HomeNavigationBar = ({ setReload }: Reload) => {
   const { scheduleId } = useParams();
   const userId = localStorage.getItem('userId');
 
@@ -116,6 +120,10 @@ const HomeNavigationBar = () => {
   const [name, setName] = useState<string>('');
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false);
   const [isDropdown, setIsDropdown] = useState<boolean>(false);
+  const [modalContent, setModalContent] = useState<React.ReactNode | null>(
+    null,
+  );
+  const [isOpenWriteModal, setIsOpenWriteModal] = useState<boolean>(false);
 
   const openSettingModal = () => {
     setIsOpenSetting(true);
@@ -140,6 +148,41 @@ const HomeNavigationBar = () => {
     setIsDropdown((prev) => !prev);
   };
 
+  const closeWriteModal = () => {
+    setIsOpenWriteModal(false);
+  };
+  const handleClickModal = (openModalContent: string) => {
+    if (openModalContent === '학급일지') {
+      setModalContent(
+        <ClassLogModal
+          closeWriteModal={closeWriteModal}
+          handleClickModal={handleClickModal}
+        />,
+      );
+    } else if (openModalContent === '업무일지') {
+      setModalContent(
+        <WorkLogModal
+          closeWriteModal={closeWriteModal}
+          handleClickModal={handleClickModal}
+        />,
+      );
+    } else if (openModalContent === '상담기록') {
+      setModalContent(
+        <ConsultationRecordsModal
+          closeWriteModal={closeWriteModal}
+          handleClickModal={handleClickModal}
+        />,
+      );
+    } else if (openModalContent === '학생 관찰 일지') {
+      setModalContent(
+        <StudentRecordsModal
+          closeWriteModal={closeWriteModal}
+          handleClickModal={handleClickModal}
+        />,
+      );
+    }
+    setIsOpenWriteModal(true);
+  };
   return (
     <>
       <SLeftSidebar>
@@ -163,7 +206,6 @@ const HomeNavigationBar = () => {
               </SCategory>
             </Link>
 
-            {/* 아카이브 이동 라우팅 변경하기 */}
             <Link
               to={scheduleId ? `/archive/${scheduleId}` : '/archive'}
               className={
@@ -200,11 +242,12 @@ const HomeNavigationBar = () => {
           <SDropdownIcon>
             {isDropdown ? <IcNavigationClose /> : <IcNavigationOpen />}
           </SDropdownIcon>
-          {isDropdown && <WriteDropdownList />}
+          {isDropdown && (
+            <WriteDropdownList handleClickModal={handleClickModal} />
+          )}
         </SWriteBtn>
         <SUserProfileInfoWrapper>
           <IcProfile />
-          {/* <IcProfileLarge /> */}
           <SUserProfile>
             <SUserName onClick={openSettingModal}>
               {`${name} 선생님`}
@@ -214,6 +257,10 @@ const HomeNavigationBar = () => {
         </SUserProfileInfoWrapper>
       </SLeftSidebar>
       {isOpenSetting && <Setting closeSettingModal={closeSettingModal} />}
+
+      {modalContent && isOpenWriteModal ? (
+        <ModalBackground>{modalContent}</ModalBackground>
+      ) : null}
     </>
   );
 };
