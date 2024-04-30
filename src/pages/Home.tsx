@@ -53,7 +53,7 @@ const Home = () => {
         </SDayAndScheduleWrapper>
       </SHomeSemester>
 
-      <ScheduleCalendar reload={reload} onDayClick={handleDayClick} />
+      <ScheduleCalendar onDayClick={handleDayClick} />
       <TaskSidebar
         reload={reload}
         setReload={setReload}
