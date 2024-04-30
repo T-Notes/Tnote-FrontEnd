@@ -48,3 +48,5 @@ export { ReactComponent as IcBlackDelete } from './blackDeleteIcon.svg';
 export { ReactComponent as IcRoundBackBtn } from './roundBackButtonIcon.svg';
 export { ReactComponent as IcRoundFrontBtn } from './roundFrontButtonIcon.svg';
 export { ReactComponent as IcBackgroundIconGroup } from './backgroundIconGroup.svg';
+export { ReactComponent as IcNavigationOpen } from './navigationOpenIcon.svg';
+export { ReactComponent as IcNavigationClose } from './navigationCloseIcon.svg';
