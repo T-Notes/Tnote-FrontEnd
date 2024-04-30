@@ -59,7 +59,7 @@ const Home = () => {
         setReload={setReload}
         clickedDate={clickedDate}
       />
-      <WriteButton setReload={setReload} />
+      {/* <WriteButton setReload={setReload} /> */}
     </SHomeWrapper>
   );
 };
