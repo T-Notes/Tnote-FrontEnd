@@ -13,7 +13,6 @@ import {
   endOfMonth,
   isToday,
   isSameMonth,
-  isWeekend,
   isSameDay,
 } from 'date-fns';
 import SearchInput from '../common/SearchInput';
@@ -53,11 +52,10 @@ const SDaysBox = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
+  flex: 1;
   flex-wrap: wrap;
 `;
 const SDays = styled.div`
-  border: 1px solid black;
   font-size: 14px;
   display: flex;
   flex-direction: column;
