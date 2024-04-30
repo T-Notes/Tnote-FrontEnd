@@ -125,6 +125,11 @@ const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
   };
 
   const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
+    startDate = new Date(
+      startDate.getTime() - startDate.getTimezoneOffset() * 60000,
+    ); // 시작 날짜의 시간대 오프셋 적용
+    endDate = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000); // 종료 날짜의 시간대 오프셋 적용
+    console.log(2, startDate.toISOString());
     setDate((prevDate) => ({
       ...prevDate,
       startDate: startDate.toISOString(),
