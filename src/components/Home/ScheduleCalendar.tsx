@@ -21,6 +21,7 @@ import { useParams } from 'react-router-dom';
 import { getAllLogs, getSearchLogsValue } from '../../utils/lib/api';
 import ScheduleCalendarSearchValue from '../../components/search/ScheduleCalendarSearchValue';
 import MoreLogModal from './logCalendar/MoreLogModal';
+import useRandomColor from '../../utils/useHooks/useRandomColor';
 
 const SCalendarWrapper = styled.div`
   width: 100%;
@@ -126,6 +127,7 @@ const ScheduleCalendar = ({
   onDayClick: (clickedDate: Date) => void;
 }) => {
   const { scheduleId } = useParams();
+  const getRandomColor = useRandomColor();
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchValueList, setSetSearchValueList] = useState<any[]>([]);
   const [allLogs, setAllLogs] = useState<any[]>([]);
@@ -150,18 +152,6 @@ const ScheduleCalendar = ({
     setCurrentDate(startOfMonth(new Date()));
     onDayClick(new Date());
   };
-
-  const getRandomColor = (() => {
-    const colors = ['#FEF5E6', '#FFD9D9', '#D2F0FF', '#F0EBFF'];
-    let index = 0;
-
-    return () => {
-      const color = colors[index];
-      index = (index + 1) % colors.length;
-
-      return color;
-    };
-  })();
 
   useEffect(() => {
     if (scheduleId) {
