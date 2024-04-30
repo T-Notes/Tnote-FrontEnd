@@ -20,6 +20,7 @@ import { Button } from '../common/styled/Button';
 import { useParams } from 'react-router-dom';
 import { getAllLogs, getSearchLogsValue } from '../../utils/lib/api';
 import ScheduleCalendarSearchValue from '../../components/search/ScheduleCalendarSearchValue';
+import MoreLogModal from './logCalendar/MoreLogModal';
 
 const SCalendarWrapper = styled.div`
   width: 100%;
@@ -128,7 +129,8 @@ const ScheduleCalendar = ({
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchValueList, setSetSearchValueList] = useState<any[]>([]);
   const [allLogs, setAllLogs] = useState<any[]>([]);
-
+  const [moreLogsModal, setMoreLogsModal] = useState<boolean>(false);
+  const [clickDay, setClickDay] = useState<Date | undefined>();
   const { currentDate, handlePrevMonth, handleNextMonth, setCurrentDate } =
     useCurrentDate();
 
@@ -186,6 +188,13 @@ const ScheduleCalendar = ({
     }
   }, [scheduleId, currentDate]);
 
+  const handleClickMoreLogs = (day: Date) => {
+    setClickDay(day);
+    setMoreLogsModal(true);
+  };
+  const closeMoreLogsModal = () => {
+    setMoreLogsModal(false);
+  };
   const handleChangeSearchValue = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
@@ -274,7 +283,9 @@ const ScheduleCalendar = ({
                         </SLogContainer>
                       ))}
                       {hiddenLogsCount > 0 && (
-                        <SMoreLogs>{`그 외 ${hiddenLogsCount}개 더 보기`}</SMoreLogs>
+                        <SMoreLogs
+                          onClick={() => handleClickMoreLogs(day)}
+                        >{`그 외 ${hiddenLogsCount}개 더 보기`}</SMoreLogs>
                       )}
                     </>
                   );
@@ -283,6 +294,12 @@ const ScheduleCalendar = ({
             ))}
           </SDaysBox>
         </SCalendarDate>
+      )}
+      {moreLogsModal && (
+        <MoreLogModal
+          clickDay={clickDay}
+          closeMoreLogsModal={closeMoreLogsModal}
+        />
       )}
     </SCalendarWrapper>
   );
