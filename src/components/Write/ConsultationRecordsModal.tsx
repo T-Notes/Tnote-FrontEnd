@@ -191,12 +191,18 @@ const ConsultationRecordsModal = ({
   const handleCounselingContentChange = (
     e: ChangeEvent<HTMLTextAreaElement>,
   ) => {
-    setCounselingContent(e.target.value);
+    const content = e.target.value;
+    if (content.length <= 3000) {
+      setCounselingContent(content);
+    }
   };
   const handleCounselingResultChange = (
     e: ChangeEvent<HTMLTextAreaElement>,
   ) => {
-    setCounselingResult(e.target.value);
+    const content = e.target.value;
+    if (content.length <= 3000) {
+      setCounselingResult(content);
+    }
   };
 
   const handleClickSubmit = async () => {

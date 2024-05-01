@@ -183,7 +183,10 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
   };
 
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setWorkContents(e.target.value);
+    const content = e.target.value;
+    if (content.length <= 3000) {
+      setWorkContents(content);
+    }
   };
 
   const handleClickSubmit = async () => {

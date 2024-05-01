@@ -114,10 +114,13 @@ const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
   };
 
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setSaveContents((prevSaveContents) => ({
-      ...prevSaveContents,
-      [contentType]: e.target.value,
-    }));
+    const content = e.target.value;
+    if (content.length <= 3000) {
+      setSaveContents((prevSaveContents) => ({
+        ...prevSaveContents,
+        [contentType]: content,
+      }));
+    }
   };
 
   const handleTitleChange = (newTitle: string) => {

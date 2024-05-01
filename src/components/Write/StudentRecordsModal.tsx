@@ -114,10 +114,16 @@ const StudentRecordsModal = ({
   const handleObservationContentChange = (
     e: ChangeEvent<HTMLTextAreaElement>,
   ) => {
-    setObservationContent(e.target.value);
+    const content = e.target.value;
+    if (content.length <= 3000) {
+      setObservationContent(content);
+    }
   };
   const handleTeachingPlanChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setTeachingPlan(e.target.value);
+    const content = e.target.value;
+    if (content.length <= 3000) {
+      setTeachingPlan(content);
+    }
   };
 
   const handleChangeValueImg = (e: any) => {
