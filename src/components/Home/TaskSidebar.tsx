@@ -1,21 +1,9 @@
 import styled from 'styled-components';
-import { Button } from '../common/styled/Button';
-
-import { IcAddWhite } from '../../assets/icons';
 import { useEffect, useState } from 'react';
-import { tr } from 'date-fns/locale';
-
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
-import Todo from '../Home/Todo';
-import {
-  getAllClassLog,
-  getAllProceedings,
-  getAllConsultations,
-  getAllObservation,
-  getAllTaskByDate,
-} from '../../utils/lib/api';
+import Todo from './todo/Todo';
+import { getAllTaskByDate } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
-import instanceAxios from '../../utils/InstanceAxios';
 import Swal from 'sweetalert2';
 
 const STaskSidebarWrapper = styled.div`
@@ -162,7 +150,6 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
         <Todo
           clickedOutside={clickedOutside}
           setClickedOutside={setClickedOutside}
-          setTodo={setTodo}
           todo={todo}
           clickedDate={clickedDate}
           setReload={setReload}
