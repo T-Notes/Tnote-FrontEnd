@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
-import Todo from './todo/Todo';
+import Todo from './Todo';
 import { getAllTaskByDate } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import EditClassLogModal from '../WriteEdit/EditClassLogModal';
+import ClassLogModal from '../Write/ClassLogModal';
 
 const STaskSidebarWrapper = styled.div`
   display: flex;
@@ -92,6 +94,8 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
   const [observationContent, setObservationContent] = useState<Task[]>([]);
   const [clickedOutside, setClickedOutside] = useState<boolean>(false);
   const [todo, setTodo] = useState<Task[]>([]);
+  const [isLogModalOpen, setIsLogModalOpen] = useState<boolean>(false);
+
   const currentDate = new Date().toISOString().slice(0, 10);
 
   const formattedDate = clickedDate
@@ -115,7 +119,7 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
 
             const logData = allData.data;
 
-            setTodo(logData.todos);
+            // setTodo(logData.todos);
             setClassLogContent(logData.classLogs);
             setWorkLogContent(logData.proceedings);
             setConsultationsContent(logData.consultations);
@@ -141,6 +145,10 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
     }
   }, [reload, scheduleId, clickedDate]);
 
+  const handleOpenLogModal = (LogId: number) => {
+    setIsLogModalOpen(true);
+  };
+
   return (
     <STaskSidebarWrapper onClick={handleUpdateOutside}>
       <SDateFont>
@@ -151,6 +159,7 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
           clickedOutside={clickedOutside}
           setClickedOutside={setClickedOutside}
           todo={todo}
+          setTodo={setTodo}
           clickedDate={clickedDate}
           setReload={setReload}
         />
@@ -161,7 +170,10 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
       </SFlex>
 
       {classLogContent.map((classLog) => (
-        <SLogs key={classLog.id}>
+        <SLogs
+          key={classLog.id}
+          onClick={() => handleOpenLogModal(classLog.id)}
+        >
           <SLogContent>{classLog.title}</SLogContent>
           <SLogCreatedAt>{`${classLog.createdAt.slice(
             0,
@@ -212,6 +224,7 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
           )} 작성`}</SLogCreatedAt>
         </SLogs>
       ))}
+      {/* {isLogModalOpen && <ClassLogModal />} */}
     </STaskSidebarWrapper>
   );
 };
