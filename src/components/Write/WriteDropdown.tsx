@@ -1,7 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import ModalPortal from '../../utils/ModalPortal';
-import { ModalBackground, ModalLayout } from '../common/styled/ModalLayout';
+
 import { IcClose, IcOpenDropdown, IcCloseDropdown } from '../../assets/icons';
 import { useToggle } from '../../utils/useHooks/useToggle';
 

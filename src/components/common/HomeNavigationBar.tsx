@@ -18,6 +18,7 @@ import WorkLogModal from '../Write/WorkLogModal';
 import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
 import StudentRecordsModal from '../Write/StudentRecordsModal';
 import { ModalBackground } from './styled/ModalLayout';
+import { useModals } from '../../utils/useHooks/useModals';
 
 //** styled **//
 const SLeftSidebar = styled.div`
@@ -115,7 +116,7 @@ interface Reload {
 const HomeNavigationBar = () => {
   const { scheduleId } = useParams();
   const userId = localStorage.getItem('userId');
-
+  const { openModal } = useModals();
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false);
@@ -153,12 +154,7 @@ const HomeNavigationBar = () => {
   };
   const handleClickModal = (openModalContent: string) => {
     if (openModalContent === '학급일지') {
-      setModalContent(
-        <ClassLogModal
-          closeWriteModal={closeWriteModal}
-          handleClickModal={handleClickModal}
-        />,
-      );
+      openModal(ClassLogModal, {});
     } else if (openModalContent === '업무일지') {
       setModalContent(
         <WorkLogModal

@@ -15,6 +15,7 @@ import { IcPen } from '../../assets/icons';
 import Swal from 'sweetalert2';
 import { css } from 'styled-components';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
+import ReactModal from 'react-modal';
 
 // styled //
 const SModalLayout = styled(ModalLayout)`
@@ -88,7 +89,12 @@ interface CloseProps {
   closeWriteModal: () => void;
   handleClickModal: (openModalContent: string) => void;
 }
-const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
+interface CustomModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  name: string;
+}
+const ClassLogModal = ({ isOpen, onClose, ...props }: CustomModalProps) => {
   const formData = new FormData();
   const { scheduleId } = useParams();
   const [title, setTitle] = useState<string>('');
@@ -108,6 +114,10 @@ const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
     startDate: '',
     endDate: '',
   });
+
+  const handleClose = () => {
+    onClose();
+  };
 
   const handleContentTypeChange = (type: keyof SaveContents) => {
     setContentType(type);
@@ -193,7 +203,7 @@ const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
           },
         );
         window.location.reload();
-        closeWriteModal();
+        handleClose();
       } catch (err) {
         console.log(err);
       }
@@ -208,82 +218,80 @@ const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
     title && date.startDate && date.endDate && saveContents[contentType];
 
   return (
-    <ModalPortal>
-      <ModalNoBlackBackground>
-        <SModalLayout>
-          <WriteDropdown
-            label="학급일지"
-            options={['업무일지', '상담기록', '학생 관찰 일지']}
-            handleClickModal={handleClickModal}
-            closeWriteModal={closeWriteModal}
-          />
-          <WritingModalTop
-            titleLabel={'제목'}
-            dateLabel={'기간'}
-            onTitleChange={handleTitleChange}
-            onStartDateChange={dateValue}
-          />
-          <SContentWrap>
-            <SType>
-              <STypeBtn
-                selected={contentType === '학습계획'}
-                onClick={() => handleContentTypeChange('학습계획')}
-              >
-                학습계획
-              </STypeBtn>
-              <STypeBtn
-                selected={contentType === '수업내용'}
-                onClick={() => handleContentTypeChange('수업내용')}
-              >
-                수업내용
-              </STypeBtn>
-              <STypeBtn
-                selected={contentType === '제출과제'}
-                onClick={() => handleContentTypeChange('제출과제')}
-              >
-                제출과제
-              </STypeBtn>
-              <STypeBtn
-                selected={contentType === '진도표'}
-                onClick={() => handleContentTypeChange('진도표')}
-              >
-                진도표
-              </STypeBtn>
-              <SBorderBottom></SBorderBottom>
-            </SType>
-            {contentType && (
-              <>
-                <SContentLine>
-                  <SContentIc>
-                    <IcPen />
-                    <SContent>
-                      내용
-                      <span>*</span>
-                    </SContent>
-                  </SContentIc>
-                  <SContentLength>
-                    ({saveContents[contentType].length} / 3000)
-                  </SContentLength>
-                </SContentLine>
-                <STextarea
-                  placeholder="텍스트를 입력해주세요"
-                  value={saveContents[contentType]}
-                  onChange={handleContentChange}
-                />
-              </>
-            )}
-          </SContentWrap>
-          <FileUpload
-            fileName={fileName}
-            handleChangeImg={handleChangeImg}
-            inputId="file"
-          />
-          <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
-            등록
-          </SLogsSubmitBtn>
-        </SModalLayout>
-      </ModalNoBlackBackground>
-    </ModalPortal>
+    <ReactModal isOpen={isOpen} ariaHideApp={false}>
+      <>
+        <WriteDropdown
+          label="학급일지"
+          options={['업무일지', '상담기록', '학생 관찰 일지']}
+          handleClickModal={() => {}}
+          closeWriteModal={handleClose}
+        />
+        <WritingModalTop
+          titleLabel={'제목'}
+          dateLabel={'기간'}
+          onTitleChange={handleTitleChange}
+          onStartDateChange={dateValue}
+        />
+        <SContentWrap>
+          <SType>
+            <STypeBtn
+              selected={contentType === '학습계획'}
+              onClick={() => handleContentTypeChange('학습계획')}
+            >
+              학습계획
+            </STypeBtn>
+            <STypeBtn
+              selected={contentType === '수업내용'}
+              onClick={() => handleContentTypeChange('수업내용')}
+            >
+              수업내용
+            </STypeBtn>
+            <STypeBtn
+              selected={contentType === '제출과제'}
+              onClick={() => handleContentTypeChange('제출과제')}
+            >
+              제출과제
+            </STypeBtn>
+            <STypeBtn
+              selected={contentType === '진도표'}
+              onClick={() => handleContentTypeChange('진도표')}
+            >
+              진도표
+            </STypeBtn>
+            <SBorderBottom></SBorderBottom>
+          </SType>
+          {contentType && (
+            <>
+              <SContentLine>
+                <SContentIc>
+                  <IcPen />
+                  <SContent>
+                    내용
+                    <span>*</span>
+                  </SContent>
+                </SContentIc>
+                <SContentLength>
+                  ({saveContents[contentType].length} / 3000)
+                </SContentLength>
+              </SContentLine>
+              <STextarea
+                placeholder="텍스트를 입력해주세요"
+                value={saveContents[contentType]}
+                onChange={handleContentChange}
+              />
+            </>
+          )}
+        </SContentWrap>
+        <FileUpload
+          fileName={fileName}
+          handleChangeImg={handleChangeImg}
+          inputId="file"
+        />
+        <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
+          등록
+        </SLogsSubmitBtn>
+      </>
+    </ReactModal>
   );
 };
 
