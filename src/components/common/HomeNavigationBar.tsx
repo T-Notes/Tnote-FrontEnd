@@ -24,15 +24,14 @@ import { useModals } from '../../utils/useHooks/useModals';
 const SLeftSidebar = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   width: 200px;
   height: 100vh;
   flex-shrink: 0;
   background-color: ${({ theme }) => theme.colors.blue400};
-  position: fixed; /* 고정 위치 */
-  top: 0; /* 맨 위에 고정 */
-  left: 0; /* 맨 왼쪽에 고정 */
-  border-right: 1px solid #ccc; /* 우측에 경계선 추가 (선택사항) */
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-right: 1px solid #ccc;
   .active {
     background-color: #f0ebff;
   }
@@ -48,9 +47,6 @@ const SCategory = styled.div`
   padding-bottom: 10px;
   padding-left: 35px;
   cursor: pointer;
-  /* &:hover {
-    background-color: #f0ebff;
-  } */
 `;
 const SLogo = styled.div`
   padding-left: 20px;
@@ -109,10 +105,6 @@ const SDropdownIcon = styled.div`
   margin-left: auto;
 `;
 
-interface Reload {
-  setReload: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
 const HomeNavigationBar = () => {
   const { scheduleId } = useParams();
   const userId = localStorage.getItem('userId');
@@ -121,10 +113,6 @@ const HomeNavigationBar = () => {
   const [name, setName] = useState<string>('');
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false);
   const [isDropdown, setIsDropdown] = useState<boolean>(false);
-  const [modalContent, setModalContent] = useState<React.ReactNode | null>(
-    null,
-  );
-  const [isOpenWriteModal, setIsOpenWriteModal] = useState<boolean>(false);
 
   const openSettingModal = () => {
     setIsOpenSetting(true);
@@ -149,35 +137,16 @@ const HomeNavigationBar = () => {
     setIsDropdown((prev) => !prev);
   };
 
-  const closeWriteModal = () => {
-    setIsOpenWriteModal(false);
-  };
   const handleClickModal = (openModalContent: string) => {
     if (openModalContent === '학급일지') {
       openModal(ClassLogModal, {});
     } else if (openModalContent === '업무일지') {
-      setModalContent(
-        <WorkLogModal
-          closeWriteModal={closeWriteModal}
-          handleClickModal={handleClickModal}
-        />,
-      );
+      openModal(WorkLogModal, {});
     } else if (openModalContent === '상담기록') {
-      setModalContent(
-        <ConsultationRecordsModal
-          closeWriteModal={closeWriteModal}
-          handleClickModal={handleClickModal}
-        />,
-      );
+      openModal(ConsultationRecordsModal, {});
     } else if (openModalContent === '학생 관찰 일지') {
-      setModalContent(
-        <StudentRecordsModal
-          closeWriteModal={closeWriteModal}
-          handleClickModal={handleClickModal}
-        />,
-      );
+      openModal(StudentRecordsModal, {});
     }
-    setIsOpenWriteModal(true);
   };
 
   return (
@@ -254,10 +223,6 @@ const HomeNavigationBar = () => {
         </SUserProfileInfoWrapper>
       </SLeftSidebar>
       {isOpenSetting && <Setting closeSettingModal={closeSettingModal} />}
-
-      {modalContent && isOpenWriteModal ? (
-        <ModalBackground>{modalContent}</ModalBackground>
-      ) : null}
     </>
   );
 };

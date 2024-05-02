@@ -4,12 +4,8 @@ import axios from 'axios';
 import FileUpload from '../common/FileUpload';
 import WritingModalTop from './WriteModalTop';
 import WriteDropdown from './WriteDropdown';
-import ModalPortal from '../../utils/ModalPortal';
-import {
-  ModalLayout,
-  ModalNoBlackBackground,
-  writeFormCustomStyles,
-} from '../common/styled/ModalLayout';
+
+import { writeFormCustomStyles } from '../common/styled/ModalLayout';
 import { Button } from '../common/styled/Button';
 import { useParams } from 'react-router-dom';
 import { IcPen } from '../../assets/icons';
@@ -18,14 +14,6 @@ import { css } from 'styled-components';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import ReactModal from 'react-modal';
 
-// styled //
-const SModalLayout = styled(ModalLayout)`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 670px;
-  height: 600px;
-`;
 const STextarea = styled.textarea`
   height: 180px;
   width: 100%;
@@ -90,7 +78,7 @@ interface CloseProps {
   closeWriteModal: () => void;
   handleClickModal: (openModalContent: string) => void;
 }
-interface CustomModalProps {
+export interface CustomModalProps {
   isOpen: boolean;
   onClose: () => void;
   name: string;

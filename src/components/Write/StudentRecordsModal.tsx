@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
+import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
@@ -9,8 +10,10 @@ import FileUpload from '../common/FileUpload';
 import {
   ModalLayout,
   ModalNoBlackBackground,
+  writeFormCustomStyles,
 } from '../common/styled/ModalLayout';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
+import { CustomModalProps } from './ClassLogModal';
 import { CloseProps } from './WorkLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
@@ -78,9 +81,10 @@ const STeachingPlan = styled.div`
 `;
 
 const StudentRecordsModal = ({
-  closeWriteModal,
-  handleClickModal,
-}: CloseProps) => {
+  isOpen,
+  onClose,
+  ...props
+}: CustomModalProps) => {
   const { scheduleId } = useParams();
 
   const [title, setTitle] = useState<string>(''); //제목 상태
@@ -171,7 +175,7 @@ const StudentRecordsModal = ({
           },
         );
         window.location.reload();
-        closeWriteModal();
+        onClose();
       } catch (err) {
         console.log(err);
       }
@@ -186,14 +190,18 @@ const StudentRecordsModal = ({
     title && date.startDate && date.endDate && observationContent;
 
   return (
-    <ModalPortal>
+    <ReactModal
+      isOpen={isOpen}
+      ariaHideApp={false}
+      style={writeFormCustomStyles}
+    >
       <ModalNoBlackBackground>
         <SModalLayout>
           <WriteDropdown
             label="학생 관찰 일지"
             options={['학급일지', '업무일지', '상담기록']}
-            handleClickModal={handleClickModal}
-            closeWriteModal={closeWriteModal}
+            handleClickModal={() => {}}
+            closeWriteModal={onClose}
           />
           <WritingModalTop
             titleLabel={'학생 이름'}
@@ -247,7 +255,7 @@ const StudentRecordsModal = ({
           </SScroll>
         </SModalLayout>
       </ModalNoBlackBackground>
-    </ModalPortal>
+    </ReactModal>
   );
 };
 
