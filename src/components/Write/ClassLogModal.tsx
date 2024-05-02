@@ -132,7 +132,7 @@ const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
       startDate.getTime() - startDate.getTimezoneOffset() * 60000,
     ); // 시작 날짜의 시간대 오프셋 적용
     endDate = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000); // 종료 날짜의 시간대 오프셋 적용
-    console.log(2, startDate.toISOString());
+
     setDate((prevDate) => ({
       ...prevDate,
       startDate: startDate.toISOString(),
@@ -155,7 +155,7 @@ const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
       setFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
     }
   };
-  console.log(2, fileName);
+
   const handleClickSubmit = async () => {
     if (scheduleId) {
       try {

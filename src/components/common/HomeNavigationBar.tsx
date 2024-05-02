@@ -112,7 +112,7 @@ interface Reload {
   setReload: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const HomeNavigationBar = ({ setReload }: Reload) => {
+const HomeNavigationBar = () => {
   const { scheduleId } = useParams();
   const userId = localStorage.getItem('userId');
 
