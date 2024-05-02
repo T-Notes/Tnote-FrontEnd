@@ -1,7 +1,8 @@
 import { useMemo, useState, ReactNode } from 'react';
 import { ModalsDispatchContext, ModalsStateContext } from './ModalsContext';
 import Modals from './Modals';
-
+import { ThemeProvider } from 'styled-components';
+import theme from '../styles/theme';
 interface ModalItem {
   Component: any;
   props: any;
@@ -31,12 +32,14 @@ const ModalsProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useMemo(() => ({ open, close }), [open, close]);
 
   return (
-    <ModalsStateContext.Provider value={openedModals}>
-      <ModalsDispatchContext.Provider value={dispatch}>
-        <Modals />
-        {children}
-      </ModalsDispatchContext.Provider>
-    </ModalsStateContext.Provider>
+    <ThemeProvider theme={theme}>
+      <ModalsStateContext.Provider value={openedModals}>
+        <ModalsDispatchContext.Provider value={dispatch}>
+          <Modals />
+          {children}
+        </ModalsDispatchContext.Provider>
+      </ModalsStateContext.Provider>
+    </ThemeProvider>
   );
 };
 

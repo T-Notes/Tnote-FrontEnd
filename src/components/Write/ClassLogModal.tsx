@@ -8,6 +8,7 @@ import ModalPortal from '../../utils/ModalPortal';
 import {
   ModalLayout,
   ModalNoBlackBackground,
+  writeFormCustomStyles,
 } from '../common/styled/ModalLayout';
 import { Button } from '../common/styled/Button';
 import { useParams } from 'react-router-dom';
@@ -218,7 +219,11 @@ const ClassLogModal = ({ isOpen, onClose, ...props }: CustomModalProps) => {
     title && date.startDate && date.endDate && saveContents[contentType];
 
   return (
-    <ReactModal isOpen={isOpen} ariaHideApp={false}>
+    <ReactModal
+      isOpen={isOpen}
+      ariaHideApp={false}
+      style={writeFormCustomStyles}
+    >
       <>
         <WriteDropdown
           label="학급일지"

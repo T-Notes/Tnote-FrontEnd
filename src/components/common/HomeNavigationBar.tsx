@@ -179,6 +179,7 @@ const HomeNavigationBar = () => {
     }
     setIsOpenWriteModal(true);
   };
+
   return (
     <>
       <SLeftSidebar>

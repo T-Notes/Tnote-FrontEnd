@@ -13,10 +13,7 @@ import {
   IcUncheckedBox,
 } from '../assets/icons';
 import Swal from 'sweetalert2';
-import { useModal } from '../utils/useHooks/useModal';
-import CustomModal from '../components/CustomModal';
 import { useModals } from '../utils/useHooks/useModals';
-import ClassModalTestVersion from '../components/ClassModalTestVersion';
 
 const SArchiveWrapper = styled.div`
   position: absolute;
@@ -131,18 +128,10 @@ const Archive = () => {
     } else Swal.fire('삭제할 학기를 선택해주세요');
   };
 
-  const { openModal } = useModals();
-
-  const handleOnClick = () => {
-    console.log(1);
-
-    openModal(ClassModalTestVersion, { name: 'World' });
-  };
   return (
     <SArchiveWrapper>
       <SArchiveHeader>
         <Sh1>내 아카이브</Sh1>
-        <div onClick={handleOnClick}>모달라ㅏㅏㅏ</div>
         <SearchInput
           size="small"
           theme={{ background: 'blue400' }}

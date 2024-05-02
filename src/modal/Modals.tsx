@@ -17,7 +17,6 @@ const Modals = () => {
       {openedModals.map((modalInfo, index) => {
         const { Component, props, isOpen } = modalInfo;
         const onClose = () => {
-          console.log('닫기');
           close(Component);
         };
         return (
