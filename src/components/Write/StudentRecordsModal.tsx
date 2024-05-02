@@ -195,66 +195,60 @@ const StudentRecordsModal = ({
       ariaHideApp={false}
       style={writeFormCustomStyles}
     >
-      <ModalNoBlackBackground>
-        <SModalLayout>
-          <WriteDropdown
-            label="학생 관찰 일지"
-            options={['학급일지', '업무일지', '상담기록']}
-            handleClickModal={() => {}}
-            closeWriteModal={onClose}
+      <WriteDropdown
+        label="학생 관찰 일지"
+        options={['학급일지', '업무일지', '상담기록']}
+        handleClickModal={() => {}}
+        closeWriteModal={onClose}
+      />
+      <WritingModalTop
+        titleLabel={'학생 이름'}
+        dateLabel={'날짜'}
+        onTitleChange={handleTitleChange}
+        onStartDateChange={dateValue}
+      />
+      <SScroll>
+        <SContentLine>
+          <SContentIc>
+            <IcPen />
+            <SContent>
+              관찰 내용
+              <span>*</span>
+            </SContent>
+          </SContentIc>
+          <SContentLength>( {observationContent.length}/ 3000)</SContentLength>
+        </SContentLine>
+
+        <STextarea
+          placeholder="텍스트를 입력해주세요"
+          value={observationContent}
+          onChange={handleObservationContentChange}
+        />
+        <STeachingPlan>
+          <SContentLine>
+            <SContentIc>
+              <IcPen />
+              <SContent>해석 및 지도방안</SContent>
+            </SContentIc>
+            <SContentLength>({teachingPlan.length} / 3000)</SContentLength>
+          </SContentLine>
+
+          <STextarea
+            placeholder="텍스트를 입력해주세요"
+            value={teachingPlan}
+            onChange={handleTeachingPlanChange}
           />
-          <WritingModalTop
-            titleLabel={'학생 이름'}
-            dateLabel={'날짜'}
-            onTitleChange={handleTitleChange}
-            onStartDateChange={dateValue}
+          <FileUpload
+            fileName={valueFileName}
+            handleChangeImg={handleChangeValueImg}
+            inputId="valueFile"
           />
-          <SScroll>
-            <SContentLine>
-              <SContentIc>
-                <IcPen />
-                <SContent>
-                  관찰 내용
-                  <span>*</span>
-                </SContent>
-              </SContentIc>
-              <SContentLength>
-                ( {observationContent.length}/ 3000)
-              </SContentLength>
-            </SContentLine>
+        </STeachingPlan>
 
-            <STextarea
-              placeholder="텍스트를 입력해주세요"
-              value={observationContent}
-              onChange={handleObservationContentChange}
-            />
-            <STeachingPlan>
-              <SContentLine>
-                <SContentIc>
-                  <IcPen />
-                  <SContent>해석 및 지도방안</SContent>
-                </SContentIc>
-                <SContentLength>({teachingPlan.length} / 3000)</SContentLength>
-              </SContentLine>
-
-              <STextarea
-                placeholder="텍스트를 입력해주세요"
-                value={teachingPlan}
-                onChange={handleTeachingPlanChange}
-              />
-              <FileUpload
-                fileName={valueFileName}
-                handleChangeImg={handleChangeValueImg}
-                inputId="valueFile"
-              />
-            </STeachingPlan>
-
-            <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
-              등록
-            </SLogsSubmitBtn>
-          </SScroll>
-        </SModalLayout>
-      </ModalNoBlackBackground>
+        <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
+          등록
+        </SLogsSubmitBtn>
+      </SScroll>
     </ReactModal>
   );
 };

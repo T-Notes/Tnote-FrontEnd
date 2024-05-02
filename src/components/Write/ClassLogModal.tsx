@@ -4,13 +4,10 @@ import axios from 'axios';
 import FileUpload from '../common/FileUpload';
 import WritingModalTop from './WriteModalTop';
 import WriteDropdown from './WriteDropdown';
-
 import { writeFormCustomStyles } from '../common/styled/ModalLayout';
-import { Button } from '../common/styled/Button';
 import { useParams } from 'react-router-dom';
 import { IcPen } from '../../assets/icons';
 import Swal from 'sweetalert2';
-import { css } from 'styled-components';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import ReactModal from 'react-modal';
 
@@ -74,16 +71,12 @@ interface SaveContents {
   제출과제: string;
   진도표: string;
 }
-interface CloseProps {
-  closeWriteModal: () => void;
-  handleClickModal: (openModalContent: string) => void;
-}
+
 export interface CustomModalProps {
   isOpen: boolean;
   onClose: () => void;
-  name: string;
 }
-const ClassLogModal = ({ isOpen, onClose, ...props }: CustomModalProps) => {
+const ClassLogModal = ({ isOpen, onClose }: CustomModalProps) => {
   const formData = new FormData();
   const { scheduleId } = useParams();
   const [title, setTitle] = useState<string>('');
@@ -93,6 +86,7 @@ const ClassLogModal = ({ isOpen, onClose, ...props }: CustomModalProps) => {
 
   const [contentType, setContentType] =
     useState<keyof SaveContents>('학습계획'); //현재 모달에서 어떤 종류의 탭을 입력하고 있는지를 나타낸다.
+
   const [saveContents, setSaveContents] = useState<SaveContents>({
     학습계획: '',
     수업내용: '',
@@ -253,27 +247,23 @@ const ClassLogModal = ({ isOpen, onClose, ...props }: CustomModalProps) => {
             </STypeBtn>
             <SBorderBottom></SBorderBottom>
           </SType>
-          {contentType && (
-            <>
-              <SContentLine>
-                <SContentIc>
-                  <IcPen />
-                  <SContent>
-                    내용
-                    <span>*</span>
-                  </SContent>
-                </SContentIc>
-                <SContentLength>
-                  ({saveContents[contentType].length} / 3000)
-                </SContentLength>
-              </SContentLine>
-              <STextarea
-                placeholder="텍스트를 입력해주세요"
-                value={saveContents[contentType]}
-                onChange={handleContentChange}
-              />
-            </>
-          )}
+          <SContentLine>
+            <SContentIc>
+              <IcPen />
+              <SContent>
+                내용
+                <span>*</span>
+              </SContent>
+            </SContentIc>
+            <SContentLength>
+              ({saveContents[contentType].length} / 3000)
+            </SContentLength>
+          </SContentLine>
+          <STextarea
+            placeholder="텍스트를 입력해주세요"
+            value={saveContents[contentType]}
+            onChange={handleContentChange}
+          />
         </SContentWrap>
         <FileUpload
           fileName={fileName}

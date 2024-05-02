@@ -96,7 +96,7 @@ export const writeFormCustomStyles = {
     transform: 'translate(-50%, -50%)',
     backgroundColor: '#fff',
     boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
-    width: '670px',
+    width: '680px',
     height: '600px',
     padding: '20px',
     border: '1px solid #D5D5D5',
