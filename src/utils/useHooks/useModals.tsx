@@ -1,4 +1,4 @@
-import { ReactNode, useContext } from 'react';
+import { useContext } from 'react';
 import { ModalsDispatchContext } from '../../modal/ModalsContext';
 
 export const useModals = () => {

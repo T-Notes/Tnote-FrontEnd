@@ -1,5 +1,4 @@
-import React, { createContext, ReactNode, useMemo, useState } from 'react';
-import Modals from './Modals';
+import { createContext } from 'react';
 
 interface ModalItem {
   Component: any;
