@@ -1,7 +1,13 @@
+interface CustomModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  name: string;
+}
+
 import ReactModal from 'react-modal';
 import React from 'react';
 
-const CustomModal = ({ isOpen, onClose, ...props }: any) => {
+const CustomModal = ({ isOpen, onClose, ...props }: CustomModalProps) => {
   const handleClose = () => {
     onClose();
   };

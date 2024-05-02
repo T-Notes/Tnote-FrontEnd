@@ -1,20 +1,18 @@
-import { createContext, ReactNode } from 'react';
+import React, { createContext, ReactNode, useMemo, useState } from 'react';
+import Modals from './Modals';
 
-type OpenModalFunction = (Component: ReactNode, props: any) => void;
-type CloseModalFunction = (Component: ReactNode) => void;
-
-export interface ModalsDispatchContextType {
-  open: OpenModalFunction;
-  close: CloseModalFunction;
-}
-
-export interface ModalItem {
-  Component: ReactNode;
+interface ModalItem {
+  Component: any;
   props: any;
   isOpen: boolean;
 }
 
-export const ModalsDispatchContext = createContext<ModalsDispatchContextType>({
+interface ModalsContextType {
+  open: (Component: any, props: any) => void;
+  close: (Component: any) => void;
+}
+
+export const ModalsDispatchContext = createContext<ModalsContextType>({
   open: (Component, props) => {},
   close: (Component) => {},
 });

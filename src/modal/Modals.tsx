@@ -1,19 +1,18 @@
-import React, { useContext } from 'react';
-import ReactDom from 'react-dom';
-import {
-  ModalItem,
-  ModalsDispatchContext,
-  ModalsDispatchContextType,
-  ModalsStateContext,
-} from './ModalsContext';
+import React, { useContext, ReactNode } from 'react';
+import ReactDOM from 'react-dom';
+import { ModalsDispatchContext, ModalsStateContext } from './ModalsContext';
+
+interface ModalInfo {
+  Component: any;
+  props: any;
+  isOpen: boolean;
+}
 
 const Modals = () => {
-  const openedModals = useContext<ModalItem[]>(ModalsStateContext);
-  const { close } = useContext<ModalsDispatchContextType>(
-    ModalsDispatchContext,
-  );
+  const openedModals = useContext<ModalInfo[]>(ModalsStateContext);
+  const { close } = useContext(ModalsDispatchContext);
 
-  return ReactDom.createPortal(
+  return ReactDOM.createPortal(
     <div className={'modal-wrapper'}>
       {openedModals.map((modalInfo, index) => {
         const { Component, props, isOpen } = modalInfo;
@@ -21,14 +20,8 @@ const Modals = () => {
           console.log('닫기');
           close(Component);
         };
-        const ModalComponent = Component as React.ElementType;
         return (
-          <ModalComponent
-            key={index}
-            isOpen={isOpen}
-            onClose={onClose}
-            {...props}
-          />
+          <Component key={index} isOpen={isOpen} onClose={onClose} {...props} />
         );
       })}
     </div>,

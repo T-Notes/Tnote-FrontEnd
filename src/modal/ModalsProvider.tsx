@@ -1,15 +1,17 @@
-import React, { ReactNode, useMemo, useState } from 'react';
-import {
-  ModalItem,
-  ModalsDispatchContext,
-  ModalsStateContext,
-} from './ModalsContext';
-// import Modals from './Modals';
+import React, { useMemo, useState, ReactNode } from 'react';
+import { ModalsDispatchContext, ModalsStateContext } from './ModalsContext';
+import Modals from './Modals';
+
+interface ModalItem {
+  Component: any;
+  props: any;
+  isOpen: boolean;
+}
 
 const ModalsProvider = ({ children }: { children: ReactNode }) => {
   const [openedModals, setOpenedModals] = useState<ModalItem[]>([]);
 
-  const open = (Component: ReactNode, props: any) => {
+  const open = (Component: any, props: any) => {
     setOpenedModals((prevModals) => [
       ...prevModals,
       {
@@ -20,18 +22,18 @@ const ModalsProvider = ({ children }: { children: ReactNode }) => {
     ]);
   };
 
-  const close = (Component: ReactNode) => {
+  const close = (Component: any) => {
     setOpenedModals((prevModals) =>
       prevModals.filter((item) => item.Component !== Component),
     );
   };
 
-  const dispatch = useMemo(() => ({ open, close }), []);
+  const dispatch = useMemo(() => ({ open, close }), [open, close]);
 
   return (
     <ModalsStateContext.Provider value={openedModals}>
       <ModalsDispatchContext.Provider value={dispatch}>
-        {/* <Modals /> */}
+        <Modals />
         {children}
       </ModalsDispatchContext.Provider>
     </ModalsStateContext.Provider>

@@ -8,6 +8,9 @@ import Swal from 'sweetalert2';
 import EditClassLogModal from '../WriteEdit/EditClassLogModal';
 import ClassLogModal from '../Write/ClassLogModal';
 
+import { useModals } from '../../utils/useHooks/useModals';
+import CustomModal from '../CustomModal';
+
 const STaskSidebarWrapper = styled.div`
   display: flex;
   flex-direction: column;
