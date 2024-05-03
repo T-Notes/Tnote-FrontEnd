@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
+import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
@@ -11,8 +12,10 @@ import { Button } from '../common/styled/Button';
 import {
   ModalLayout,
   ModalNoBlackBackground,
+  writeFormCustomStyles,
 } from '../common/styled/ModalLayout';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
+import { CustomModalProps } from './ClassLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 
@@ -126,9 +129,13 @@ const SScroll = styled.div`
 `;
 export interface CloseProps {
   closeWriteModal: () => void;
-  handleClickModal: (openModalContent: string) => void;
+  handleClickDropdownModalOpen: (option: string) => void;
 }
-const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
+const WorkLogModal = ({
+  isOpen,
+  onClose,
+  handleClickOpenModal,
+}: CustomModalProps) => {
   const { scheduleId } = useParams();
 
   const [title, setTitle] = useState<string>('');
@@ -219,7 +226,7 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
           },
         );
         window.location.reload();
-        closeWriteModal();
+        onClose();
       } catch (err) {
         console.log(err);
       }
@@ -233,14 +240,18 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
   const isFormValid = title && date.startDate && date.endDate && workContents;
 
   return (
-    <ModalPortal>
-      <ModalNoBlackBackground>
-        <SModalLayout>
+    <ReactModal
+      isOpen={isOpen}
+      ariaHideApp={false}
+      style={writeFormCustomStyles}
+    >
+      <>
+        <>
           <WriteDropdown
             label="업무일지"
             options={['학급일지', '상담기록', '학생 관찰 일지']}
-            handleClickModal={handleClickModal}
-            closeWriteModal={closeWriteModal}
+            onClickDropdownOpenModal={handleClickOpenModal}
+            closeWriteModal={onClose}
           />
           <WritingModalTop
             titleLabel={'제목'}
@@ -297,9 +308,9 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
               등록
             </SLogsSubmitBtn>
           </SScroll>
-        </SModalLayout>
-      </ModalNoBlackBackground>
-    </ModalPortal>
+        </>
+      </>
+    </ReactModal>
   );
 };
 

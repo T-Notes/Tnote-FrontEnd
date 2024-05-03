@@ -5,8 +5,8 @@ import Todo from './Todo';
 import { getAllTaskByDate } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import EditClassLogModal from '../WriteEdit/EditClassLogModal';
 import ClassLogModal from '../Write/ClassLogModal';
+import { useModals } from '../../utils/useHooks/useModals';
 
 const STaskSidebarWrapper = styled.div`
   display: flex;
@@ -84,17 +84,17 @@ interface Reload {
   clickedDate: string | undefined;
   setReload: React.Dispatch<React.SetStateAction<boolean>>;
 }
-// 금일 해당하는 내용의 task들이 노출되어야 함.
+
 const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
   const { scheduleId } = useParams();
   const { year, month, day } = useCurrentDate();
+  const { openModal } = useModals();
   const [classLogContent, setClassLogContent] = useState<Task[]>([]);
   const [workLogContent, setWorkLogContent] = useState<Task[]>([]);
   const [consultationsContent, setConsultationsContent] = useState<Task[]>([]);
   const [observationContent, setObservationContent] = useState<Task[]>([]);
   const [clickedOutside, setClickedOutside] = useState<boolean>(false);
   const [todo, setTodo] = useState<Task[]>([]);
-  const [isLogModalOpen, setIsLogModalOpen] = useState<boolean>(false);
 
   const currentDate = new Date().toISOString().slice(0, 10);
 
@@ -106,9 +106,8 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
       )
     : `${year}년 ${month}월 ${day}일`;
 
-  // todo 외부 클릭 시 수정 요청 함수
   const handleUpdateOutside = () => {
-    setClickedOutside(true); // 클릭 상태 변경
+    setClickedOutside(true);
   };
   useEffect(() => {
     if (scheduleId) {
@@ -119,7 +118,6 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
 
             const logData = allData.data;
 
-            // setTodo(logData.todos);
             setClassLogContent(logData.classLogs);
             setWorkLogContent(logData.proceedings);
             setConsultationsContent(logData.consultations);
@@ -145,8 +143,9 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
     }
   }, [reload, scheduleId, clickedDate]);
 
-  const handleOpenLogModal = (LogId: number) => {
-    setIsLogModalOpen(true);
+  const handleOpenClassLogIdModal = (logId: any) => {
+    console.log(1, logId);
+    openModal(ClassLogModal, { logId });
   };
 
   return (
@@ -172,7 +171,7 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
       {classLogContent.map((classLog) => (
         <SLogs
           key={classLog.id}
-          onClick={() => handleOpenLogModal(classLog.id)}
+          onClick={() => handleOpenClassLogIdModal(classLog.id)}
         >
           <SLogContent>{classLog.title}</SLogContent>
           <SLogCreatedAt>{`${classLog.createdAt.slice(

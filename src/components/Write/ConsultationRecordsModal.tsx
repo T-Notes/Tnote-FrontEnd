@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
+import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
@@ -10,8 +11,10 @@ import { Button } from '../common/styled/Button';
 import {
   ModalLayout,
   ModalNoBlackBackground,
+  writeFormCustomStyles,
 } from '../common/styled/ModalLayout';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
+import { CustomModalProps } from './ClassLogModal';
 import { CloseProps } from './WorkLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
@@ -128,9 +131,10 @@ const SCounselingResult = styled.div`
   border-top: 1px solid #d5d5d5;
 `;
 const ConsultationRecordsModal = ({
-  closeWriteModal,
-  handleClickModal,
-}: CloseProps) => {
+  isOpen,
+  onClose,
+  handleClickOpenModal,
+}: CustomModalProps) => {
   const { scheduleId } = useParams();
 
   const [title, setTitle] = useState<string>('');
@@ -244,7 +248,7 @@ const ConsultationRecordsModal = ({
           },
         );
         window.location.reload();
-        closeWriteModal();
+        onClose();
       } catch (err) {
         console.log(err);
       }
@@ -265,133 +269,129 @@ const ConsultationRecordsModal = ({
     counselingContent;
 
   return (
-    <ModalPortal>
-      <ModalNoBlackBackground>
-        <SModalLayout>
-          <WriteDropdown
-            label="상담기록"
-            options={['학급일지', '업무일지', '학생 관찰 일지']}
-            handleClickModal={handleClickModal}
-            closeWriteModal={closeWriteModal}
+    <ReactModal
+      isOpen={isOpen}
+      ariaHideApp={false}
+      style={writeFormCustomStyles}
+    >
+      <WriteDropdown
+        label="상담기록"
+        options={['학급일지', '업무일지', '학생 관찰 일지']}
+        onClickDropdownOpenModal={handleClickOpenModal}
+        closeWriteModal={onClose}
+      />
+      <WritingModalTop
+        titleLabel={'학생 이름'}
+        dateLabel={'상담 날짜'}
+        onTitleChange={handleTitleChange}
+        onStartDateChange={dateValue}
+      />
+      {/* 스크롤 내용 */}
+      <SScroll>
+        <SCounselingTarget>
+          <SCounseling>
+            <IcSmallDatePicker />
+            <SLabel>
+              상담분야
+              <SPointText>*</SPointText>
+            </SLabel>
+            <SCounselingCategoryBox>
+              <SCounselingCategory
+                selected={selectedCounselingButton === 'FRIENDSHIP'}
+                onClick={() => handleCounselingButtonClick('FRIENDSHIP')}
+              >
+                교우관계
+              </SCounselingCategory>
+              <SCounselingCategory
+                selected={selectedCounselingButton === 'GRADE'}
+                onClick={() => handleCounselingButtonClick('GRADE')}
+              >
+                성적
+              </SCounselingCategory>
+              <SCounselingCategory
+                selected={selectedCounselingButton === 'HOME'}
+                onClick={() => handleCounselingButtonClick('HOME')}
+              >
+                가정
+              </SCounselingCategory>
+              <SCounselingCategory
+                selected={selectedCounselingButton === 'HEALTH'}
+                onClick={() => handleCounselingButtonClick('HEALTH')}
+              >
+                건강
+              </SCounselingCategory>
+              <SCounselingCategory
+                selected={selectedCounselingButton === 'ETC'}
+                onClick={() => handleCounselingButtonClick('ETC')}
+              >
+                기타
+              </SCounselingCategory>
+            </SCounselingCategoryBox>
+          </SCounseling>
+          <SCounseling>
+            <IcTitle />
+            <SLabel>
+              대상
+              <SPointText>*</SPointText>
+            </SLabel>
+            <SCounselingCategoryBox>
+              <STargetCategory
+                selected={selectedTargetButton === 'STUDENT'}
+                onClick={() => handleTargetButtonClick('STUDENT')}
+              >
+                학생
+              </STargetCategory>
+              <STargetCategory
+                selected={selectedTargetButton === 'PATENTS'}
+                onClick={() => handleTargetButtonClick('PATENTS')}
+              >
+                학부모
+              </STargetCategory>
+            </SCounselingCategoryBox>
+          </SCounseling>
+        </SCounselingTarget>
+        <SContentLine>
+          <SContentIc>
+            <IcPen />
+            <SContent>
+              상담 내용
+              <span>*</span>
+            </SContent>
+          </SContentIc>
+          <SContentLength>( {counselingContent.length}/ 3000)</SContentLength>
+        </SContentLine>
+
+        <STextarea
+          placeholder="텍스트를 입력해주세요"
+          value={counselingContent}
+          onChange={handleCounselingContentChange}
+        />
+        <SCounselingResult>
+          <SContentLine>
+            <SContentIc>
+              <IcPen />
+              <SContent>상담 결과</SContent>
+            </SContentIc>
+            <SContentLength>({counselingResult.length} / 3000)</SContentLength>
+          </SContentLine>
+
+          <STextarea
+            placeholder="텍스트를 입력해주세요"
+            value={counselingResult}
+            onChange={handleCounselingResultChange}
           />
-          <WritingModalTop
-            titleLabel={'학생 이름'}
-            dateLabel={'상담 날짜'}
-            onTitleChange={handleTitleChange}
-            onStartDateChange={dateValue}
+          <FileUpload
+            fileName={valueFileName}
+            handleChangeImg={handleChangeValueImg}
+            inputId="valueFile"
           />
-          {/* 스크롤 내용 */}
-          <SScroll>
-            <SCounselingTarget>
-              <SCounseling>
-                <IcSmallDatePicker />
-                <SLabel>
-                  상담분야
-                  <SPointText>*</SPointText>
-                </SLabel>
-                <SCounselingCategoryBox>
-                  <SCounselingCategory
-                    selected={selectedCounselingButton === 'FRIENDSHIP'}
-                    onClick={() => handleCounselingButtonClick('FRIENDSHIP')}
-                  >
-                    교우관계
-                  </SCounselingCategory>
-                  <SCounselingCategory
-                    selected={selectedCounselingButton === 'GRADE'}
-                    onClick={() => handleCounselingButtonClick('GRADE')}
-                  >
-                    성적
-                  </SCounselingCategory>
-                  <SCounselingCategory
-                    selected={selectedCounselingButton === 'HOME'}
-                    onClick={() => handleCounselingButtonClick('HOME')}
-                  >
-                    가정
-                  </SCounselingCategory>
-                  <SCounselingCategory
-                    selected={selectedCounselingButton === 'HEALTH'}
-                    onClick={() => handleCounselingButtonClick('HEALTH')}
-                  >
-                    건강
-                  </SCounselingCategory>
-                  <SCounselingCategory
-                    selected={selectedCounselingButton === 'ETC'}
-                    onClick={() => handleCounselingButtonClick('ETC')}
-                  >
-                    기타
-                  </SCounselingCategory>
-                </SCounselingCategoryBox>
-              </SCounseling>
-              <SCounseling>
-                <IcTitle />
-                <SLabel>
-                  대상
-                  <SPointText>*</SPointText>
-                </SLabel>
-                <SCounselingCategoryBox>
-                  <STargetCategory
-                    selected={selectedTargetButton === 'STUDENT'}
-                    onClick={() => handleTargetButtonClick('STUDENT')}
-                  >
-                    학생
-                  </STargetCategory>
-                  <STargetCategory
-                    selected={selectedTargetButton === 'PATENTS'}
-                    onClick={() => handleTargetButtonClick('PATENTS')}
-                  >
-                    학부모
-                  </STargetCategory>
-                </SCounselingCategoryBox>
-              </SCounseling>
-            </SCounselingTarget>
-            <SContentLine>
-              <SContentIc>
-                <IcPen />
-                <SContent>
-                  상담 내용
-                  <span>*</span>
-                </SContent>
-              </SContentIc>
-              <SContentLength>
-                ( {counselingContent.length}/ 3000)
-              </SContentLength>
-            </SContentLine>
+        </SCounselingResult>
 
-            <STextarea
-              placeholder="텍스트를 입력해주세요"
-              value={counselingContent}
-              onChange={handleCounselingContentChange}
-            />
-            <SCounselingResult>
-              <SContentLine>
-                <SContentIc>
-                  <IcPen />
-                  <SContent>상담 결과</SContent>
-                </SContentIc>
-                <SContentLength>
-                  ({counselingResult.length} / 3000)
-                </SContentLength>
-              </SContentLine>
-
-              <STextarea
-                placeholder="텍스트를 입력해주세요"
-                value={counselingResult}
-                onChange={handleCounselingResultChange}
-              />
-              <FileUpload
-                fileName={valueFileName}
-                handleChangeImg={handleChangeValueImg}
-                inputId="valueFile"
-              />
-            </SCounselingResult>
-
-            <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
-              등록
-            </SLogsSubmitBtn>
-          </SScroll>
-        </SModalLayout>
-      </ModalNoBlackBackground>
-    </ModalPortal>
+        <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
+          등록
+        </SLogsSubmitBtn>
+      </SScroll>
+    </ReactModal>
   );
 };
 

@@ -17,21 +17,20 @@ import ClassLogModal from '../Write/ClassLogModal';
 import WorkLogModal from '../Write/WorkLogModal';
 import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
 import StudentRecordsModal from '../Write/StudentRecordsModal';
-import { ModalBackground } from './styled/ModalLayout';
+import { useModals } from '../../utils/useHooks/useModals';
 
 //** styled **//
 const SLeftSidebar = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   width: 200px;
   height: 100vh;
   flex-shrink: 0;
   background-color: ${({ theme }) => theme.colors.blue400};
-  position: fixed; /* 고정 위치 */
-  top: 0; /* 맨 위에 고정 */
-  left: 0; /* 맨 왼쪽에 고정 */
-  border-right: 1px solid #ccc; /* 우측에 경계선 추가 (선택사항) */
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-right: 1px solid #ccc;
   .active {
     background-color: #f0ebff;
   }
@@ -47,9 +46,6 @@ const SCategory = styled.div`
   padding-bottom: 10px;
   padding-left: 35px;
   cursor: pointer;
-  /* &:hover {
-    background-color: #f0ebff;
-  } */
 `;
 const SLogo = styled.div`
   padding-left: 20px;
@@ -108,22 +104,14 @@ const SDropdownIcon = styled.div`
   margin-left: auto;
 `;
 
-interface Reload {
-  setReload: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
 const HomeNavigationBar = () => {
   const { scheduleId } = useParams();
   const userId = localStorage.getItem('userId');
-
+  const { openModal } = useModals();
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false);
   const [isDropdown, setIsDropdown] = useState<boolean>(false);
-  const [modalContent, setModalContent] = useState<React.ReactNode | null>(
-    null,
-  );
-  const [isOpenWriteModal, setIsOpenWriteModal] = useState<boolean>(false);
 
   const openSettingModal = () => {
     setIsOpenSetting(true);
@@ -148,41 +136,20 @@ const HomeNavigationBar = () => {
     setIsDropdown((prev) => !prev);
   };
 
-  const closeWriteModal = () => {
-    setIsOpenWriteModal(false);
-  };
-  const handleClickModal = (openModalContent: string) => {
-    if (openModalContent === '학급일지') {
-      setModalContent(
-        <ClassLogModal
-          closeWriteModal={closeWriteModal}
-          handleClickModal={handleClickModal}
-        />,
-      );
-    } else if (openModalContent === '업무일지') {
-      setModalContent(
-        <WorkLogModal
-          closeWriteModal={closeWriteModal}
-          handleClickModal={handleClickModal}
-        />,
-      );
-    } else if (openModalContent === '상담기록') {
-      setModalContent(
-        <ConsultationRecordsModal
-          closeWriteModal={closeWriteModal}
-          handleClickModal={handleClickModal}
-        />,
-      );
-    } else if (openModalContent === '학생 관찰 일지') {
-      setModalContent(
-        <StudentRecordsModal
-          closeWriteModal={closeWriteModal}
-          handleClickModal={handleClickModal}
-        />,
-      );
+  const handleClickOpenModal = (openModalName: string) => {
+    if (openModalName === '학급일지') {
+      openModal(ClassLogModal, {
+        handleClickOpenModal,
+      });
+    } else if (openModalName === '업무일지') {
+      openModal(WorkLogModal, { handleClickOpenModal });
+    } else if (openModalName === '상담기록') {
+      openModal(ConsultationRecordsModal, { handleClickOpenModal });
+    } else if (openModalName === '학생 관찰 일지') {
+      openModal(StudentRecordsModal, { handleClickOpenModal });
     }
-    setIsOpenWriteModal(true);
   };
+
   return (
     <>
       <SLeftSidebar>
@@ -243,7 +210,7 @@ const HomeNavigationBar = () => {
             {isDropdown ? <IcNavigationClose /> : <IcNavigationOpen />}
           </SDropdownIcon>
           {isDropdown && (
-            <WriteDropdownList handleClickModal={handleClickModal} />
+            <WriteDropdownList onClickOpenModal={handleClickOpenModal} />
           )}
         </SWriteBtn>
         <SUserProfileInfoWrapper>
@@ -257,10 +224,6 @@ const HomeNavigationBar = () => {
         </SUserProfileInfoWrapper>
       </SLeftSidebar>
       {isOpenSetting && <Setting closeSettingModal={closeSettingModal} />}
-
-      {modalContent && isOpenWriteModal ? (
-        <ModalBackground>{modalContent}</ModalBackground>
-      ) : null}
     </>
   );
 };
