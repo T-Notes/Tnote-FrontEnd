@@ -7,6 +7,9 @@ import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import ClassLogModal from '../Write/ClassLogModal';
 import { useModals } from '../../utils/useHooks/useModals';
+import WorkLogModal from '../Write/WorkLogModal';
+import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
+import StudentRecordsModal from '../Write/StudentRecordsModal';
 
 const STaskSidebarWrapper = styled.div`
   display: flex;
@@ -144,8 +147,16 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
   }, [reload, scheduleId, clickedDate]);
 
   const handleOpenClassLogIdModal = (logId: any) => {
-    console.log(1, logId);
     openModal(ClassLogModal, { logId });
+  };
+  const handleOpenProceedingIdModal = (logId: any) => {
+    openModal(WorkLogModal, { logId });
+  };
+  const handleOpenConsultationIdModal = (logId: any) => {
+    openModal(ConsultationRecordsModal, { logId });
+  };
+  const handleOpenObservationIdModal = (logId: any) => {
+    openModal(StudentRecordsModal, { logId });
   };
 
   return (
@@ -187,7 +198,10 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
       </SFlex>
 
       {workLogContent.map((workLog) => (
-        <SLogs key={workLog.id}>
+        <SLogs
+          key={workLog.id}
+          onClick={() => handleOpenProceedingIdModal(workLog.id)}
+        >
           <SLogContent>{workLog.title}</SLogContent>
           <SLogCreatedAt>{`${workLog.createdAt.slice(
             0,
@@ -201,7 +215,10 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
       </SFlex>
 
       {observationContent.map((observation) => (
-        <SLogs key={observation.id}>
+        <SLogs
+          key={observation.id}
+          onClick={() => handleOpenObservationIdModal(observation.id)}
+        >
           <SLogContent>{observation.studentName}</SLogContent>
           <SLogCreatedAt>{`${observation.createdAt.slice(
             0,
@@ -215,7 +232,10 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
       </SFlex>
 
       {consultationsContent.map((consultation) => (
-        <SLogs key={consultation.id}>
+        <SLogs
+          key={consultation.id}
+          onClick={() => handleOpenConsultationIdModal(consultation.id)}
+        >
           <SLogContent>{consultation.studentName}</SLogContent>
           <SLogCreatedAt>{`${consultation.createdAt.slice(
             0,

@@ -11,6 +11,8 @@ import Swal from 'sweetalert2';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import ReactModal from 'react-modal';
 import { getClassLogDetailData } from '../../utils/lib/api';
+import useDateTimeOffset from '../../utils/handleDateTimeOffset';
+import handleDateTimeOffset from '../../utils/handleDateTimeOffset';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -79,7 +81,7 @@ export interface CustomModalProps {
   handleClickOpenModal: (option: string) => void;
   logId: number;
 }
-interface DateProps {
+export interface DateProps {
   startDate: string | Date;
   endDate: string | Date;
 }
@@ -134,22 +136,16 @@ const ClassLogModal = ({
     setTitle(e.target.value);
   };
 
-  const handleDateValue = (
-    startDate: Date,
-    endDate: Date,
-    isAllDay: boolean,
-  ) => {
-    // 의문: 서버애서도 해당 시간을 한국 로컬 시간으로 인식해서 보내는가?
-    startDate = new Date(
-      startDate.getTime() - startDate.getTimezoneOffset() * 60000,
-    ); // 시작 날짜의 시간대 오프셋 적용
-    endDate = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000); // 종료 날짜의 시간대 오프셋 적용
-    console.log('시작 오프셋', startDate.toISOString());
-    setDate((prevDate) => ({
-      ...prevDate,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-    }));
+  const handleDate = (startDate: Date, endDate: Date, isAllDay: boolean) => {
+    const { ISOStartDate, ISOEndDate } = handleDateTimeOffset(
+      startDate,
+      endDate,
+      isAllDay,
+    );
+    setDate({
+      startDate: ISOStartDate,
+      endDate: ISOEndDate,
+    });
     setParentsIsAllDay(isAllDay);
   };
 
@@ -212,14 +208,14 @@ const ClassLogModal = ({
       });
     }
   };
-  // 수정이 필요한 부분
+
   useEffect(() => {
     if (logId) {
       getClassLogDetailData(String(logId))
         .then((response) => {
           console.log(2, response.data);
           const data = response.data;
-          console.log(3, new Date(data.startDate));
+
           setTitle(data.title);
 
           setDate({
@@ -257,7 +253,7 @@ const ClassLogModal = ({
           title={title}
           dateLabel={'기간'}
           onTitleChange={handleTitleChange}
-          onStartDateChange={handleDateValue}
+          onStartDateChange={handleDate}
           onStartDate={date.startDate}
           onEndDate={date.endDate}
         />

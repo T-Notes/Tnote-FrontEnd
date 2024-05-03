@@ -1,10 +1,11 @@
 import axios from 'axios';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcMap, IcPen } from '../../assets/icons';
+import handleDateTimeOffset from '../../utils/handleDateTimeOffset';
 
 import ModalPortal from '../../utils/ModalPortal';
 import FileUpload from '../common/FileUpload';
@@ -15,9 +16,10 @@ import {
   writeFormCustomStyles,
 } from '../common/styled/ModalLayout';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
-import { CustomModalProps } from './ClassLogModal';
+import { CustomModalProps, DateProps } from './ClassLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
+import { getProceedingDetailData } from '../../utils/lib/api';
 
 const SModalLayout = styled(ModalLayout)`
   display: flex;
@@ -130,17 +132,19 @@ const SScroll = styled.div`
 export interface CloseProps {
   closeWriteModal: () => void;
   handleClickDropdownModalOpen: (option: string) => void;
+  logId: number;
 }
 const WorkLogModal = ({
   isOpen,
   onClose,
   handleClickOpenModal,
+  logId,
 }: CustomModalProps) => {
   const { scheduleId } = useParams();
 
   const [title, setTitle] = useState<string>('');
   const [place, setPlace] = useState<string>('');
-  const [date, setDate] = useState({
+  const [date, setDate] = useState<DateProps>({
     startDate: '',
     endDate: '',
   });
@@ -165,22 +169,20 @@ const WorkLogModal = ({
       setFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
     }
   };
-
-  const handleTitleChange = (newTitle: string) => {
-    setTitle(newTitle);
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
   };
 
-  // 자식 컴포넌트에게서 기간 값 가져오기
-  const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
-    startDate = new Date(
-      startDate.getTime() - startDate.getTimezoneOffset() * 60000,
-    ); // 시작 날짜의 시간대 오프셋 적용
-    endDate = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000); // 종료 날짜의 시간대 오프셋 적용
-    setDate((prevDate) => ({
-      ...prevDate,
-      startDate: startDate,
-      endDate: endDate,
-    }));
+  const handleDate = (startDate: Date, endDate: Date, isAllDay: boolean) => {
+    const { ISOStartDate, ISOEndDate } = handleDateTimeOffset(
+      startDate,
+      endDate,
+      isAllDay,
+    );
+    setDate({
+      startDate: ISOStartDate,
+      endDate: ISOEndDate,
+    });
     setParentsIsAllDay(isAllDay);
   };
 
@@ -239,6 +241,26 @@ const WorkLogModal = ({
   };
   const isFormValid = title && date.startDate && date.endDate && workContents;
 
+  useEffect(() => {
+    if (logId) {
+      getProceedingDetailData(String(logId))
+        .then((response) => {
+          console.log(2, response.data);
+          const data = response.data;
+          setTitle(data.title);
+          setPlace(data.location);
+          setWorkContents(data.workContents);
+          setDate({
+            startDate: new Date(data.startDate),
+            endDate: new Date(data.endDate),
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [logId]);
+
   return (
     <ReactModal
       isOpen={isOpen}
@@ -257,7 +279,10 @@ const WorkLogModal = ({
             titleLabel={'제목'}
             dateLabel={'기간'}
             onTitleChange={handleTitleChange}
-            onStartDateChange={dateValue}
+            onStartDateChange={handleDate}
+            title={title}
+            onStartDate={date.startDate}
+            onEndDate={date.endDate}
           />
           <SScroll>
             <SContentWrap>

@@ -74,6 +74,8 @@ const WritingModalTop = ({
   onStartDate,
   onEndDate,
 }: ModalTopProps) => {
+  console.log('title은', title);
+
   return (
     <SWrapper>
       <STitle>

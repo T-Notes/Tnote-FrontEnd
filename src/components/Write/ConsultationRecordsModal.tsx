@@ -1,10 +1,12 @@
 import axios from 'axios';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcPen, IcSmallDatePicker, IcTitle } from '../../assets/icons';
+import handleDateTimeOffset from '../../utils/handleDateTimeOffset';
+import { getConsultationDetailData } from '../../utils/lib/api';
 import ModalPortal from '../../utils/ModalPortal';
 import FileUpload from '../common/FileUpload';
 import { Button } from '../common/styled/Button';
@@ -14,7 +16,7 @@ import {
   writeFormCustomStyles,
 } from '../common/styled/ModalLayout';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
-import { CustomModalProps } from './ClassLogModal';
+import { CustomModalProps, DateProps } from './ClassLogModal';
 import { CloseProps } from './WorkLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
@@ -134,13 +136,14 @@ const ConsultationRecordsModal = ({
   isOpen,
   onClose,
   handleClickOpenModal,
+  logId,
 }: CustomModalProps) => {
   const { scheduleId } = useParams();
 
   const [title, setTitle] = useState<string>('');
   const [counselingContent, setCounselingContent] = useState<string>('');
   const [counselingResult, setCounselingResult] = useState<string>('');
-  const [date, setDate] = useState({
+  const [date, setDate] = useState<DateProps>({
     startDate: '',
     endDate: '',
   });
@@ -168,28 +171,26 @@ const ConsultationRecordsModal = ({
   };
 
   const handleCounselingButtonClick = (buttonName: string) => {
-    console.log(1, buttonName); // 영어로 값이 들어옴
-
     setSelectedCounselingButton(buttonName);
   };
 
   const handleTargetButtonClick = (buttonName: string) => {
     setSelectedTargetButton(buttonName);
   };
-  const handleTitleChange = (newTitle: string) => {
-    setTitle(newTitle);
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
   };
   // 자식 컴포넌트에게서 기간 값 가져오기
-  const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
-    startDate = new Date(
-      startDate.getTime() - startDate.getTimezoneOffset() * 60000,
-    ); // 시작 날짜의 시간대 오프셋 적용
-    endDate = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000); // 종료 날짜의 시간대 오프셋 적용
-    setDate((prevDate) => ({
-      ...prevDate,
-      startDate: startDate,
-      endDate: endDate,
-    }));
+  const handleDate = (startDate: Date, endDate: Date, isAllDay: boolean) => {
+    const { ISOStartDate, ISOEndDate } = handleDateTimeOffset(
+      startDate,
+      endDate,
+      isAllDay,
+    );
+    setDate({
+      startDate: ISOStartDate,
+      endDate: ISOEndDate,
+    });
     setParentsIsAllDay(isAllDay);
   };
   const handleCounselingContentChange = (
@@ -268,6 +269,28 @@ const ConsultationRecordsModal = ({
     selectedTargetButton &&
     counselingContent;
 
+  useEffect(() => {
+    if (logId) {
+      getConsultationDetailData(String(logId))
+        .then((response) => {
+          console.log(2, response.data);
+          const data = response.data;
+          setTitle(data.studentName);
+          setCounselingContent(data.consultationContents);
+          setCounselingResult(data.consultationResult);
+          setSelectedCounselingButton(data.counselingField);
+          setSelectedTargetButton(data.counselingType);
+          setDate({
+            startDate: new Date(data.startDate),
+            endDate: new Date(data.endDate),
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [logId]);
+
   return (
     <ReactModal
       isOpen={isOpen}
@@ -284,7 +307,10 @@ const ConsultationRecordsModal = ({
         titleLabel={'학생 이름'}
         dateLabel={'상담 날짜'}
         onTitleChange={handleTitleChange}
-        onStartDateChange={dateValue}
+        onStartDateChange={handleDate}
+        title={title}
+        onStartDate={date.startDate}
+        onEndDate={date.endDate}
       />
       {/* 스크롤 내용 */}
       <SScroll>
