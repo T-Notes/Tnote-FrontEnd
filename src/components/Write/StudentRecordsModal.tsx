@@ -11,7 +11,6 @@ import FileUpload from '../common/FileUpload';
 import { writeFormCustomStyles } from '../common/styled/ModalLayout';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import { CustomModalProps, DateProps } from './ClassLogModal';
-import { CloseProps } from './WorkLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 import { getObservationDetailData } from '../../utils/lib/api';
@@ -66,9 +65,8 @@ const StudentRecordsModal = ({
   onClose,
   handleClickOpenModal,
   logId,
+  scheduleId,
 }: CustomModalProps) => {
-  const { scheduleId } = useParams();
-
   const [title, setTitle] = useState<string>(''); //제목 상태
   const [observationContent, setObservationContent] = useState<string>('');
   const [teachingPlan, setTeachingPlan] = useState<string>('');

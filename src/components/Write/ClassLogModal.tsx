@@ -80,6 +80,7 @@ export interface CustomModalProps {
   onClose: () => void;
   handleClickOpenModal: (option: string) => void;
   logId: number;
+  scheduleId: number;
 }
 export interface DateProps {
   startDate: string | Date;
@@ -90,9 +91,9 @@ const ClassLogModal = ({
   onClose,
   handleClickOpenModal,
   logId,
+  scheduleId,
 }: CustomModalProps) => {
   const formData = new FormData();
-  const { scheduleId } = useParams();
   const [title, setTitle] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File[]>([]);
@@ -165,6 +166,8 @@ const ClassLogModal = ({
   };
 
   const handleClickSubmit = async () => {
+    console.log('scheduleId:', scheduleId);
+
     if (scheduleId) {
       try {
         const logData = {

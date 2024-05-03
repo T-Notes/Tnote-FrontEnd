@@ -129,19 +129,14 @@ const SPlace = styled.div`
 const SScroll = styled.div`
   overflow-y: scroll;
 `;
-export interface CloseProps {
-  closeWriteModal: () => void;
-  handleClickDropdownModalOpen: (option: string) => void;
-  logId: number;
-}
+
 const WorkLogModal = ({
   isOpen,
   onClose,
   handleClickOpenModal,
   logId,
+  scheduleId,
 }: CustomModalProps) => {
-  const { scheduleId } = useParams();
-
   const [title, setTitle] = useState<string>('');
   const [place, setPlace] = useState<string>('');
   const [date, setDate] = useState<DateProps>({
