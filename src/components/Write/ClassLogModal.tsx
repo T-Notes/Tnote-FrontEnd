@@ -79,6 +79,10 @@ export interface CustomModalProps {
   handleClickOpenModal: (option: string) => void;
   logId: number;
 }
+interface DateProps {
+  startDate: string | Date;
+  endDate: string | Date;
+}
 const ClassLogModal = ({
   isOpen,
   onClose,
@@ -101,7 +105,7 @@ const ClassLogModal = ({
     제출과제: '',
     진도표: '',
   });
-  const [date, setDate] = useState({
+  const [date, setDate] = useState<DateProps>({
     startDate: '',
     endDate: '',
   });
@@ -126,18 +130,21 @@ const ClassLogModal = ({
     }
   };
 
-  const handleTitleChange = (newTitle: string) => {
-    setTitle(newTitle);
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
   };
 
-  const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
-    console.log(1, startDate.toISOString());
-
+  const handleDateValue = (
+    startDate: Date,
+    endDate: Date,
+    isAllDay: boolean,
+  ) => {
+    // 의문: 서버애서도 해당 시간을 한국 로컬 시간으로 인식해서 보내는가?
     startDate = new Date(
       startDate.getTime() - startDate.getTimezoneOffset() * 60000,
     ); // 시작 날짜의 시간대 오프셋 적용
     endDate = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000); // 종료 날짜의 시간대 오프셋 적용
-
+    console.log('시작 오프셋', startDate.toISOString());
     setDate((prevDate) => ({
       ...prevDate,
       startDate: startDate.toISOString(),
@@ -212,12 +219,13 @@ const ClassLogModal = ({
         .then((response) => {
           console.log(2, response.data);
           const data = response.data;
+          console.log(3, new Date(data.startDate));
           setTitle(data.title);
-          setDate((prevDate) => ({
-            ...prevDate,
-            startDate: data.startDate,
-            endDate: data.endDate,
-          }));
+
+          setDate({
+            startDate: new Date(data.startDate),
+            endDate: new Date(data.endDate),
+          });
           setSaveContents({
             학습계획: data.plan,
             수업내용: data.classContents,
@@ -246,9 +254,12 @@ const ClassLogModal = ({
         />
         <WritingModalTop
           titleLabel={'제목'}
+          title={title}
           dateLabel={'기간'}
           onTitleChange={handleTitleChange}
-          onStartDateChange={dateValue}
+          onStartDateChange={handleDateValue}
+          onStartDate={date.startDate}
+          onEndDate={date.endDate}
         />
         <SContentWrap>
           <SType>
