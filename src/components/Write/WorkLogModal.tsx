@@ -129,9 +129,13 @@ const SScroll = styled.div`
 `;
 export interface CloseProps {
   closeWriteModal: () => void;
-  handleClickModal: (openModalContent: string) => void;
+  handleClickDropdownModalOpen: (option: string) => void;
 }
-const WorkLogModal = ({ isOpen, onClose, ...props }: CustomModalProps) => {
+const WorkLogModal = ({
+  isOpen,
+  onClose,
+  handleClickOpenModal,
+}: CustomModalProps) => {
   const { scheduleId } = useParams();
 
   const [title, setTitle] = useState<string>('');
@@ -246,7 +250,7 @@ const WorkLogModal = ({ isOpen, onClose, ...props }: CustomModalProps) => {
           <WriteDropdown
             label="업무일지"
             options={['학급일지', '상담기록', '학생 관찰 일지']}
-            handleClickModal={() => {}}
+            onClickDropdownOpenModal={handleClickOpenModal}
             closeWriteModal={onClose}
           />
           <WritingModalTop

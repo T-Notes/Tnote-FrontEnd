@@ -83,7 +83,7 @@ const STeachingPlan = styled.div`
 const StudentRecordsModal = ({
   isOpen,
   onClose,
-  ...props
+  handleClickOpenModal,
 }: CustomModalProps) => {
   const { scheduleId } = useParams();
 
@@ -198,7 +198,7 @@ const StudentRecordsModal = ({
       <WriteDropdown
         label="학생 관찰 일지"
         options={['학급일지', '업무일지', '상담기록']}
-        handleClickModal={() => {}}
+        onClickDropdownOpenModal={handleClickOpenModal}
         closeWriteModal={onClose}
       />
       <WritingModalTop

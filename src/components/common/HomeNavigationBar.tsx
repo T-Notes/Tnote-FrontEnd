@@ -17,7 +17,6 @@ import ClassLogModal from '../Write/ClassLogModal';
 import WorkLogModal from '../Write/WorkLogModal';
 import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
 import StudentRecordsModal from '../Write/StudentRecordsModal';
-import { ModalBackground } from './styled/ModalLayout';
 import { useModals } from '../../utils/useHooks/useModals';
 
 //** styled **//
@@ -137,15 +136,17 @@ const HomeNavigationBar = () => {
     setIsDropdown((prev) => !prev);
   };
 
-  const handleClickModal = (openModalContent: string) => {
-    if (openModalContent === '학급일지') {
-      openModal(ClassLogModal, {});
-    } else if (openModalContent === '업무일지') {
-      openModal(WorkLogModal, {});
-    } else if (openModalContent === '상담기록') {
-      openModal(ConsultationRecordsModal, {});
-    } else if (openModalContent === '학생 관찰 일지') {
-      openModal(StudentRecordsModal, {});
+  const handleClickOpenModal = (openModalName: string) => {
+    if (openModalName === '학급일지') {
+      openModal(ClassLogModal, {
+        handleClickOpenModal,
+      });
+    } else if (openModalName === '업무일지') {
+      openModal(WorkLogModal, { handleClickOpenModal });
+    } else if (openModalName === '상담기록') {
+      openModal(ConsultationRecordsModal, { handleClickOpenModal });
+    } else if (openModalName === '학생 관찰 일지') {
+      openModal(StudentRecordsModal, { handleClickOpenModal });
     }
   };
 
@@ -209,7 +210,7 @@ const HomeNavigationBar = () => {
             {isDropdown ? <IcNavigationClose /> : <IcNavigationOpen />}
           </SDropdownIcon>
           {isDropdown && (
-            <WriteDropdownList handleClickModal={handleClickModal} />
+            <WriteDropdownList onClickOpenModal={handleClickOpenModal} />
           )}
         </SWriteBtn>
         <SUserProfileInfoWrapper>

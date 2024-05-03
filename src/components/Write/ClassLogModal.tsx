@@ -75,8 +75,13 @@ interface SaveContents {
 export interface CustomModalProps {
   isOpen: boolean;
   onClose: () => void;
+  handleClickOpenModal: (option: string) => void;
 }
-const ClassLogModal = ({ isOpen, onClose }: CustomModalProps) => {
+const ClassLogModal = ({
+  isOpen,
+  onClose,
+  handleClickOpenModal,
+}: CustomModalProps) => {
   const formData = new FormData();
   const { scheduleId } = useParams();
   const [title, setTitle] = useState<string>('');
@@ -210,7 +215,7 @@ const ClassLogModal = ({ isOpen, onClose }: CustomModalProps) => {
         <WriteDropdown
           label="학급일지"
           options={['업무일지', '상담기록', '학생 관찰 일지']}
-          handleClickModal={() => {}}
+          onClickDropdownOpenModal={handleClickOpenModal}
           closeWriteModal={handleClose}
         />
         <WritingModalTop

@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { ModalsDispatchContext, ModalsStateContext } from './ModalsContext';
 
@@ -11,10 +11,17 @@ interface ModalInfo {
 const Modals = () => {
   const openedModals = useContext<ModalInfo[]>(ModalsStateContext);
   const { close } = useContext(ModalsDispatchContext);
+  console.log('modals:', openedModals.slice(0, -1));
+
+  useEffect(() => {
+    if (openedModals.length > 1) {
+      openedModals.slice(0, -1).forEach((modal) => close(modal.Component));
+    }
+  }, [openedModals, close]);
 
   return ReactDOM.createPortal(
     <div className={'modal-wrapper'}>
-      {openedModals.map((modalInfo, index) => {
+      {openedModals.slice(0).map((modalInfo, index) => {
         const { Component, props, isOpen } = modalInfo;
         const onClose = () => {
           close(Component);

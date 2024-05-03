@@ -133,7 +133,7 @@ const SCounselingResult = styled.div`
 const ConsultationRecordsModal = ({
   isOpen,
   onClose,
-  ...props
+  handleClickOpenModal,
 }: CustomModalProps) => {
   const { scheduleId } = useParams();
 
@@ -277,7 +277,7 @@ const ConsultationRecordsModal = ({
       <WriteDropdown
         label="상담기록"
         options={['학급일지', '업무일지', '학생 관찰 일지']}
-        handleClickModal={() => {}}
+        onClickDropdownOpenModal={handleClickOpenModal}
         closeWriteModal={onClose}
       />
       <WritingModalTop
