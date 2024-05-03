@@ -11,7 +11,6 @@ interface ModalInfo {
 const Modals = () => {
   const openedModals = useContext<ModalInfo[]>(ModalsStateContext);
   const { close } = useContext(ModalsDispatchContext);
-  console.log('modals:', openedModals.slice(0, -1));
 
   useEffect(() => {
     if (openedModals.length > 1) {

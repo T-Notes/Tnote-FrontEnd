@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import FileUpload from '../common/FileUpload';
@@ -10,6 +10,7 @@ import { IcPen } from '../../assets/icons';
 import Swal from 'sweetalert2';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import ReactModal from 'react-modal';
+import { getClassLogDetailData } from '../../utils/lib/api';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -76,11 +77,13 @@ export interface CustomModalProps {
   isOpen: boolean;
   onClose: () => void;
   handleClickOpenModal: (option: string) => void;
+  logId: number;
 }
 const ClassLogModal = ({
   isOpen,
   onClose,
   handleClickOpenModal,
+  logId,
 }: CustomModalProps) => {
   const formData = new FormData();
   const { scheduleId } = useParams();
@@ -90,20 +93,22 @@ const ClassLogModal = ({
   const [fileName, setFileName] = useState<string[]>([]);
 
   const [contentType, setContentType] =
-    useState<keyof SaveContents>('학습계획'); //현재 모달에서 어떤 종류의 탭을 입력하고 있는지를 나타낸다.
+    useState<keyof SaveContents>('학습계획');
 
   const [saveContents, setSaveContents] = useState<SaveContents>({
     학습계획: '',
     수업내용: '',
     제출과제: '',
     진도표: '',
-  }); //각 탭의 타입에 따른 입력된 내용을 저장하는 객체
+  });
   const [date, setDate] = useState({
     startDate: '',
     endDate: '',
   });
+  const isFormValid =
+    title && date.startDate && date.endDate && saveContents[contentType];
 
-  const handleClose = () => {
+  const handleModalClose = () => {
     onClose();
   };
 
@@ -126,6 +131,8 @@ const ClassLogModal = ({
   };
 
   const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
+    console.log(1, startDate.toISOString());
+
     startDate = new Date(
       startDate.getTime() - startDate.getTimezoneOffset() * 60000,
     ); // 시작 날짜의 시간대 오프셋 적용
@@ -173,10 +180,6 @@ const ClassLogModal = ({
         });
         formData.append('classLogRequestDto', jsonDataTypeValue);
 
-        // if (imgUrl) {
-        //   formData.append('classLogImages', imgUrl);
-        // }
-
         const accessToken = localStorage.getItem('accessToken');
 
         await axios.post(
@@ -191,7 +194,7 @@ const ClassLogModal = ({
           },
         );
         window.location.reload();
-        handleClose();
+        handleModalClose();
       } catch (err) {
         console.log(err);
       }
@@ -202,8 +205,31 @@ const ClassLogModal = ({
       });
     }
   };
-  const isFormValid =
-    title && date.startDate && date.endDate && saveContents[contentType];
+  // 수정이 필요한 부분
+  useEffect(() => {
+    if (logId) {
+      getClassLogDetailData(String(logId))
+        .then((response) => {
+          console.log(2, response.data);
+          const data = response.data;
+          setTitle(data.title);
+          setDate((prevDate) => ({
+            ...prevDate,
+            startDate: data.startDate,
+            endDate: data.endDate,
+          }));
+          setSaveContents({
+            학습계획: data.plan,
+            수업내용: data.classContents,
+            제출과제: data.submission,
+            진도표: data.magnitude,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [logId]);
 
   return (
     <ReactModal
@@ -216,7 +242,7 @@ const ClassLogModal = ({
           label="학급일지"
           options={['업무일지', '상담기록', '학생 관찰 일지']}
           onClickDropdownOpenModal={handleClickOpenModal}
-          closeWriteModal={handleClose}
+          closeWriteModal={handleModalClose}
         />
         <WritingModalTop
           titleLabel={'제목'}

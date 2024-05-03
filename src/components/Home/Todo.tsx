@@ -118,14 +118,11 @@ const Todo = memo(
       const updatedTodoList = todo.map((item) =>
         item.id === todoId ? { ...item, status: !item.status } : item,
       );
-      console.log(updatedTodoList);
 
       setTodo(updatedTodoList); // 해당 ID의 상태를 변경한 새로운 todo 리스트를 설정합니다.
     };
 
     const handleDelete = async (todoId: number | undefined) => {
-      console.log('id', todoId);
-
       await removeTodo(scheduleId, todoId);
       setReload((prev) => !prev);
     };
@@ -147,7 +144,7 @@ const Todo = memo(
         try {
           if (scheduleId) {
             const response = await getTodo(scheduleId, clickedDate);
-            console.log(response.data);
+
             setTodoList(response.data);
           }
         } catch {}
@@ -200,8 +197,6 @@ const Todo = memo(
       todoId: number,
       todoContent: string | undefined,
     ) => {
-      console.log(1, todoContent);
-
       const date = clickedDate;
       const patchTodoData = {
         content: todoContent,
