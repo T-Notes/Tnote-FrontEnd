@@ -18,7 +18,7 @@ const SPolicyContentBox = styled.section`
   width: auto;
   height: 380px;
   overflow: scroll;
-
+  line-height: 1.5;
   display: flex;
   padding: 10px 10px 10px 10px;
   justify-content: center;
