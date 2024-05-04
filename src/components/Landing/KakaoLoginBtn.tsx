@@ -1,10 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import styled from 'styled-components';
-
 import { IcKakao } from '../../assets/icons';
-import instanceAxios from '../../utils/InstanceAxios';
-// import { kakaoLogin } from '../../utils/lib/api';
+import { useModals } from '../../utils/useHooks/useModals';
+import { WarningModal } from '../common/WarningModal';
 
 //styled //
 const SKakaoLoginBtn = styled.button`
@@ -13,7 +11,6 @@ const SKakaoLoginBtn = styled.button`
   align-items: center;
   width: 290px;
   height: 50px;
-  margin-left: 230px;
   border-radius: 12px;
 
   background-color: ${({ theme }) => theme.colors.yellow200}; // active
@@ -25,16 +22,15 @@ const SKaKao = styled(IcKakao)`
   margin-right: 5.5%;
 `;
 interface LoginProps {
-  onWarning: React.Dispatch<React.SetStateAction<boolean>>;
   isChecked: boolean;
 }
-const KakaoLoginBtn = ({ onWarning, isChecked }: LoginProps) => {
-  const [token, setToken] = useState<any>();
+const KakaoLoginBtn = ({ isChecked }: LoginProps) => {
+  const { openModal } = useModals();
   const handleLogin = async () => {
     if (isChecked) {
       window.location.assign('https://j9972.kr/oauth2/authorization/kakao');
     } else {
-      onWarning(true);
+      openModal(WarningModal, {});
     }
   };
 

@@ -52,19 +52,19 @@ const SPrivacyPolicyCation = styled.p`
 
 interface PrivacyPolicyModalProps {
   isOpen: boolean;
-  onRequestClose: () => void;
-  onPrivacyAgreement: ReactEventHandler;
+  onClose: () => void;
+  handleIsCheckedTrue: ReactEventHandler;
 }
 
 const PrivacyPolicyModal = ({
   isOpen,
-  onRequestClose,
-  onPrivacyAgreement,
+  onClose,
+  handleIsCheckedTrue,
 }: PrivacyPolicyModalProps) => {
   return (
     <ReactModal
       isOpen={isOpen}
-      onRequestClose={onRequestClose}
+      onRequestClose={onClose}
       style={policyCustomStyles}
     >
       <SPrivacyPolicyTitle>개인 정보 보호 정책</SPrivacyPolicyTitle>
@@ -73,7 +73,7 @@ const PrivacyPolicyModal = ({
       </SPrivacyPolicyCation>
       <SPrivacyPolicyBox>
         <SPolicyContentBox>{privacyPolicyContent}</SPolicyContentBox>
-        <SPrivacyAgreementBtnBox onClick={onPrivacyAgreement}>
+        <SPrivacyAgreementBtnBox onClick={handleIsCheckedTrue}>
           동의함
         </SPrivacyAgreementBtnBox>
       </SPrivacyPolicyBox>
