@@ -105,7 +105,6 @@ const WriteDatePicker = ({
     onStartDateChange(startDate, endDate, isAllDay);
   }, [startDate, endDate, isAllDay]);
 
-  //**date-picker에는 Date객체를 담아야함. */
   return (
     <>
       <SDatePickerBox>

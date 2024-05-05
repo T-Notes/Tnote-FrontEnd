@@ -1,33 +1,16 @@
 import axios from 'axios';
 import { ChangeEvent, useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcMap, IcPen } from '../../assets/icons';
-import handleDateTimeOffset from '../../utils/handleDateTimeOffset';
-
-import ModalPortal from '../../utils/ModalPortal';
 import FileUpload from '../common/FileUpload';
-import { Button } from '../common/styled/Button';
-import {
-  ModalLayout,
-  ModalNoBlackBackground,
-  writeFormCustomStyles,
-} from '../common/styled/ModalLayout';
+import { writeFormCustomStyles } from '../common/styled/ModalLayout';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import { CustomModalProps, DateProps } from './ClassLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 import { getProceedingDetailData } from '../../utils/lib/api';
-
-const SModalLayout = styled(ModalLayout)`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 670px;
-  height: 600px;
-`;
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -140,8 +123,8 @@ const WorkLogModal = ({
   const [title, setTitle] = useState<string>('');
   const [place, setPlace] = useState<string>('');
   const [date, setDate] = useState<DateProps>({
-    startDate: '',
-    endDate: '',
+    startDate: new Date(),
+    endDate: new Date(),
   });
   const [workContents, setWorkContents] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
@@ -169,14 +152,9 @@ const WorkLogModal = ({
   };
 
   const handleDate = (startDate: Date, endDate: Date, isAllDay: boolean) => {
-    const { ISOStartDate, ISOEndDate } = handleDateTimeOffset(
-      startDate,
-      endDate,
-      isAllDay,
-    );
     setDate({
-      startDate: ISOStartDate,
-      endDate: ISOEndDate,
+      startDate: startDate,
+      endDate: endDate,
     });
     setParentsIsAllDay(isAllDay);
   };
@@ -198,8 +176,13 @@ const WorkLogModal = ({
       try {
         const logData = {
           title,
-          startDate: date.startDate,
-          endDate: date.endDate,
+          startDate: new Date(
+            date.startDate.getTime() -
+              date.startDate.getTimezoneOffset() * 60000,
+          ),
+          endDate: new Date(
+            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+          ),
           location: place,
           workContents: workContents,
           isAllDay: parentsIsAllDay,

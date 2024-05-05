@@ -1,20 +1,16 @@
 import axios from 'axios';
 import { ChangeEvent, useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
-import { useParams } from 'react-router-dom';
+
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcPen, IcSmallDatePicker, IcTitle } from '../../assets/icons';
-import handleDateTimeOffset from '../../utils/handleDateTimeOffset';
+
 import { getConsultationDetailData } from '../../utils/lib/api';
-import ModalPortal from '../../utils/ModalPortal';
+
 import FileUpload from '../common/FileUpload';
 import { Button } from '../common/styled/Button';
-import {
-  ModalLayout,
-  ModalNoBlackBackground,
-  writeFormCustomStyles,
-} from '../common/styled/ModalLayout';
+import { writeFormCustomStyles } from '../common/styled/ModalLayout';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import { CustomModalProps, DateProps } from './ClassLogModal';
 
@@ -30,13 +26,7 @@ const SLabel = styled.p`
 const SPointText = styled.span`
   color: #632cfa;
 `;
-const SModalLayout = styled(ModalLayout)`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 670px;
-  height: 600px;
-`;
+
 const SCounseling = styled.div`
   display: flex;
   align-items: center;
@@ -143,8 +133,8 @@ const ConsultationRecordsModal = ({
   const [counselingContent, setCounselingContent] = useState<string>('');
   const [counselingResult, setCounselingResult] = useState<string>('');
   const [date, setDate] = useState<DateProps>({
-    startDate: '',
-    endDate: '',
+    startDate: new Date(),
+    endDate: new Date(),
   });
   const [selectedCounselingButton, setSelectedCounselingButton] =
     useState<string>('');
@@ -181,14 +171,9 @@ const ConsultationRecordsModal = ({
   };
   // 자식 컴포넌트에게서 기간 값 가져오기
   const handleDate = (startDate: Date, endDate: Date, isAllDay: boolean) => {
-    const { ISOStartDate, ISOEndDate } = handleDateTimeOffset(
-      startDate,
-      endDate,
-      isAllDay,
-    );
     setDate({
-      startDate: ISOStartDate,
-      endDate: ISOEndDate,
+      startDate: startDate,
+      endDate: endDate,
     });
     setParentsIsAllDay(isAllDay);
   };
@@ -214,8 +199,13 @@ const ConsultationRecordsModal = ({
       try {
         const logData = {
           studentName: title,
-          startDate: date.startDate,
-          endDate: date.endDate,
+          startDate: new Date(
+            date.startDate.getTime() -
+              date.startDate.getTimezoneOffset() * 60000,
+          ),
+          endDate: new Date(
+            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+          ),
           counselingField: selectedCounselingButton,
           counselingType: selectedTargetButton,
           consultationContents: counselingContent,

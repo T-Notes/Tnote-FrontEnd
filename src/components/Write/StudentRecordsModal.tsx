@@ -1,11 +1,10 @@
 import axios from 'axios';
 import { ChangeEvent, useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
-import { useParams } from 'react-router-dom';
+
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcPen } from '../../assets/icons';
-import handleDateTimeOffset from '../../utils/handleDateTimeOffset';
 
 import FileUpload from '../common/FileUpload';
 import { writeFormCustomStyles } from '../common/styled/ModalLayout';
@@ -71,8 +70,8 @@ const StudentRecordsModal = ({
   const [observationContent, setObservationContent] = useState<string>('');
   const [teachingPlan, setTeachingPlan] = useState<string>('');
   const [date, setDate] = useState<DateProps>({
-    startDate: '',
-    endDate: '',
+    startDate: new Date(),
+    endDate: new Date(),
   });
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [valueImgUrl, setValueImgUrl] = useState<File[]>([]);
@@ -84,14 +83,9 @@ const StudentRecordsModal = ({
   };
   // 자식 컴포넌트에게서 기간 값 가져오기
   const handleDate = (startDate: Date, endDate: Date, isAllDay: boolean) => {
-    const { ISOStartDate, ISOEndDate } = handleDateTimeOffset(
-      startDate,
-      endDate,
-      isAllDay,
-    );
     setDate({
-      startDate: ISOStartDate,
-      endDate: ISOEndDate,
+      startDate: startDate,
+      endDate: endDate,
     });
     setParentsIsAllDay(isAllDay);
   };
@@ -130,8 +124,13 @@ const StudentRecordsModal = ({
       try {
         const logData = {
           studentName: title,
-          startDate: date.startDate,
-          endDate: date.endDate,
+          startDate: new Date(
+            date.startDate.getTime() -
+              date.startDate.getTimezoneOffset() * 60000,
+          ),
+          endDate: new Date(
+            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+          ),
           observationContents: observationContent,
           guidance: teachingPlan,
           isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
