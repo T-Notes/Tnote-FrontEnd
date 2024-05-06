@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { memo, SetStateAction, useEffect, useState } from 'react';
+import { ChangeEvent, memo, SetStateAction, useEffect, useState } from 'react';
 import {
   IcAddWhite,
   IcCheckedBox,
@@ -16,12 +16,11 @@ import {
 import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { Task } from './TaskSidebar';
-import { css } from 'styled-components';
 
 const STodoWrapper = styled.div`
-  max-height: 260px;
+  /* max-height: 180px;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: hidden; */
 `;
 const STodoHeader = styled.div`
   display: flex;
@@ -70,63 +69,84 @@ const STodoContainer = styled.div`
 const SCheckbox = styled.div`
   padding-left: 7px;
 `;
-
+const STodoInputContainer = styled.div`
+  max-height: 120px;
+  overflow-y: auto;
+  overflow-x: hidden;
+`;
 interface TodoOutside {
-  clickedOutside: boolean;
-  setClickedOutside: React.Dispatch<SetStateAction<boolean>>;
   todo: Task[];
-  setTodo: any;
+  setTodo: React.Dispatch<SetStateAction<Task[]>>;
   clickedDate: string | undefined;
   setReload: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const Todo = memo(
-  ({
-    clickedOutside,
-    setClickedOutside,
-    todo,
-    setTodo,
-    clickedDate,
-    setReload,
-  }: TodoOutside) => {
-    const { scheduleId } = useParams();
-    const [todoContent, setTodoContent] = useState<string>('');
-    const [todoId, setTodoId] = useState<number>();
 
-    const handleChangeTodoInput = (
-      e: React.ChangeEvent<HTMLInputElement>,
-      todoId: number,
-    ) => {
-      setTodoId(todoId);
-      const newContent = e.target.value;
-      setTodoContent(newContent);
-    };
+interface Todo {
+  id: number;
+  content: string;
+  date: string;
+  status: boolean;
+}
+const Todo = memo(({ todo, setTodo, clickedDate, setReload }: TodoOutside) => {
+  const { scheduleId } = useParams();
+  const [todoContent, setTodoContent] = useState<string>('');
+  const [todoId, setTodoId] = useState<number>();
+  const [isCheckBox, setIsCheckBox] = useState<boolean>(false);
+  const [todoList, setTodoList] = useState<Todo[]>([]);
 
-    // todo 삭제
-    const handleDelete = async (todoId: number | undefined) => {
-      await removeTodo(scheduleId, todoId);
+  const handleChangeTodoInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    todoId: number,
+  ) => {
+    const newContent = e.target.value;
+    setTodoId(todoId);
+    setTodoContent(newContent);
+  };
+
+  const handleToggleCheckBox = async (
+    todoId: number,
+    todoContent: string | undefined,
+  ) => {
+    try {
+      const updatedTodoList = todo.map((item) =>
+        item.id === todoId ? { ...item, status: !item.status } : item,
+      );
+      setTodo(updatedTodoList); // 상태를 변경하여 UI 업데이트
+
+      const date = clickedDate;
+      const todoData = {
+        content: todoContent,
+        status: !todo.find((item) => item.id === todoId)?.status,
+      };
+      await updateTodo(scheduleId, todoId, todoData, date);
       setReload((prev) => !prev);
-    };
+    } catch (error) {
+      console.error('Error toggling checkbox:', error);
+    }
+  };
 
-    // 수정 기능
+  const handleDelete = async (todoId: number | undefined) => {
+    await removeTodo(scheduleId, todoId);
+    setReload((prev) => !prev);
+  };
 
-    //수정
-    useEffect(() => {
-      if (clickedOutside) {
-        const date = clickedDate;
-        // 부모에서 클릭 이벤트 발생 시
-        const patchTodoData = {
-          content: todoContent,
-          status: false,
-        };
-        if (todoId) {
-          updateTodo(scheduleId, todoId, patchTodoData, date); // 수정 요청 보내기
-          setClickedOutside(false); // 클릭 상태 초기화
+  useEffect(() => {
+    const getTodoList = async () => {
+      try {
+        if (scheduleId) {
+          const response = await getTodo(scheduleId, clickedDate);
+
+          setTodoList(response.data);
         }
-      }
-    }, [clickedOutside, todoContent, scheduleId, todoId]);
+      } catch {}
+    };
+    getTodoList();
+  }, []);
 
-    // + 버튼으로 post 요청
-    const handleAddTodo = async () => {
+  const handleAddTodo = async () => {
+    const isAnyEmpty = todo.some((item) => !item.content.trim());
+
+    if (!isAnyEmpty) {
       if (scheduleId) {
         const date = clickedDate;
         const todoData = {
@@ -140,39 +160,44 @@ const Todo = memo(
           text: '학기 추가 혹은 학기 선택을 먼저 해주십시오.',
         });
       }
-    };
+    }
+  };
 
-    const handleStatusChange = async (
-      todoId: number,
-      todoContent: string | undefined,
-    ) => {
+  const handleInputBlur = async (todoId: number | undefined) => {
+    if (todoId && todoContent.trim() !== '') {
       const date = clickedDate;
-      const patchTodoData = {
+      const todoData = {
         content: todoContent,
-        status: true,
       };
-      await updateTodo(scheduleId, todoId, patchTodoData, date);
+      await updateTodo(scheduleId, todoId, todoData, date);
       setReload((prev) => !prev);
-    };
-
-    return (
-      <div>
-        <STodoWrapper>
-          <STodoHeader>
-            <SFont>To do</SFont>
-            <STodoTotalNumber>{todo.length}</STodoTotalNumber>
-          </STodoHeader>
-
+    }
+  };
+  return (
+    <div>
+      <STodoWrapper>
+        <STodoHeader>
+          <SFont>To do</SFont>
+          <STodoTotalNumber>{todo.length}</STodoTotalNumber>
+        </STodoHeader>
+        <STodoInputContainer>
           {todo.map((todoItem) => (
             <STodoContainer className="todo-item" key={todoItem.id}>
               <SCheckbox>
                 {todoItem.status ? (
-                  <IcCheckedBox />
+                  <IcCheckedBox
+                    onClick={() =>
+                      handleToggleCheckBox(todoItem.id, todoItem.content)
+                    }
+                  />
                 ) : (
                   <IcUncheckedBox
                     onClick={() =>
-                      handleStatusChange(todoItem.id, todoItem.content)
+                      handleToggleCheckBox(todoItem.id, todoItem.content)
                     }
+                    // onClick={() =>
+                    //   handleStatusChange(todoItem.id, todoItem.content)
+                    // }
                   />
                 )}
               </SCheckbox>
@@ -181,7 +206,10 @@ const Todo = memo(
                 placeholder="todo list 작성하세요"
                 defaultValue={todoItem.content}
                 $completed={todoItem.status}
-                onChange={(e: any) => handleChangeTodoInput(e, todoItem.id)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  handleChangeTodoInput(e, todoItem.id)
+                }
+                onBlur={() => handleInputBlur(todoItem.id)}
                 readOnly={todoItem.status}
               />
               <IcCloseSmall
@@ -190,14 +218,14 @@ const Todo = memo(
               />
             </STodoContainer>
           ))}
-        </STodoWrapper>
+        </STodoInputContainer>
+      </STodoWrapper>
 
-        <SAddTodo onClick={handleAddTodo}>
-          <IcAddWhite />
-        </SAddTodo>
-      </div>
-    );
-  },
-);
+      <SAddTodo onClick={handleAddTodo}>
+        <IcAddWhite />
+      </SAddTodo>
+    </div>
+  );
+});
 
 export default Todo;
