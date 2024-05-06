@@ -209,7 +209,7 @@ const ConsultationRecordsModal = ({
         // 이미지 파일
         if (imgUrl.length >= 1) {
           for (let i = 0; i < imgUrl.length; i++) {
-            formData.append('consultationImage', imgUrl[i]);
+            formData.append('consultationImages', imgUrl[i]);
           }
         }
 
