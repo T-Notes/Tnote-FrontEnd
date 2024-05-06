@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { ko } from 'date-fns/esm/locale';
-import { SDateInput } from '../common/styled/Input';
-import { IcDatePicker } from '../../assets/icons';
 import { useEffect, useState } from 'react';
 import PrivacyPolicyCheckbox from '../Landing/PrivacyPolicyCheckbox';
 import { useToggle } from '../../utils/useHooks/useToggle';
@@ -46,14 +43,24 @@ const SAllDayText = styled.span`
 `;
 
 interface DateProps {
-  onStartDateChange: (startDate: any, endDate: any, isAllDay: boolean) => void;
+  onStartDateChange: (
+    startDate: Date,
+    endDate: Date,
+    isAllDay: boolean,
+  ) => void;
+  onStartDate: string | Date;
+  onEndDate: string | Date;
 }
 
-const WriteDatePicker = ({ onStartDateChange }: DateProps) => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+const WriteDatePicker = ({
+  onStartDateChange,
+  onStartDate,
+  onEndDate,
+}: DateProps) => {
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(new Date());
   const [isAllDay, setIsAllDay] = useState<boolean>(false);
-  const { isToggle, setIsToggle, handleChangeToggle } = useToggle();
+  const { isToggle, handleChangeToggle } = useToggle();
 
   const handleDateChange = (start: Date, end: Date) => {
     setStartDate(start);
@@ -64,18 +71,17 @@ const WriteDatePicker = ({ onStartDateChange }: DateProps) => {
     }
   };
 
-  //종일 버튼 토글
   const handleAllDayToggle = () => {
     handleChangeToggle();
     const today = new Date();
-    const startOfDay = new Date(
+    const startAllDay = new Date(
       today.getFullYear(),
       today.getMonth(),
       today.getDate(),
-      12,
+      0,
       0,
     );
-    const endOfDay = new Date(
+    const endAllDay = new Date(
       today.getFullYear(),
       today.getMonth(),
       today.getDate(),
@@ -88,10 +94,9 @@ const WriteDatePicker = ({ onStartDateChange }: DateProps) => {
       setEndDate(new Date());
     } else {
       // 종일 버튼 선택 시
-      setStartDate(startOfDay);
-      setEndDate(endOfDay);
+      setStartDate(startAllDay);
+      setEndDate(endAllDay);
     }
-    // 종일 여부도 부모 컴포넌트로 전달
     setIsAllDay(!isAllDay);
   };
 
@@ -104,21 +109,20 @@ const WriteDatePicker = ({ onStartDateChange }: DateProps) => {
     <>
       <SDatePickerBox>
         <SCalender
-          selected={startDate} //선택된 날짜를 나타내는 속성
-          onChange={(date) => handleDateChange(date as Date, endDate)} //날짜가 선택되었을때 호출되는 콜백 함수
-          minDate={new Date('2000-01-01')} // minDate 이전 날짜 선택 불가
+          selected={onStartDate ? new Date(onStartDate) : startDate}
+          onChange={(date) => handleDateChange(date as Date, endDate)}
+          minDate={new Date('2000-01-01')}
           // maxDate={new Date(endDate)}
-          // 아래 속성들은 글쓰기 모달에서만 필요한 값.
-          showTimeSelect // 시간 선택 옵션 표시
-          timeFormat="HH:mm" // 시간 표시 형식을 지정하는 문자열 (24시간 형식)
-          timeIntervals={30} // 시간 선택 옵션에서 표시할 분 간격
+          showTimeSelect
+          timeFormat="HH:mm"
+          timeIntervals={30}
           timeCaption="시간"
-          shouldCloseOnSelect={true} // 날짜 클릭 시 자동으로 닫히는 속성
-          dateFormat="yyyy-MM-dd (eee) HH:mm" // 날짜 표시 형식
+          shouldCloseOnSelect={true}
+          dateFormat="yyyy-MM-dd (eee) HH:mm"
         />
         <STildeIcon>~</STildeIcon>
         <SCalender
-          selected={endDate}
+          selected={onEndDate ? new Date(onEndDate) : endDate}
           onChange={(date) => handleDateChange(startDate, date as Date)}
           // minDate={new Date(startDate)}
           showTimeSelect

@@ -13,6 +13,7 @@ import {
   IcUncheckedBox,
 } from '../assets/icons';
 import Swal from 'sweetalert2';
+import { useModals } from '../utils/useHooks/useModals';
 
 const SArchiveWrapper = styled.div`
   position: absolute;
@@ -126,6 +127,7 @@ const Archive = () => {
       });
     } else Swal.fire('삭제할 학기를 선택해주세요');
   };
+
   return (
     <SArchiveWrapper>
       <SArchiveHeader>

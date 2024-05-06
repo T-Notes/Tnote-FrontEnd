@@ -2,6 +2,7 @@ import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 
 const GlobalStyle = createGlobalStyle`
+
     ${reset}
     * {
         box-sizing: border-box;
@@ -11,7 +12,10 @@ const GlobalStyle = createGlobalStyle`
     width: 0.5rem;
     
   }
-
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
   &::-webkit-scrollbar-track {
     height: auto;
   }

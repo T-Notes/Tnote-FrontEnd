@@ -1,9 +1,9 @@
-import '../../App.css';
+import '../../../App.css';
 import styled from 'styled-components';
 import _debounce from 'lodash/debounce';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { ko } from 'date-fns/locale';
-import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
+import { useCurrentDate } from '../../../utils/useHooks/useCurrentDate';
 import {
   format,
   startOfWeek,
@@ -13,14 +13,15 @@ import {
   endOfMonth,
   isToday,
   isSameMonth,
-  isWeekend,
   isSameDay,
 } from 'date-fns';
-import SearchInput from '../common/SearchInput';
-import { Button } from '../common/styled/Button';
+import SearchInput from '../../common/SearchInput';
+import { Button } from '../../common/styled/Button';
 import { useParams } from 'react-router-dom';
-import { getAllLogs, getSearchLogsValue } from '../../utils/lib/api';
-import ScheduleCalendarSearchValue from '../../components/search/ScheduleCalendarSearchValue';
+import { getAllLogs, getSearchLogsValue } from '../../../utils/lib/api';
+import ScheduleCalendarSearchValue from '../../search/ScheduleCalendarSearchValue';
+import MoreLogModal from './MoreLogModal';
+import useRandomColor from '../../../utils/useHooks/useRandomColor';
 
 const SCalendarWrapper = styled.div`
   width: 100%;
@@ -53,7 +54,7 @@ const SDaysBox = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
+  flex: 1;
   flex-wrap: wrap;
 `;
 const SDays = styled.div`
@@ -103,7 +104,7 @@ const SLogContainer = styled.ul`
 `;
 
 const SLog = styled.div<{ color: string }>`
-  font-size: 12px;
+  font-size: 13px;
   width: auto;
   display: flex;
   justify-content: center;
@@ -111,28 +112,29 @@ const SLog = styled.div<{ color: string }>`
   padding: 3px;
   background-color: ${({ color }) => color};
 `;
-interface Task {
-  id: number;
-  title: string;
-  studentName: string;
-  startDate: Date;
-}
-interface Reload {
-  reload: boolean;
+const SMoreLogs = styled.div`
+  font-size: 13px;
+  color: #a6a6a6;
+  padding-top: 3px;
+  &:hover {
+    color: #3378ff;
+  }
+`;
+
+const ScheduleCalendar = ({
+  onDayClick,
+}: {
   onDayClick: (clickedDate: Date) => void;
-}
-const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
+}) => {
   const { scheduleId } = useParams();
-  const [classLogs, setClassLogs] = useState<Task[]>([]);
-  const [consultations, setConsultations] = useState<Task[]>([]);
-  const [workLogs, setWorkLogs] = useState<Task[]>([]);
-  const [observations, setObservations] = useState<Task[]>([]);
+  const getRandomColor = useRandomColor();
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchValueList, setSetSearchValueList] = useState<any[]>([]);
-
+  const [allLogs, setAllLogs] = useState<any[]>([]);
+  const [moreLogsModal, setMoreLogsModal] = useState<boolean>(false);
+  const [clickDay, setClickDay] = useState<Date | undefined>();
   const { currentDate, handlePrevMonth, handleNextMonth, setCurrentDate } =
     useCurrentDate();
-  const formattedDate = currentDate.toISOString().split('T')[0];
 
   const startWeek = startOfWeek(startOfMonth(currentDate));
   const endWeek = endOfWeek(endOfMonth(currentDate));
@@ -140,51 +142,53 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
   const days = [];
   let day = startWeek;
 
-  // 한달 안에 들어가야 하는 날짜들을 days[]에 push
   while (day <= endWeek) {
     days.push(day);
     day = addDays(day, 1);
   }
 
-  //   // 현재날짜로 돌아오기
-  const handleCurrentDate = () => {
+  const handleMoveCurrentDate = () => {
     setCurrentDate(startOfMonth(new Date()));
     onDayClick(new Date());
   };
-  // 랜덤 색상
-  const getRandomColor = (() => {
-    const colors = ['#FEF5E6', '#FFD9D9', '#D2F0FF', '#F0EBFF'];
-    let index = 0;
 
-    return () => {
-      const color = colors[index];
-      index = (index + 1) % colors.length;
-
-      return color;
-    };
-  })();
-
-  // 월별 전체 조회하기
   useEffect(() => {
     if (scheduleId) {
       try {
         const getMonthlyLogs = async () => {
+          const formattedDate = format(currentDate, 'yyyy-MM-dd');
+
           const response = await getAllLogs(scheduleId, formattedDate);
-          setClassLogs(response.data.classLogs);
-          setWorkLogs(response.data.proceedings);
-          setConsultations(response.data.consultations);
-          setObservations(response.data.observations);
+
+          const { classLogs, consultations, proceedings, observations } =
+            response.data;
+
+          const allLogs = [
+            ...classLogs,
+            ...consultations,
+            ...proceedings,
+            ...observations,
+          ];
+
+          setAllLogs(allLogs);
         };
         getMonthlyLogs();
       } catch {}
     }
-  }, [scheduleId, reload, currentDate]);
+  }, [scheduleId, currentDate]);
 
+  const handleClickMoreLogs = (day: Date) => {
+    setClickDay(day);
+    setMoreLogsModal(true);
+  };
+  const closeMoreLogsModal = () => {
+    setMoreLogsModal(false);
+  };
   const handleChangeSearchValue = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
     if (!value) {
-      setSetSearchValueList([]); // 검색어가 비어있을 때 검색 결과를 초기화
+      setSetSearchValueList([]);
     }
   };
 
@@ -215,7 +219,7 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
           </SYearMonth>
           <button onClick={handleNextMonth}>&gt;</button>
         </SCalendarHeader>
-        <STodayButton onClick={handleCurrentDate}>오늘</STodayButton>
+        <STodayButton onClick={handleMoveCurrentDate}>오늘</STodayButton>
         <SearchInput
           size="small"
           theme={{ background: 'blue400' }}
@@ -248,50 +252,41 @@ const ScheduleCalendar = ({ reload, onDayClick }: Reload) => {
                 <div className={isToday(day) ? 'today' : ''}>
                   {format(day, 'd')}
                 </div>
-                {classLogs.map((item) => {
-                  const itemDate = new Date(item.startDate);
-                  if (isSameDay(itemDate, day)) {
-                    return (
-                      <SLogContainer key={item.id}>
-                        <SLog color={getRandomColor()}>{item.title}</SLog>
-                      </SLogContainer>
-                    );
-                  }
-                })}
-                {consultations.map((item) => {
-                  const itemDate = new Date(item.startDate);
-                  if (isSameDay(itemDate, day)) {
-                    return (
-                      <SLogContainer key={item.id}>
-                        <SLog color={getRandomColor()}>{item.studentName}</SLog>
-                      </SLogContainer>
-                    );
-                  }
-                })}
-                {workLogs.map((item) => {
-                  const itemDate = new Date(item.startDate);
-                  if (isSameDay(itemDate, day)) {
-                    return (
-                      <SLogContainer key={item.id}>
-                        <SLog color={getRandomColor()}>{item.title}</SLog>
-                      </SLogContainer>
-                    );
-                  }
-                })}
-                {observations.map((item) => {
-                  const itemDate = new Date(item.startDate);
-                  if (isSameDay(itemDate, day)) {
-                    return (
-                      <SLogContainer key={item.id}>
-                        <SLog color={getRandomColor()}>{item.studentName}</SLog>
-                      </SLogContainer>
-                    );
-                  }
-                })}
+
+                {(() => {
+                  const logsForDay = allLogs.filter((item) =>
+                    isSameDay(new Date(item.startDate), day),
+                  );
+                  const visibleLogs = logsForDay.slice(0, 2);
+                  const hiddenLogsCount =
+                    logsForDay.length - visibleLogs.length;
+                  return (
+                    <>
+                      {visibleLogs.map((item, index) => (
+                        <SLogContainer key={index}>
+                          <SLog color={getRandomColor()}>
+                            {item.title || item.studentName}
+                          </SLog>
+                        </SLogContainer>
+                      ))}
+                      {hiddenLogsCount > 0 && (
+                        <SMoreLogs
+                          onClick={() => handleClickMoreLogs(day)}
+                        >{`그 외 ${hiddenLogsCount}개 더 보기`}</SMoreLogs>
+                      )}
+                    </>
+                  );
+                })()}
               </SDays>
             ))}
           </SDaysBox>
         </SCalendarDate>
+      )}
+      {moreLogsModal && (
+        <MoreLogModal
+          clickDay={clickDay}
+          closeMoreLogsModal={closeMoreLogsModal}
+        />
       )}
     </SCalendarWrapper>
   );

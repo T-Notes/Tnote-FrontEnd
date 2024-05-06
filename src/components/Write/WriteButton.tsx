@@ -5,7 +5,6 @@ import ClassLogModal from './ClassLogModal';
 import ConsultationRecordsModal from './ConsultationRecordsModal';
 import StudentRecordsModal from './StudentRecordsModal';
 import WorkLogModal from './WorkLogModal';
-import WriteFormModal from './WriteFormModal';
 
 const SWriteBtn = styled.button`
   width: 70px;
@@ -82,12 +81,12 @@ const WriteButton = () => {
   return (
     <>
       <SWriteBtn onClick={openWriteFormModal}>글쓰기</SWriteBtn>
-      {isOpenWriteFormModal && (
+      {/* {isOpenWriteFormModal && (
         <WriteFormModal
           closeWriteFormModal={closeWriteFormModal}
           handleClickModal={handleClickModal}
         />
-      )}
+      )} */}
       {modalContent && isOpenWriteModal ? (
         <ModalBackground>{modalContent}</ModalBackground>
       ) : null}

@@ -1,18 +1,20 @@
 import axios from 'axios';
-import { ChangeEvent, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { ChangeEvent, useEffect, useState } from 'react';
+import ReactModal from 'react-modal';
+
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcPen, IcSmallDatePicker, IcTitle } from '../../assets/icons';
-import ModalPortal from '../../utils/ModalPortal';
+import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
+
+import { getConsultationDetailData } from '../../utils/lib/api';
+
 import FileUpload from '../common/FileUpload';
 import { Button } from '../common/styled/Button';
-import {
-  ModalLayout,
-  ModalNoBlackBackground,
-} from '../common/styled/ModalLayout';
+import { writeFormCustomStyles } from '../common/styled/ModalLayout';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
-import { CloseProps } from './WorkLogModal';
+import { CustomModalProps, DateProps } from './ClassLogModal';
+
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 
@@ -25,13 +27,7 @@ const SLabel = styled.p`
 const SPointText = styled.span`
   color: #632cfa;
 `;
-const SModalLayout = styled(ModalLayout)`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 670px;
-  height: 600px;
-`;
+
 const SCounseling = styled.div`
   display: flex;
   align-items: center;
@@ -128,71 +124,60 @@ const SCounselingResult = styled.div`
   border-top: 1px solid #d5d5d5;
 `;
 const ConsultationRecordsModal = ({
-  closeWriteModal,
-  handleClickModal,
-}: CloseProps) => {
-  const { scheduleId } = useParams();
-
+  isOpen,
+  onClose,
+  handleClickOpenModal,
+  logId,
+  scheduleId,
+}: CustomModalProps) => {
   const [title, setTitle] = useState<string>('');
   const [counselingContent, setCounselingContent] = useState<string>('');
   const [counselingResult, setCounselingResult] = useState<string>('');
-  const [date, setDate] = useState({
-    startDate: '',
-    endDate: '',
+  const [date, setDate] = useState<DateProps>({
+    startDate: new Date(),
+    endDate: new Date(),
   });
   const [selectedCounselingButton, setSelectedCounselingButton] =
     useState<string>('');
   const [selectedTargetButton, setSelectedTargetButton] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
-  const [valueImgUrl, setValueImgUrl] = useState<File[]>([]);
-  const [valueFileName, setValueFileName] = useState<string[]>([]);
+  const [imgUrl, setImgUrl] = useState<File[]>([]);
+  const [fileName, setFileName] = useState<string[]>([]);
   const formData = new FormData();
 
-  const handleChangeValueImg = (e: any) => {
-    const files = e.target.files;
-    const newFiles: File[] = [];
-    const newFileNames: string[] = [];
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        newFiles.push(files[i]);
-        newFileNames.push(files[i].name);
-        formData.append('consultationImages', files[i]);
-      }
-      setValueImgUrl((prevFiles) => [...prevFiles, ...newFiles]);
-      setValueFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
-    }
-  };
-
   const handleCounselingButtonClick = (buttonName: string) => {
-    console.log(1, buttonName); // 영어로 값이 들어옴
-
     setSelectedCounselingButton(buttonName);
   };
 
   const handleTargetButtonClick = (buttonName: string) => {
     setSelectedTargetButton(buttonName);
   };
-  const handleTitleChange = (newTitle: string) => {
-    setTitle(newTitle);
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
   };
   // 자식 컴포넌트에게서 기간 값 가져오기
-  const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
-    setDate((prevDate) => ({
-      ...prevDate,
+  const handleDate = (startDate: Date, endDate: Date, isAllDay: boolean) => {
+    setDate({
       startDate: startDate,
       endDate: endDate,
-    }));
+    });
     setParentsIsAllDay(isAllDay);
   };
   const handleCounselingContentChange = (
     e: ChangeEvent<HTMLTextAreaElement>,
   ) => {
-    setCounselingContent(e.target.value);
+    const content = e.target.value;
+    if (content.length <= 3000) {
+      setCounselingContent(content);
+    }
   };
   const handleCounselingResultChange = (
     e: ChangeEvent<HTMLTextAreaElement>,
   ) => {
-    setCounselingResult(e.target.value);
+    const content = e.target.value;
+    if (content.length <= 3000) {
+      setCounselingResult(content);
+    }
   };
 
   const handleClickSubmit = async () => {
@@ -200,8 +185,13 @@ const ConsultationRecordsModal = ({
       try {
         const logData = {
           studentName: title,
-          startDate: date.startDate,
-          endDate: date.endDate,
+          startDate: new Date(
+            date.startDate.getTime() -
+              date.startDate.getTimezoneOffset() * 60000,
+          ),
+          endDate: new Date(
+            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+          ),
           counselingField: selectedCounselingButton,
           counselingType: selectedTargetButton,
           consultationContents: counselingContent,
@@ -215,6 +205,14 @@ const ConsultationRecordsModal = ({
             text: '상담 분야와 상담 대상을 선택해주세요.',
           });
         }
+
+        // 이미지 파일
+        if (imgUrl.length >= 1) {
+          for (let i = 0; i < imgUrl.length; i++) {
+            formData.append('consultationImages', imgUrl[i]);
+          }
+        }
+
         const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
           type: 'application/json',
         });
@@ -234,7 +232,7 @@ const ConsultationRecordsModal = ({
           },
         );
         window.location.reload();
-        closeWriteModal();
+        onClose();
       } catch (err) {
         console.log(err);
       }
@@ -254,134 +252,157 @@ const ConsultationRecordsModal = ({
     selectedTargetButton &&
     counselingContent;
 
+  useEffect(() => {
+    if (logId) {
+      getConsultationDetailData(String(logId))
+        .then((response) => {
+          console.log(2, response.data);
+          const data = response.data;
+          setTitle(data.studentName);
+          setCounselingContent(data.consultationContents);
+          setCounselingResult(data.consultationResult);
+          setSelectedCounselingButton(data.counselingField);
+          setSelectedTargetButton(data.counselingType);
+          setDate({
+            startDate: new Date(data.startDate),
+            endDate: new Date(data.endDate),
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [logId]);
+
   return (
-    <ModalPortal>
-      <ModalNoBlackBackground>
-        <SModalLayout>
-          <WriteDropdown
-            label="상담기록"
-            options={['학급일지', '업무일지', '학생 관찰 일지']}
-            handleClickModal={handleClickModal}
-            closeWriteModal={closeWriteModal}
+    <ReactModal
+      isOpen={isOpen}
+      ariaHideApp={false}
+      style={writeFormCustomStyles}
+    >
+      <WriteDropdown
+        label="상담기록"
+        options={['학급일지', '업무일지', '학생 관찰 일지']}
+        onClickDropdownOpenModal={handleClickOpenModal}
+        closeWriteModal={onClose}
+      />
+      <WritingModalTop
+        titleLabel={'학생 이름'}
+        dateLabel={'상담 날짜'}
+        onTitleChange={handleTitleChange}
+        onStartDateChange={handleDate}
+        title={title}
+        onStartDate={date.startDate}
+        onEndDate={date.endDate}
+      />
+      {/* 스크롤 내용 */}
+      <SScroll>
+        <SCounselingTarget>
+          <SCounseling>
+            <IcSmallDatePicker />
+            <SLabel>
+              상담분야
+              <SPointText>*</SPointText>
+            </SLabel>
+            <SCounselingCategoryBox>
+              <SCounselingCategory
+                selected={selectedCounselingButton === 'FRIENDSHIP'}
+                onClick={() => handleCounselingButtonClick('FRIENDSHIP')}
+              >
+                교우관계
+              </SCounselingCategory>
+              <SCounselingCategory
+                selected={selectedCounselingButton === 'GRADE'}
+                onClick={() => handleCounselingButtonClick('GRADE')}
+              >
+                성적
+              </SCounselingCategory>
+              <SCounselingCategory
+                selected={selectedCounselingButton === 'HOME'}
+                onClick={() => handleCounselingButtonClick('HOME')}
+              >
+                가정
+              </SCounselingCategory>
+              <SCounselingCategory
+                selected={selectedCounselingButton === 'HEALTH'}
+                onClick={() => handleCounselingButtonClick('HEALTH')}
+              >
+                건강
+              </SCounselingCategory>
+              <SCounselingCategory
+                selected={selectedCounselingButton === 'ETC'}
+                onClick={() => handleCounselingButtonClick('ETC')}
+              >
+                기타
+              </SCounselingCategory>
+            </SCounselingCategoryBox>
+          </SCounseling>
+          <SCounseling>
+            <IcTitle />
+            <SLabel>
+              대상
+              <SPointText>*</SPointText>
+            </SLabel>
+            <SCounselingCategoryBox>
+              <STargetCategory
+                selected={selectedTargetButton === 'STUDENT'}
+                onClick={() => handleTargetButtonClick('STUDENT')}
+              >
+                학생
+              </STargetCategory>
+              <STargetCategory
+                selected={selectedTargetButton === 'PATENTS'}
+                onClick={() => handleTargetButtonClick('PATENTS')}
+              >
+                학부모
+              </STargetCategory>
+            </SCounselingCategoryBox>
+          </SCounseling>
+        </SCounselingTarget>
+        <SContentLine>
+          <SContentIc>
+            <IcPen />
+            <SContent>
+              상담 내용
+              <span>*</span>
+            </SContent>
+          </SContentIc>
+          <SContentLength>( {counselingContent.length}/ 3000)</SContentLength>
+        </SContentLine>
+
+        <STextarea
+          placeholder="텍스트를 입력해주세요"
+          value={counselingContent}
+          onChange={handleCounselingContentChange}
+        />
+        <SCounselingResult>
+          <SContentLine>
+            <SContentIc>
+              <IcPen />
+              <SContent>상담 결과</SContent>
+            </SContentIc>
+            <SContentLength>({counselingResult.length} / 3000)</SContentLength>
+          </SContentLine>
+
+          <STextarea
+            placeholder="텍스트를 입력해주세요"
+            value={counselingResult}
+            onChange={handleCounselingResultChange}
           />
-          <WritingModalTop
-            titleLabel={'학생 이름'}
-            dateLabel={'상담 날짜'}
-            onTitleChange={handleTitleChange}
-            onStartDateChange={dateValue}
+          <FileUpload
+            fileName={fileName}
+            handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
+              handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
+            }
+            inputId="valueFile"
           />
-          {/* 스크롤 내용 */}
-          <SScroll>
-            <SCounselingTarget>
-              <SCounseling>
-                <IcSmallDatePicker />
-                <SLabel>
-                  상담분야
-                  <SPointText>*</SPointText>
-                </SLabel>
-                <SCounselingCategoryBox>
-                  <SCounselingCategory
-                    selected={selectedCounselingButton === 'FRIENDSHIP'}
-                    onClick={() => handleCounselingButtonClick('FRIENDSHIP')}
-                  >
-                    교우관계
-                  </SCounselingCategory>
-                  <SCounselingCategory
-                    selected={selectedCounselingButton === 'GRADE'}
-                    onClick={() => handleCounselingButtonClick('GRADE')}
-                  >
-                    성적
-                  </SCounselingCategory>
-                  <SCounselingCategory
-                    selected={selectedCounselingButton === 'HOME'}
-                    onClick={() => handleCounselingButtonClick('HOME')}
-                  >
-                    가정
-                  </SCounselingCategory>
-                  <SCounselingCategory
-                    selected={selectedCounselingButton === 'HEALTH'}
-                    onClick={() => handleCounselingButtonClick('HEALTH')}
-                  >
-                    건강
-                  </SCounselingCategory>
-                  <SCounselingCategory
-                    selected={selectedCounselingButton === 'ETC'}
-                    onClick={() => handleCounselingButtonClick('ETC')}
-                  >
-                    기타
-                  </SCounselingCategory>
-                </SCounselingCategoryBox>
-              </SCounseling>
-              <SCounseling>
-                <IcTitle />
-                <SLabel>
-                  대상
-                  <SPointText>*</SPointText>
-                </SLabel>
-                <SCounselingCategoryBox>
-                  <STargetCategory
-                    selected={selectedTargetButton === 'STUDENT'}
-                    onClick={() => handleTargetButtonClick('STUDENT')}
-                  >
-                    학생
-                  </STargetCategory>
-                  <STargetCategory
-                    selected={selectedTargetButton === 'PATENTS'}
-                    onClick={() => handleTargetButtonClick('PATENTS')}
-                  >
-                    학부모
-                  </STargetCategory>
-                </SCounselingCategoryBox>
-              </SCounseling>
-            </SCounselingTarget>
-            <SContentLine>
-              <SContentIc>
-                <IcPen />
-                <SContent>
-                  상담 내용
-                  <span>*</span>
-                </SContent>
-              </SContentIc>
-              <SContentLength>
-                ( {counselingContent.length}/ 3000)
-              </SContentLength>
-            </SContentLine>
+        </SCounselingResult>
 
-            <STextarea
-              placeholder="텍스트를 입력해주세요"
-              value={counselingContent}
-              onChange={handleCounselingContentChange}
-            />
-            <SCounselingResult>
-              <SContentLine>
-                <SContentIc>
-                  <IcPen />
-                  <SContent>상담 결과</SContent>
-                </SContentIc>
-                <SContentLength>
-                  ({counselingResult.length} / 3000)
-                </SContentLength>
-              </SContentLine>
-
-              <STextarea
-                placeholder="텍스트를 입력해주세요"
-                value={counselingResult}
-                onChange={handleCounselingResultChange}
-              />
-              <FileUpload
-                fileName={valueFileName}
-                handleChangeImg={handleChangeValueImg}
-                inputId="valueFile"
-              />
-            </SCounselingResult>
-
-            <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
-              등록
-            </SLogsSubmitBtn>
-          </SScroll>
-        </SModalLayout>
-      </ModalNoBlackBackground>
-    </ModalPortal>
+        <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
+          등록
+        </SLogsSubmitBtn>
+      </SScroll>
+    </ReactModal>
   );
 };
 

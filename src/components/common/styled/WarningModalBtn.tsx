@@ -48,12 +48,12 @@ const WarningModalBtn = ({
   return (
     <>
       {confirm && <SConfirmBtn onClick={onClickWarningBtn}>확인</SConfirmBtn>}
-      {yesNo && (
+      {/* {yesNo && (
         <SButtonBox>
           <SNoBtn onClick={onClickWarningBtn}>아니요</SNoBtn>
           <SYesBtn onClick={onClickWarningBtn}>네</SYesBtn>
         </SButtonBox>
-      )}
+      )} */}
     </>
   );
 };

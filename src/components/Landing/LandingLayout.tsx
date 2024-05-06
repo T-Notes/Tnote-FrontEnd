@@ -3,10 +3,7 @@ import styled from 'styled-components';
 import { IcLogo } from '../../assets/icons';
 
 // styled //
-const SWrapper = styled.div`
-  margin-top: 120px;
-  margin-left: 230px;
-`;
+const SWrapper = styled.div``;
 
 const SContentWrapper = styled.section`
   margin-top: 30px;

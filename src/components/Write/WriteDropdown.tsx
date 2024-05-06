@@ -1,7 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import ModalPortal from '../../utils/ModalPortal';
-import { ModalBackground, ModalLayout } from '../common/styled/ModalLayout';
+
 import { IcClose, IcOpenDropdown, IcCloseDropdown } from '../../assets/icons';
 import { useToggle } from '../../utils/useHooks/useToggle';
 
@@ -56,15 +54,17 @@ const SDropdownItem = styled.li`
 export interface WritingModalProps {
   label: string;
   options: string[];
-  handleClickModal: (option: string) => void;
+  onClickDropdownOpenModal: (option: string) => void;
   closeWriteModal: () => void;
 }
 
 const WriteDropdown = (props: WritingModalProps) => {
-  const { label, options, handleClickModal, closeWriteModal } = props;
+  const { label, options, onClickDropdownOpenModal, closeWriteModal } = props;
 
   const { isToggle, handleChangeToggle } = useToggle();
-
+  const handleClickDropdownOpenModal = (option: string) => {
+    onClickDropdownOpenModal(option);
+  };
   return (
     <SModalTop>
       <IcClose className="pointer" onClick={closeWriteModal} />
@@ -84,7 +84,7 @@ const WriteDropdown = (props: WritingModalProps) => {
               <SDropdownItem
                 key={option}
                 onClick={() => {
-                  handleClickModal(option);
+                  handleClickDropdownOpenModal(option);
                 }}
               >
                 {option}

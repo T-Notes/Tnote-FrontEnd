@@ -148,31 +148,62 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
   }, [scheduleId, reload]);
 
   const handleUpdateSemester = async () => {
-    const patchData = {
-      semesterName: semesterData.semesterName,
-      lastClass: semesterData.lastClass,
-      startDate: startDate,
-      endDate: endDate,
-    };
-    const editSemester = await updateSemester(scheduleId, patchData);
-    const data = editSemester.data;
+    // 기본 저장 기능 추가
+    if (scheduleId) {
+      const patchData = {
+        semesterName: semesterData.semesterName,
+        lastClass: semesterData.lastClass,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      const editSemester = await updateSemester(scheduleId, patchData);
+      const data = editSemester.data;
 
-    setSemesterData((prev) => ({
-      ...prev,
-      semesterName: data.semesterName,
-      lastClass: data.lastClass,
-    }));
-    localStorage.setItem('semesterName', data.semesterName);
-    setReload((prev) => !prev);
-    Swal.fire({
-      title: '저장되었습니다.',
-      confirmButtonText: '확인',
-      confirmButtonColor: '#632CFA',
-    }).then((res) => {
-      if (res.isConfirmed) {
-        window.location.reload();
-      }
-    });
+      setSemesterData((prev) => ({
+        ...prev,
+        semesterName: data.semesterName,
+        lastClass: data.lastClass,
+      }));
+
+      setReload((prev) => !prev);
+      Swal.fire({
+        title: '저장되었습니다.',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#632CFA',
+      }).then((res) => {
+        if (res.isConfirmed) {
+          window.location.reload();
+        }
+      });
+    } else {
+      const createData = {
+        semesterName: semesterData.semesterName,
+        lastClass: semesterData.lastClass,
+        email: '',
+        startDate: startDate,
+        endDate: endDate,
+      };
+      const response = await createSemester(createData);
+      const data = response.data;
+      console.log(1, response);
+
+      setSemesterData((prev) => ({
+        ...prev,
+        semesterName: data.semesterName,
+        lastClass: data.lastClass,
+      }));
+
+      setReload((prev) => !prev);
+      Swal.fire({
+        title: '저장되었습니다.',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#632CFA',
+      }).then((res) => {
+        if (res.isConfirmed) {
+          window.location.reload();
+        }
+      });
+    }
   };
 
   const handleDeleteSemester = async () => {

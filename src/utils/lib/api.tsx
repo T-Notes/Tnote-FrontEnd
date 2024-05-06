@@ -152,9 +152,7 @@ interface CreateSemester {
 export const createSemester = async (semesterData: object) => {
   try {
     const response = await instanceAxios.post('/tnote/schedule', semesterData);
-    console.log(response.data);
-
-    return response.data.data;
+    return response.data;
   } catch {
     throw new Error('학기 리스트 생성 에러가 발생했습니다.');
   }
