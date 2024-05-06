@@ -1,39 +1,19 @@
 import axios from 'axios';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
-import { useParams } from 'react-router-dom';
+
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcPen } from '../../assets/icons';
-import ModalPortal from '../../utils/ModalPortal';
+
 import FileUpload from '../common/FileUpload';
-import {
-  ModalLayout,
-  ModalNoBlackBackground,
-  writeFormCustomStyles,
-} from '../common/styled/ModalLayout';
+import { writeFormCustomStyles } from '../common/styled/ModalLayout';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
-import { CustomModalProps } from './ClassLogModal';
-import { CloseProps } from './WorkLogModal';
+import { CustomModalProps, DateProps } from './ClassLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
-
-const SLabel = styled.p`
-  padding-left: 10px;
-  padding-right: 20px;
-  flex-shrink: 0;
-  ${({ theme }) => theme.fonts.caption3}
-`;
-const SPointText = styled.span`
-  color: #632cfa;
-`;
-const SModalLayout = styled(ModalLayout)`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 670px;
-  height: 600px;
-`;
+import { getObservationDetailData } from '../../utils/lib/api';
+import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -84,35 +64,30 @@ const StudentRecordsModal = ({
   isOpen,
   onClose,
   handleClickOpenModal,
+  logId,
+  scheduleId,
 }: CustomModalProps) => {
-  const { scheduleId } = useParams();
-
   const [title, setTitle] = useState<string>(''); //제목 상태
   const [observationContent, setObservationContent] = useState<string>('');
   const [teachingPlan, setTeachingPlan] = useState<string>('');
-  const [date, setDate] = useState({
-    startDate: '',
-    endDate: '',
+  const [date, setDate] = useState<DateProps>({
+    startDate: new Date(),
+    endDate: new Date(),
   });
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
-  const [valueImgUrl, setValueImgUrl] = useState<File[]>([]);
-  const [valueFileName, setValueFileName] = useState<string[]>([]);
+  const [imgUrl, setImgUrl] = useState<File[]>([]);
+  const [fileName, setFileName] = useState<string[]>([]);
   const formData = new FormData();
 
-  const handleTitleChange = (newTitle: string) => {
-    setTitle(newTitle);
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
   };
   // 자식 컴포넌트에게서 기간 값 가져오기
-  const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
-    startDate = new Date(
-      startDate.getTime() - startDate.getTimezoneOffset() * 60000,
-    ); // 시작 날짜의 시간대 오프셋 적용
-    endDate = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000); // 종료 날짜의 시간대 오프셋 적용
-    setDate((prevDate) => ({
-      ...prevDate,
+  const handleDate = (startDate: Date, endDate: Date, isAllDay: boolean) => {
+    setDate({
       startDate: startDate,
       endDate: endDate,
-    }));
+    });
     setParentsIsAllDay(isAllDay);
   };
   const handleObservationContentChange = (
@@ -130,32 +105,29 @@ const StudentRecordsModal = ({
     }
   };
 
-  const handleChangeValueImg = (e: any) => {
-    const files = e.target.files;
-    const newFiles: File[] = [];
-    const newFileNames: string[] = [];
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        newFiles.push(files[i]);
-        newFileNames.push(files[i].name);
-        formData.append('observationImages', files[i]);
-      }
-      setValueImgUrl((prevFiles) => [...prevFiles, ...newFiles]);
-      setValueFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
-    }
-  };
-
   const handleClickSubmit = async () => {
     if (scheduleId) {
       try {
         const logData = {
           studentName: title,
-          startDate: date.startDate,
-          endDate: date.endDate,
+          startDate: new Date(
+            date.startDate.getTime() -
+              date.startDate.getTimezoneOffset() * 60000,
+          ),
+          endDate: new Date(
+            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+          ),
           observationContents: observationContent,
           guidance: teachingPlan,
           isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
         };
+        // 이미지 파일
+        if (imgUrl.length >= 1) {
+          for (let i = 0; i < imgUrl.length; i++) {
+            formData.append('observationImages', imgUrl[i]);
+          }
+        }
+
         const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
           type: 'application/json',
         });
@@ -189,6 +161,26 @@ const StudentRecordsModal = ({
   const isFormValid =
     title && date.startDate && date.endDate && observationContent;
 
+  useEffect(() => {
+    if (logId) {
+      getObservationDetailData(String(logId))
+        .then((response) => {
+          console.log(2, response.data);
+          const data = response.data;
+          setTitle(data.studentName);
+          setObservationContent(data.observationContents);
+          setTeachingPlan(data.guidance);
+          setDate({
+            startDate: new Date(data.startDate),
+            endDate: new Date(data.endDate),
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [logId]);
+
   return (
     <ReactModal
       isOpen={isOpen}
@@ -205,7 +197,10 @@ const StudentRecordsModal = ({
         titleLabel={'학생 이름'}
         dateLabel={'날짜'}
         onTitleChange={handleTitleChange}
-        onStartDateChange={dateValue}
+        onStartDateChange={handleDate}
+        title={title}
+        onStartDate={date.startDate}
+        onEndDate={date.endDate}
       />
       <SScroll>
         <SContentLine>
@@ -239,8 +234,10 @@ const StudentRecordsModal = ({
             onChange={handleTeachingPlanChange}
           />
           <FileUpload
-            fileName={valueFileName}
-            handleChangeImg={handleChangeValueImg}
+            fileName={fileName}
+            handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
+              handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
+            }
             inputId="valueFile"
           />
         </STeachingPlan>

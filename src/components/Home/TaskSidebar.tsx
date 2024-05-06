@@ -7,6 +7,9 @@ import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import ClassLogModal from '../Write/ClassLogModal';
 import { useModals } from '../../utils/useHooks/useModals';
+import WorkLogModal from '../Write/WorkLogModal';
+import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
+import StudentRecordsModal from '../Write/StudentRecordsModal';
 
 const STaskSidebarWrapper = styled.div`
   display: flex;
@@ -71,6 +74,10 @@ const SLogLength = styled.div`
   border-radius: 10px;
   color: white;
 `;
+const STaskLogContainer = styled.div`
+  max-height: 90px;
+  overflow-y: scroll;
+`;
 export interface Task {
   id: number;
   title: string;
@@ -80,12 +87,10 @@ export interface Task {
   createdAt: string;
 }
 interface Reload {
-  reload: boolean;
   clickedDate: string | undefined;
-  setReload: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
+const TaskSidebar = ({ clickedDate }: Reload) => {
   const { scheduleId } = useParams();
   const { year, month, day } = useCurrentDate();
   const { openModal } = useModals();
@@ -93,9 +98,8 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
   const [workLogContent, setWorkLogContent] = useState<Task[]>([]);
   const [consultationsContent, setConsultationsContent] = useState<Task[]>([]);
   const [observationContent, setObservationContent] = useState<Task[]>([]);
-  const [clickedOutside, setClickedOutside] = useState<boolean>(false);
   const [todo, setTodo] = useState<Task[]>([]);
-
+  const [reload, setReload] = useState<boolean>(false);
   const currentDate = new Date().toISOString().slice(0, 10);
 
   const formattedDate = clickedDate
@@ -106,9 +110,6 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
       )
     : `${year}년 ${month}월 ${day}일`;
 
-  const handleUpdateOutside = () => {
-    setClickedOutside(true);
-  };
   useEffect(() => {
     if (scheduleId) {
       const fetchData = async () => {
@@ -117,7 +118,9 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
             const allData = await getAllTaskByDate(scheduleId, clickedDate);
 
             const logData = allData.data;
+            console.log('logData', logData);
 
+            setTodo(logData.todos);
             setClassLogContent(logData.classLogs);
             setWorkLogContent(logData.proceedings);
             setConsultationsContent(logData.consultations);
@@ -144,19 +147,25 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
   }, [reload, scheduleId, clickedDate]);
 
   const handleOpenClassLogIdModal = (logId: any) => {
-    console.log(1, logId);
     openModal(ClassLogModal, { logId });
+  };
+  const handleOpenProceedingIdModal = (logId: any) => {
+    openModal(WorkLogModal, { logId });
+  };
+  const handleOpenConsultationIdModal = (logId: any) => {
+    openModal(ConsultationRecordsModal, { logId });
+  };
+  const handleOpenObservationIdModal = (logId: any) => {
+    openModal(StudentRecordsModal, { logId });
   };
 
   return (
-    <STaskSidebarWrapper onClick={handleUpdateOutside}>
+    <STaskSidebarWrapper>
       <SDateFont>
         {clickedDate !== '' ? formattedDate : `${year}년 ${month}월 ${day}일`}
       </SDateFont>
       <div>
         <Todo
-          clickedOutside={clickedOutside}
-          setClickedOutside={setClickedOutside}
           todo={todo}
           setTodo={setTodo}
           clickedDate={clickedDate}
@@ -167,63 +176,77 @@ const TaskSidebar = ({ reload, setReload, clickedDate }: Reload) => {
         <SFont>학급 일지</SFont>
         <SLogLength>{classLogContent.length}</SLogLength>
       </SFlex>
-
-      {classLogContent.map((classLog) => (
-        <SLogs
-          key={classLog.id}
-          onClick={() => handleOpenClassLogIdModal(classLog.id)}
-        >
-          <SLogContent>{classLog.title}</SLogContent>
-          <SLogCreatedAt>{`${classLog.createdAt.slice(
-            0,
-            10,
-          )} 작성`}</SLogCreatedAt>
-        </SLogs>
-      ))}
+      <STaskLogContainer>
+        {classLogContent.map((classLog) => (
+          <SLogs
+            key={classLog.id}
+            onClick={() => handleOpenClassLogIdModal(classLog.id)}
+          >
+            <SLogContent>{classLog.title}</SLogContent>
+            <SLogCreatedAt>{`${classLog.createdAt.slice(
+              0,
+              10,
+            )} 작성`}</SLogCreatedAt>
+          </SLogs>
+        ))}
+      </STaskLogContainer>
 
       <SFlex>
         <SFont>업무 일지</SFont>
         <SLogLength>{workLogContent.length}</SLogLength>
       </SFlex>
+      <STaskLogContainer>
+        {workLogContent.map((workLog) => (
+          <SLogs
+            key={workLog.id}
+            onClick={() => handleOpenProceedingIdModal(workLog.id)}
+          >
+            <SLogContent>{workLog.title}</SLogContent>
+            <SLogCreatedAt>{`${workLog.createdAt.slice(
+              0,
+              10,
+            )} 작성`}</SLogCreatedAt>
+          </SLogs>
+        ))}
+      </STaskLogContainer>
 
-      {workLogContent.map((workLog) => (
-        <SLogs key={workLog.id}>
-          <SLogContent>{workLog.title}</SLogContent>
-          <SLogCreatedAt>{`${workLog.createdAt.slice(
-            0,
-            10,
-          )} 작성`}</SLogCreatedAt>
-        </SLogs>
-      ))}
       <SFlex>
         <SFont>관찰 일지</SFont>
         <SLogLength>{observationContent.length}</SLogLength>
       </SFlex>
+      <STaskLogContainer>
+        {observationContent.map((observation) => (
+          <SLogs
+            key={observation.id}
+            onClick={() => handleOpenObservationIdModal(observation.id)}
+          >
+            <SLogContent>{observation.studentName}</SLogContent>
+            <SLogCreatedAt>{`${observation.createdAt.slice(
+              0,
+              10,
+            )} 작성`}</SLogCreatedAt>
+          </SLogs>
+        ))}
+      </STaskLogContainer>
 
-      {observationContent.map((observation) => (
-        <SLogs key={observation.id}>
-          <SLogContent>{observation.studentName}</SLogContent>
-          <SLogCreatedAt>{`${observation.createdAt.slice(
-            0,
-            10,
-          )} 작성`}</SLogCreatedAt>
-        </SLogs>
-      ))}
       <SFlex>
         <SFont>상담 일지</SFont>
         <SLogLength>{consultationsContent.length}</SLogLength>
       </SFlex>
-
-      {consultationsContent.map((consultation) => (
-        <SLogs key={consultation.id}>
-          <SLogContent>{consultation.studentName}</SLogContent>
-          <SLogCreatedAt>{`${consultation.createdAt.slice(
-            0,
-            10,
-          )} 작성`}</SLogCreatedAt>
-        </SLogs>
-      ))}
-      {/* {isLogModalOpen && <ClassLogModal />} */}
+      <STaskLogContainer>
+        {consultationsContent.map((consultation) => (
+          <SLogs
+            key={consultation.id}
+            onClick={() => handleOpenConsultationIdModal(consultation.id)}
+          >
+            <SLogContent>{consultation.studentName}</SLogContent>
+            <SLogCreatedAt>{`${consultation.createdAt.slice(
+              0,
+              10,
+            )} 작성`}</SLogCreatedAt>
+          </SLogs>
+        ))}
+      </STaskLogContainer>
     </STaskSidebarWrapper>
   );
 };

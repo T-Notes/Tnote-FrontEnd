@@ -32,8 +32,6 @@ const Home = () => {
   const handleClickLinkToAddSemesterPage = () => {
     navigate('/semesterSetup/home');
   };
-  // reload 상태 관리
-  const [reload, setReload] = useState<boolean>(false);
 
   const handleDayClick = (clickedDate: Date) => {
     const currentDate = clickedDate;
@@ -54,12 +52,7 @@ const Home = () => {
       </SHomeSemester>
 
       <ScheduleCalendar onDayClick={handleDayClick} />
-      <TaskSidebar
-        reload={reload}
-        setReload={setReload}
-        clickedDate={clickedDate}
-      />
-      {/* <WriteButton setReload={setReload} /> */}
+      <TaskSidebar clickedDate={clickedDate} />
     </SHomeWrapper>
   );
 };

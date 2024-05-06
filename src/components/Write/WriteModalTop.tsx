@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import WriteDatePicker from './WriteDatePicker';
 import { IcDatePicker, IcSmallDatePicker, IcTitle } from '../../assets/icons';
 
@@ -57,25 +57,23 @@ const SPeriod = styled.div`
 `;
 
 export interface ModalTopProps {
-  onTitleChange: (newTitle: string) => void;
+  onTitleChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onStartDateChange: (startDate: any, endDate: any, isAllDay: boolean) => void;
   titleLabel: string;
+  title: string;
   dateLabel: string;
+  onStartDate: string | Date;
+  onEndDate: string | Date;
 }
 const WritingModalTop = ({
   onTitleChange,
   onStartDateChange,
   titleLabel,
+  title,
   dateLabel,
+  onStartDate,
+  onEndDate,
 }: ModalTopProps) => {
-  const [title, setTitle] = useState<string>('');
-
-  const handleTitleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = e.target.value;
-    setTitle(newTitle); // title.length 보여주기 위함
-    onTitleChange(newTitle);
-  };
-
   return (
     <SWrapper>
       <STitle>
@@ -89,7 +87,8 @@ const WritingModalTop = ({
           type="text"
           maxLength={30}
           placeholder="제목을 입력하세요"
-          onChange={handleTitleInputChange}
+          onChange={onTitleChange}
+          value={title || ''}
         ></STitleInput>
         <STitleLength>({title.length} / 30)</STitleLength>
       </STitle>
@@ -100,7 +99,11 @@ const WritingModalTop = ({
           <SPointText>*</SPointText>
         </SLabel>
         <div>
-          <WriteDatePicker onStartDateChange={onStartDateChange} />
+          <WriteDatePicker
+            onStartDateChange={onStartDateChange}
+            onStartDate={onStartDate}
+            onEndDate={onEndDate}
+          />
         </div>
       </SPeriod>
     </SWrapper>

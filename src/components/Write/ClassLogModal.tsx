@@ -5,12 +5,12 @@ import FileUpload from '../common/FileUpload';
 import WritingModalTop from './WriteModalTop';
 import WriteDropdown from './WriteDropdown';
 import { writeFormCustomStyles } from '../common/styled/ModalLayout';
-import { useParams } from 'react-router-dom';
 import { IcPen } from '../../assets/icons';
 import Swal from 'sweetalert2';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import ReactModal from 'react-modal';
 import { getClassLogDetailData } from '../../utils/lib/api';
+import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -78,15 +78,20 @@ export interface CustomModalProps {
   onClose: () => void;
   handleClickOpenModal: (option: string) => void;
   logId: number;
+  scheduleId: number;
+}
+export interface DateProps {
+  startDate: Date;
+  endDate: Date;
 }
 const ClassLogModal = ({
   isOpen,
   onClose,
   handleClickOpenModal,
   logId,
+  scheduleId,
 }: CustomModalProps) => {
   const formData = new FormData();
-  const { scheduleId } = useParams();
   const [title, setTitle] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File[]>([]);
@@ -101,9 +106,9 @@ const ClassLogModal = ({
     제출과제: '',
     진도표: '',
   });
-  const [date, setDate] = useState({
-    startDate: '',
-    endDate: '',
+  const [date, setDate] = useState<DateProps>({
+    startDate: new Date(),
+    endDate: new Date(),
   });
   const isFormValid =
     title && date.startDate && date.endDate && saveContents[contentType];
@@ -126,39 +131,17 @@ const ClassLogModal = ({
     }
   };
 
-  const handleTitleChange = (newTitle: string) => {
-    setTitle(newTitle);
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
   };
 
-  const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
-    console.log(1, startDate.toISOString());
+  const handleDate = (startDate: Date, endDate: Date, isAllDay: boolean) => {
+    setDate({
+      startDate: startDate,
+      endDate: endDate,
+    });
 
-    startDate = new Date(
-      startDate.getTime() - startDate.getTimezoneOffset() * 60000,
-    ); // 시작 날짜의 시간대 오프셋 적용
-    endDate = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000); // 종료 날짜의 시간대 오프셋 적용
-
-    setDate((prevDate) => ({
-      ...prevDate,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-    }));
     setParentsIsAllDay(isAllDay);
-  };
-
-  const handleChangeImg = (e: any) => {
-    const files = e.target.files;
-    const newFiles: File[] = [];
-    const newFileNames: string[] = [];
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        newFiles.push(files[i]);
-        newFileNames.push(files[i].name);
-        formData.append('classLogImages', files[i]);
-      }
-      setImgUrl((prevFiles) => [...prevFiles, ...newFiles]);
-      setFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
-    }
   };
 
   const handleClickSubmit = async () => {
@@ -166,14 +149,26 @@ const ClassLogModal = ({
       try {
         const logData = {
           title: title,
-          startDate: date.startDate,
-          endDate: date.endDate,
+          startDate: new Date(
+            date.startDate.getTime() -
+              date.startDate.getTimezoneOffset() * 60000,
+          ),
+          endDate: new Date(
+            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+          ),
           plan: saveContents.학습계획,
           classContents: saveContents.수업내용,
           submission: saveContents.제출과제,
           magnitude: saveContents.진도표,
           isAllDay: parentsIsAllDay,
         };
+
+        // 이미지 파일
+        if (imgUrl.length >= 1) {
+          for (let i = 0; i < imgUrl.length; i++) {
+            formData.append('classLogImages', imgUrl[i]);
+          }
+        }
 
         const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
           type: 'application/json',
@@ -205,19 +200,19 @@ const ClassLogModal = ({
       });
     }
   };
-  // 수정이 필요한 부분
+
   useEffect(() => {
     if (logId) {
       getClassLogDetailData(String(logId))
         .then((response) => {
-          console.log(2, response.data);
           const data = response.data;
+
           setTitle(data.title);
-          setDate((prevDate) => ({
-            ...prevDate,
-            startDate: data.startDate,
-            endDate: data.endDate,
-          }));
+
+          setDate({
+            startDate: new Date(data.startDate),
+            endDate: new Date(data.endDate),
+          });
           setSaveContents({
             학습계획: data.plan,
             수업내용: data.classContents,
@@ -246,9 +241,12 @@ const ClassLogModal = ({
         />
         <WritingModalTop
           titleLabel={'제목'}
+          title={title}
           dateLabel={'기간'}
           onTitleChange={handleTitleChange}
-          onStartDateChange={dateValue}
+          onStartDateChange={handleDate}
+          onStartDate={date.startDate}
+          onEndDate={date.endDate}
         />
         <SContentWrap>
           <SType>
@@ -298,7 +296,9 @@ const ClassLogModal = ({
         </SContentWrap>
         <FileUpload
           fileName={fileName}
-          handleChangeImg={handleChangeImg}
+          handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
+            handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
+          }
           inputId="file"
         />
         <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>

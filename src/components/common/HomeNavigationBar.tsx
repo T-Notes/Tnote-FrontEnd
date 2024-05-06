@@ -140,13 +140,14 @@ const HomeNavigationBar = () => {
     if (openModalName === '학급일지') {
       openModal(ClassLogModal, {
         handleClickOpenModal,
+        scheduleId,
       });
     } else if (openModalName === '업무일지') {
-      openModal(WorkLogModal, { handleClickOpenModal });
+      openModal(WorkLogModal, { handleClickOpenModal, scheduleId });
     } else if (openModalName === '상담기록') {
-      openModal(ConsultationRecordsModal, { handleClickOpenModal });
+      openModal(ConsultationRecordsModal, { handleClickOpenModal, scheduleId });
     } else if (openModalName === '학생 관찰 일지') {
-      openModal(StudentRecordsModal, { handleClickOpenModal });
+      openModal(StudentRecordsModal, { handleClickOpenModal, scheduleId });
     }
   };
 
