@@ -1,31 +1,22 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
-import { useModal } from '../utils/useHooks/useModal';
 import { useToggle } from '../utils/useHooks/useToggle';
-import { privacyPolicyContent } from '../utils/privacyPolicyContent';
-import { WarningModal } from '../components/common/WarningModal';
 import LandingLayout from '../components/Landing/LandingLayout';
 import KakaoLoginBtn from '../components/Landing/KakaoLoginBtn';
 import PrivacyPolicyCheckbox from '../components/Landing/PrivacyPolicyCheckbox';
 import PrivacyPolicyModal from '../components/Landing/PrivacyPolicyModal';
 import { IcBackgroundIconGroup } from '../assets/icons';
 import { useModals } from '../utils/useHooks/useModals';
-// import LandingBackgroundImage from '../assets/images/LandingBackgroundImage.png';
+import privacyPolicyContent from '../utils/privacyPolicyContent';
 
 // styled //
 const SLandingWrapper = styled.div`
-  // 개선 : 웹 화면 크기에 따라 달라져야 함
-  /* background-image: url(${'../assets/images/LandingBackgroundImage.png'}); // 추후 수정하기 */
   background-color: #f5f6ff;
   display: flex;
   align-items: center;
-  /* align-items: center;
-  justify-content: center; */
-  /* background-size: cover;
-  background-position: center; */
+  position: relative;
+
   width: 100%;
   height: 100vh;
-  /* position: absolute; */
 
   @media (max-width: 768px) {
     background-size: auto;
@@ -34,6 +25,7 @@ const SLandingWrapper = styled.div`
 
 const SIcBackgroundIconGroup = styled(IcBackgroundIconGroup)`
   padding-left: 60px;
+  z-index: 5;
 `;
 
 const SBackContent = styled.div`
@@ -58,7 +50,27 @@ const SPrivacyPolicyCheckboxSection = styled.div`
   display: flex;
   align-items: center;
 `;
-
+const SBackgroundCircle = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 100vh;
+  background-color: #c4cdffcc;
+  clip-path: ellipse(40% 70% at 100% 50%);
+  z-index: 4;
+`;
+const SBackgroundCircle2 = styled(SBackgroundCircle)`
+  background-color: #dae0ffe5;
+  clip-path: ellipse(50% 80% at 100% 50%);
+  z-index: 3;
+`;
+const SBackgroundCircle3 = styled(SBackgroundCircle)`
+  background-color: #eff1ff;
+  clip-path: ellipse(60% 90% at 100% 50%);
+  z-index: 2;
+`;
 const Landing = () => {
   const { isToggle, setIsToggle, handleChangeToggle } = useToggle();
   const { openModal, closeModal } = useModals();
@@ -91,6 +103,9 @@ const Landing = () => {
           </SPrivacyPolicyCheckboxSection>
         </div>
 
+        <SBackgroundCircle></SBackgroundCircle>
+        <SBackgroundCircle2></SBackgroundCircle2>
+        <SBackgroundCircle3></SBackgroundCircle3>
         <SIcBackgroundIconGroup />
       </SBackContent>
     </SLandingWrapper>
