@@ -75,8 +75,8 @@ const StudentRecordsModal = ({
     endDate: new Date(),
   });
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
-  const [valueImgUrl, setValueImgUrl] = useState<File[]>([]);
-  const [valueFileName, setValueFileName] = useState<string[]>([]);
+  const [imgUrl, setImgUrl] = useState<File[]>([]);
+  const [fileName, setFileName] = useState<string[]>([]);
   const formData = new FormData();
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -122,9 +122,9 @@ const StudentRecordsModal = ({
           isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
         };
         // 이미지 파일
-        if (valueImgUrl.length >= 1) {
-          for (let i = 0; i < valueImgUrl.length; i++) {
-            formData.append('observationImages', valueImgUrl[i]);
+        if (imgUrl.length >= 1) {
+          for (let i = 0; i < imgUrl.length; i++) {
+            formData.append('observationImages', imgUrl[i]);
           }
         }
 
@@ -234,9 +234,9 @@ const StudentRecordsModal = ({
             onChange={handleTeachingPlanChange}
           />
           <FileUpload
-            fileName={valueFileName}
+            fileName={fileName}
             handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
-              handleChangeLogImgFileUpload(e, setValueImgUrl, setValueFileName)
+              handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
             }
             inputId="valueFile"
           />

@@ -141,8 +141,8 @@ const ConsultationRecordsModal = ({
     useState<string>('');
   const [selectedTargetButton, setSelectedTargetButton] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
-  const [valueImgUrl, setValueImgUrl] = useState<File[]>([]);
-  const [valueFileName, setValueFileName] = useState<string[]>([]);
+  const [imgUrl, setImgUrl] = useState<File[]>([]);
+  const [fileName, setFileName] = useState<string[]>([]);
   const formData = new FormData();
 
   const handleCounselingButtonClick = (buttonName: string) => {
@@ -207,9 +207,9 @@ const ConsultationRecordsModal = ({
         }
 
         // 이미지 파일
-        if (valueImgUrl.length >= 1) {
-          for (let i = 0; i < valueImgUrl.length; i++) {
-            formData.append('consultationImages', valueImgUrl[i]);
+        if (imgUrl.length >= 1) {
+          for (let i = 0; i < imgUrl.length; i++) {
+            formData.append('consultationImage', imgUrl[i]);
           }
         }
 
@@ -390,9 +390,9 @@ const ConsultationRecordsModal = ({
             onChange={handleCounselingResultChange}
           />
           <FileUpload
-            fileName={valueFileName}
+            fileName={fileName}
             handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
-              handleChangeLogImgFileUpload(e, setValueImgUrl, setValueFileName)
+              handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
             }
             inputId="valueFile"
           />
