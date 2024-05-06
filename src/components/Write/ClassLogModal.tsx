@@ -5,14 +5,12 @@ import FileUpload from '../common/FileUpload';
 import WritingModalTop from './WriteModalTop';
 import WriteDropdown from './WriteDropdown';
 import { writeFormCustomStyles } from '../common/styled/ModalLayout';
-import { useParams } from 'react-router-dom';
 import { IcPen } from '../../assets/icons';
 import Swal from 'sweetalert2';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import ReactModal from 'react-modal';
 import { getClassLogDetailData } from '../../utils/lib/api';
-import useDateTimeOffset from '../../utils/handleDateTimeOffset';
-import handleDateTimeOffset from '../../utils/handleDateTimeOffset';
+import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -83,8 +81,8 @@ export interface CustomModalProps {
   scheduleId: number;
 }
 export interface DateProps {
-  startDate: string | Date;
-  endDate: string | Date;
+  startDate: Date;
+  endDate: Date;
 }
 const ClassLogModal = ({
   isOpen,
@@ -109,8 +107,8 @@ const ClassLogModal = ({
     진도표: '',
   });
   const [date, setDate] = useState<DateProps>({
-    startDate: '',
-    endDate: '',
+    startDate: new Date(),
+    endDate: new Date(),
   });
   const isFormValid =
     title && date.startDate && date.endDate && saveContents[contentType];
@@ -138,48 +136,39 @@ const ClassLogModal = ({
   };
 
   const handleDate = (startDate: Date, endDate: Date, isAllDay: boolean) => {
-    const { ISOStartDate, ISOEndDate } = handleDateTimeOffset(
-      startDate,
-      endDate,
-      isAllDay,
-    );
     setDate({
-      startDate: ISOStartDate,
-      endDate: ISOEndDate,
+      startDate: startDate,
+      endDate: endDate,
     });
+
     setParentsIsAllDay(isAllDay);
   };
 
-  const handleChangeImg = (e: any) => {
-    const files = e.target.files;
-    const newFiles: File[] = [];
-    const newFileNames: string[] = [];
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        newFiles.push(files[i]);
-        newFileNames.push(files[i].name);
-        formData.append('classLogImages', files[i]);
-      }
-      setImgUrl((prevFiles) => [...prevFiles, ...newFiles]);
-      setFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
-    }
-  };
-
   const handleClickSubmit = async () => {
-    console.log('scheduleId:', scheduleId);
-
     if (scheduleId) {
       try {
         const logData = {
           title: title,
-          startDate: date.startDate,
-          endDate: date.endDate,
+          startDate: new Date(
+            date.startDate.getTime() -
+              date.startDate.getTimezoneOffset() * 60000,
+          ),
+          endDate: new Date(
+            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+          ),
           plan: saveContents.학습계획,
           classContents: saveContents.수업내용,
           submission: saveContents.제출과제,
           magnitude: saveContents.진도표,
           isAllDay: parentsIsAllDay,
         };
+
+        // 이미지 파일
+        if (imgUrl.length >= 1) {
+          for (let i = 0; i < imgUrl.length; i++) {
+            formData.append('classLogImages', imgUrl[i]);
+          }
+        }
 
         const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
           type: 'application/json',
@@ -216,7 +205,6 @@ const ClassLogModal = ({
     if (logId) {
       getClassLogDetailData(String(logId))
         .then((response) => {
-          console.log(2, response.data);
           const data = response.data;
 
           setTitle(data.title);
@@ -308,7 +296,9 @@ const ClassLogModal = ({
         </SContentWrap>
         <FileUpload
           fileName={fileName}
-          handleChangeImg={handleChangeImg}
+          handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
+            handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
+          }
           inputId="file"
         />
         <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>

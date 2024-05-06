@@ -11,6 +11,7 @@ import { CustomModalProps, DateProps } from './ClassLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 import { getProceedingDetailData } from '../../utils/lib/api';
+import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -133,20 +134,6 @@ const WorkLogModal = ({
 
   const formData = new FormData();
 
-  const handleChangeImg = (e: any) => {
-    const files = e.target.files;
-    const newFiles: File[] = [];
-    const newFileNames: string[] = [];
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        newFiles.push(files[i]);
-        newFileNames.push(files[i].name);
-        formData.append('proceedingImages', files[i]);
-      }
-      setImgUrl((prevFiles) => [...prevFiles, ...newFiles]);
-      setFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
-    }
-  };
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
@@ -187,6 +174,15 @@ const WorkLogModal = ({
           workContents: workContents,
           isAllDay: parentsIsAllDay,
         };
+
+        // 이미지 파일
+        if (imgUrl.length >= 1) {
+          for (let i = 0; i < imgUrl.length; i++) {
+            formData.append('proceedingImages', imgUrl[i]);
+          }
+        }
+        console.log(formData.getAll('proceedingImages'));
+
         const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
           type: 'application/json',
         });
@@ -304,7 +300,9 @@ const WorkLogModal = ({
             </SContentWrap>
             <FileUpload
               fileName={fileName}
-              handleChangeImg={handleChangeImg}
+              handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
+                handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
+              }
               inputId="file"
             />
             <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>

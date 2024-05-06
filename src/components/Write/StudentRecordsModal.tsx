@@ -13,6 +13,7 @@ import { CustomModalProps, DateProps } from './ClassLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 import { getObservationDetailData } from '../../utils/lib/api';
+import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -104,21 +105,6 @@ const StudentRecordsModal = ({
     }
   };
 
-  const handleChangeValueImg = (e: any) => {
-    const files = e.target.files;
-    const newFiles: File[] = [];
-    const newFileNames: string[] = [];
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        newFiles.push(files[i]);
-        newFileNames.push(files[i].name);
-        formData.append('observationImages', files[i]);
-      }
-      setValueImgUrl((prevFiles) => [...prevFiles, ...newFiles]);
-      setValueFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
-    }
-  };
-
   const handleClickSubmit = async () => {
     if (scheduleId) {
       try {
@@ -135,6 +121,13 @@ const StudentRecordsModal = ({
           guidance: teachingPlan,
           isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
         };
+        // 이미지 파일
+        if (valueImgUrl.length >= 1) {
+          for (let i = 0; i < valueImgUrl.length; i++) {
+            formData.append('observationImages', valueImgUrl[i]);
+          }
+        }
+
         const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
           type: 'application/json',
         });
@@ -242,7 +235,9 @@ const StudentRecordsModal = ({
           />
           <FileUpload
             fileName={valueFileName}
-            handleChangeImg={handleChangeValueImg}
+            handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
+              handleChangeLogImgFileUpload(e, setValueImgUrl, setValueFileName)
+            }
             inputId="valueFile"
           />
         </STeachingPlan>

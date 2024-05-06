@@ -5,6 +5,7 @@ import ReactModal from 'react-modal';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcPen, IcSmallDatePicker, IcTitle } from '../../assets/icons';
+import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 
 import { getConsultationDetailData } from '../../utils/lib/api';
 
@@ -144,21 +145,6 @@ const ConsultationRecordsModal = ({
   const [valueFileName, setValueFileName] = useState<string[]>([]);
   const formData = new FormData();
 
-  const handleChangeValueImg = (e: any) => {
-    const files = e.target.files;
-    const newFiles: File[] = [];
-    const newFileNames: string[] = [];
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        newFiles.push(files[i]);
-        newFileNames.push(files[i].name);
-        formData.append('consultationImages', files[i]);
-      }
-      setValueImgUrl((prevFiles) => [...prevFiles, ...newFiles]);
-      setValueFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
-    }
-  };
-
   const handleCounselingButtonClick = (buttonName: string) => {
     setSelectedCounselingButton(buttonName);
   };
@@ -219,6 +205,14 @@ const ConsultationRecordsModal = ({
             text: '상담 분야와 상담 대상을 선택해주세요.',
           });
         }
+
+        // 이미지 파일
+        if (valueImgUrl.length >= 1) {
+          for (let i = 0; i < valueImgUrl.length; i++) {
+            formData.append('consultationImages', valueImgUrl[i]);
+          }
+        }
+
         const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
           type: 'application/json',
         });
@@ -397,7 +391,9 @@ const ConsultationRecordsModal = ({
           />
           <FileUpload
             fileName={valueFileName}
-            handleChangeImg={handleChangeValueImg}
+            handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
+              handleChangeLogImgFileUpload(e, setValueImgUrl, setValueFileName)
+            }
             inputId="valueFile"
           />
         </SCounselingResult>
