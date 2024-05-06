@@ -3,7 +3,7 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import SemesterMenu from '../components/Home/SemesterMenu';
 import RemainingDays from '../components/Home/RemainingDays';
-import ScheduleCalendar from '../components/Home/ScheduleCalendar';
+import ScheduleCalendar from '../components/Home/logCalendar/ScheduleCalendar';
 import TaskSidebar from '../components/Home/TaskSidebar';
 import TodaySchedule from '../components/Home/TodaySchedule';
 import WriteButton from '../components/Write/WriteButton';
@@ -32,8 +32,6 @@ const Home = () => {
   const handleClickLinkToAddSemesterPage = () => {
     navigate('/semesterSetup/home');
   };
-  // reload 상태 관리
-  const [reload, setReload] = useState<boolean>(false);
 
   const handleDayClick = (clickedDate: Date) => {
     const currentDate = clickedDate;
@@ -53,13 +51,8 @@ const Home = () => {
         </SDayAndScheduleWrapper>
       </SHomeSemester>
 
-      <ScheduleCalendar reload={reload} onDayClick={handleDayClick} />
-      <TaskSidebar
-        reload={reload}
-        setReload={setReload}
-        clickedDate={clickedDate}
-      />
-      {/* <WriteButton setReload={setReload} /> */}
+      <ScheduleCalendar onDayClick={handleDayClick} />
+      <TaskSidebar clickedDate={clickedDate} />
     </SHomeWrapper>
   );
 };

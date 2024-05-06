@@ -1,29 +1,17 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import FileUpload from '../common/FileUpload';
 import WritingModalTop from './WriteModalTop';
 import WriteDropdown from './WriteDropdown';
-import ModalPortal from '../../utils/ModalPortal';
-import {
-  ModalLayout,
-  ModalNoBlackBackground,
-} from '../common/styled/ModalLayout';
-import { Button } from '../common/styled/Button';
-import { useParams } from 'react-router-dom';
+import { writeFormCustomStyles } from '../common/styled/ModalLayout';
 import { IcPen } from '../../assets/icons';
 import Swal from 'sweetalert2';
-import { css } from 'styled-components';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
+import ReactModal from 'react-modal';
+import { getClassLogDetailData } from '../../utils/lib/api';
+import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 
-// styled //
-const SModalLayout = styled(ModalLayout)`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 670px;
-  height: 600px;
-`;
 const STextarea = styled.textarea`
   height: 180px;
   width: 100%;
@@ -84,77 +72,90 @@ interface SaveContents {
   제출과제: string;
   진도표: string;
 }
-interface CloseProps {
-  closeWriteModal: () => void;
-  handleClickModal: (openModalContent: string) => void;
+
+export interface CustomModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  handleClickOpenModal: (option: string) => void;
+  logId: number;
+  scheduleId: number;
 }
-const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
+export interface DateProps {
+  startDate: Date;
+  endDate: Date;
+}
+const ClassLogModal = ({
+  isOpen,
+  onClose,
+  handleClickOpenModal,
+  logId,
+  scheduleId,
+}: CustomModalProps) => {
   const formData = new FormData();
-  const { scheduleId } = useParams();
   const [title, setTitle] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File[]>([]);
   const [fileName, setFileName] = useState<string[]>([]);
 
   const [contentType, setContentType] =
-    useState<keyof SaveContents>('학습계획'); //현재 모달에서 어떤 종류의 탭을 입력하고 있는지를 나타낸다.
+    useState<keyof SaveContents>('학습계획');
+
   const [saveContents, setSaveContents] = useState<SaveContents>({
     학습계획: '',
     수업내용: '',
     제출과제: '',
     진도표: '',
-  }); //각 탭의 타입에 따른 입력된 내용을 저장하는 객체
-  const [date, setDate] = useState({
-    startDate: '',
-    endDate: '',
   });
+  const [date, setDate] = useState<DateProps>({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
+  const isFormValid =
+    title && date.startDate && date.endDate && saveContents[contentType];
+
+  const handleModalClose = () => {
+    onClose();
+  };
 
   const handleContentTypeChange = (type: keyof SaveContents) => {
     setContentType(type);
   };
 
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setSaveContents((prevSaveContents) => ({
-      ...prevSaveContents,
-      [contentType]: e.target.value,
-    }));
+    const content = e.target.value;
+    if (content.length <= 3000) {
+      setSaveContents((prevSaveContents) => ({
+        ...prevSaveContents,
+        [contentType]: content,
+      }));
+    }
   };
 
-  const handleTitleChange = (newTitle: string) => {
-    setTitle(newTitle);
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
   };
 
-  const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
-    setDate((prevDate) => ({
-      ...prevDate,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-    }));
+  const handleDate = (startDate: Date, endDate: Date, isAllDay: boolean) => {
+    setDate({
+      startDate: startDate,
+      endDate: endDate,
+    });
+
     setParentsIsAllDay(isAllDay);
   };
 
-  const handleChangeImg = (e: any) => {
-    const files = e.target.files;
-    const newFiles: File[] = [];
-    const newFileNames: string[] = [];
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        newFiles.push(files[i]);
-        newFileNames.push(files[i].name);
-        formData.append('classLogImages', files[i]);
-      }
-      setImgUrl((prevFiles) => [...prevFiles, ...newFiles]);
-      setFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
-    }
-  };
-  console.log(2, fileName);
   const handleClickSubmit = async () => {
     if (scheduleId) {
       try {
         const logData = {
           title: title,
-          startDate: date.startDate,
-          endDate: date.endDate,
+          startDate: new Date(
+            date.startDate.getTime() -
+              date.startDate.getTimezoneOffset() * 60000,
+          ),
+          endDate: new Date(
+            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+          ),
           plan: saveContents.학습계획,
           classContents: saveContents.수업내용,
           submission: saveContents.제출과제,
@@ -162,14 +163,17 @@ const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
           isAllDay: parentsIsAllDay,
         };
 
+        // 이미지 파일
+        if (imgUrl.length >= 1) {
+          for (let i = 0; i < imgUrl.length; i++) {
+            formData.append('classLogImages', imgUrl[i]);
+          }
+        }
+
         const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
           type: 'application/json',
         });
         formData.append('classLogRequestDto', jsonDataTypeValue);
-
-        // if (imgUrl) {
-        //   formData.append('classLogImages', imgUrl);
-        // }
 
         const accessToken = localStorage.getItem('accessToken');
 
@@ -185,7 +189,7 @@ const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
           },
         );
         window.location.reload();
-        closeWriteModal();
+        handleModalClose();
       } catch (err) {
         console.log(err);
       }
@@ -196,86 +200,112 @@ const ClassLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
       });
     }
   };
-  const isFormValid =
-    title && date.startDate && date.endDate && saveContents[contentType];
+
+  useEffect(() => {
+    if (logId) {
+      getClassLogDetailData(String(logId))
+        .then((response) => {
+          const data = response.data;
+
+          setTitle(data.title);
+
+          setDate({
+            startDate: new Date(data.startDate),
+            endDate: new Date(data.endDate),
+          });
+          setSaveContents({
+            학습계획: data.plan,
+            수업내용: data.classContents,
+            제출과제: data.submission,
+            진도표: data.magnitude,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [logId]);
 
   return (
-    <ModalPortal>
-      <ModalNoBlackBackground>
-        <SModalLayout>
-          <WriteDropdown
-            label="학급일지"
-            options={['업무일지', '상담기록', '학생 관찰 일지']}
-            handleClickModal={handleClickModal}
-            closeWriteModal={closeWriteModal}
+    <ReactModal
+      isOpen={isOpen}
+      ariaHideApp={false}
+      style={writeFormCustomStyles}
+    >
+      <>
+        <WriteDropdown
+          label="학급일지"
+          options={['업무일지', '상담기록', '학생 관찰 일지']}
+          onClickDropdownOpenModal={handleClickOpenModal}
+          closeWriteModal={handleModalClose}
+        />
+        <WritingModalTop
+          titleLabel={'제목'}
+          title={title}
+          dateLabel={'기간'}
+          onTitleChange={handleTitleChange}
+          onStartDateChange={handleDate}
+          onStartDate={date.startDate}
+          onEndDate={date.endDate}
+        />
+        <SContentWrap>
+          <SType>
+            <STypeBtn
+              selected={contentType === '학습계획'}
+              onClick={() => handleContentTypeChange('학습계획')}
+            >
+              학습계획
+            </STypeBtn>
+            <STypeBtn
+              selected={contentType === '수업내용'}
+              onClick={() => handleContentTypeChange('수업내용')}
+            >
+              수업내용
+            </STypeBtn>
+            <STypeBtn
+              selected={contentType === '제출과제'}
+              onClick={() => handleContentTypeChange('제출과제')}
+            >
+              제출과제
+            </STypeBtn>
+            <STypeBtn
+              selected={contentType === '진도표'}
+              onClick={() => handleContentTypeChange('진도표')}
+            >
+              진도표
+            </STypeBtn>
+            <SBorderBottom></SBorderBottom>
+          </SType>
+          <SContentLine>
+            <SContentIc>
+              <IcPen />
+              <SContent>
+                내용
+                <span>*</span>
+              </SContent>
+            </SContentIc>
+            <SContentLength>
+              ({saveContents[contentType].length} / 3000)
+            </SContentLength>
+          </SContentLine>
+          <STextarea
+            placeholder="텍스트를 입력해주세요"
+            value={saveContents[contentType]}
+            onChange={handleContentChange}
           />
-          <WritingModalTop
-            titleLabel={'제목'}
-            dateLabel={'기간'}
-            onTitleChange={handleTitleChange}
-            onStartDateChange={dateValue}
-          />
-          <SContentWrap>
-            <SType>
-              <STypeBtn
-                selected={contentType === '학습계획'}
-                onClick={() => handleContentTypeChange('학습계획')}
-              >
-                학습계획
-              </STypeBtn>
-              <STypeBtn
-                selected={contentType === '수업내용'}
-                onClick={() => handleContentTypeChange('수업내용')}
-              >
-                수업내용
-              </STypeBtn>
-              <STypeBtn
-                selected={contentType === '제출과제'}
-                onClick={() => handleContentTypeChange('제출과제')}
-              >
-                제출과제
-              </STypeBtn>
-              <STypeBtn
-                selected={contentType === '진도표'}
-                onClick={() => handleContentTypeChange('진도표')}
-              >
-                진도표
-              </STypeBtn>
-              <SBorderBottom></SBorderBottom>
-            </SType>
-            {contentType && (
-              <>
-                <SContentLine>
-                  <SContentIc>
-                    <IcPen />
-                    <SContent>
-                      내용
-                      <span>*</span>
-                    </SContent>
-                  </SContentIc>
-                  <SContentLength>
-                    ({saveContents[contentType].length} / 3000)
-                  </SContentLength>
-                </SContentLine>
-                <STextarea
-                  placeholder="텍스트를 입력해주세요"
-                  value={saveContents[contentType]}
-                  onChange={handleContentChange}
-                />
-              </>
-            )}
-          </SContentWrap>
-          <FileUpload
-            fileName={fileName}
-            handleChangeImg={handleChangeImg}
-            inputId="file"
-          />
-          <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
-            등록
-          </SLogsSubmitBtn>
-        </SModalLayout>
-      </ModalNoBlackBackground>
-    </ModalPortal>
+        </SContentWrap>
+        <FileUpload
+          fileName={fileName}
+          handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
+            handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
+          }
+          inputId="file"
+        />
+        <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
+          등록
+        </SLogsSubmitBtn>
+      </>
+    </ReactModal>
   );
 };
 

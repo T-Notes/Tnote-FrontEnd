@@ -327,9 +327,9 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
             </SUserInfoContainer>
             <SAlarmContainer>
               <SColumn>
-                <SLabel>알람받기</SLabel>
+                <SLabel>이메일 수신 여부</SLabel>
                 <SCaption>
-                  교사 업무관리 앱에서 제공하는 알림을 끄거나 켤 수 있습니다.
+                  Tonte 관련 정보를 이메일로 받아보실 수 있습니다.
                 </SCaption>
               </SColumn>
               {userData.alarm ? (

@@ -1,28 +1,17 @@
 import axios from 'axios';
-import { ChangeEvent, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { ChangeEvent, useEffect, useState } from 'react';
+import ReactModal from 'react-modal';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcMap, IcPen } from '../../assets/icons';
-
-import ModalPortal from '../../utils/ModalPortal';
 import FileUpload from '../common/FileUpload';
-import { Button } from '../common/styled/Button';
-import {
-  ModalLayout,
-  ModalNoBlackBackground,
-} from '../common/styled/ModalLayout';
+import { writeFormCustomStyles } from '../common/styled/ModalLayout';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
+import { CustomModalProps, DateProps } from './ClassLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
-
-const SModalLayout = styled(ModalLayout)`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 670px;
-  height: 600px;
-`;
+import { getProceedingDetailData } from '../../utils/lib/api';
+import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -124,18 +113,19 @@ const SPlace = styled.div`
 const SScroll = styled.div`
   overflow-y: scroll;
 `;
-export interface CloseProps {
-  closeWriteModal: () => void;
-  handleClickModal: (openModalContent: string) => void;
-}
-const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
-  const { scheduleId } = useParams();
 
+const WorkLogModal = ({
+  isOpen,
+  onClose,
+  handleClickOpenModal,
+  logId,
+  scheduleId,
+}: CustomModalProps) => {
   const [title, setTitle] = useState<string>('');
   const [place, setPlace] = useState<string>('');
-  const [date, setDate] = useState({
-    startDate: '',
-    endDate: '',
+  const [date, setDate] = useState<DateProps>({
+    startDate: new Date(),
+    endDate: new Date(),
   });
   const [workContents, setWorkContents] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
@@ -144,32 +134,15 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
 
   const formData = new FormData();
 
-  const handleChangeImg = (e: any) => {
-    const files = e.target.files;
-    const newFiles: File[] = [];
-    const newFileNames: string[] = [];
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        newFiles.push(files[i]);
-        newFileNames.push(files[i].name);
-        formData.append('proceedingImages', files[i]);
-      }
-      setImgUrl((prevFiles) => [...prevFiles, ...newFiles]);
-      setFileName((prevFileNames) => [...prevFileNames, ...newFileNames]);
-    }
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
   };
 
-  const handleTitleChange = (newTitle: string) => {
-    setTitle(newTitle);
-  };
-
-  // 자식 컴포넌트에게서 기간 값 가져오기
-  const dateValue = (startDate: any, endDate: any, isAllDay: boolean) => {
-    setDate((prevDate) => ({
-      ...prevDate,
+  const handleDate = (startDate: Date, endDate: Date, isAllDay: boolean) => {
+    setDate({
       startDate: startDate,
       endDate: endDate,
-    }));
+    });
     setParentsIsAllDay(isAllDay);
   };
 
@@ -179,7 +152,10 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
   };
 
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setWorkContents(e.target.value);
+    const content = e.target.value;
+    if (content.length <= 3000) {
+      setWorkContents(content);
+    }
   };
 
   const handleClickSubmit = async () => {
@@ -187,12 +163,26 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
       try {
         const logData = {
           title,
-          startDate: date.startDate,
-          endDate: date.endDate,
+          startDate: new Date(
+            date.startDate.getTime() -
+              date.startDate.getTimezoneOffset() * 60000,
+          ),
+          endDate: new Date(
+            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+          ),
           location: place,
           workContents: workContents,
           isAllDay: parentsIsAllDay,
         };
+
+        // 이미지 파일
+        if (imgUrl.length >= 1) {
+          for (let i = 0; i < imgUrl.length; i++) {
+            formData.append('proceedingImages', imgUrl[i]);
+          }
+        }
+        console.log(formData.getAll('proceedingImages'));
+
         const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
           type: 'application/json',
         });
@@ -212,7 +202,7 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
           },
         );
         window.location.reload();
-        closeWriteModal();
+        onClose();
       } catch (err) {
         console.log(err);
       }
@@ -225,21 +215,48 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
   };
   const isFormValid = title && date.startDate && date.endDate && workContents;
 
+  useEffect(() => {
+    if (logId) {
+      getProceedingDetailData(String(logId))
+        .then((response) => {
+          console.log(2, response.data);
+          const data = response.data;
+          setTitle(data.title);
+          setPlace(data.location);
+          setWorkContents(data.workContents);
+          setDate({
+            startDate: new Date(data.startDate),
+            endDate: new Date(data.endDate),
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [logId]);
+
   return (
-    <ModalPortal>
-      <ModalNoBlackBackground>
-        <SModalLayout>
+    <ReactModal
+      isOpen={isOpen}
+      ariaHideApp={false}
+      style={writeFormCustomStyles}
+    >
+      <>
+        <>
           <WriteDropdown
             label="업무일지"
             options={['학급일지', '상담기록', '학생 관찰 일지']}
-            handleClickModal={handleClickModal}
-            closeWriteModal={closeWriteModal}
+            onClickDropdownOpenModal={handleClickOpenModal}
+            closeWriteModal={onClose}
           />
           <WritingModalTop
             titleLabel={'제목'}
             dateLabel={'기간'}
             onTitleChange={handleTitleChange}
-            onStartDateChange={dateValue}
+            onStartDateChange={handleDate}
+            title={title}
+            onStartDate={date.startDate}
+            onEndDate={date.endDate}
           />
           <SScroll>
             <SContentWrap>
@@ -283,16 +300,18 @@ const WorkLogModal = ({ closeWriteModal, handleClickModal }: CloseProps) => {
             </SContentWrap>
             <FileUpload
               fileName={fileName}
-              handleChangeImg={handleChangeImg}
+              handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
+                handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
+              }
               inputId="file"
             />
             <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
               등록
             </SLogsSubmitBtn>
           </SScroll>
-        </SModalLayout>
-      </ModalNoBlackBackground>
-    </ModalPortal>
+        </>
+      </>
+    </ReactModal>
   );
 };
 
