@@ -47,7 +47,7 @@ export const policyCustomStyles = {
     zIndex: 9,
   },
   content: {
-    width: '664px',
+    width: '700px',
     height: '627px',
     top: '50%',
     left: '50%',

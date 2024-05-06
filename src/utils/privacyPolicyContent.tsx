@@ -3,10 +3,13 @@ import styled from 'styled-components';
 const SPolicyContent = styled.div`
   line-height: 27px;
   div {
-    margin-bottom: 16px; /* 각 <p> 요소 사이의 간격 조절 */
+    margin-bottom: 16px;
   }
+
+  font-size: 16px;
+  font-weight: 500;
 `;
-export const privacyPolicyContent = (
+const privacyPolicyContent = (
   <SPolicyContent>
     <div>
       [Tnote]은(는) 사용자의 개인정보를 중요하게 다루고 있습니다. 이에 대한
@@ -66,3 +69,5 @@ export const privacyPolicyContent = (
     </div>
   </SPolicyContent>
 );
+
+export default privacyPolicyContent;

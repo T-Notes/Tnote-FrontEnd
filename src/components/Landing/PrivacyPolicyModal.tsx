@@ -4,7 +4,7 @@ import { ReactEventHandler, ReactNode } from 'react';
 
 import { Button } from '../common/styled/Button';
 import { policyCustomStyles } from '../common/styled/ModalLayout';
-import { privacyPolicyContent } from '../../utils/privacyPolicyContent';
+import privacyPolicyContent from '../../utils/privacyPolicyContent';
 
 // styled //
 const SPrivacyPolicyBox = styled.div`
@@ -15,25 +15,26 @@ const SPrivacyPolicyBox = styled.div`
 `;
 
 const SPolicyContentBox = styled.section`
-  width: auto;
-  height: 380px;
-  overflow: scroll;
-  line-height: 1.5;
-  display: flex;
-  padding: 10px 10px 10px 10px;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 10px;
-  border-radius: 8px;
-  margin-top: 30px;
-  border: 1px solid var(--Black-Black50, #d5d5d5);
-  background-color: ${({ theme }) => theme.colors.blue400};
-  ${({ theme }) => theme.fonts.caption}
+  transform: skew(-0.05deg);
+  > div {
+    max-height: 380px;
+    overflow-y: scroll;
+
+    display: flex;
+    padding: 10px 10px 10px 10px;
+    justify-content: center;
+    align-items: flex-start;
+
+    border-radius: 8px;
+    margin-top: 30px;
+    border: 1px solid var(--Black-Black50, #d5d5d5);
+    background-color: ${({ theme }) => theme.colors.blue400};
+  }
 `;
 
 const SPrivacyAgreementBtnBox = styled(Button)`
   margin-top: 30px;
-  width: 420px;
+  width: 400px;
   height: 60px;
 
   background-color: ${({ theme }) => theme.colors.purple100}; // active
@@ -72,7 +73,9 @@ const PrivacyPolicyModal = ({
         아래 약관에 동의하시고, 다음단계로 이동하세요!
       </SPrivacyPolicyCation>
       <SPrivacyPolicyBox>
-        <SPolicyContentBox>{privacyPolicyContent}</SPolicyContentBox>
+        <SPolicyContentBox>
+          <div>{privacyPolicyContent}</div>
+        </SPolicyContentBox>
         <SPrivacyAgreementBtnBox onClick={handleIsCheckedTrue}>
           동의함
         </SPrivacyAgreementBtnBox>
