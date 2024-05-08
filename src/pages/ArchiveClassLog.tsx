@@ -33,8 +33,12 @@ const STitleAndDate = styled.div`
   align-items: center;
 `;
 const STitleAndDateText = styled.div`
+  display: flex;
   font-size: 20px;
   font-weight: 600;
+  > div {
+    padding-left: 5px;
+  }
 `;
 const SDate = styled.div`
   margin-left: auto;
@@ -164,8 +168,11 @@ const ArchiveClassLog = () => {
           <STitle>학급일지</STitle>
         </SArchiveTitle>
         <STitleAndDate>
-          <STitleAndDateText>제목내용:</STitleAndDateText>
-          <STitleAndDateText>{`${classLogData.title} 학급일지`}</STitleAndDateText>
+          <STitleAndDateText>
+            제목:
+            <div>{`${classLogData.title}`}</div>
+          </STitleAndDateText>
+
           <SDate>{`${classLogData.startDate} ~ ${classLogData.endDate}`}</SDate>
         </STitleAndDate>
         <STextareaContainer>

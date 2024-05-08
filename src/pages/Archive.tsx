@@ -1,19 +1,14 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import MyArchive, { SSemesterContainer } from '../components/Archive/MyArchive';
+import NotSearchArchive, {
+  SSemesterContainer,
+} from '../components/Archive/NotSearchArchive';
 import SearchInput from '../components/common/SearchInput';
 import { getSemesterSearchValue, removeSemester } from '../utils/lib/api';
 import _debounce from 'lodash/debounce';
-import {
-  IcCheckedBox,
-  IcDelete,
-  IcGrayPen,
-  IcPen,
-  IcUncheckedBox,
-} from '../assets/icons';
+import { IcCheckedBox, IcDelete, IcUncheckedBox } from '../assets/icons';
 import Swal from 'sweetalert2';
-import { useModals } from '../utils/useHooks/useModals';
 
 const SArchiveWrapper = styled.div`
   position: absolute;
@@ -60,7 +55,7 @@ const Archive = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchValueList, setSetSearchValueList] = useState<SearchValue[]>([]);
-  const [reload, setReload] = useState<boolean>(false);
+
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [isDeleteChecked, setIsDeleteChecked] = useState<number | null>(null);
 
@@ -79,7 +74,6 @@ const Archive = () => {
   const handleSemesterSearch = async () => {
     const getSearchValue = await getSemesterSearchValue(searchValue);
     setSetSearchValueList(getSearchValue.data);
-    console.log(2, getSearchValue.data.length);
   };
 
   const debouncedSearch = _debounce(handleSemesterSearch, 500);
@@ -94,13 +88,11 @@ const Archive = () => {
     }
   }, [searchValue]);
 
-  const handleSelectedSemester = (semesterId: number, semesterName: string) => {
-    navigate(`/archiveContainer/${semesterId}`);
+  const handleSelectedSemester = (semesterId: number) => {
+    navigate(`/archiveDetail/${semesterId}`);
   };
 
   const handleDeletedCheck = (item: number) => {
-    console.log(item);
-
     setIsDeleteChecked((prevIsDeleteChecked) =>
       prevIsDeleteChecked === item ? null : item,
     );
@@ -139,10 +131,7 @@ const Archive = () => {
           placeholder="텍스트를 입력하세요"
           value={searchValue}
         />
-        {/* <SEdit>
-          수정
-          <IcGrayPen />
-        </SEdit> */}
+
         {isDelete ? (
           <SDelete onClick={handleClickDelete}>
             삭제
@@ -173,11 +162,7 @@ const Archive = () => {
                       />
                     )}
 
-                    <div
-                      onClick={() =>
-                        handleSelectedSemester(item.id, item.semesterName)
-                      }
-                    >
+                    <div onClick={() => handleSelectedSemester(item.id)}>
                       {item.semesterName}
                     </div>
                   </SSemesterContainer>
@@ -186,9 +171,7 @@ const Archive = () => {
                 <>
                   <SSemesterContainer
                     key={item.id}
-                    onClick={() =>
-                      handleSelectedSemester(item.id, item.semesterName)
-                    }
+                    onClick={() => handleSelectedSemester(item.id)}
                   >
                     <div>{item.semesterName}</div>
                   </SSemesterContainer>
@@ -201,7 +184,7 @@ const Archive = () => {
         <></>
       )}
       {!searchValue && (
-        <MyArchive
+        <NotSearchArchive
           isDelete={isDelete}
           handleDeletedCheck={handleDeletedCheck}
           isDeleteChecked={isDeleteChecked}

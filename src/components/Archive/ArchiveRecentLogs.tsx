@@ -108,7 +108,6 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
           );
         })}
       </SRecentSearchContainer>
-      <ArchiveFilteredLogs scheduleId={scheduleId} />
     </SArchiveRecentLogsWrapper>
   );
 };

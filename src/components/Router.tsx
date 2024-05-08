@@ -60,7 +60,7 @@ const Router = () => {
             element={<ArchiveObservation />}
           />
           <Route
-            path="/archiveContainer/:scheduleId"
+            path="/archiveDetail/:scheduleId"
             element={<ArchiveDetail />}
           />
           {/* 과목 추가 클릭 후 페이지 */}
