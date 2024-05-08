@@ -12,6 +12,7 @@ import ArchiveProceeding from '../pages/ArchiveProceeding';
 import ArchiveConsultation from '../pages/ArchiveConsultation';
 import ArchiveObservation from '../pages/ArchiveObservation';
 import ArchiveDetail from '../pages/ArchiveDetail';
+import ArchiveLogDetail from '../pages/ArchiveLogDetailPage';
 
 const Router = () => {
   return (
@@ -60,8 +61,12 @@ const Router = () => {
             element={<ArchiveObservation />}
           />
           <Route
-            path="/archiveDetail/:scheduleId"
+            path="/archiveSemesterDetail/:scheduleId"
             element={<ArchiveDetail />}
+          />
+          <Route
+            path="archive/logDetail/:logType/:logId"
+            element={<ArchiveLogDetail></ArchiveLogDetail>}
           />
           {/* 과목 추가 클릭 후 페이지 */}
         </Route>

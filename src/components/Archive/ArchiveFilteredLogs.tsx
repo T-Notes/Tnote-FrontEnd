@@ -140,7 +140,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
     setIsFilterDropdownOpen(false);
   };
 
-  const handleClickModal = async (option: string) => {
+  const handleClickFilter = async (option: string) => {
     setCurrentFilteredOption(option);
     try {
       let res;
@@ -161,11 +161,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
           res = await getAllObservation(scheduleId);
           setFilteredLogsList(res.data.observations);
           break;
-        // case 'To-Do':
-        //   res = await getTodo(scheduleId, new Date());
-        //   console.log(res.data);
-        //   setFilteredLogsList(res.data);
-        //   break;
+
         default:
           break;
       }
@@ -212,7 +208,10 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   };
 
   // 클릭한 값으로 페이지 변환 함수
-  const handleChangePageAtLogs = (id: number) => {
+  const handleChangePageAtLogs = (id: number, logType: string) => {
+    // if (id && logType) {
+    //   navigate(`archive/logDetail/${logType}/${id}`);
+    // }
     if (currentFilteredOption === '학급일지' || currentFilteredOption === '') {
       navigate(`/archive/classLog/${id}`);
     } else if (currentFilteredOption === '업무일지') {
@@ -245,7 +244,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
                 <SDropdownItem
                   key={option}
                   onClick={() => {
-                    handleClickModal(option);
+                    handleClickFilter(option);
                   }}
                 >
                   {option}
@@ -268,7 +267,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
             return (
               <SLogContainer
                 key={index}
-                onClick={() => handleChangePageAtLogs(item.id)}
+                onClick={() => handleChangePageAtLogs(item.id, item.logType)}
               >
                 {/* {isShowCheckBox &&
                   (checkedLogs[item.id] ? (

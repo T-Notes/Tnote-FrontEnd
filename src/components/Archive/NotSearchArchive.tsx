@@ -48,7 +48,7 @@ const NotSearchArchive = ({
   const [allSemester, setAllSemester] = useState<Semester[]>([]);
 
   const handleSelectedSemester = (selectedSemesterId: number) => {
-    navigate(`/archiveDetail/${selectedSemesterId}`);
+    navigate(`/archiveSemesterDetail/${selectedSemesterId}`);
   };
 
   useEffect(() => {

@@ -89,7 +89,7 @@ const Archive = () => {
   }, [searchValue]);
 
   const handleSelectedSemester = (semesterId: number) => {
-    navigate(`/archiveDetail/${semesterId}`);
+    navigate(`/archiveSemesterDetail/${semesterId}`);
   };
 
   const handleDeletedCheck = (item: number) => {
