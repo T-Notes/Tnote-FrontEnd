@@ -34,8 +34,12 @@ const STitleAndDate = styled.div`
   align-items: center;
 `;
 const STitleAndDateText = styled.div`
+  display: flex;
   font-size: 20px;
   font-weight: 600;
+  > div {
+    padding-left: 5px;
+  }
 `;
 const SDate = styled.div`
   margin-left: auto;
@@ -155,7 +159,9 @@ const ArchiveObservation = () => {
             <STitle>학생 관찰 기록</STitle>
           </SArchiveTitle>
           <STitleAndDate>
-            <STitleAndDateText>{`${observationLogData.studentName}`}</STitleAndDateText>
+            <STitleAndDateText>
+              제목: <div>{`${observationLogData.studentName}`}</div>
+            </STitleAndDateText>
             <SDate>{`${observationLogData.startDate} ~ ${observationLogData.endDate}`}</SDate>
           </STitleAndDate>
           <STextareaContainer>
