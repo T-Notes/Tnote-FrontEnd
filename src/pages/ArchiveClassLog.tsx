@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcGoBack } from '../assets/icons';
 import EditClassLogModal from '../components/WriteEdit/EditClassLogModal';
+import { formatDate } from '../utils/formatDate';
 import instanceAxios from '../utils/InstanceAxios';
 import { getClassLogDetailData } from '../utils/lib/api';
 import ModalPortal from '../utils/ModalPortal';
@@ -133,8 +134,8 @@ const ArchiveClassLog = () => {
       setClassLogData({
         id: res.data.id,
         title: res.data.title,
-        startDate: res.data.startDate.slice(0, 10),
-        endDate: res.data.endDate.slice(0, 10),
+        startDate: res.data.startDate,
+        endDate: res.data.endDate,
         classContents: res.data.classContents,
         magnitude: res.data.magnitude,
         plan: res.data.plan,
@@ -173,17 +174,19 @@ const ArchiveClassLog = () => {
             <div>{`${classLogData.title}`}</div>
           </STitleAndDateText>
 
-          <SDate>{`${classLogData.startDate} ~ ${classLogData.endDate}`}</SDate>
+          <SDate>{`${formatDate(classLogData.startDate)} ~ ${formatDate(
+            classLogData.endDate,
+          )}`}</SDate>
         </STitleAndDate>
         <STextareaContainer>
           <SLabel>학급계획</SLabel>
-          <STextarea value={classLogData.plan} />
+          <STextarea readOnly defaultValue={classLogData.plan} />
           <SLabel>수업내용</SLabel>
-          <STextarea value={classLogData.classContents} />
+          <STextarea readOnly defaultValue={classLogData.classContents} />
           <SLabel>제출과제</SLabel>
-          <STextarea value={classLogData.submission} />
+          <STextarea readOnly defaultValue={classLogData.submission} />
           <SLabel>진도표</SLabel>
-          <STextarea value={classLogData.magnitude} />
+          <STextarea readOnly defaultValue={classLogData.magnitude} />
         </STextareaContainer>
         <SButtons>
           <SDelete onClick={handleDelete}>삭제</SDelete>

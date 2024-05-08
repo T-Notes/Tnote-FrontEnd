@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { IcGoBack } from '../assets/icons';
 import WorkLogModal from '../components/Write/WorkLogModal';
 import EditProceedingModal from '../components/WriteEdit/EditProceedingModal';
+import { formatDate } from '../utils/formatDate';
 import instanceAxios from '../utils/InstanceAxios';
 import { getProceedingDetailData } from '../utils/lib/api';
 import ModalPortal from '../utils/ModalPortal';
@@ -120,13 +121,14 @@ const ArchiveProceeding = () => {
   useEffect(() => {
     const getDetailData = async () => {
       const res = await getProceedingDetailData(logId);
+      const data = res.data;
+
       setProceedingLogData({
-        title: res.data.title,
-        workContents: res.data.workContents,
-        startDate: res.data.startDate.slice(0, 10),
-        endDate: res.data.endDate.slice(0, 10),
+        title: data.title,
+        workContents: data.workContents,
+        startDate: data.startDate,
+        endDate: data.endDate,
       });
-      console.log(res.data);
     };
     getDetailData();
   }, [reload]);
@@ -157,7 +159,9 @@ const ArchiveProceeding = () => {
           <STitleAndDateText>
             제목: <div>{`${proceedingLogData.title}`}</div>
           </STitleAndDateText>
-          <SDate>{`${proceedingLogData.startDate} ~ ${proceedingLogData.endDate}`}</SDate>
+          <SDate>{`${formatDate(proceedingLogData.startDate)} ~ ${formatDate(
+            proceedingLogData.endDate,
+          )}`}</SDate>
         </STitleAndDate>
         <STextareaContainer>
           <SLabel>회의록</SLabel>

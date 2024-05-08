@@ -6,6 +6,7 @@ import { IcGoBack } from '../assets/icons';
 import WorkLogModal from '../components/Write/WorkLogModal';
 import EditObservationModal from '../components/WriteEdit/EditObservationModal';
 import EditProceedingModal from '../components/WriteEdit/EditProceedingModal';
+import { formatDate } from '../utils/formatDate';
 import instanceAxios from '../utils/InstanceAxios';
 import { getObservationDetailData } from '../utils/lib/api';
 import ModalPortal from '../utils/ModalPortal';
@@ -127,10 +128,9 @@ const ArchiveObservation = () => {
         studentName: res.data.studentName,
         guidance: res.data.guidance,
         observationContents: res.data.observationContents,
-        startDate: res.data.startDate.slice(0, 10),
-        endDate: res.data.endDate.slice(0, 10),
+        startDate: res.data.startDate,
+        endDate: res.data.endDate,
       });
-      console.log(res.data);
     };
     getDetailData();
   }, [reload]);
@@ -162,7 +162,9 @@ const ArchiveObservation = () => {
             <STitleAndDateText>
               제목: <div>{`${observationLogData.studentName}`}</div>
             </STitleAndDateText>
-            <SDate>{`${observationLogData.startDate} ~ ${observationLogData.endDate}`}</SDate>
+            <SDate>{`${formatDate(observationLogData.startDate)} ~ ${formatDate(
+              observationLogData.endDate,
+            )}`}</SDate>
           </STitleAndDate>
           <STextareaContainer>
             <SLabel>관찰내용</SLabel>

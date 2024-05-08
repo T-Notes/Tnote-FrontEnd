@@ -6,6 +6,7 @@ import { IcGoBack } from '../assets/icons';
 import WorkLogModal from '../components/Write/WorkLogModal';
 import EditConsultationModal from '../components/WriteEdit/EditConsultationModal';
 import EditProceedingModal from '../components/WriteEdit/EditProceedingModal';
+import { formatDate } from '../utils/formatDate';
 import instanceAxios from '../utils/InstanceAxios';
 import { getConsultationDetailData } from '../utils/lib/api';
 import ModalPortal from '../utils/ModalPortal';
@@ -168,7 +169,9 @@ const ArchiveConsultation = () => {
               제목:
               <div>{`${consultationLogData.studentName}`}</div>
             </STitleAndDateText>
-            <SDate>{`${consultationLogData.startDate} ~ ${consultationLogData.endDate}`}</SDate>
+            <SDate>{`${formatDate(
+              consultationLogData.startDate,
+            )} ~ ${formatDate(consultationLogData.endDate)}`}</SDate>
           </STitleAndDate>
           <STextareaContainer>
             <SLabel>상담내용</SLabel>
