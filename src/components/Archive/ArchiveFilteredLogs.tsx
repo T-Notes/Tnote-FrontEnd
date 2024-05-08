@@ -63,9 +63,9 @@ const SDropdownList = styled.ul`
   background-color: white;
   padding: 4px;
   position: absolute;
-  top: calc(100% + 4px); /* SDropdownLabel 아래로 위치 */
+  top: calc(100% + 4px);
   left: 0;
-  z-index: 3; /* SDropdownLabel 위에 나타나도록 설정 */
+  z-index: 3;
 `;
 const SDropdownItem = styled.li`
   padding: 8px;
@@ -101,6 +101,9 @@ const SLogContainerHeader = styled.div`
 `;
 const SDate = styled.div`
   margin-left: auto;
+`;
+const SLogType = styled.span`
+  padding-left: 0px;
 `;
 interface Archive {
   scheduleId: string | undefined;
@@ -282,10 +285,47 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
 
                 <div>{item.title || item.studentName}</div>
                 <div>
-                  {item.classContents ||
-                    item.workContents ||
+                  <div>
+                    {(item.classContents === '' && (
+                      <SLogType>/학급일지</SLogType>
+                    )) ||
+                      (item.classContents && <SLogType>/학급일지</SLogType>)}
+                    {(item.workContents === '' && (
+                      <SLogType>/업무일지</SLogType>
+                    )) ||
+                      (item.workContents && <SLogType>/업무일지</SLogType>)}
+                    {(item.consultationContents === '' && (
+                      <SLogType>/상담기록</SLogType>
+                    )) ||
+                      (item.consultationContents && (
+                        <SLogType>/상담기록</SLogType>
+                      ))}
+
+                    {(item.observationContents === '' && (
+                      <SLogType>/학생 관찰 기록</SLogType>
+                    )) ||
+                      (item.observationContents && (
+                        <SLogType>/학생관찰기록</SLogType>
+                      ))}
+                  </div>
+
+                  {/* {item.classContents !== '' || item.classContents === '' ? (
+                    <span>학급일지</span>
+                  ) : null}
+                  {item.workContents !== '' || item.workContents === '' ? (
+                    <span>업무일지</span>
+                  ) : null}
+                  {item.consultationContents !== '' ||
+                  item.consultationContents === '' ? (
+                    <span>상담기록</span>
+                  ) : null}
+                  {item.observationContents !== '' ||
+                  item.observationContents === '' ? (
+                    <span>학생 관찰 기록</span>
+                  ) : null} */}
+                  {/* {item.workContents ||
                     item.consultationContents ||
-                    item.observationContents}
+                    item.observationContents} */}
                 </div>
                 <SCreatedAt>{newTimestamp}</SCreatedAt>
               </SLogContainer>
