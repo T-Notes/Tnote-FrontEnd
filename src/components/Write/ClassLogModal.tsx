@@ -206,6 +206,7 @@ const ClassLogModal = ({
       getClassLogDetailData(String(logId))
         .then((response) => {
           const data = response.data;
+          console.log(30, data);
 
           setTitle(data.title);
 

@@ -48,6 +48,8 @@ const ScheduleCalendarSearchValue = ({ searchValueList }: Props) => {
       openModal(StudentRecordsModal, { logId, scheduleId });
     }
   };
+  console.log(searchValueList);
+
   return (
     <>
       {searchValueList.map((item) => {

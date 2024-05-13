@@ -168,12 +168,10 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   };
 
   useEffect(() => {
-    console.log('렌더링!');
-
+    // 전체 필터 api로 수정
     if (scheduleId) {
       const getClassLogData = async () => {
         const res = await getAllClassLog(scheduleId);
-        console.log(res.data.classLogs);
 
         setFilteredLogsList(res.data.classLogs);
       };

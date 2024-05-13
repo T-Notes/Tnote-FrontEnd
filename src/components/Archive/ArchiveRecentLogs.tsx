@@ -48,7 +48,7 @@ interface RecentLogs {
 }
 
 interface newRecentLogs {
-  id: number | null;
+  id: number;
   title: string;
   studentName: string;
   createdAt: string;
@@ -64,7 +64,6 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
         const getRecentData = async () => {
           const response = await getRecentLogs();
           const data = response.data;
-          console.log(data);
 
           if (data) {
             const promises = data.map(async (item: RecentLogs) => {
@@ -80,6 +79,8 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
               }
               if (recentEndPoint) {
                 const response = await instanceAxios.get(recentEndPoint);
+                console.log(33, response.data.data);
+
                 return response.data.data;
               }
             });
@@ -94,15 +95,20 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
       }
     }
   }, [scheduleId]);
+  console.log('newRecentLogs', newRecentLogs);
 
+  const handleClickRecentLog = (logId: number) => {};
   return (
     <SArchiveRecentLogsWrapper>
       <STitle>최근 조회</STitle>
       <SRecentSearchContainer>
-        {newRecentLogs.map((item, index) => {
+        {newRecentLogs.map((item) => {
           const newTimestamp = item.createdAt.slice(0, 10);
           return (
-            <SRecentSearchItem key={index}>
+            <SRecentSearchItem
+              key={item.id}
+              onClick={() => handleClickRecentLog(item.id)}
+            >
               <IcFile />
               <div>{item.studentName || item.title}</div>
               <div>{`${newTimestamp} 작성`}</div>

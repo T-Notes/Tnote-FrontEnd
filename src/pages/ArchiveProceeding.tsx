@@ -4,11 +4,10 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcGoBack } from '../assets/icons';
 import WorkLogModal from '../components/Write/WorkLogModal';
-import EditProceedingModal from '../components/WriteEdit/EditProceedingModal';
 import { formatDate } from '../utils/formatDate';
 import instanceAxios from '../utils/InstanceAxios';
 import { getProceedingDetailData } from '../utils/lib/api';
-import ModalPortal from '../utils/ModalPortal';
+import { useModals } from '../utils/useHooks/useModals';
 
 const SArchiveTitle = styled.div`
   display: flex;
@@ -113,11 +112,10 @@ const ArchiveProceeding = () => {
     startDate: '',
     endDate: '',
   });
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const { openModal } = useModals();
   const handleClickEdit = () => {
-    setIsEdit((prev) => !prev);
+    openModal(WorkLogModal, { logId });
   };
-  const [reload, setReload] = useState<boolean>(false);
 
   useEffect(() => {
     const getDetailData = async () => {
@@ -132,7 +130,7 @@ const ArchiveProceeding = () => {
       });
     };
     getDetailData();
-  }, [reload]);
+  }, []);
 
   const handleDelete = async () => {
     await Swal.fire({
@@ -175,15 +173,6 @@ const ArchiveProceeding = () => {
           <SEdit onClick={handleClickEdit}>수정</SEdit>
         </SButtons>
       </SArchiveClassLog>
-      <ModalPortal>
-        {isEdit && (
-          <EditProceedingModal
-            onClose={handleClickEdit}
-            logId={logId}
-            setReload={setReload}
-          />
-        )}
-      </ModalPortal>
     </SArchiveClassLogWrapper>
   );
 };
