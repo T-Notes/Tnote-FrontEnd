@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { IcFile } from '../../assets/icons';
 import instanceAxios from '../../utils/InstanceAxios';
 import { getRecentLogs } from '../../utils/lib/api';
-import ArchiveFilteredLogs from './ArchiveFilteredLogs';
 
 const SArchiveRecentLogsWrapper = styled.div`
   display: flex;
@@ -52,6 +51,7 @@ interface newRecentLogs {
   title: string;
   studentName: string;
   createdAt: string;
+  logType: string;
 }
 const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
   const navigate = useNavigate();
@@ -97,7 +97,22 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
   }, [scheduleId]);
   console.log('newRecentLogs', newRecentLogs);
 
-  const handleClickRecentLog = (logId: number) => {};
+  const handleClickRecentLog = (logId: number, logType: string) => {
+    let logEndpointMid = '';
+    if (logType === 'CLASS_LOG') {
+      logEndpointMid = 'classLog';
+    }
+    if (logType === 'PROCEEDING') {
+      logEndpointMid = 'proceeding';
+    }
+    if (logType === 'CONSULTATION') {
+      logEndpointMid = 'consultation';
+    }
+    if (logType === 'OBSERVATION') {
+      logEndpointMid = 'observation';
+    }
+    navigate(`/archive/${logEndpointMid}/${scheduleId}/${logId}`);
+  };
   return (
     <SArchiveRecentLogsWrapper>
       <STitle>최근 조회</STitle>
@@ -107,7 +122,7 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
           return (
             <SRecentSearchItem
               key={item.id}
-              onClick={() => handleClickRecentLog(item.id)}
+              onClick={() => handleClickRecentLog(item.id, item.logType)}
             >
               <IcFile />
               <div>{item.studentName || item.title}</div>
