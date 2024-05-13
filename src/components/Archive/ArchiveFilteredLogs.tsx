@@ -1,24 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import {
   IcBlackDelete,
   IcCheckedBox,
   IcCloseDropdownSmall,
-  IcDelete,
-  IcFile,
   IcOpenDropdownSmall,
   IcUncheckedBox,
 } from '../../assets/icons';
 import instanceAxios from '../../utils/InstanceAxios';
 import {
   getAllClassLog,
-  getRecentLogs,
   getAllProceedings,
   getAllConsultations,
   getAllObservation,
-  getTodo,
 } from '../../utils/lib/api';
+import { useToggle } from '../../utils/useHooks/useToggle';
 
 const SDelete = styled.button`
   display: flex;
@@ -33,6 +31,9 @@ const SDelete = styled.button`
   margin-right: 20px;
   font-size: 16px;
   font-weight: 500;
+  > p {
+    padding-right: 3px;
+  }
 `;
 const SFilter = styled.button`
   display: flex;
@@ -68,7 +69,9 @@ const SDropdownList = styled.ul`
   z-index: 3;
 `;
 const SDropdownItem = styled.li`
+  display: flex;
   padding: 8px;
+  padding-left: 24px;
   cursor: pointer;
 
   &:hover {
@@ -85,7 +88,6 @@ const SLogContainer = styled.div`
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 5px;
-  cursor: pointer;
 `;
 const SCreatedAt = styled.div`
   margin-left: auto;
@@ -105,6 +107,10 @@ const SDate = styled.div`
 const SLogType = styled.span`
   padding-left: 0px;
 `;
+const SCheckedBox = styled.div`
+  padding-right: 20px;
+`;
+
 interface Archive {
   scheduleId: string | undefined;
 }
@@ -112,32 +118,21 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const navigate = useNavigate();
 
   const [filteredLogsList, setFilteredLogsList] = useState<any[]>([]);
-  const [isFilterDropdownOpen, setIsFilterDropdownOpen] =
-    useState<boolean>(false);
   const options = ['학급일지', '업무일지', '상담기록', '학생관찰기록'];
-  const [isShowCheckBox, setIsShowCheckBox] = useState<boolean>(false);
   const [currentFilteredOption, setCurrentFilteredOption] =
     useState<string>('');
-  const [isSelectedCheckBox, setIsSelectedCheckBox] = useState<number>();
-  const [checkedLogs, setCheckedLogs] = useState<{ [key: number]: boolean }>(
-    {},
-  );
+  const [isDelete, setIsDelete] = useState<boolean>(false);
+  const [checkedDeleteId, setCheckedDeleteId] = useState<number | null>(null);
+  const [logType, setLogType] = useState<string>('');
 
-  const handleClickShowCheckBox = () => {
-    setIsShowCheckBox((prev) => !prev);
+  const { handleChangeToggle, isToggle } = useToggle();
+
+  const handleDeleteModeActivate = () => {
+    setIsDelete(true);
   };
-  const handleClickCheckBox = (id: number) => {
-    setIsSelectedCheckBox(id);
-    setCheckedLogs((prev) => ({
-      ...prev,
-      [id]: !prev[id], // 토글
-    }));
-  };
-  const openFilterDropdown = () => {
-    setIsFilterDropdownOpen(true);
-  };
-  const closeFilterDropdown = () => {
-    setIsFilterDropdownOpen(false);
+  const handleDeletedCheck = (item: number, logType: string) => {
+    setLogType(logType);
+    setCheckedDeleteId((prev) => (prev === item ? null : item));
   };
 
   const handleClickFilter = async (option: string) => {
@@ -165,12 +160,12 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
         default:
           break;
       }
-      closeFilterDropdown();
+      handleChangeToggle();
     } catch (error) {
       console.error(error);
     }
   };
-  // 필터된 일지 정보 조회
+
   useEffect(() => {
     if (scheduleId) {
       const getClassLogData = async () => {
@@ -180,38 +175,47 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
       };
       getClassLogData();
     }
-  }, [scheduleId]);
+  }, []);
 
   const handleDelete = () => {
-    // 클릭한 값 삭제 기능
-    if (isSelectedCheckBox) {
-      console.log(1, isSelectedCheckBox);
+    let logEndPointMiddle = '';
 
-      if (currentFilteredOption === '학급일지') {
-        instanceAxios.delete(`/tnote/classLog/${isSelectedCheckBox}`);
-      }
-      if (currentFilteredOption === '업무일지') {
-        instanceAxios.delete(`/tnote/proceeding/${isSelectedCheckBox}`);
-      }
-      // if (currentFilteredOption === 'To-Do') {
-      //   instanceAxios.delete(
-      //     `/tnote/todos/${scheduleId}/${isSelectedCheckBox}`,
-      //   );
-      // }
-      if (currentFilteredOption === '상담기록') {
-        instanceAxios.delete(`/tnote/consultation/${isSelectedCheckBox}`);
-      }
-      if (currentFilteredOption === '학생관찰기록') {
-        instanceAxios.delete(`/tnote/observation/${isSelectedCheckBox}`);
-      }
+    if (logType === 'CLASS_LOG') {
+      logEndPointMiddle = 'classLog';
+    }
+    if (logType === 'PROCEEDING') {
+      logEndPointMiddle = 'proceeding';
+    }
+    if (logType === 'CONSULTATION') {
+      logEndPointMiddle = 'consultation';
+    }
+    if (logType === 'OBSERVATION') {
+      logEndPointMiddle = 'observation';
+    }
+    if (checkedDeleteId) {
+      Swal.fire({
+        title: '항목 삭제',
+        text: '정말 삭제하시겠습니까?',
+        confirmButtonText: '삭제',
+        cancelButtonText: '취소',
+        confirmButtonColor: '#632CFA',
+        showCancelButton: true,
+      }).then((res) => {
+        if (res.isConfirmed) {
+          instanceAxios.delete(
+            `/tnote/${logEndPointMiddle}/${checkedDeleteId}`,
+          );
+          window.location.reload();
+        }
+      });
+    } else {
+      Swal.fire({
+        text: '삭제할 항목을 선택해주세요',
+      });
     }
   };
 
-  // 클릭한 값으로 페이지 변환 함수
-  const handleChangePageAtLogs = (id: number, logType: string) => {
-    // if (id && logType) {
-    //   navigate(`archive/logDetail/${logType}/${id}`);
-    // }
+  const handleChangePageAtLogs = (id: number) => {
     if (currentFilteredOption === '학급일지' || currentFilteredOption === '') {
       navigate(`/archive/classLog/${id}`);
     } else if (currentFilteredOption === '업무일지') {
@@ -225,20 +229,21 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   return (
     <>
       <SArchiveButtons>
-        <SDelete onClick={handleClickShowCheckBox}>선택</SDelete>
-        <SDelete onClick={handleDelete}>
-          삭제
-          <IcBlackDelete />
-        </SDelete>
-
-        <SFilter>
+        {isDelete ? (
+          <SDelete onClick={handleDelete}>
+            <p>삭제</p>
+            <IcBlackDelete />
+          </SDelete>
+        ) : (
+          <SDelete onClick={handleDeleteModeActivate}>
+            <p>삭제</p>
+            <IcBlackDelete />
+          </SDelete>
+        )}
+        <SFilter onClick={handleChangeToggle}>
           필터
-          {isFilterDropdownOpen ? (
-            <IcCloseDropdownSmall onClick={closeFilterDropdown} />
-          ) : (
-            <IcOpenDropdownSmall onClick={openFilterDropdown} />
-          )}
-          {isFilterDropdownOpen && (
+          {isToggle ? <IcCloseDropdownSmall /> : <IcOpenDropdownSmall />}
+          {isToggle && (
             <SDropdownList>
               {options.map((option) => (
                 <SDropdownItem
@@ -265,66 +270,64 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
           filteredLogsList.map((item, index) => {
             const newTimestamp = item.createdAt.slice(0, 10);
             return (
-              <SLogContainer
-                key={index}
-                onClick={() => handleChangePageAtLogs(item.id, item.logType)}
-              >
-                {/* {isShowCheckBox &&
-                  (checkedLogs[item.id] ? (
-                    <IcCheckedBox
-                      className="pointer"
-                      onClick={() => handleClickCheckBox(item.id)}
-                    />
-                  ) : (
-                    <IcUncheckedBox
-                      className="pointer"
-                      onClick={() => handleClickCheckBox(item.id)}
-                    />
-                  ))} */}
+              <SLogContainer key={index}>
+                {isDelete && (
+                  <>
+                    {checkedDeleteId === item.id ? (
+                      <SCheckedBox>
+                        <IcCheckedBox
+                          onClick={() =>
+                            handleDeletedCheck(item.id, item.logType)
+                          }
+                        />
+                      </SCheckedBox>
+                    ) : (
+                      <SCheckedBox>
+                        <IcUncheckedBox
+                          onClick={() =>
+                            handleDeletedCheck(item.id, item.logType)
+                          }
+                        />
+                      </SCheckedBox>
+                    )}
+                  </>
+                )}
 
-                <div>{item.title || item.studentName}</div>
                 <div>
-                  <div>
-                    {(item.classContents === '' && (
-                      <SLogType>/학급일지</SLogType>
-                    )) ||
-                      (item.classContents && <SLogType>/학급일지</SLogType>)}
-                    {(item.workContents === '' && (
-                      <SLogType>/업무일지</SLogType>
-                    )) ||
-                      (item.workContents && <SLogType>/업무일지</SLogType>)}
-                    {(item.consultationContents === '' && (
-                      <SLogType>/상담기록</SLogType>
-                    )) ||
-                      (item.consultationContents && (
-                        <SLogType>/상담기록</SLogType>
-                      ))}
+                  {item.logType === 'CLASS_LOG' && (
+                    <SLogType
+                      className="pointer"
+                      onClick={() => handleChangePageAtLogs(item.id)}
+                    >
+                      <p>{item.title || item.studentName}/학급일지</p>
+                    </SLogType>
+                  )}
 
-                    {(item.observationContents === '' && (
-                      <SLogType>/학생 관찰 기록</SLogType>
-                    )) ||
-                      (item.observationContents && (
-                        <SLogType>/학생관찰기록</SLogType>
-                      ))}
-                  </div>
+                  {item.logType === 'PROCEEDING' && (
+                    <SLogType
+                      className="pointer"
+                      onClick={() => handleChangePageAtLogs(item.id)}
+                    >
+                      <p>{item.title || item.studentName}/업무일지</p>
+                    </SLogType>
+                  )}
+                  {item.logType === 'CONSULTATION' && (
+                    <SLogType
+                      className="pointer"
+                      onClick={() => handleChangePageAtLogs(item.id)}
+                    >
+                      <p>{item.title || item.studentName}/상담기록</p>
+                    </SLogType>
+                  )}
 
-                  {/* {item.classContents !== '' || item.classContents === '' ? (
-                    <span>학급일지</span>
-                  ) : null}
-                  {item.workContents !== '' || item.workContents === '' ? (
-                    <span>업무일지</span>
-                  ) : null}
-                  {item.consultationContents !== '' ||
-                  item.consultationContents === '' ? (
-                    <span>상담기록</span>
-                  ) : null}
-                  {item.observationContents !== '' ||
-                  item.observationContents === '' ? (
-                    <span>학생 관찰 기록</span>
-                  ) : null} */}
-                  {/* {item.workContents ||
-                    item.consultationContents ||
-                    item.observationContents} */}
+                  {item.logType === 'OBSERVATION' && (
+                    <SLogType
+                      className="pointer"
+                      onClick={() => handleChangePageAtLogs(item.id)}
+                    >
+                      <p>{item.title || item.studentName}/학생 관찰 기록</p>
+                    </SLogType>
+                  )}
                 </div>
                 <SCreatedAt>{newTimestamp}</SCreatedAt>
               </SLogContainer>
