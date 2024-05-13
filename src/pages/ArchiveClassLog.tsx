@@ -111,6 +111,7 @@ interface ClassLog {
 // 상태가 true라면 수정용 모달을 띄우기
 const ArchiveClassLog = () => {
   const { logId } = useParams();
+  const { scheduleId } = useParams();
   const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [reload, setReload] = useState<boolean>(false);
@@ -157,7 +158,9 @@ const ArchiveClassLog = () => {
       if (result.isConfirmed) {
         instanceAxios.delete(`/tnote/classLog/${logId}`);
         Swal.fire('삭제가 완료되었습니다.');
-        navigate(-1);
+        setTimeout(() => {
+          navigate(`/archiveSemesterDetail/${scheduleId}`);
+        }, 100);
       }
     });
   };

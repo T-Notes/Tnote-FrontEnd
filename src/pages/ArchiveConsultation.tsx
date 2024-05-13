@@ -107,6 +107,7 @@ interface Consultation {
 }
 const ArchiveConsultation = () => {
   const { logId } = useParams();
+  const { scheduleId } = useParams();
   const navigate = useNavigate();
   const [consultationLogData, setConsultationLogData] = useState<Consultation>({
     studentName: '',
@@ -151,8 +152,9 @@ const ArchiveConsultation = () => {
       if (result.isConfirmed) {
         instanceAxios.delete(`/tnote/consultation/${logId}`);
         Swal.fire('삭제가 완료되었습니다.');
-
-        navigate(-1);
+        setTimeout(() => {
+          navigate(`/archiveSemesterDetail/${scheduleId}`);
+        }, 100);
       }
     });
   };

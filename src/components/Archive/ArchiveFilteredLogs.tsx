@@ -124,6 +124,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [checkedDeleteId, setCheckedDeleteId] = useState<number | null>(null);
   const [logType, setLogType] = useState<string>('');
+  // const [reload, setReload] = useState<boolean>(false);
 
   const { handleChangeToggle, isToggle } = useToggle();
 
@@ -167,9 +168,12 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   };
 
   useEffect(() => {
+    console.log('렌더링!');
+
     if (scheduleId) {
       const getClassLogData = async () => {
         const res = await getAllClassLog(scheduleId);
+        console.log(res.data.classLogs);
 
         setFilteredLogsList(res.data.classLogs);
       };
@@ -217,13 +221,13 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
 
   const handleChangePageAtLogs = (id: number) => {
     if (currentFilteredOption === '학급일지' || currentFilteredOption === '') {
-      navigate(`/archive/classLog/${id}`);
+      navigate(`/archive/classLog/${scheduleId}/${id}`);
     } else if (currentFilteredOption === '업무일지') {
-      navigate(`/archive/proceeding/${id}`);
+      navigate(`/archive/proceeding/${scheduleId}/${id}`);
     } else if (currentFilteredOption === '상담기록') {
-      navigate(`/archive/consultation/${id}`);
+      navigate(`/archive/consultation/${scheduleId}/${id}`);
     } else if (currentFilteredOption === '학생관찰기록') {
-      navigate(`/archive/observation/${id}`);
+      navigate(`/archive/observation/${scheduleId}/${id}`);
     }
   };
   return (

@@ -45,19 +45,19 @@ const Router = () => {
           <Route path="/archive" element={<Archive />} />
           <Route path="/archive/:scheduleId" element={<Archive />} />
           <Route
-            path="/archive/classLog/:logId"
+            path="/archive/classLog/:scheduleId/:logId"
             element={<ArchiveClassLog />}
           />
           <Route
-            path="/archive/proceeding/:logId"
+            path="/archive/proceeding/:scheduleId/:logId"
             element={<ArchiveProceeding />}
           />
           <Route
-            path="/archive/consultation/:logId"
+            path="/archive/consultation/:scheduleId/:logId"
             element={<ArchiveConsultation />}
           />
           <Route
-            path="/archive/observation/:logId"
+            path="/archive/observation/:scheduleId/:logId"
             element={<ArchiveObservation />}
           />
           <Route

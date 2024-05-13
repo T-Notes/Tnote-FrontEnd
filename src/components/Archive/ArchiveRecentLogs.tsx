@@ -64,6 +64,8 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
         const getRecentData = async () => {
           const response = await getRecentLogs();
           const data = response.data;
+          console.log(data);
+
           if (data) {
             const promises = data.map(async (item: RecentLogs) => {
               let recentEndPoint = '';

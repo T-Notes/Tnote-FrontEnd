@@ -105,6 +105,7 @@ interface Proceeding {
 
 const ArchiveProceeding = () => {
   const { logId } = useParams();
+  const { scheduleId } = useParams();
   const navigate = useNavigate();
   const [proceedingLogData, setProceedingLogData] = useState<Proceeding>({
     title: '',
@@ -144,7 +145,9 @@ const ArchiveProceeding = () => {
       if (result.isConfirmed) {
         instanceAxios.delete(`/tnote/proceeding/${logId}`);
         Swal.fire('삭제가 완료되었습니다.');
-        navigate(-1);
+        setTimeout(() => {
+          navigate(`/archiveSemesterDetail/${scheduleId}`);
+        }, 100);
       }
     });
   };
