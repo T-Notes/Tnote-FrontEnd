@@ -105,8 +105,8 @@ interface Consultation {
   endDate: string;
 }
 const ArchiveConsultation = () => {
-  const { logId } = useParams();
-  const { scheduleId } = useParams();
+  const { logId, scheduleId } = useParams();
+
   const navigate = useNavigate();
   const [consultationLogData, setConsultationLogData] = useState<Consultation>({
     studentName: '',

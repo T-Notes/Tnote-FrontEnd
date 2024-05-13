@@ -104,8 +104,8 @@ interface Proceeding {
 }
 
 const ArchiveObservation = () => {
-  const { logId } = useParams();
-  const { scheduleId } = useParams();
+  const { logId, scheduleId } = useParams();
+
   const navigate = useNavigate();
   const [observationLogData, setObservationLogData] = useState<Proceeding>({
     studentName: '',

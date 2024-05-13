@@ -110,14 +110,14 @@ interface ClassLog {
 // 수정 버튼을 클릭 -> 상태를 수정 상태로 변경
 // 상태가 true라면 수정용 모달을 띄우기
 const ArchiveClassLog = () => {
-  const { logId } = useParams();
-  const { scheduleId } = useParams();
+  const { logId, scheduleId } = useParams();
   const navigate = useNavigate();
-
   const { openModal } = useModals();
 
+  const [isEdit, setIsEdit] = useState<boolean>(true);
   const handleClickEdit = () => {
-    openModal(ClassLogModal, { logId });
+    setIsEdit(true);
+    openModal(ClassLogModal, { logId, scheduleId, isEdit });
   };
   const [classLogData, setClassLogData] = useState<ClassLog>({
     id: null,

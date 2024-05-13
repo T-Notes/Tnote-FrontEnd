@@ -103,8 +103,8 @@ interface Proceeding {
 }
 
 const ArchiveProceeding = () => {
-  const { logId } = useParams();
-  const { scheduleId } = useParams();
+  const { logId, scheduleId } = useParams();
+
   const navigate = useNavigate();
   const [proceedingLogData, setProceedingLogData] = useState<Proceeding>({
     title: '',
