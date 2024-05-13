@@ -60,7 +60,8 @@ const AllSemesterNamesForm = () => {
     const getSemesterId = async () => {
       const response = await getUserInfo(user);
       const scheduleId = response.data.scheduleId;
-      setDefaultSemester(scheduleId);
+      const semesterName = response.data.semesterName;
+      setDefaultSemester(semesterName);
       currentUrl.pathname.includes('home')
         ? navigate(`/home/${scheduleId}`)
         : navigate(`/timetable/${scheduleId}`);
