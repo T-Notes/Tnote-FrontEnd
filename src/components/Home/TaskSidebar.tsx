@@ -118,7 +118,6 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
             const allData = await getAllTaskByDate(scheduleId, clickedDate);
 
             const logData = allData.data;
-            console.log('logData', logData);
 
             setTodo(logData.todos);
             setClassLogContent(logData.classLogs);
