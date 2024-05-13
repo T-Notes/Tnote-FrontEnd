@@ -193,7 +193,7 @@ const ScheduleCalendar = ({
   };
 
   const handleLogsSearch = async () => {
-    const getSearchValue = await getSearchLogsValue(searchValue);
+    const getSearchValue = await getSearchLogsValue(searchValue, scheduleId);
     setSetSearchValueList(getSearchValue.data);
   };
 
