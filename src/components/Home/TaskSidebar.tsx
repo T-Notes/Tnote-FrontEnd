@@ -146,16 +146,16 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
     }
   }, [reload, scheduleId, clickedDate]);
 
-  const handleOpenClassLogIdModal = (logId: any) => {
+  const handleOpenClassLogIdModal = (logId: number) => {
     openModal(ClassLogModal, { logId });
   };
-  const handleOpenProceedingIdModal = (logId: any) => {
+  const handleOpenProceedingIdModal = (logId: number) => {
     openModal(WorkLogModal, { logId });
   };
-  const handleOpenConsultationIdModal = (logId: any) => {
+  const handleOpenConsultationIdModal = (logId: number) => {
     openModal(ConsultationRecordsModal, { logId });
   };
-  const handleOpenObservationIdModal = (logId: any) => {
+  const handleOpenObservationIdModal = (logId: number) => {
     openModal(StudentRecordsModal, { logId });
   };
 
