@@ -413,11 +413,17 @@ export const getRecentLogs = async () => {
 
 // 일지 검색
 
-export const getSearchLogsValue = async (keyword: string) => {
+export const getSearchLogsValue = async (
+  keyword: string,
+  scheduleId: string | undefined,
+) => {
   try {
-    const response = await instanceAxios.get('/tnote/home/searching', {
-      params: { keyword: keyword },
-    });
+    const response = await instanceAxios.get(
+      `/tnote/home/searching/${scheduleId}`,
+      {
+        params: { keyword: keyword },
+      },
+    );
     return response.data;
   } catch {}
 };
