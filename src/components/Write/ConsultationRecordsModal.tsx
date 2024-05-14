@@ -129,6 +129,7 @@ const ConsultationRecordsModal = ({
   handleClickOpenModal,
   logId,
   scheduleId,
+  isEdit,
 }: CustomModalProps) => {
   const [title, setTitle] = useState<string>('');
   const [counselingContent, setCounselingContent] = useState<string>('');
@@ -284,7 +285,8 @@ const ConsultationRecordsModal = ({
         label="상담기록"
         options={['학급일지', '업무일지', '학생 관찰 일지']}
         onClickDropdownOpenModal={handleClickOpenModal}
-        closeWriteModal={onClose}
+        onClose={onClose}
+        isEdit={isEdit}
       />
       <WritingModalTop
         titleLabel={'학생 이름'}

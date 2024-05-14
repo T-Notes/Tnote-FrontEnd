@@ -114,9 +114,8 @@ const ArchiveClassLog = () => {
   const navigate = useNavigate();
   const { openModal } = useModals();
 
-  const [isEdit, setIsEdit] = useState<boolean>(true);
+  const isEdit = true;
   const handleClickEdit = () => {
-    setIsEdit(true);
     openModal(ClassLogModal, { logId, scheduleId, isEdit });
   };
   const [classLogData, setClassLogData] = useState<ClassLog>({

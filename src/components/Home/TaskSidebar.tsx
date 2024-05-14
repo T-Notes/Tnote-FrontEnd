@@ -100,6 +100,7 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
   const [observationContent, setObservationContent] = useState<Task[]>([]);
   const [todo, setTodo] = useState<Task[]>([]);
   const [reload, setReload] = useState<boolean>(false);
+  const isEdit = true;
   const currentDate = new Date().toISOString().slice(0, 10);
 
   const formattedDate = clickedDate
@@ -146,16 +147,16 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
   }, [reload, scheduleId, clickedDate]);
 
   const handleOpenClassLogIdModal = (logId: number) => {
-    openModal(ClassLogModal, { logId });
+    openModal(ClassLogModal, { scheduleId, logId, isEdit });
   };
   const handleOpenProceedingIdModal = (logId: number) => {
-    openModal(WorkLogModal, { logId });
+    openModal(WorkLogModal, { scheduleId, logId, isEdit });
   };
   const handleOpenConsultationIdModal = (logId: number) => {
-    openModal(ConsultationRecordsModal, { logId });
+    openModal(ConsultationRecordsModal, { scheduleId, logId, isEdit });
   };
   const handleOpenObservationIdModal = (logId: number) => {
-    openModal(StudentRecordsModal, { logId });
+    openModal(StudentRecordsModal, { scheduleId, logId, isEdit });
   };
 
   return (

@@ -119,8 +119,10 @@ const ArchiveConsultation = () => {
   });
 
   const { openModal } = useModals();
+  const isEdit = true;
+
   const handleClickEdit = () => {
-    openModal(ConsultationRecordsModal, { logId });
+    openModal(ConsultationRecordsModal, { logId, isEdit });
   };
 
   useEffect(() => {

@@ -66,6 +66,7 @@ const StudentRecordsModal = ({
   handleClickOpenModal,
   logId,
   scheduleId,
+  isEdit,
 }: CustomModalProps) => {
   const [title, setTitle] = useState<string>(''); //제목 상태
   const [observationContent, setObservationContent] = useState<string>('');
@@ -191,7 +192,8 @@ const StudentRecordsModal = ({
         label="학생 관찰 일지"
         options={['학급일지', '업무일지', '상담기록']}
         onClickDropdownOpenModal={handleClickOpenModal}
-        closeWriteModal={onClose}
+        onClose={onClose}
+        isEdit={isEdit}
       />
       <WritingModalTop
         titleLabel={'학생 이름'}

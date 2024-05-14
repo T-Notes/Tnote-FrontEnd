@@ -120,6 +120,7 @@ const WorkLogModal = ({
   handleClickOpenModal,
   logId,
   scheduleId,
+  isEdit,
 }: CustomModalProps) => {
   const [title, setTitle] = useState<string>('');
   const [place, setPlace] = useState<string>('');
@@ -247,7 +248,8 @@ const WorkLogModal = ({
             label="업무일지"
             options={['학급일지', '상담기록', '학생 관찰 일지']}
             onClickDropdownOpenModal={handleClickOpenModal}
-            closeWriteModal={onClose}
+            onClose={onClose}
+            isEdit={isEdit}
           />
           <WritingModalTop
             titleLabel={'제목'}

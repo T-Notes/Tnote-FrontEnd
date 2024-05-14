@@ -36,16 +36,16 @@ interface Props {
 const ScheduleCalendarSearchValue = ({ searchValueList }: Props) => {
   const { scheduleId } = useParams();
   const { openModal } = useModals();
-
+  const isEdit = true;
   const handleClickOpenLogModal = (logId: number, logType: string) => {
     if (logType === 'CLASS_LOG') {
-      openModal(ClassLogModal, { logId, scheduleId });
+      openModal(ClassLogModal, { logId, scheduleId, isEdit });
     } else if (logType === 'PROCEEDING') {
-      openModal(WorkLogModal, { logId, scheduleId });
+      openModal(WorkLogModal, { logId, scheduleId, isEdit });
     } else if (logType === 'CONSULTATION') {
-      openModal(ConsultationRecordsModal, { logId, scheduleId });
+      openModal(ConsultationRecordsModal, { logId, scheduleId, isEdit });
     } else if (logType === 'OBSERVATION') {
-      openModal(StudentRecordsModal, { logId, scheduleId });
+      openModal(StudentRecordsModal, { logId, scheduleId, isEdit });
     }
   };
   console.log(searchValueList);
