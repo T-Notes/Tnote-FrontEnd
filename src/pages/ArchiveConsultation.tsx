@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcGoBack } from '../assets/icons';
+import ArchiveContent from '../components/Archive/ArchiveContent';
 import ConsultationRecordsModal from '../components/Write/ConsultationRecordsModal';
 import { formatDate } from '../utils/formatDate';
 import instanceAxios from '../utils/InstanceAxios';
@@ -103,6 +104,7 @@ interface Consultation {
   counselingType: string;
   startDate: string;
   endDate: string;
+  consultationImageUrls: string;
 }
 const ArchiveConsultation = () => {
   const { logId, scheduleId } = useParams();
@@ -116,6 +118,7 @@ const ArchiveConsultation = () => {
     counselingType: '',
     startDate: '',
     endDate: '',
+    consultationImageUrls: '',
   });
 
   const { openModal } = useModals();
@@ -128,6 +131,7 @@ const ArchiveConsultation = () => {
   useEffect(() => {
     const getDetailData = async () => {
       const res = await getConsultationDetailData(logId);
+
       setConsultationLogData({
         studentName: res.data.studentName,
         consultationContents: res.data.consultationContents,
@@ -136,6 +140,7 @@ const ArchiveConsultation = () => {
         counselingType: res.data.counselingType,
         startDate: res.data.startDate.slice(0, 10),
         endDate: res.data.endDate.slice(0, 10),
+        consultationImageUrls: res.data.consultationImageUrls,
       });
     };
     getDetailData();
@@ -177,15 +182,20 @@ const ArchiveConsultation = () => {
             )} ~ ${formatDate(consultationLogData.endDate)}`}</SDate>
           </STitleAndDate>
           <STextareaContainer>
-            <SLabel>상담내용</SLabel>
-            <STextarea
-              readOnly
-              defaultValue={consultationLogData.consultationContents}
+            <ArchiveContent
+              label="상담내용"
+              contentValue={consultationLogData.consultationContents}
+              isFile={false}
             />
-            <SLabel>상담결과</SLabel>
-            <STextarea
-              readOnly
-              defaultValue={consultationLogData.consultationResult}
+            <ArchiveContent
+              label="상담결과"
+              contentValue={consultationLogData.consultationResult}
+              isFile={false}
+            />
+            <ArchiveContent
+              label="첨부파일"
+              contentValue={consultationLogData.consultationImageUrls}
+              isFile={true}
             />
           </STextareaContainer>
           <SButtons>

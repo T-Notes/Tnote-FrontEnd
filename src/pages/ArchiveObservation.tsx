@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcGoBack } from '../assets/icons';
+import ArchiveContent from '../components/Archive/ArchiveContent';
 import StudentRecordsModal from '../components/Write/StudentRecordsModal';
 import { formatDate } from '../utils/formatDate';
 import instanceAxios from '../utils/InstanceAxios';
@@ -101,6 +102,7 @@ interface Proceeding {
   observationContents: string;
   startDate: string;
   endDate: string;
+  observationImageUrls: string;
 }
 
 const ArchiveObservation = () => {
@@ -113,6 +115,7 @@ const ArchiveObservation = () => {
     observationContents: '',
     startDate: '',
     endDate: '',
+    observationImageUrls: '',
   });
   const { openModal } = useModals();
   const isEdit = true;
@@ -124,12 +127,14 @@ const ArchiveObservation = () => {
   useEffect(() => {
     const getDetailData = async () => {
       const res = await getObservationDetailData(logId);
+
       setObservationLogData({
         studentName: res.data.studentName,
         guidance: res.data.guidance,
         observationContents: res.data.observationContents,
         startDate: res.data.startDate,
         endDate: res.data.endDate,
+        observationImageUrls: res.data.observationImageUrls,
       });
     };
     getDetailData();
@@ -169,13 +174,21 @@ const ArchiveObservation = () => {
             )}`}</SDate>
           </STitleAndDate>
           <STextareaContainer>
-            <SLabel>관찰내용</SLabel>
-            <STextarea
-              readOnly
-              defaultValue={observationLogData.observationContents}
+            <ArchiveContent
+              label="관찰내용"
+              contentValue={observationLogData.observationContents}
+              isFile={false}
             />
-            <SLabel>해석 및 지도방안</SLabel>
-            <STextarea readOnly defaultValue={observationLogData.guidance} />
+            <ArchiveContent
+              label="관찰결과"
+              contentValue={observationLogData.guidance}
+              isFile={false}
+            />
+            <ArchiveContent
+              label="첨부파일"
+              contentValue={observationLogData.observationImageUrls}
+              isFile={true}
+            />
           </STextareaContainer>
           <SButtons>
             <SDelete onClick={handleDelete}>삭제</SDelete>

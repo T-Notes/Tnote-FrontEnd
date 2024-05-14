@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcGoBack } from '../assets/icons';
+import ArchiveContent from '../components/Archive/ArchiveContent';
 import WorkLogModal from '../components/Write/WorkLogModal';
 import { formatDate } from '../utils/formatDate';
 import instanceAxios from '../utils/InstanceAxios';
@@ -100,6 +101,7 @@ interface Proceeding {
   workContents: string;
   startDate: string;
   endDate: string;
+  proceedingImageUrls: string;
 }
 
 const ArchiveProceeding = () => {
@@ -111,6 +113,7 @@ const ArchiveProceeding = () => {
     workContents: '',
     startDate: '',
     endDate: '',
+    proceedingImageUrls: '',
   });
   const { openModal } = useModals();
   const isEdit = true;
@@ -123,12 +126,15 @@ const ArchiveProceeding = () => {
     const getDetailData = async () => {
       const res = await getProceedingDetailData(logId);
       const data = res.data;
+      console.log(data);
 
       setProceedingLogData({
         title: data.title,
         workContents: data.workContents,
         startDate: data.startDate,
         endDate: data.endDate,
+
+        proceedingImageUrls: data.proceedingImageUrls,
       });
     };
     getDetailData();
@@ -167,8 +173,16 @@ const ArchiveProceeding = () => {
           )}`}</SDate>
         </STitleAndDate>
         <STextareaContainer>
-          <SLabel>회의록</SLabel>
-          <STextarea readOnly defaultValue={proceedingLogData.workContents} />
+          <ArchiveContent
+            label="업무일지"
+            contentValue={proceedingLogData.workContents}
+            isFile={false}
+          />
+          <ArchiveContent
+            label="첨부파일"
+            contentValue={proceedingLogData.proceedingImageUrls}
+            isFile={true}
+          />
         </STextareaContainer>
         <SButtons>
           <SDelete onClick={handleDelete}>삭제</SDelete>

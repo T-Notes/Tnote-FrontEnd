@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcGoBack } from '../assets/icons';
+import ArchiveContent from '../components/Archive/ArchiveContent';
 import ClassLogModal from '../components/Write/ClassLogModal';
 import { formatDate } from '../utils/formatDate';
 import instanceAxios from '../utils/InstanceAxios';
@@ -46,26 +47,10 @@ const SDate = styled.div`
   font-size: 16px;
   font-weight: 500;
 `;
-const SLabel = styled.label`
-  font-size: 17px;
-  font-weight: 600;
-  padding-bottom: 10px;
-`;
+
 const STextareaContainer = styled.div`
   display: flex;
   flex-direction: column;
-`;
-const STextarea = styled.textarea`
-  height: 130px;
-  width: 100%;
-  color: #a6a6a6;
-  overflow-y: scroll;
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #a6a6a6;
-  background: #ffff;
-  margin-bottom: 15px;
-  margin-bottom: 30px;
 `;
 
 const SDelete = styled.button`
@@ -106,6 +91,7 @@ interface ClassLog {
   magnitude: string;
   plan: string;
   submission: string;
+  classLogImageUrls: string;
 }
 // 수정 버튼을 클릭 -> 상태를 수정 상태로 변경
 // 상태가 true라면 수정용 모달을 띄우기
@@ -127,11 +113,13 @@ const ArchiveClassLog = () => {
     magnitude: '',
     plan: '',
     submission: '',
+    classLogImageUrls: '',
   });
 
   useEffect(() => {
     const getDetailData = async () => {
       const res = await getClassLogDetailData(logId);
+
       setClassLogData({
         id: res.data.id,
         title: res.data.title,
@@ -141,6 +129,7 @@ const ArchiveClassLog = () => {
         magnitude: res.data.magnitude,
         plan: res.data.plan,
         submission: res.data.submission,
+        classLogImageUrls: res.data.classLogImageUrls,
       });
     };
     getDetailData();
@@ -182,14 +171,31 @@ const ArchiveClassLog = () => {
           )}`}</SDate>
         </STitleAndDate>
         <STextareaContainer>
-          <SLabel>학급계획</SLabel>
-          <STextarea readOnly defaultValue={classLogData.plan} />
-          <SLabel>수업내용</SLabel>
-          <STextarea readOnly defaultValue={classLogData.classContents} />
-          <SLabel>제출과제</SLabel>
-          <STextarea readOnly defaultValue={classLogData.submission} />
-          <SLabel>진도표</SLabel>
-          <STextarea readOnly defaultValue={classLogData.magnitude} />
+          <ArchiveContent
+            label="학급계획"
+            contentValue={classLogData.plan}
+            isFile={false}
+          />
+          <ArchiveContent
+            label="수업내용"
+            contentValue={classLogData.classContents}
+            isFile={false}
+          />
+          <ArchiveContent
+            label="제출과제"
+            contentValue={classLogData.submission}
+            isFile={false}
+          />
+          <ArchiveContent
+            label="진도표"
+            contentValue={classLogData.magnitude}
+            isFile={false}
+          />
+          <ArchiveContent
+            label="첨부파일"
+            contentValue={classLogData.classLogImageUrls}
+            isFile={true}
+          />
         </STextareaContainer>
         <SButtons>
           <SDelete onClick={handleDelete}>삭제</SDelete>
