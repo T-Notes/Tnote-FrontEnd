@@ -68,6 +68,28 @@ instanceAxios.interceptors.response.use(
           }
         });
       }
+    } else {
+      Swal.fire({
+        title: '문제가 발생했습니다.',
+        text: '로그아웃 후 다시 이용해주세요.',
+        showCancelButton: true,
+        confirmButtonColor: '#632CFA',
+        cancelButtonColor: '#E8E8E8',
+        confirmButtonText: '로그아웃',
+        cancelButtonText: '취소',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: '로그아웃!',
+            text: '정상적으로 로그아웃 되었습니다.',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              localStorage.clear();
+              window.location.href = '/';
+            }
+          });
+        }
+      });
     }
 
     // 토큰 만료 이외의 다른 오류 처리
