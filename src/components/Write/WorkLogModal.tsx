@@ -161,6 +161,50 @@ const WorkLogModal = ({
 
   const handleClickSubmit = async () => {
     if (scheduleId) {
+      if (isEdit) {
+        const editData = {
+          title,
+          startDate: new Date(
+            date.startDate.getTime() -
+              date.startDate.getTimezoneOffset() * 60000,
+          ),
+          endDate: new Date(
+            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+          ),
+          location: place,
+          workContents: workContents,
+          isAllDay: parentsIsAllDay,
+        };
+
+        // 이미지 파일
+        if (imgUrl.length >= 1) {
+          for (let i = 0; i < imgUrl.length; i++) {
+            formData.append('proceedingImages', imgUrl[i]);
+          }
+        }
+        console.log(formData.getAll('proceedingImages'));
+
+        const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
+          type: 'application/json',
+        });
+        formData.append('updateRequestDto', jsonDataTypeValue);
+
+        const accessToken = localStorage.getItem('accessToken');
+
+        await axios.patch(
+          `https://j9972.kr/tnote/proceeding/${logId}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${accessToken}`,
+              accept: 'application/json',
+            },
+          },
+        );
+        window.location.reload();
+        onClose();
+      }
       try {
         const logData = {
           title,

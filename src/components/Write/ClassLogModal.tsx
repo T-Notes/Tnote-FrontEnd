@@ -9,7 +9,7 @@ import { IcPen } from '../../assets/icons';
 import Swal from 'sweetalert2';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import ReactModal from 'react-modal';
-import { getClassLogDetailData } from '../../utils/lib/api';
+import { getClassLogDetailData, patchClassLog } from '../../utils/lib/api';
 import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 
 const STextarea = styled.textarea`
@@ -79,6 +79,7 @@ export interface CustomModalProps {
   handleClickOpenModal: (option: string) => void;
   logId: number;
   scheduleId: number;
+  isEdit: boolean;
 }
 export interface DateProps {
   startDate: Date;
@@ -90,6 +91,7 @@ const ClassLogModal = ({
   handleClickOpenModal,
   logId,
   scheduleId,
+  isEdit,
 }: CustomModalProps) => {
   const formData = new FormData();
   const [title, setTitle] = useState<string>('');
@@ -112,10 +114,6 @@ const ClassLogModal = ({
   });
   const isFormValid =
     title && date.startDate && date.endDate && saveContents[contentType];
-
-  const handleModalClose = () => {
-    onClose();
-  };
 
   const handleContentTypeChange = (type: keyof SaveContents) => {
     setContentType(type);
@@ -146,8 +144,8 @@ const ClassLogModal = ({
 
   const handleClickSubmit = async () => {
     if (scheduleId) {
-      try {
-        const logData = {
+      if (isEdit) {
+        const editData = {
           title: title,
           startDate: new Date(
             date.startDate.getTime() -
@@ -162,23 +160,22 @@ const ClassLogModal = ({
           magnitude: saveContents.진도표,
           isAllDay: parentsIsAllDay,
         };
-
-        // 이미지 파일
+        // await patchClassLog(String(logId), editData);
         if (imgUrl.length >= 1) {
           for (let i = 0; i < imgUrl.length; i++) {
             formData.append('classLogImages', imgUrl[i]);
           }
         }
 
-        const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+        const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
           type: 'application/json',
         });
-        formData.append('classLogRequestDto', jsonDataTypeValue);
+        formData.append('classLogUpdateRequestDto', jsonDataTypeValue);
 
         const accessToken = localStorage.getItem('accessToken');
 
-        await axios.post(
-          `https://j9972.kr/tnote/classLog/${scheduleId}`,
+        await axios.patch(
+          `https://j9972.kr/tnote/classLog/${logId}`,
           formData,
           {
             headers: {
@@ -189,9 +186,55 @@ const ClassLogModal = ({
           },
         );
         window.location.reload();
-        handleModalClose();
-      } catch (err) {
-        console.log(err);
+        onClose();
+      } else {
+        try {
+          const logData = {
+            title: title,
+            startDate: new Date(
+              date.startDate.getTime() -
+                date.startDate.getTimezoneOffset() * 60000,
+            ),
+            endDate: new Date(
+              date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+            ),
+            plan: saveContents.학습계획,
+            classContents: saveContents.수업내용,
+            submission: saveContents.제출과제,
+            magnitude: saveContents.진도표,
+            isAllDay: parentsIsAllDay,
+          };
+
+          // 이미지 파일
+          if (imgUrl.length >= 1) {
+            for (let i = 0; i < imgUrl.length; i++) {
+              formData.append('classLogImages', imgUrl[i]);
+            }
+          }
+
+          const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+            type: 'application/json',
+          });
+          formData.append('classLogRequestDto', jsonDataTypeValue);
+
+          const accessToken = localStorage.getItem('accessToken');
+
+          await axios.post(
+            `https://j9972.kr/tnote/classLog/${scheduleId}`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${accessToken}`,
+                accept: 'application/json',
+              },
+            },
+          );
+          window.location.reload();
+          onClose();
+        } catch (err) {
+          console.log(err);
+        }
       }
     } else {
       Swal.fire({
@@ -206,7 +249,6 @@ const ClassLogModal = ({
       getClassLogDetailData(String(logId))
         .then((response) => {
           const data = response.data;
-          console.log(30, data);
 
           setTitle(data.title);
 
@@ -238,7 +280,8 @@ const ClassLogModal = ({
           label="학급일지"
           options={['업무일지', '상담기록', '학생 관찰 일지']}
           onClickDropdownOpenModal={handleClickOpenModal}
-          closeWriteModal={handleModalClose}
+          onClose={onClose}
+          isEdit={isEdit}
         />
         <WritingModalTop
           titleLabel={'제목'}

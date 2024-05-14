@@ -76,7 +76,6 @@ export interface WritingModalProps {
 
 const WriteDropdown = (props: WritingModalProps) => {
   const { label, options, onClickDropdownOpenModal, onClose, isEdit } = props;
-  console.log(isEdit);
 
   const { isToggle, handleChangeToggle } = useToggle();
   const handleClickDropdownOpenModal = (option: string) => {

@@ -121,7 +121,7 @@ const ArchiveObservation = () => {
   const isEdit = true;
 
   const handleClickEdit = () => {
-    openModal(StudentRecordsModal, { logId, isEdit });
+    openModal(StudentRecordsModal, { scheduleId, logId, isEdit });
   };
 
   useEffect(() => {

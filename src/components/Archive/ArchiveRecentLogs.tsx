@@ -79,7 +79,6 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
               }
               if (recentEndPoint) {
                 const response = await instanceAxios.get(recentEndPoint);
-                console.log(33, response.data.data);
 
                 return response.data.data;
               }
@@ -95,7 +94,6 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
       }
     }
   }, [scheduleId]);
-  console.log('newRecentLogs', newRecentLogs);
 
   const handleClickRecentLog = (logId: number, logType: string) => {
     let logEndpointMid = '';

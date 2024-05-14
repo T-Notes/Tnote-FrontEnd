@@ -182,7 +182,54 @@ const ConsultationRecordsModal = ({
   };
 
   const handleClickSubmit = async () => {
+    console.log(scheduleId);
+
     if (scheduleId) {
+      if (isEdit) {
+        const editData = {
+          studentName: title,
+          startDate: new Date(
+            date.startDate.getTime() -
+              date.startDate.getTimezoneOffset() * 60000,
+          ),
+          endDate: new Date(
+            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+          ),
+          counselingField: selectedCounselingButton,
+          counselingType: selectedTargetButton,
+          consultationContents: counselingContent,
+          consultationResult: counselingResult,
+          isAllDay: parentsIsAllDay,
+        };
+
+        // 이미지 파일
+        if (imgUrl.length >= 1) {
+          for (let i = 0; i < imgUrl.length; i++) {
+            formData.append('consultationImages', imgUrl[i]);
+          }
+        }
+
+        const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
+          type: 'application/json',
+        });
+        formData.append('requestDto', jsonDataTypeValue);
+
+        const accessToken = localStorage.getItem('accessToken');
+
+        await axios.patch(
+          `https://j9972.kr/tnote/consultation/${logId}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${accessToken}`,
+              accept: 'application/json',
+            },
+          },
+        );
+        window.location.reload();
+        onClose();
+      }
       try {
         const logData = {
           studentName: title,
@@ -197,7 +244,7 @@ const ConsultationRecordsModal = ({
           counselingType: selectedTargetButton,
           consultationContents: counselingContent,
           consultationResult: counselingResult,
-          isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
+          isAllDay: parentsIsAllDay,
         };
 
         if (!logData.counselingField || !logData.counselingType) {
@@ -257,7 +304,6 @@ const ConsultationRecordsModal = ({
     if (logId) {
       getConsultationDetailData(String(logId))
         .then((response) => {
-          console.log(2, response.data);
           const data = response.data;
           setTitle(data.studentName);
           setCounselingContent(data.consultationContents);

@@ -119,7 +119,7 @@ const ArchiveProceeding = () => {
   const isEdit = true;
 
   const handleClickEdit = () => {
-    openModal(WorkLogModal, { logId, isEdit });
+    openModal(WorkLogModal, { scheduleId, logId, isEdit });
   };
 
   useEffect(() => {

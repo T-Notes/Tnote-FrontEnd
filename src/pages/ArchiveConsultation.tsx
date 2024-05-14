@@ -125,7 +125,7 @@ const ArchiveConsultation = () => {
   const isEdit = true;
 
   const handleClickEdit = () => {
-    openModal(ConsultationRecordsModal, { logId, isEdit });
+    openModal(ConsultationRecordsModal, { scheduleId, logId, isEdit });
   };
 
   useEffect(() => {
