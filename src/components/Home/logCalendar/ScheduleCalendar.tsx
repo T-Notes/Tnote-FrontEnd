@@ -18,7 +18,7 @@ import {
 import SearchInput from '../../common/SearchInput';
 import { Button } from '../../common/styled/Button';
 import { useParams } from 'react-router-dom';
-import { getAllLogs, getSearchLogsValue } from '../../../utils/lib/api';
+import { getAllLogsByMonth, getSearchLogsValue } from '../../../utils/lib/api';
 import ScheduleCalendarSearchValue from '../../search/ScheduleCalendarSearchValue';
 import MoreLogModal from './MoreLogModal';
 import useRandomColor from '../../../utils/useHooks/useRandomColor';
@@ -158,7 +158,7 @@ const ScheduleCalendar = ({
         const getMonthlyLogs = async () => {
           const formattedDate = format(currentDate, 'yyyy-MM-dd');
 
-          const response = await getAllLogs(scheduleId, formattedDate);
+          const response = await getAllLogsByMonth(scheduleId, formattedDate);
 
           const { classLogs, consultations, proceedings, observations } =
             response.data;
