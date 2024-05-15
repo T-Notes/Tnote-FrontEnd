@@ -462,16 +462,7 @@ export const getFilteredLogsByDate = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `tnote/home/${scheduleId}/dateLogs`,
-      {
-        params: {
-          startDate: startDate,
-          endDate: endDate,
-          page: 0,
-          size: 8,
-          logType: logType,
-        },
-      },
+      `tnote/home/${scheduleId}/dateLogs?startDate=${startDate}&endDate=${endDate}&page=0&size=8&logType=${logType}`,
     );
 
     return response.data;
