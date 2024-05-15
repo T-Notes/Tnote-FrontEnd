@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 import Todo from './Todo';
-import { getAllTaskByDate } from '../../utils/lib/api';
+import { getAllTaskByDate, getSemesterData } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import ClassLogModal from '../Write/ClassLogModal';
@@ -135,11 +135,6 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
           }
         } catch (error) {
           console.error('Error fetching data:', error);
-          Swal.fire({
-            text: '학기에 포함된 날짜만 선택 가능합니다.',
-            confirmButtonText: '확인',
-            confirmButtonColor: '#632CFA',
-          });
         }
       };
       fetchData();
