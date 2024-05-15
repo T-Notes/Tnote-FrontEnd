@@ -377,9 +377,19 @@ export const getAllObservation = async (scheduleId: string | undefined) => {
   } catch {}
 };
 
+// 학기 일지 전체 조회(아카이브)
+export const getAllLogsBySchedule = async (scheduleId: string | undefined) => {
+  try {
+    const response = await instanceAxios.get(
+      `tnote/home/${scheduleId}/LogsByFilter?page=0&size=8&logType=ALL`,
+    );
+    return response.data;
+  } catch {}
+};
+
 // 월별 모든 일지 가져오기
 
-export const getAllLogs = async (
+export const getAllLogsByMonth = async (
   scheduleId: string | undefined,
   date: string,
 ) => {

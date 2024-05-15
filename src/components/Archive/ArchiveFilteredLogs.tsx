@@ -15,8 +15,10 @@ import {
   getAllProceedings,
   getAllConsultations,
   getAllObservation,
+  getAllLogsBySchedule,
 } from '../../utils/lib/api';
 import { useToggle } from '../../utils/useHooks/useToggle';
+import Pagination from '../common/Pagination';
 
 const SDelete = styled.button`
   display: flex;
@@ -118,7 +120,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const navigate = useNavigate();
 
   const [filteredLogsList, setFilteredLogsList] = useState<any[]>([]);
-  const options = ['학급일지', '업무일지', '상담기록', '학생관찰기록'];
+  const options = ['전체', '학급일지', '업무일지', '상담기록', '학생관찰기록'];
   const [currentFilteredOption, setCurrentFilteredOption] =
     useState<string>('');
   const [isDelete, setIsDelete] = useState<boolean>(false);
@@ -141,6 +143,11 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
     try {
       let res;
       switch (option) {
+        case '전체':
+          res = await getAllLogsBySchedule(scheduleId);
+          console.log('전체 일지', res.data);
+          setFilteredLogsList(res.data.logs);
+          break;
         case '학급일지':
           res = await getAllClassLog(scheduleId);
           setFilteredLogsList(res.data.classLogs);
@@ -168,14 +175,13 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   };
 
   useEffect(() => {
-    // 전체 필터 api로 수정
     if (scheduleId) {
-      const getClassLogData = async () => {
-        const res = await getAllClassLog(scheduleId);
+      const getAllLogs = async () => {
+        const res = await getAllLogsBySchedule(scheduleId);
 
-        setFilteredLogsList(res.data.classLogs);
+        setFilteredLogsList(res.data.logs);
       };
-      getClassLogData();
+      getAllLogs();
     }
   }, []);
 
@@ -228,6 +234,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
       navigate(`/archive/observation/${scheduleId}/${id}`);
     }
   };
+
   return (
     <>
       <SArchiveButtons>
@@ -335,6 +342,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
               </SLogContainer>
             );
           })}
+        <Pagination totalPage={filteredLogsList.length} />
       </div>
     </>
   );
