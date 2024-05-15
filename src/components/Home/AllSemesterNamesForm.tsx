@@ -61,10 +61,15 @@ const AllSemesterNamesForm = () => {
       const response = await getUserInfo(user);
       const scheduleId = response.data.scheduleId;
       const semesterName = response.data.semesterName;
-      setDefaultSemester(semesterName);
-      currentUrl.pathname.includes('home')
-        ? navigate(`/home/${scheduleId}`)
-        : navigate(`/timetable/${scheduleId}`);
+      if (semesterName !== undefined) {
+        setDefaultSemester(semesterName);
+      }
+
+      if (scheduleId !== undefined) {
+        currentUrl.pathname.includes('home')
+          ? navigate(`/home/${scheduleId}`)
+          : navigate(`/timetable/${scheduleId}`);
+      }
     };
     getSemesterId();
   }, [reload]);
