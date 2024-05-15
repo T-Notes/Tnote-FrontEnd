@@ -62,10 +62,19 @@ const WriteDatePicker = ({
   const [isAllDay, setIsAllDay] = useState<boolean>(false);
   const { isToggle, handleChangeToggle } = useToggle();
 
-  const handleDateChange = (start: Date, end: Date) => {
+  const handleDateChangeStartDate = (start: Date, end: Date) => {
     setStartDate(start);
     if (end < start) {
       setEndDate(start);
+    } else {
+      setEndDate(end);
+    }
+  };
+
+  const handleDateChangeEndDate = (start: Date, end: Date) => {
+    setStartDate(start);
+    if (end < start) {
+      alert('종료일이 시작일보다 빠릅니다.');
     } else {
       setEndDate(end);
     }
@@ -110,7 +119,7 @@ const WriteDatePicker = ({
       <SDatePickerBox>
         <SCalender
           selected={onStartDate ? new Date(onStartDate) : startDate}
-          onChange={(date) => handleDateChange(date as Date, endDate)}
+          onChange={(date) => handleDateChangeStartDate(date as Date, endDate)}
           minDate={new Date('2000-01-01')}
           // maxDate={new Date(endDate)}
           showTimeSelect
@@ -123,7 +132,7 @@ const WriteDatePicker = ({
         <STildeIcon>~</STildeIcon>
         <SCalender
           selected={onEndDate ? new Date(onEndDate) : endDate}
-          onChange={(date) => handleDateChange(startDate, date as Date)}
+          onChange={(date) => handleDateChangeEndDate(startDate, date as Date)}
           // minDate={new Date(startDate)}
           showTimeSelect
           timeFormat="HH:mm"
