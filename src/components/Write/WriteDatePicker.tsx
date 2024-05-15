@@ -64,10 +64,10 @@ const WriteDatePicker = ({
 
   const handleDateChange = (start: Date, end: Date) => {
     setStartDate(start);
-    setEndDate(end);
-
     if (end < start) {
-      alert('시작일보다 종료일이 빠릅니다.');
+      setEndDate(start);
+    } else {
+      setEndDate(end);
     }
   };
 

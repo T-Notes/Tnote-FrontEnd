@@ -1,10 +1,7 @@
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { ko } from 'date-fns/esm/locale';
-import { SDateInput } from '../common/styled/Input';
 import { IcDatePicker } from '../../assets/icons';
-import React, { useEffect, useState } from 'react';
 
 const SWrapper = styled.div`
   display: flex;
@@ -12,8 +9,7 @@ const SWrapper = styled.div`
 `;
 const SDatePickerBox = styled.div`
   display: flex;
-  /* width: 710px; */
-  /* height: 56px; */
+
   align-items: center;
   gap: 20px;
 `;
@@ -68,10 +64,10 @@ const DateRangePicker = ({
 }: DateProps) => {
   const handleDateChange = (start: Date, end: Date) => {
     setStartDate(start);
-    setEndDate(end);
-
     if (end < start) {
-      alert('시작일보다 종료일이 빠릅니다.');
+      setEndDate(start);
+    } else {
+      setEndDate(end);
     }
   };
 
