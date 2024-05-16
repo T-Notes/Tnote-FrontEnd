@@ -22,6 +22,7 @@ import { getAllLogsByMonth, getSearchLogsValue } from '../../../utils/lib/api';
 import ScheduleCalendarSearchValue from '../../search/ScheduleCalendarSearchValue';
 import MoreLogModal from './MoreLogModal';
 import useRandomColor from '../../../utils/useHooks/useRandomColor';
+import { useModals } from '../../../utils/useHooks/useModals';
 
 const SCalendarWrapper = styled.div`
   width: 100%;
@@ -131,8 +132,7 @@ const ScheduleCalendar = ({
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchValueList, setSetSearchValueList] = useState<any[]>([]);
   const [allLogs, setAllLogs] = useState<any[]>([]);
-  const [moreLogsModal, setMoreLogsModal] = useState<boolean>(false);
-  const [clickDay, setClickDay] = useState<Date | undefined>();
+  const { openModal } = useModals();
   const { currentDate, handlePrevMonth, handleNextMonth, setCurrentDate } =
     useCurrentDate();
 
@@ -178,12 +178,9 @@ const ScheduleCalendar = ({
   }, [scheduleId, currentDate]);
 
   const handleClickMoreLogs = (day: Date) => {
-    setClickDay(day);
-    setMoreLogsModal(true);
+    openModal(MoreLogModal, { clickDay: day, scheduleId });
   };
-  const closeMoreLogsModal = () => {
-    setMoreLogsModal(false);
-  };
+
   const handleChangeSearchValue = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
@@ -281,12 +278,6 @@ const ScheduleCalendar = ({
             ))}
           </SDaysBox>
         </SCalendarDate>
-      )}
-      {moreLogsModal && (
-        <MoreLogModal
-          clickDay={clickDay}
-          closeMoreLogsModal={closeMoreLogsModal}
-        />
       )}
     </SCalendarWrapper>
   );

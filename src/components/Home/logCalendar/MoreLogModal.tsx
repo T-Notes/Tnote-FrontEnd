@@ -1,23 +1,32 @@
 import styled from 'styled-components';
-import { ModalNoBlackBackground } from '../../common/styled/ModalLayout';
 import { format } from 'date-fns';
 import koLocale from 'date-fns/locale/ko';
 import { IcClose } from '../../../assets/icons';
 import { useEffect, useState } from 'react';
-
 import { getAllTaskByDate } from '../../../utils/lib/api';
-import { useParams } from 'react-router-dom';
 import useRandomColor from '../../../utils/useHooks/useRandomColor';
+import ReactModal from 'react-modal';
 
-const SModalLayout = styled.div`
-  width: 208px;
-  height: 221px;
-  border: 1px solid var(--Black-Black50, #d5d5d5);
-  background-color: #fff;
-  padding: 10px;
-  border-radius: 12px;
-  box-shadow: 0px 2px 4px 0px #0000004d;
-`;
+const moreLogsCustomStyles = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: '#fff',
+    boxShadow: '0px 2px 4px 0px #0000004d',
+    width: '210px',
+    height: '230px',
+    padding: '10px',
+    border: '1px solid #D5D5D5',
+    borderRadius: '12px',
+  },
+};
 
 const SDay = styled.div`
   display: flex;
@@ -45,7 +54,7 @@ const SLog = styled.div<{ color: string }>`
   overflow-y: scroll;
 `;
 const SLogContainer = styled.div`
-  max-height: 150px;
+  max-height: 145px;
   overflow-y: auto;
 `;
 const SDayOfWeek = styled.p`
@@ -61,12 +70,13 @@ const SDayOfMonth = styled.p`
 `;
 interface MoreLogs {
   clickDay: Date | undefined;
-  closeMoreLogsModal: () => void;
+  isOpen: boolean;
+  onClose: () => void;
+  scheduleId: string;
 }
 
-const MoreLogModal = ({ clickDay, closeMoreLogsModal }: MoreLogs) => {
+const MoreLogModal = ({ clickDay, isOpen, onClose, scheduleId }: MoreLogs) => {
   if (!clickDay) return null;
-  const { scheduleId } = useParams();
   const getRandomColor = useRandomColor();
   const [allLogsByDay, setAllLogsByDay] = useState<any[]>([]);
   const dayOfMonth = format(clickDay, 'd', { locale: koLocale });
@@ -78,7 +88,7 @@ const MoreLogModal = ({ clickDay, closeMoreLogsModal }: MoreLogs) => {
     const getDate = async () => {
       try {
         const response = await getAllTaskByDate(scheduleId, formattedDate);
-        console.log('결과', response);
+
         const { classLogs, consultations, proceedings, observations } =
           response.data;
 
@@ -94,19 +104,19 @@ const MoreLogModal = ({ clickDay, closeMoreLogsModal }: MoreLogs) => {
     getDate();
   }, []);
   return (
-    <ModalNoBlackBackground onClick={closeMoreLogsModal}>
-      <SModalLayout
-        onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
-          e.stopPropagation()
-        }
-      >
+    <ReactModal
+      isOpen={isOpen}
+      ariaHideApp={false}
+      style={moreLogsCustomStyles}
+    >
+      <>
         <SDay>
           <SDayContent>
             <SDayOfWeek>{dayOfWeek}</SDayOfWeek>
             <SDayOfMonth>{dayOfMonth}</SDayOfMonth>
           </SDayContent>
           <div>
-            <IcClose onClick={closeMoreLogsModal} className="pointer" />
+            <IcClose onClick={onClose} className="pointer" />
           </div>
         </SDay>
         <SLogContainer>
@@ -116,8 +126,8 @@ const MoreLogModal = ({ clickDay, closeMoreLogsModal }: MoreLogs) => {
             </SLog>
           ))}
         </SLogContainer>
-      </SModalLayout>
-    </ModalNoBlackBackground>
+      </>
+    </ReactModal>
   );
 };
 
