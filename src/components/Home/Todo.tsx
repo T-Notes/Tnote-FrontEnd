@@ -99,29 +99,36 @@ const Todo = memo(({ todo, setTodo, clickedDate, setReload }: TodoOutside) => {
     todoId: number,
   ) => {
     const newContent = e.target.value;
+
     setTodoId(todoId);
     setTodoContent(newContent);
   };
 
-  const handleToggleCheckBox = async (
-    todoId: number,
-    todoContent: string | undefined,
-  ) => {
-    try {
-      const updatedTodoList = todo.map((item) =>
-        item.id === todoId ? { ...item, status: !item.status } : item,
-      );
-      setTodo(updatedTodoList); // 상태를 변경하여 UI 업데이트
+  const handleToggleCheckBox = async (todoId: number, content: string) => {
+    if (content && content !== '') {
+      try {
+        const updatedTodoList = todo.map((item) =>
+          item.id === todoId ? { ...item, status: !item.status } : item,
+        );
+        setTodo(updatedTodoList);
 
-      const date = clickedDate;
-      const todoData = {
-        content: todoContent,
-        status: !todo.find((item) => item.id === todoId)?.status,
-      };
-      await updateTodo(scheduleId, todoId, todoData, date);
-      setReload((prev) => !prev);
-    } catch (error) {
-      console.error('Error toggling checkbox:', error);
+        const date = clickedDate;
+        const todoItem = todo.find((item) => item.id === todoId);
+
+        if (!todoItem) return;
+
+        const todoData = {
+          content: content,
+          status: !todoItem.status,
+        };
+
+        await updateTodo(scheduleId, todoId, todoData, date);
+        setReload((prev) => !prev);
+      } catch (error) {
+        console.error('Error toggling checkbox:', error);
+      }
+    } else {
+      alert('텍스트를 입력 및 저장하세요');
     }
   };
 
@@ -144,10 +151,10 @@ const Todo = memo(({ todo, setTodo, clickedDate, setReload }: TodoOutside) => {
   }, []);
 
   const handleAddTodo = async () => {
-    const isAnyEmpty = todo.some((item) => !item.content.trim());
+    const isAnyEmpty = todo.some((item) => item.content.trim() === '');
 
-    if (!isAnyEmpty) {
-      if (scheduleId) {
+    if (scheduleId) {
+      if (!isAnyEmpty) {
         const date = clickedDate;
         const todoData = {
           content: '',
@@ -155,16 +162,20 @@ const Todo = memo(({ todo, setTodo, clickedDate, setReload }: TodoOutside) => {
         await createTodo(scheduleId, todoData, date);
         setReload((prev) => !prev);
       } else {
-        Swal.fire({
-          title: '학기가 있어야 합니다.',
-          text: '학기 추가 혹은 학기 선택을 먼저 해주십시오.',
-        });
+        alert('텍스트를 입력 및 저장하세요');
       }
+    } else {
+      Swal.fire({
+        title: '학기가 있어야 합니다.',
+        text: '학기 추가 혹은 학기 선택을 먼저 해주십시오.',
+      });
     }
   };
 
   const handleInputBlur = async (todoId: number | undefined) => {
-    if (todoId && todoContent.trim() !== '') {
+    console.log(2, 'onBlur!');
+
+    if (todoId) {
       const date = clickedDate;
       const todoData = {
         content: todoContent,
@@ -195,9 +206,6 @@ const Todo = memo(({ todo, setTodo, clickedDate, setReload }: TodoOutside) => {
                     onClick={() =>
                       handleToggleCheckBox(todoItem.id, todoItem.content)
                     }
-                    // onClick={() =>
-                    //   handleStatusChange(todoItem.id, todoItem.content)
-                    // }
                   />
                 )}
               </SCheckbox>
