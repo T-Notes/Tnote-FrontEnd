@@ -127,8 +127,13 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const [checkedDeleteId, setCheckedDeleteId] = useState<number | null>(null);
   const [logType, setLogType] = useState<string>('');
   // const [reload, setReload] = useState<boolean>(false);
-
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [totalLogs, setTotalLogs] = useState<number>(0);
   const { handleChangeToggle, isToggle } = useToggle();
+
+  const handlePageChange = (selected: { selected: number }) => {
+    setCurrentPage(selected.selected);
+  };
 
   const handleDeleteModeActivate = () => {
     setIsDelete(true);
@@ -144,8 +149,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
       let res;
       switch (option) {
         case '전체':
-          res = await getAllLogsBySchedule(scheduleId);
-          console.log('전체 일지', res.data);
+          res = await getAllLogsBySchedule(scheduleId, currentPage);
           setFilteredLogsList(res.data.logs);
           break;
         case '학급일지':
@@ -177,13 +181,13 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   useEffect(() => {
     if (scheduleId) {
       const getAllLogs = async () => {
-        const res = await getAllLogsBySchedule(scheduleId);
-
+        const res = await getAllLogsBySchedule(scheduleId, currentPage);
+        setTotalLogs(res.data.totalLog);
         setFilteredLogsList(res.data.logs);
       };
       getAllLogs();
     }
-  }, []);
+  }, [currentPage]);
 
   const handleDelete = () => {
     let logEndPointMiddle = '';
@@ -342,7 +346,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
               </SLogContainer>
             );
           })}
-        <Pagination totalPage={filteredLogsList.length} />
+        <Pagination totalLogs={totalLogs} handlePageChange={handlePageChange} />
       </div>
     </>
   );

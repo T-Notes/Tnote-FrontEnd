@@ -162,6 +162,7 @@ export const createSemester = async (semesterData: object) => {
 export const getSemesterData = async (scheduleId: string | undefined) => {
   try {
     const response = await instanceAxios.get(`/tnote/schedule/${scheduleId}`);
+
     return response.data;
   } catch {
     throw new Error('해당 학기의 정보를 조회하는데 에러가 발생했습니다.');
@@ -378,10 +379,13 @@ export const getAllObservation = async (scheduleId: string | undefined) => {
 };
 
 // 학기 일지 전체 조회(아카이브)
-export const getAllLogsBySchedule = async (scheduleId: string | undefined) => {
+export const getAllLogsBySchedule = async (
+  scheduleId: string | undefined,
+  page: number,
+) => {
   try {
     const response = await instanceAxios.get(
-      `tnote/home/${scheduleId}/LogsByFilter?page=0&size=8&logType=ALL`,
+      `tnote/home/${scheduleId}/LogsByFilter?page=${page}&size=8&logType=ALL`,
     );
     return response.data;
   } catch {}
