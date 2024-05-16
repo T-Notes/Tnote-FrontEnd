@@ -102,15 +102,41 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
   const [reload, setReload] = useState<boolean>(false);
   const isEdit = true;
   const currentDate = new Date().toISOString().slice(0, 10);
+  // let startDate = '';
+  // let endDate = '';
 
   const formattedDate = clickedDate
     ? clickedDate.replace(
         /(\d{4})-(\d{2})-(\d{2})/,
         (match, year, month, day) =>
-          `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`,
+          `${year}년 ${String(month).padStart(2, '0')}월 ${String(day).padStart(
+            2,
+            '0',
+          )}일`,
       )
-    : `${year}년 ${month}월 ${day}일`;
+    : `${year}년 ${String(month).padStart(2, '0')}월 ${String(day).padStart(
+        2,
+        '0',
+      )}일`;
 
+  // useEffect(() => {
+  //   if (scheduleId) {
+  //     const getDateRange = async () => {
+  //       const response = await getSemesterData(scheduleId);
+
+  //       startDate = response.data[0].startDate;
+  //       endDate = response.data[0].endDate;
+  //     };
+  //     getDateRange();
+  //   }
+  // }, [clickedDate]);
+
+  // const handleCheckDateRange = (clickedDate: string | undefined) => {
+  //   if (clickedDate !== undefined) {
+  //     const isDateInRange = clickedDate >= startDate && clickedDate <= endDate;
+  //     return isDateInRange ? `${year}년 ${month}월 ${day}일` : formattedDate;
+  //   }
+  // };
   useEffect(() => {
     if (scheduleId) {
       const fetchData = async () => {
