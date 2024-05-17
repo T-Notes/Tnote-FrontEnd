@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import ReactModal from 'react-modal';
 
 import { searchCustomStyles } from '../common/styled/ModalLayout';
-import { UserDataProps } from './UserInfoForm';
 
 import styled from 'styled-components';
 import { IcClose } from '../../assets/icons';
@@ -57,10 +56,8 @@ const SPoint = styled.span`
 
 interface searchModalProps {
   isOpen: boolean;
-  onRequestClose: () => void;
-  onClickSubmit: (searchInput: string) => void;
-  userData: UserDataProps;
-  setUserData: React.Dispatch<React.SetStateAction<UserDataProps>>;
+  onClose: () => void;
+  handleSubmit: (searchInput: string) => void;
 }
 interface ResultsProps {
   region: string;
@@ -68,34 +65,27 @@ interface ResultsProps {
   schoolName: string;
 }
 
-const UserSchoolForm = (props: searchModalProps) => {
-  const { isOpen, onRequestClose, userData, setUserData, onClickSubmit } =
-    props;
+const UserSchoolModal = (props: searchModalProps) => {
+  const { isOpen, onClose, handleSubmit } = props;
   const [schoolSearchData, setSchoolSearchData] = useState<ResultsProps>({
     region: '',
     schoolType: '',
     schoolName: '',
   });
 
-  const [isRegionDropdownOpen, setIsRegionDropdownOpen] =
-    useState<boolean>(false);
   const [showSchoolDataLoader, setShowSchoolDataLoader] =
     useState<boolean>(true);
   const [isValid, setIsValid] = useState<boolean>(false);
 
-  const openRegionDropdown = () => {
-    setIsRegionDropdownOpen(true);
-  };
-  const closeRegionDropdown = () => {
-    setIsRegionDropdownOpen(false);
-  };
+  const [isGubunDropdownToggle, setIsGubunDropdownToggle] = useState(false);
+  const [isRegionDropdownToggle, setIsRegionDropdownToggle] =
+    useState<boolean>(false);
 
-  const [isGubunDropdownOpen, setIsGubunDropdownOpen] = useState(false);
-  const openGubunDropdown = () => {
-    setIsGubunDropdownOpen(true);
+  const handleChangeGubunToggle = () => {
+    setIsGubunDropdownToggle(!isGubunDropdownToggle);
   };
-  const closeGubunDropdown = () => {
-    setIsGubunDropdownOpen(false);
+  const handleChangeRegionToggle = () => {
+    setIsRegionDropdownToggle(!isRegionDropdownToggle);
   };
 
   const handleSelectedRegionOption = (region: string) => {
@@ -103,7 +93,7 @@ const UserSchoolForm = (props: searchModalProps) => {
       ...prev,
       region: region,
     }));
-    closeRegionDropdown();
+    handleChangeRegionToggle();
   };
 
   const handleSelectedGubunOption = (schoolType: string) => {
@@ -111,7 +101,7 @@ const UserSchoolForm = (props: searchModalProps) => {
       ...prev,
       schoolType: schoolType,
     }));
-    closeGubunDropdown();
+    handleChangeGubunToggle();
   };
 
   const handleSchoolSearchInputChange = (
@@ -141,12 +131,12 @@ const UserSchoolForm = (props: searchModalProps) => {
     <>
       <ReactModal
         isOpen={isOpen}
-        onRequestClose={onRequestClose}
+        ariaHideApp={false}
         style={searchCustomStyles}
       >
         <>
           <SIcClose>
-            <IcClose onClick={onRequestClose} className="pointer" />
+            <IcClose onClick={onClose} className="pointer" />
           </SIcClose>
           <SSchoolSearchWrapper>
             <SModalTitle>학교검색</SModalTitle>
@@ -154,9 +144,8 @@ const UserSchoolForm = (props: searchModalProps) => {
             <CityAndTypeSelection
               label="시/도"
               value={schoolSearchData.region}
-              isDropdown={isRegionDropdownOpen}
-              openDropdown={openRegionDropdown}
-              closeDropdown={closeRegionDropdown}
+              handleChangeToggle={handleChangeRegionToggle}
+              isToggle={isRegionDropdownToggle}
               dropdownList={
                 <RegionDropdownList
                   onSelectedRegion={handleSelectedRegionOption}
@@ -167,9 +156,8 @@ const UserSchoolForm = (props: searchModalProps) => {
             <CityAndTypeSelection
               label="학교분류"
               value={schoolSearchData.schoolType}
-              isDropdown={isGubunDropdownOpen}
-              openDropdown={openGubunDropdown}
-              closeDropdown={closeGubunDropdown}
+              handleChangeToggle={handleChangeGubunToggle}
+              isToggle={isGubunDropdownToggle}
               dropdownList={
                 <GubunDropdownList
                   onSelectedGubun={handleSelectedGubunOption}
@@ -200,7 +188,7 @@ const UserSchoolForm = (props: searchModalProps) => {
             </SInputBox>
 
             <SButton
-              onClick={() => onClickSubmit(schoolSearchData.schoolName)}
+              onClick={() => handleSubmit(schoolSearchData.schoolName)}
               style={{
                 backgroundColor: isValid ? '#632CFA' : '#F3F3F3',
                 color: isValid ? '#FFFFFF' : '#A6A6A6',
@@ -216,4 +204,4 @@ const UserSchoolForm = (props: searchModalProps) => {
   );
 };
 
-export default UserSchoolForm;
+export default UserSchoolModal;
