@@ -100,43 +100,52 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
   const [observationContent, setObservationContent] = useState<Task[]>([]);
   const [todo, setTodo] = useState<Task[]>([]);
   const [reload, setReload] = useState<boolean>(false);
+  const [semesterStartDate, setSemesterStartDate] = useState<string>('');
+  const [semesterEndDate, setSemesterEndDate] = useState<string>('');
   const isEdit = true;
   const currentDate = new Date().toISOString().slice(0, 10);
-  // let startDate = '';
-  // let endDate = '';
 
-  const formattedDate = clickedDate
-    ? clickedDate.replace(
-        /(\d{4})-(\d{2})-(\d{2})/,
-        (match, year, month, day) =>
-          `${year}년 ${String(month).padStart(2, '0')}월 ${String(day).padStart(
-            2,
-            '0',
-          )}일`,
-      )
-    : `${year}년 ${String(month).padStart(2, '0')}월 ${String(day).padStart(
-        2,
-        '0',
-      )}일`;
+  const formattedDate = (() => {
+    const clickedDateTime = clickedDate ? new Date(clickedDate) : null;
+    const semesterStartDateObj = semesterStartDate
+      ? new Date(semesterStartDate)
+      : null;
+    const semesterEndDateObj = semesterEndDate
+      ? new Date(semesterEndDate)
+      : null;
 
-  // useEffect(() => {
-  //   if (scheduleId) {
-  //     const getDateRange = async () => {
-  //       const response = await getSemesterData(scheduleId);
+    if (
+      clickedDateTime &&
+      semesterStartDateObj &&
+      semesterEndDateObj &&
+      clickedDateTime >= semesterStartDateObj &&
+      clickedDateTime <= semesterEndDateObj
+    ) {
+      const year = clickedDateTime.getFullYear();
+      const month = String(clickedDateTime.getMonth() + 1).padStart(2, '0');
+      const day = String(clickedDateTime.getDate()).padStart(2, '0');
 
-  //       startDate = response.data[0].startDate;
-  //       endDate = response.data[0].endDate;
-  //     };
-  //     getDateRange();
-  //   }
-  // }, [clickedDate]);
+      return `${year}년 ${month}월 ${day}일`;
+    } else {
+      return `${year}년 ${String(month).padStart(2, '0')}월 ${String(
+        day,
+      ).padStart(2, '0')}일`;
+    }
+  })();
 
-  // const handleCheckDateRange = (clickedDate: string | undefined) => {
-  //   if (clickedDate !== undefined) {
-  //     const isDateInRange = clickedDate >= startDate && clickedDate <= endDate;
-  //     return isDateInRange ? `${year}년 ${month}월 ${day}일` : formattedDate;
-  //   }
-  // };
+  useEffect(() => {
+    if (scheduleId) {
+      const getDateRange = async () => {
+        const response = await getSemesterData(scheduleId);
+        console.log(3, response.data);
+
+        setSemesterStartDate(response.data[0].startDate);
+        setSemesterEndDate(response.data[0].endDate);
+      };
+      getDateRange();
+    }
+  }, [clickedDate]);
+
   useEffect(() => {
     if (scheduleId) {
       const fetchData = async () => {
