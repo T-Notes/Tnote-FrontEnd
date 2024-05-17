@@ -68,9 +68,9 @@ const SemesterSetupBanner = () => {
   // 학기 자동 생성 기준
   const autoCreateSemester = () => {
     let createdSemester = '';
-    if (1 <= month && month <= 6) {
+    if (1 <= Number(month) && Number(month) <= 6) {
       createdSemester = `${year}년 2학기`;
-    } else if (7 <= month && month <= 12) {
+    } else if (7 <= Number(month) && Number(month) <= 12) {
       createdSemester = `${year}년 1학기`;
     }
     return createdSemester;
