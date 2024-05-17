@@ -130,7 +130,7 @@ const ScheduleCalendar = ({
   const { scheduleId } = useParams();
   const getRandomColor = useRandomColor();
   const [searchValue, setSearchValue] = useState<string>('');
-  const [searchValueList, setSetSearchValueList] = useState<any[]>([]);
+  const [searchValueList, setSearchValueList] = useState<any[]>([]);
   const [allLogs, setAllLogs] = useState<any[]>([]);
   const { openModal } = useModals();
   const { currentDate, handlePrevMonth, handleNextMonth, setCurrentDate } =
@@ -169,6 +169,7 @@ const ScheduleCalendar = ({
             ...proceedings,
             ...observations,
           ];
+          console.log(1, response.data);
 
           setAllLogs(allLogs);
         };
@@ -185,16 +186,17 @@ const ScheduleCalendar = ({
     const value = e.target.value;
     setSearchValue(value);
     if (!value) {
-      setSetSearchValueList([]);
+      setSearchValueList([]);
     }
   };
 
   const handleLogsSearch = async () => {
     const getSearchValue = await getSearchLogsValue(searchValue, scheduleId);
-    setSetSearchValueList(getSearchValue.data);
+    setSearchValueList(getSearchValue.data);
+    console.log(getSearchValue.data);
   };
 
-  const debouncedSearch = _debounce(handleLogsSearch, 1000);
+  const debouncedSearch = _debounce(handleLogsSearch, 300);
 
   useEffect(() => {
     if (searchValue) {
@@ -226,7 +228,7 @@ const ScheduleCalendar = ({
         />
       </SCalendarHeaderWrapper>
 
-      {searchValueList.length > 0 ? (
+      {searchValue ? (
         <>
           <ScheduleCalendarSearchValue searchValueList={searchValueList} />
         </>
