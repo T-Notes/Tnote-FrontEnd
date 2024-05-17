@@ -17,16 +17,14 @@ const AllSemesterNamesForm = () => {
 
   const user = localStorage.getItem('userId');
   const [semesterOptions, setSemesterOptions] = useState<SemesterData[]>([]);
-  const [isDropdownSemester, setIsDropdownSemester] = useState<boolean>(false);
+  const [isDropdownSemesterToggle, setIsDropdownSemesterToggle] =
+    useState<boolean>(false);
   const [defaultSemester, setDefaultSemester] = useState<string>('');
   const [reload, setReload] = useState<boolean>(false);
   const currentUrl = useLocation();
 
-  const openDropdownSemester = () => {
-    setIsDropdownSemester(true);
-  };
-  const closeDropdownSemester = () => {
-    setIsDropdownSemester(false);
+  const handleChangeSemesterToggle = () => {
+    setIsDropdownSemesterToggle(!isDropdownSemesterToggle);
   };
 
   useEffect(() => {
@@ -52,7 +50,7 @@ const AllSemesterNamesForm = () => {
     };
     await updateUserInfo(userData);
 
-    closeDropdownSemester();
+    handleChangeSemesterToggle();
     setReload((prev) => !prev);
   };
 
@@ -94,9 +92,8 @@ const AllSemesterNamesForm = () => {
             onSelectedSemester={handleClickSemester}
           />
         }
-        isDropdown={isDropdownSemester}
-        openDropdown={openDropdownSemester}
-        closeDropdown={closeDropdownSemester}
+        isToggle={isDropdownSemesterToggle}
+        handleChangeToggle={handleChangeSemesterToggle}
       ></DropdownInput>
     </>
   );

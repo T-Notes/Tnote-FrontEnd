@@ -149,16 +149,15 @@ const ClassAddForm = ({
   const [memo, setMemo] = useState<string>('');
   const { currentDate } = useCurrentDate();
   const date = currentDate;
-  const [isClassDayDropdownOpen, setIsClassDayDropdownOpen] = useState(false);
-  // const [reloadTrigger, setReloadTrigger] = useState(false); // 화면 reload 추가
+  const [isClassDayDropdownToggle, setIsClassDayDropdownToggle] =
+    useState(false);
+
   const [enDay, setEnDay] = useState<string>(''); // 서버에 보낼 상태
 
-  const openClassDayDropdown = () => {
-    setIsClassDayDropdownOpen(true);
+  const handleChangeClassDayToggle = () => {
+    setIsClassDayDropdownToggle(!isClassDayDropdownToggle);
   };
-  const closeClassDayDropdown = () => {
-    setIsClassDayDropdownOpen(false);
-  };
+
   const classNum = [
     { id: 1, class: '1' },
     { id: 2, class: '2' },
@@ -194,7 +193,7 @@ const ClassAddForm = ({
     setEnDay(enDay); // 서버에 보낼 상태
     setClassDay(day); // 유저에게 보여질 상태
 
-    closeClassDayDropdown();
+    handleChangeClassDayToggle();
   };
 
   const handleChangeClassLocation = (
@@ -321,9 +320,8 @@ const ClassAddForm = ({
                 theme={{ background: 'white' }}
                 placeholder="수업 요일을 선택해주세요"
                 value={classDay} // 유저에게 보여질 상태
-                isDropdown={isClassDayDropdownOpen}
-                openDropdown={openClassDayDropdown}
-                closeDropdown={closeClassDayDropdown}
+                isToggle={isClassDayDropdownToggle}
+                handleChangeToggle={handleChangeClassDayToggle}
                 dropdownList={
                   <ClassDayList handleClickDay={handleSelectedClassDay} />
                 }
