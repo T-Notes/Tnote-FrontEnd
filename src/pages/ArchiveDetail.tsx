@@ -7,10 +7,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcGoBack } from '../assets/icons';
-import { getSemesterData } from '../utils/lib/api';
+import { getFilteredLogsByDate, getSemesterData } from '../utils/lib/api';
 import { useCurrentDate } from '../utils/useHooks/useCurrentDate';
 import ArchiveRecentLogs from '../components/Archive/ArchiveRecentLogs';
 import ArchiveFilteredLogs from '../components/Archive/ArchiveFilteredLogs';
+import instanceAxios from '../utils/InstanceAxios';
 
 const SArchiveContainerWrapper = styled.div`
   display: flex;
@@ -70,11 +71,18 @@ const ArchiveDetail = () => {
     }
   }, [scheduleId]);
 
-  const handleNoFeature = () => {
-    Swal.fire({
-      title: '서비스 개발 중',
-      text: '죄송합니다. 아직 이용하 실 수 없는 서비스입니다.',
-    });
+  const handleNoFeature = async (dateRange: string) => {
+    let startDate = '';
+    let endDate = '';
+    if (dateRange === 'TODAY') {
+      startDate = `${year}-${month}-${day}`;
+      endDate = `${year}-${month}-${day}`;
+    }
+
+    const response = await instanceAxios.get(
+      `tnote/home/${scheduleId}/dateLogs?startDate=${startDate}&endDate=${endDate}&page=0&size=8&logType=`,
+    );
+    console.log(response);
   };
   return (
     <SArchiveContainerWrapper>
@@ -86,10 +94,16 @@ const ArchiveDetail = () => {
       </SArchiveTitle>
       <SArchiveDateContainer>
         <SArchiveCurrentDate>{`${year}년 ${month}월 ${day}일`}</SArchiveCurrentDate>
-        <SSelectDateButton onClick={handleNoFeature}>오늘</SSelectDateButton>
-        <SSelectDateButton onClick={handleNoFeature}>일주일</SSelectDateButton>
-        <SSelectDateButton onClick={handleNoFeature}>한달</SSelectDateButton>
-        <SSelectDateButton onClick={handleNoFeature}>
+        <SSelectDateButton onClick={() => handleNoFeature('TODAY')}>
+          오늘
+        </SSelectDateButton>
+        <SSelectDateButton onClick={() => handleNoFeature('WEEK')}>
+          일주일
+        </SSelectDateButton>
+        <SSelectDateButton onClick={() => handleNoFeature('MONTH')}>
+          한달
+        </SSelectDateButton>
+        <SSelectDateButton onClick={() => handleNoFeature('TODAY')}>
           직접지정
         </SSelectDateButton>
       </SArchiveDateContainer>
