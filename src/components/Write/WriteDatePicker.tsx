@@ -10,7 +10,6 @@ const SDatePickerBox = styled.div`
   align-items: center;
 `;
 
-// 달력 스타일링
 const SCalender = styled(DatePicker)`
   display: flex;
   border: none;
@@ -22,7 +21,10 @@ const SCalender = styled(DatePicker)`
   align-items: center;
   text-align: center;
   ${({ theme }) => theme.fonts.caption3}
-  color:   ${({ theme }) => theme.colors.gray100};
+  color: ${({ selected }) => (selected ? 'black' : '#A6A6A6')};
+  .react-datepicker__header {
+    background-color: #007bff; /* 파란색 */
+  }
 `;
 const STildeIcon = styled.span`
   font-size: 20px;
