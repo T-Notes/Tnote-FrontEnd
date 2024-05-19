@@ -66,7 +66,8 @@ const SDays = styled.div`
   height: 80px;
   flex: 1;
   flex: 1 0 14%;
-  padding: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   .today {
     color: #ffff;
     background-color: #7f51fc;
@@ -106,10 +107,10 @@ const SLogContainer = styled.ul`
 
 const SLog = styled.div<{ color: string }>`
   font-size: 13px;
-  width: auto;
+  width: 100%;
   display: flex;
   justify-content: center;
-  border-radius: 8px;
+  /* border-radius: 8px; */
   padding: 3px;
   background-color: ${({ color }) => color};
 `;
@@ -138,7 +139,9 @@ const ScheduleCalendar = ({
 
   const startWeek = startOfWeek(startOfMonth(currentDate));
   const endWeek = endOfWeek(endOfMonth(currentDate));
-
+  const [itemColorsMap, setItemColorsMap] = useState<Record<string, string>>(
+    {},
+  );
   const days = [];
   let day = startWeek;
 
@@ -169,7 +172,6 @@ const ScheduleCalendar = ({
             ...proceedings,
             ...observations,
           ];
-          console.log(1, response.data);
 
           setAllLogs(allLogs);
         };
@@ -193,7 +195,6 @@ const ScheduleCalendar = ({
   const handleLogsSearch = async () => {
     const getSearchValue = await getSearchLogsValue(searchValue, scheduleId);
     setSearchValueList(getSearchValue.data);
-    console.log(getSearchValue.data);
   };
 
   const debouncedSearch = _debounce(handleLogsSearch, 300);
@@ -253,9 +254,20 @@ const ScheduleCalendar = ({
                 </div>
 
                 {(() => {
-                  const logsForDay = allLogs.filter((item) =>
-                    isSameDay(new Date(item.startDate), day),
-                  );
+                  const logsForDay = allLogs.filter((item) => {
+                    const startDate = new Date(item.startDate);
+                    const endDate = new Date(item.endDate);
+                    const daysInRange = [];
+
+                    let currentDate = startDate;
+                    while (currentDate <= endDate) {
+                      daysInRange.push(currentDate);
+                      currentDate = addDays(currentDate, 1);
+                    }
+
+                    return daysInRange.some((date) => isSameDay(date, day));
+                  });
+
                   const visibleLogs = logsForDay.slice(0, 2);
                   const hiddenLogsCount =
                     logsForDay.length - visibleLogs.length;
