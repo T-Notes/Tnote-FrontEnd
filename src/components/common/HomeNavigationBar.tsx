@@ -159,45 +159,42 @@ const HomeNavigationBar = () => {
             <IcLogo />
           </SLogo>
           <>
-            <Link
-              to={scheduleId ? `/home/${scheduleId}` : '/home'}
-              className={
-                location.pathname ===
-                (scheduleId ? `/home/${scheduleId}` : '/home')
-                  ? 'active'
-                  : ''
-              }
-            >
-              <SCategory>
+            <Link to={scheduleId ? `/home/${scheduleId}` : '/home'}>
+              <SCategory
+                className={
+                  location.pathname ===
+                  (scheduleId ? `/home/${scheduleId}` : '/home')
+                    ? 'active'
+                    : ''
+                }
+              >
                 <IcHome />
                 <SCategoryText>홈화면</SCategoryText>
               </SCategory>
             </Link>
 
-            <Link
-              to={scheduleId ? `/archive/${scheduleId}` : '/archive'}
-              className={
-                location.pathname ===
-                (scheduleId ? `/archive/${scheduleId}` : '/archive')
-                  ? 'active'
-                  : ''
-              }
-            >
-              <SCategory>
+            <Link to={scheduleId ? `/archive/${scheduleId}` : '/archive'}>
+              <SCategory
+                className={
+                  location.pathname ===
+                  (scheduleId ? `/archive/${scheduleId}` : '/archive')
+                    ? 'active'
+                    : ''
+                }
+              >
                 <IcArchive />
                 <SCategoryText>아카이브</SCategoryText>
               </SCategory>
             </Link>
-            <Link
-              to={scheduleId ? `/timetable/${scheduleId}` : '/timetable'}
-              className={
-                location.pathname ===
-                (scheduleId ? `/timetable/${scheduleId}` : '/timetable')
-                  ? 'active'
-                  : ''
-              }
-            >
-              <SCategory>
+            <Link to={scheduleId ? `/timetable/${scheduleId}` : '/timetable'}>
+              <SCategory
+                className={
+                  location.pathname ===
+                  (scheduleId ? `/timetable/${scheduleId}` : '/timetable')
+                    ? 'active'
+                    : ''
+                }
+              >
                 <IcTimetable />
                 <SCategoryText>시간표</SCategoryText>
               </SCategory>

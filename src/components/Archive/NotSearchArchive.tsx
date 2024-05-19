@@ -39,7 +39,7 @@ interface Archive {
   isDeleteChecked: number | null;
 }
 
-const MyArchive = ({
+const NotSearchArchive = ({
   isDelete,
   handleDeletedCheck,
   isDeleteChecked,
@@ -48,7 +48,7 @@ const MyArchive = ({
   const [allSemester, setAllSemester] = useState<Semester[]>([]);
 
   const handleSelectedSemester = (selectedSemesterId: number) => {
-    navigate(`/archiveContainer/${selectedSemesterId}`);
+    navigate(`/archiveSemesterDetail/${selectedSemesterId}`);
   };
 
   useEffect(() => {
@@ -85,4 +85,4 @@ const MyArchive = ({
   );
 };
 
-export default MyArchive;
+export default NotSearchArchive;

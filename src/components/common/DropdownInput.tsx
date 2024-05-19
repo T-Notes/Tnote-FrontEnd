@@ -1,7 +1,6 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import { IcCloseDropdownSmall, IcOpenDropdownSmall } from '../../assets/icons';
-import { useToggle } from '../../utils/useHooks/useToggle';
 
 interface StyledDropdownInputProps {
   size?: 'mini' | 'small' | 'large';
@@ -66,9 +65,8 @@ interface DropdownProps {
     background: string;
   };
   dropdownList: ReactNode;
-  isDropdown: boolean;
-  openDropdown: () => void;
-  closeDropdown: () => void;
+  handleChangeToggle: () => void;
+  isToggle: boolean;
 }
 const DropdownInput = (props: DropdownProps) => {
   const {
@@ -77,9 +75,8 @@ const DropdownInput = (props: DropdownProps) => {
     size,
     theme,
     dropdownList,
-    isDropdown,
-    openDropdown,
-    closeDropdown,
+    handleChangeToggle,
+    isToggle,
   } = props;
 
   return (
@@ -89,14 +86,20 @@ const DropdownInput = (props: DropdownProps) => {
           placeholder={placeholder}
           value={value}
           readOnly
-          onClick={openDropdown}
+          onClick={handleChangeToggle}
         />
-        {isDropdown ? (
-          <IcCloseDropdownSmall onClick={closeDropdown} className="pointer" />
+        {isToggle ? (
+          <IcCloseDropdownSmall
+            onClick={handleChangeToggle}
+            className="pointer"
+          />
         ) : (
-          <IcOpenDropdownSmall onClick={openDropdown} className="pointer" />
+          <IcOpenDropdownSmall
+            onClick={handleChangeToggle}
+            className="pointer"
+          />
         )}
-        {isDropdown && dropdownList}
+        {isToggle && dropdownList}
       </SDropdownInputWrapper>
     </>
   );

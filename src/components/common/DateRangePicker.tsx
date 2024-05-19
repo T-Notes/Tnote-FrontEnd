@@ -1,10 +1,7 @@
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { ko } from 'date-fns/esm/locale';
-import { SDateInput } from '../common/styled/Input';
 import { IcDatePicker } from '../../assets/icons';
-import React, { useEffect, useState } from 'react';
 
 const SWrapper = styled.div`
   display: flex;
@@ -12,8 +9,7 @@ const SWrapper = styled.div`
 `;
 const SDatePickerBox = styled.div`
   display: flex;
-  /* width: 710px; */
-  /* height: 56px; */
+
   align-items: center;
   gap: 20px;
 `;
@@ -66,15 +62,23 @@ const DateRangePicker = ({
   setEndDate,
   endDate,
 }: DateProps) => {
-  const handleDateChange = (start: Date, end: Date) => {
+  const handleDateChangeStartDate = (start: Date, end: Date) => {
     setStartDate(start);
-    setEndDate(end);
-
     if (end < start) {
-      alert('시작일보다 종료일이 빠릅니다.');
+      setEndDate(start);
+    } else {
+      setEndDate(end);
     }
   };
 
+  const handleDateChangeEndDate = (start: Date, end: Date) => {
+    setStartDate(start);
+    if (end < start) {
+      alert('종료일이 시작일보다 빠릅니다.');
+    } else {
+      setEndDate(end);
+    }
+  };
   return (
     <SWrapper>
       <SDateIc>
@@ -90,7 +94,7 @@ const DateRangePicker = ({
             <SCalender
               selected={startDate}
               onChange={(date) =>
-                handleDateChange(date as Date, endDate as Date)
+                handleDateChangeStartDate(date as Date, endDate as Date)
               }
               minDate={new Date('2000-01-01')} // minDate 이전 날짜 선택 불가
               // maxDate={new Date(endDate)}
@@ -103,7 +107,7 @@ const DateRangePicker = ({
           <SCalender
             selected={endDate}
             onChange={(date) =>
-              handleDateChange(startDate as Date, date as Date)
+              handleDateChangeEndDate(startDate as Date, date as Date)
             }
             // minDate={new Date(startDate)}
             dateFormat="yyyy-MM-dd"

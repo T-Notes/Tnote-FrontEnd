@@ -143,7 +143,6 @@ const TimetableDayTemplate = memo(
         const day = dayMapping(dayIndex);
         const res = await getTodayTimetable(scheduleId, day);
         setClassList(res.data);
-        console.log(3, res.data);
       };
       getDayTimetable();
     }, [dayIndex, reloadTrigger]);

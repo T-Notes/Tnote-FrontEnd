@@ -10,7 +10,6 @@ const SDatePickerBox = styled.div`
   align-items: center;
 `;
 
-// 달력 스타일링
 const SCalender = styled(DatePicker)`
   display: flex;
   border: none;
@@ -22,7 +21,10 @@ const SCalender = styled(DatePicker)`
   align-items: center;
   text-align: center;
   ${({ theme }) => theme.fonts.caption3}
-  color:   ${({ theme }) => theme.colors.gray100};
+  color: ${({ selected }) => (selected ? 'black' : '#A6A6A6')};
+  .react-datepicker__header {
+    background-color: #007bff; /* 파란색 */
+  }
 `;
 const STildeIcon = styled.span`
   font-size: 20px;
@@ -62,12 +64,21 @@ const WriteDatePicker = ({
   const [isAllDay, setIsAllDay] = useState<boolean>(false);
   const { isToggle, handleChangeToggle } = useToggle();
 
-  const handleDateChange = (start: Date, end: Date) => {
+  const handleDateChangeStartDate = (start: Date, end: Date) => {
     setStartDate(start);
-    setEndDate(end);
-
     if (end < start) {
-      alert('시작일보다 종료일이 빠릅니다.');
+      setEndDate(start);
+    } else {
+      setEndDate(end);
+    }
+  };
+
+  const handleDateChangeEndDate = (start: Date, end: Date) => {
+    setStartDate(start);
+    if (end < start) {
+      alert('종료일이 시작일보다 빠릅니다.');
+    } else {
+      setEndDate(end);
     }
   };
 
@@ -110,7 +121,7 @@ const WriteDatePicker = ({
       <SDatePickerBox>
         <SCalender
           selected={onStartDate ? new Date(onStartDate) : startDate}
-          onChange={(date) => handleDateChange(date as Date, endDate)}
+          onChange={(date) => handleDateChangeStartDate(date as Date, endDate)}
           minDate={new Date('2000-01-01')}
           // maxDate={new Date(endDate)}
           showTimeSelect
@@ -123,7 +134,7 @@ const WriteDatePicker = ({
         <STildeIcon>~</STildeIcon>
         <SCalender
           selected={onEndDate ? new Date(onEndDate) : endDate}
-          onChange={(date) => handleDateChange(startDate, date as Date)}
+          onChange={(date) => handleDateChangeEndDate(startDate, date as Date)}
           // minDate={new Date(startDate)}
           showTimeSelect
           timeFormat="HH:mm"

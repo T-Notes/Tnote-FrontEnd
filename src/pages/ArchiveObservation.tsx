@@ -3,12 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcGoBack } from '../assets/icons';
-import WorkLogModal from '../components/Write/WorkLogModal';
-import EditObservationModal from '../components/WriteEdit/EditObservationModal';
-import EditProceedingModal from '../components/WriteEdit/EditProceedingModal';
+import ArchiveContent from '../components/Archive/ArchiveContent';
+import StudentRecordsModal from '../components/Write/StudentRecordsModal';
+import { formatDate } from '../utils/formatDate';
 import instanceAxios from '../utils/InstanceAxios';
 import { getObservationDetailData } from '../utils/lib/api';
-import ModalPortal from '../utils/ModalPortal';
+import { useModals } from '../utils/useHooks/useModals';
 
 const SArchiveTitle = styled.div`
   display: flex;
@@ -34,8 +34,12 @@ const STitleAndDate = styled.div`
   align-items: center;
 `;
 const STitleAndDateText = styled.div`
+  display: flex;
   font-size: 20px;
   font-weight: 600;
+  > div {
+    padding-left: 5px;
+  }
 `;
 const SDate = styled.div`
   margin-left: auto;
@@ -98,10 +102,12 @@ interface Proceeding {
   observationContents: string;
   startDate: string;
   endDate: string;
+  observationImageUrls: string;
 }
 
 const ArchiveObservation = () => {
-  const { logId } = useParams();
+  const { logId, scheduleId } = useParams();
+
   const navigate = useNavigate();
   const [observationLogData, setObservationLogData] = useState<Proceeding>({
     studentName: '',
@@ -109,27 +115,30 @@ const ArchiveObservation = () => {
     observationContents: '',
     startDate: '',
     endDate: '',
+    observationImageUrls: '',
   });
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const { openModal } = useModals();
+  const isEdit = true;
+
   const handleClickEdit = () => {
-    setIsEdit((prev) => !prev);
+    openModal(StudentRecordsModal, { scheduleId, logId, isEdit });
   };
-  const [reload, setReload] = useState<boolean>(false);
 
   useEffect(() => {
     const getDetailData = async () => {
       const res = await getObservationDetailData(logId);
+
       setObservationLogData({
         studentName: res.data.studentName,
         guidance: res.data.guidance,
         observationContents: res.data.observationContents,
-        startDate: res.data.startDate.slice(0, 10),
-        endDate: res.data.endDate.slice(0, 10),
+        startDate: res.data.startDate,
+        endDate: res.data.endDate,
+        observationImageUrls: res.data.observationImageUrls,
       });
-      console.log(res.data);
     };
     getDetailData();
-  }, [reload]);
+  }, []);
 
   const handleDelete = async () => {
     await Swal.fire({
@@ -142,7 +151,9 @@ const ArchiveObservation = () => {
       if (result.isConfirmed) {
         instanceAxios.delete(`/tnote/observation/${logId}`);
         Swal.fire('삭제가 완료되었습니다.');
-        navigate(-1);
+        setTimeout(() => {
+          navigate(`/archiveSemesterDetail/${scheduleId}`);
+        }, 100);
       }
     });
   };
@@ -155,32 +166,35 @@ const ArchiveObservation = () => {
             <STitle>학생 관찰 기록</STitle>
           </SArchiveTitle>
           <STitleAndDate>
-            <STitleAndDateText>{`${observationLogData.studentName}`}</STitleAndDateText>
-            <SDate>{`${observationLogData.startDate} ~ ${observationLogData.endDate}`}</SDate>
+            <STitleAndDateText>
+              제목: <div>{`${observationLogData.studentName}`}</div>
+            </STitleAndDateText>
+            <SDate>{`${formatDate(observationLogData.startDate)} ~ ${formatDate(
+              observationLogData.endDate,
+            )}`}</SDate>
           </STitleAndDate>
           <STextareaContainer>
-            <SLabel>관찰내용</SLabel>
-            <STextarea
-              readOnly
-              defaultValue={observationLogData.observationContents}
+            <ArchiveContent
+              label="관찰내용"
+              contentValue={observationLogData.observationContents}
+              isFile={false}
             />
-            <SLabel>해석 및 지도방안</SLabel>
-            <STextarea readOnly defaultValue={observationLogData.guidance} />
+            <ArchiveContent
+              label="관찰결과"
+              contentValue={observationLogData.guidance}
+              isFile={false}
+            />
+            <ArchiveContent
+              label="첨부파일"
+              contentValue={observationLogData.observationImageUrls}
+              isFile={true}
+            />
           </STextareaContainer>
           <SButtons>
             <SDelete onClick={handleDelete}>삭제</SDelete>
             <SEdit onClick={handleClickEdit}>수정</SEdit>
           </SButtons>
         </SArchiveClassLog>
-        <ModalPortal>
-          {isEdit && (
-            <EditObservationModal
-              onClose={handleClickEdit}
-              logId={logId}
-              setReload={setReload}
-            />
-          )}
-        </ModalPortal>
       </SArchiveClassLogWrapper>
     </>
   );

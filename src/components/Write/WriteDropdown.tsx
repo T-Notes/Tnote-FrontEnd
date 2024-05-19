@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 
-import { IcClose, IcOpenDropdown, IcCloseDropdown } from '../../assets/icons';
+import {
+  IcClose,
+  IcOpenDropdown,
+  IcCloseDropdown,
+  IcEditDisabledDropdown,
+} from '../../assets/icons';
 import { useToggle } from '../../utils/useHooks/useToggle';
 
 // styled //
@@ -9,19 +14,29 @@ const SModalTop = styled.div`
   align-items: center;
   margin-bottom: 20px;
 `;
+const SIcClose = styled(IcClose)`
+  margin-right: 10px;
+`;
 const SDropdownLabel = styled.div`
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* 204px를 rem 단위로 변경 */
+  padding-left: 10px;
   width: auto;
-  /* height: 60px; */
-  /* border-radius: 8px; */
-  padding-left: 20px;
-  /* border: 1px solid #a6a6a6; */
+
   ${({ theme }) => theme.fonts.h4}
 `;
+const DisabledDropdownLabel = styled(SDropdownLabel)`
+  border-radius: 8px;
+  border: 1px solid #a6a6a6;
+  background-color: #e8e8e8;
+  pointer-events: none;
+  color: #a6a6a6;
+
+  opacity: 0.8;
+`;
+
 const SDropdownToggle = styled.div`
   display: flex;
   margin-left: 10px;
@@ -55,11 +70,12 @@ export interface WritingModalProps {
   label: string;
   options: string[];
   onClickDropdownOpenModal: (option: string) => void;
-  closeWriteModal: () => void;
+  onClose: () => void;
+  isEdit: boolean;
 }
 
 const WriteDropdown = (props: WritingModalProps) => {
-  const { label, options, onClickDropdownOpenModal, closeWriteModal } = props;
+  const { label, options, onClickDropdownOpenModal, onClose, isEdit } = props;
 
   const { isToggle, handleChangeToggle } = useToggle();
   const handleClickDropdownOpenModal = (option: string) => {
@@ -67,32 +83,56 @@ const WriteDropdown = (props: WritingModalProps) => {
   };
   return (
     <SModalTop>
-      <IcClose className="pointer" onClick={closeWriteModal} />
-      <SDropdownLabel>
-        <div>{label}</div>
-        <SDropdownToggle onClick={handleChangeToggle}>
-          {isToggle ? (
-            <IcCloseDropdown className="pointer" />
-          ) : (
-            <IcOpenDropdown className="pointer" />
-          )}
-        </SDropdownToggle>
+      <SIcClose className="pointer" onClick={onClose} />
+      {isEdit ? (
+        <DisabledDropdownLabel>
+          <div>{label}</div>
+          <SDropdownToggle onClick={handleChangeToggle}>
+            <IcEditDisabledDropdown />
+          </SDropdownToggle>
 
-        {isToggle && (
-          <SDropdownList>
-            {options.map((option) => (
-              <SDropdownItem
-                key={option}
-                onClick={() => {
-                  handleClickDropdownOpenModal(option);
-                }}
-              >
-                {option}
-              </SDropdownItem>
-            ))}
-          </SDropdownList>
-        )}
-      </SDropdownLabel>
+          {isToggle && (
+            <SDropdownList>
+              {options.map((option) => (
+                <SDropdownItem
+                  key={option}
+                  onClick={() => {
+                    handleClickDropdownOpenModal(option);
+                  }}
+                >
+                  {option}
+                </SDropdownItem>
+              ))}
+            </SDropdownList>
+          )}
+        </DisabledDropdownLabel>
+      ) : (
+        <SDropdownLabel>
+          <div>{label}</div>
+          <SDropdownToggle onClick={handleChangeToggle}>
+            {isToggle ? (
+              <IcCloseDropdown className="pointer" />
+            ) : (
+              <IcOpenDropdown className="pointer" />
+            )}
+          </SDropdownToggle>
+
+          {isToggle && (
+            <SDropdownList>
+              {options.map((option) => (
+                <SDropdownItem
+                  key={option}
+                  onClick={() => {
+                    handleClickDropdownOpenModal(option);
+                  }}
+                >
+                  {option}
+                </SDropdownItem>
+              ))}
+            </SDropdownList>
+          )}
+        </SDropdownLabel>
+      )}
     </SModalTop>
   );
 };

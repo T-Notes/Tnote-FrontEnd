@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+
 import instanceAxios from '../../utils/InstanceAxios';
-import { useModal } from '../../utils/useHooks/useModal';
+
 import { getUserInfo, updateUserInfo } from '../../utils/lib/api';
 
 import { IcSearch } from '../../assets/icons';
@@ -13,11 +13,11 @@ import { Button } from '../common/styled/Button';
 
 import UserSubjectForm from './UserSubjectForm';
 import UserCareerForm from './UserCareerForm';
-import UserSchoolForm from './UserSchoolForm';
-import SearchInput from '../common/SearchInput';
+import UserSchoolModal from './UserSchoolModal';
 import { useRecoilState } from 'recoil';
 import { userDataState } from '../../utils/lib/recoil/userDataState';
 import Swal from 'sweetalert2';
+import { useModals } from '../../utils/useHooks/useModals';
 
 const SFormWrapper = styled.div`
   display: flex;
@@ -91,7 +91,7 @@ const UserInfoForm = ({ isEditMode, closeEditModal }: EditProps) => {
     career: '',
     alarm: false,
   });
-  const { isOpen, openModal, closeModal } = useModal();
+  const { openModal, closeModal } = useModals();
 
   const isUserDataValid = () => {
     const { schoolName, subject, career } = userData;
@@ -102,10 +102,15 @@ const UserInfoForm = ({ isEditMode, closeEditModal }: EditProps) => {
 
   // 자식 컴포넌트에서 유저가 선택한 학교명 받아오는 함수
   const handleSubmit = (searchInput: string) => {
-    closeModal();
+    console.log(searchInput);
+
+    closeModal(UserSchoolModal);
     setUserData((prevData) => ({ ...prevData, schoolName: searchInput }));
   };
 
+  const handleOpenSchoolModal = () => {
+    openModal(UserSchoolModal, { handleSubmit });
+  };
   // 로그인된 유저 정보 렌더링 되자마자 가져오기
   useEffect(() => {
     if (userId) {
@@ -160,7 +165,6 @@ const UserInfoForm = ({ isEditMode, closeEditModal }: EditProps) => {
       });
     } catch {}
   };
-  console.log(isEditMode);
 
   return (
     <SFormWrapper>
@@ -181,13 +185,13 @@ const UserInfoForm = ({ isEditMode, closeEditModal }: EditProps) => {
           <IcSearch />
           <SSearchInput
             placeholder="학교를 입력해주세요"
-            onClick={openModal}
+            onClick={handleOpenSchoolModal}
             readOnly
             value={userData.schoolName || ''}
           />
         </SSearchWrapper>
 
-        {isOpen && (
+        {/* {isOpen && (
           <UserSchoolForm
             isOpen={isOpen}
             onRequestClose={closeModal}
@@ -195,7 +199,7 @@ const UserInfoForm = ({ isEditMode, closeEditModal }: EditProps) => {
             userData={userData}
             setUserData={setUserData}
           />
-        )}
+        )} */}
       </div>
       <SButtonGroup>
         {isEditMode ? (
