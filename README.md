@@ -27,12 +27,12 @@ Tnote는 교사들의 업무 효율을 올리기 위한 교사 업무 기록 서
 FE
 | [최윤지 Yoonji23](https://github.com/Yoonji23) |
 | ---- |
-| ![이미지1](https://avatars.githubusercontent.com/u/105706403?v=4) |
+| <img src="https://avatars.githubusercontent.com/u/105706403?v=4" alt="이미지1" width="100" height="100"> | <img src="두번째_이미지_URL" alt="두번째 이미지" width="100" height="100"> |
 
 BE
-| [정수영 j9972](https://github.com/j9972) | [김태환 hwan2-99 ](https://github.com/hwan2-99) |
+| [정수영 j9972](https://github.com/j9972) | [김태환 hwan2-99](https://github.com/hwan2-99) |
 | ---- | ---- |
-| ![이미지1](https://avatars.githubusercontent.com/u/50689754?v=4) | ![이미지2](https://avatars.githubusercontent.com/u/93575221?v=4) |
+| <img src="https://avatars.githubusercontent.com/u/50689754?v=4" alt="이미지1" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/93575221?v=4" alt="이미지2" width="100" height="100"> |
 
 <br><br>
 
