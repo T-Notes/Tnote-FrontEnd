@@ -24,8 +24,8 @@ instanceAxios.interceptors.response.use(
     console.log(2, error.response.data.message);
     const errorMessage = error.response.data.message;
 
-    // 만료된 토큰인 경우
-    if (errorMessage === 'wrong token') {
+    // 만료된 토큰인 경우 No message available / expired access token
+    if (errorMessage === 'expired access token') {
       // 토큰 갱신 요청 보내기
       try {
         const refreshToken = localStorage.getItem('refreshToken');
@@ -68,7 +68,7 @@ instanceAxios.interceptors.response.use(
           }
         });
       }
-    } else {
+    } else if (errorMessage === 'No message available') {
       Swal.fire({
         title: '문제가 발생했습니다.',
         text: '로그아웃 후 다시 이용해주세요.',
@@ -89,6 +89,14 @@ instanceAxios.interceptors.response.use(
             }
           });
         }
+      });
+    } else if (errorMessage === 'incorrect date in subject') {
+      Swal.fire({
+        text: '학기에 포함된 날짜만 선택 가능합니다.',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#632CFA',
+      }).then((res) => {
+        window.location.reload();
       });
     }
 
