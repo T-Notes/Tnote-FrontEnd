@@ -4,10 +4,12 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcGoBack } from '../assets/icons';
-import EditClassLogModal from '../components/WriteEdit/EditClassLogModal';
+import ArchiveContent from '../components/Archive/ArchiveContent';
+import ClassLogModal from '../components/Write/ClassLogModal';
+import { formatDate } from '../utils/formatDate';
 import instanceAxios from '../utils/InstanceAxios';
 import { getClassLogDetailData } from '../utils/lib/api';
-import ModalPortal from '../utils/ModalPortal';
+import { useModals } from '../utils/useHooks/useModals';
 
 const SArchiveTitle = styled.div`
   display: flex;
@@ -33,34 +35,22 @@ const STitleAndDate = styled.div`
   align-items: center;
 `;
 const STitleAndDateText = styled.div`
+  display: flex;
   font-size: 20px;
   font-weight: 600;
+  > div {
+    padding-left: 5px;
+  }
 `;
 const SDate = styled.div`
   margin-left: auto;
   font-size: 16px;
   font-weight: 500;
 `;
-const SLabel = styled.label`
-  font-size: 17px;
-  font-weight: 600;
-  padding-bottom: 10px;
-`;
+
 const STextareaContainer = styled.div`
   display: flex;
   flex-direction: column;
-`;
-const STextarea = styled.textarea`
-  height: 130px;
-  width: 100%;
-  color: #a6a6a6;
-  overflow-y: scroll;
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #a6a6a6;
-  background: #ffff;
-  margin-bottom: 15px;
-  margin-bottom: 30px;
 `;
 
 const SDelete = styled.button`
@@ -101,16 +91,18 @@ interface ClassLog {
   magnitude: string;
   plan: string;
   submission: string;
+  classLogImageUrls: string;
 }
 // 수정 버튼을 클릭 -> 상태를 수정 상태로 변경
 // 상태가 true라면 수정용 모달을 띄우기
 const ArchiveClassLog = () => {
-  const { logId } = useParams();
+  const { logId, scheduleId } = useParams();
   const navigate = useNavigate();
-  const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [reload, setReload] = useState<boolean>(false);
+  const { openModal } = useModals();
+
+  const isEdit = true;
   const handleClickEdit = () => {
-    setIsEdit((prev) => !prev);
+    openModal(ClassLogModal, { logId, scheduleId, isEdit });
   };
   const [classLogData, setClassLogData] = useState<ClassLog>({
     id: null,
@@ -121,24 +113,27 @@ const ArchiveClassLog = () => {
     magnitude: '',
     plan: '',
     submission: '',
+    classLogImageUrls: '',
   });
 
   useEffect(() => {
     const getDetailData = async () => {
       const res = await getClassLogDetailData(logId);
+
       setClassLogData({
         id: res.data.id,
         title: res.data.title,
-        startDate: res.data.startDate.slice(0, 10),
-        endDate: res.data.endDate.slice(0, 10),
+        startDate: res.data.startDate,
+        endDate: res.data.endDate,
         classContents: res.data.classContents,
         magnitude: res.data.magnitude,
         plan: res.data.plan,
         submission: res.data.submission,
+        classLogImageUrls: res.data.classLogImageUrls,
       });
     };
     getDetailData();
-  }, [reload]);
+  }, []);
 
   const handleDelete = async () => {
     await Swal.fire({
@@ -152,7 +147,9 @@ const ArchiveClassLog = () => {
       if (result.isConfirmed) {
         instanceAxios.delete(`/tnote/classLog/${logId}`);
         Swal.fire('삭제가 완료되었습니다.');
-        navigate(-1);
+        setTimeout(() => {
+          navigate(`/archiveSemesterDetail/${scheduleId}`);
+        }, 100);
       }
     });
   };
@@ -164,34 +161,47 @@ const ArchiveClassLog = () => {
           <STitle>학급일지</STitle>
         </SArchiveTitle>
         <STitleAndDate>
-          <STitleAndDateText>제목내용:</STitleAndDateText>
-          <STitleAndDateText>{`${classLogData.title} 학급일지`}</STitleAndDateText>
-          <SDate>{`${classLogData.startDate} ~ ${classLogData.endDate}`}</SDate>
+          <STitleAndDateText>
+            제목:
+            <div>{`${classLogData.title}`}</div>
+          </STitleAndDateText>
+
+          <SDate>{`${formatDate(classLogData.startDate)} ~ ${formatDate(
+            classLogData.endDate,
+          )}`}</SDate>
         </STitleAndDate>
         <STextareaContainer>
-          <SLabel>학급계획</SLabel>
-          <STextarea value={classLogData.plan} />
-          <SLabel>수업내용</SLabel>
-          <STextarea value={classLogData.classContents} />
-          <SLabel>제출과제</SLabel>
-          <STextarea value={classLogData.submission} />
-          <SLabel>진도표</SLabel>
-          <STextarea value={classLogData.magnitude} />
+          <ArchiveContent
+            label="학급계획"
+            contentValue={classLogData.plan}
+            isFile={false}
+          />
+          <ArchiveContent
+            label="수업내용"
+            contentValue={classLogData.classContents}
+            isFile={false}
+          />
+          <ArchiveContent
+            label="제출과제"
+            contentValue={classLogData.submission}
+            isFile={false}
+          />
+          <ArchiveContent
+            label="진도표"
+            contentValue={classLogData.magnitude}
+            isFile={false}
+          />
+          <ArchiveContent
+            label="첨부파일"
+            contentValue={classLogData.classLogImageUrls}
+            isFile={true}
+          />
         </STextareaContainer>
         <SButtons>
           <SDelete onClick={handleDelete}>삭제</SDelete>
           <SEdit onClick={handleClickEdit}>수정</SEdit>
         </SButtons>
       </SArchiveClassLog>
-      <ModalPortal>
-        {isEdit && (
-          <EditClassLogModal
-            onClose={handleClickEdit}
-            logId={logId}
-            setReload={setReload}
-          />
-        )}
-      </ModalPortal>
     </SArchiveClassLogWrapper>
   );
 };

@@ -18,10 +18,11 @@ import {
 import SearchInput from '../../common/SearchInput';
 import { Button } from '../../common/styled/Button';
 import { useParams } from 'react-router-dom';
-import { getAllLogs, getSearchLogsValue } from '../../../utils/lib/api';
+import { getAllLogsByMonth, getSearchLogsValue } from '../../../utils/lib/api';
 import ScheduleCalendarSearchValue from '../../search/ScheduleCalendarSearchValue';
 import MoreLogModal from './MoreLogModal';
 import useRandomColor from '../../../utils/useHooks/useRandomColor';
+import { useModals } from '../../../utils/useHooks/useModals';
 
 const SCalendarWrapper = styled.div`
   width: 100%;
@@ -65,7 +66,8 @@ const SDays = styled.div`
   height: 80px;
   flex: 1;
   flex: 1 0 14%;
-  padding: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   .today {
     color: #ffff;
     background-color: #7f51fc;
@@ -105,10 +107,10 @@ const SLogContainer = styled.ul`
 
 const SLog = styled.div<{ color: string }>`
   font-size: 13px;
-  width: auto;
+  width: 100%;
   display: flex;
   justify-content: center;
-  border-radius: 8px;
+  /* border-radius: 8px; */
   padding: 3px;
   background-color: ${({ color }) => color};
 `;
@@ -129,16 +131,17 @@ const ScheduleCalendar = ({
   const { scheduleId } = useParams();
   const getRandomColor = useRandomColor();
   const [searchValue, setSearchValue] = useState<string>('');
-  const [searchValueList, setSetSearchValueList] = useState<any[]>([]);
+  const [searchValueList, setSearchValueList] = useState<any[]>([]);
   const [allLogs, setAllLogs] = useState<any[]>([]);
-  const [moreLogsModal, setMoreLogsModal] = useState<boolean>(false);
-  const [clickDay, setClickDay] = useState<Date | undefined>();
+  const { openModal } = useModals();
   const { currentDate, handlePrevMonth, handleNextMonth, setCurrentDate } =
     useCurrentDate();
 
   const startWeek = startOfWeek(startOfMonth(currentDate));
   const endWeek = endOfWeek(endOfMonth(currentDate));
-
+  const [itemColorsMap, setItemColorsMap] = useState<Record<string, string>>(
+    {},
+  );
   const days = [];
   let day = startWeek;
 
@@ -158,7 +161,7 @@ const ScheduleCalendar = ({
         const getMonthlyLogs = async () => {
           const formattedDate = format(currentDate, 'yyyy-MM-dd');
 
-          const response = await getAllLogs(scheduleId, formattedDate);
+          const response = await getAllLogsByMonth(scheduleId, formattedDate);
 
           const { classLogs, consultations, proceedings, observations } =
             response.data;
@@ -178,26 +181,23 @@ const ScheduleCalendar = ({
   }, [scheduleId, currentDate]);
 
   const handleClickMoreLogs = (day: Date) => {
-    setClickDay(day);
-    setMoreLogsModal(true);
+    openModal(MoreLogModal, { clickDay: day, scheduleId });
   };
-  const closeMoreLogsModal = () => {
-    setMoreLogsModal(false);
-  };
+
   const handleChangeSearchValue = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
     if (!value) {
-      setSetSearchValueList([]);
+      setSearchValueList([]);
     }
   };
 
   const handleLogsSearch = async () => {
-    const getSearchValue = await getSearchLogsValue(searchValue);
-    setSetSearchValueList(getSearchValue.data);
+    const getSearchValue = await getSearchLogsValue(searchValue, scheduleId);
+    setSearchValueList(getSearchValue.data);
   };
 
-  const debouncedSearch = _debounce(handleLogsSearch, 1000);
+  const debouncedSearch = _debounce(handleLogsSearch, 300);
 
   useEffect(() => {
     if (searchValue) {
@@ -229,7 +229,7 @@ const ScheduleCalendar = ({
         />
       </SCalendarHeaderWrapper>
 
-      {searchValueList.length > 0 ? (
+      {searchValue ? (
         <>
           <ScheduleCalendarSearchValue searchValueList={searchValueList} />
         </>
@@ -254,9 +254,20 @@ const ScheduleCalendar = ({
                 </div>
 
                 {(() => {
-                  const logsForDay = allLogs.filter((item) =>
-                    isSameDay(new Date(item.startDate), day),
-                  );
+                  const logsForDay = allLogs.filter((item) => {
+                    const startDate = new Date(item.startDate);
+                    const endDate = new Date(item.endDate);
+                    const daysInRange = [];
+
+                    let currentDate = startDate;
+                    while (currentDate <= endDate) {
+                      daysInRange.push(currentDate);
+                      currentDate = addDays(currentDate, 1);
+                    }
+
+                    return daysInRange.some((date) => isSameDay(date, day));
+                  });
+
                   const visibleLogs = logsForDay.slice(0, 2);
                   const hiddenLogsCount =
                     logsForDay.length - visibleLogs.length;
@@ -281,12 +292,6 @@ const ScheduleCalendar = ({
             ))}
           </SDaysBox>
         </SCalendarDate>
-      )}
-      {moreLogsModal && (
-        <MoreLogModal
-          clickDay={clickDay}
-          closeMoreLogsModal={closeMoreLogsModal}
-        />
       )}
     </SCalendarWrapper>
   );

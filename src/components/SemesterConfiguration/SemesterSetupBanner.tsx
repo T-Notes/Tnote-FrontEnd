@@ -1,11 +1,9 @@
 import styled from 'styled-components';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { IcAddBlack, IcGoBack } from '../../assets/icons';
 import { useEffect, useState } from 'react';
 import { createSemester, getAllSemesterNames } from '../../utils/lib/api';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
-import { useRecoilValue } from 'recoil';
-import { userDataState } from '../../utils/lib/recoil/userDataState';
 
 const SHeader = styled.h1`
   ${({ theme }) => theme.fonts.h2}
@@ -57,9 +55,12 @@ interface SemesterListProps {
 }
 
 const SemesterSetupBanner = () => {
+  const { scheduleId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentUrl = location.pathname;
   const [semesterList, setSemesterList] = useState<SemesterListProps[]>([]);
-  const { year, month } = useCurrentDate();
+  const { year, month, day } = useCurrentDate();
 
   const [isPostSemester, setIsPostSemester] = useState<boolean>(false);
   const [selectedSemester, setSelectedSemester] = useState<number | null>(null);
@@ -67,17 +68,14 @@ const SemesterSetupBanner = () => {
   // 학기 자동 생성 기준
   const autoCreateSemester = () => {
     let createdSemester = '';
-    // month가 1~ 6월이면 상반기 =>  2학기 생성
-    if (1 <= month && month <= 6) {
+    if (1 <= Number(month) && Number(month) <= 6) {
       createdSemester = `${year}년 2학기`;
-      // month가 7~12월이면 하반기 => 1학기 생성
-    } else if (7 <= month && month <= 12) {
+    } else if (7 <= Number(month) && Number(month) <= 12) {
       createdSemester = `${year}년 1학기`;
     }
     return createdSemester;
   };
 
-  // 학기 Post
   const handleAddSemester = async () => {
     const createdSemester = autoCreateSemester();
     try {
@@ -86,17 +84,27 @@ const SemesterSetupBanner = () => {
           semesterName: createdSemester,
           lastClass: '',
           email: '',
-          startDate: new Date(),
-          endDate: new Date(),
+          startDate: `${year}-${month}-${day}`,
+          endDate: `${year}-${month}-${day}`,
         };
-        await createSemester(data);
+        const response = await createSemester(data);
+        const newSemesterId = response.data.id;
+
+        if (newSemesterId) {
+          if (currentUrl.includes('home')) {
+            navigate(`/semesterSetup/home/${newSemesterId}`);
+          } else if (currentUrl.includes('timetable')) {
+            navigate(`/semesterSetup/timetable/${newSemesterId}`);
+          }
+        }
+
         setIsPostSemester((prev) => !prev);
       }
     } catch (error) {
       console.log('학기 추가에 실패했습니다.', error);
     }
   };
-  // 조회
+
   useEffect(() => {
     const getSemester = async () => {
       const updatedSemesterList = await getAllSemesterNames();
@@ -106,17 +114,17 @@ const SemesterSetupBanner = () => {
   }, [isPostSemester]);
 
   const handleClickBackRoute = () => {
-    if (window.location.pathname.includes('home')) {
+    if (currentUrl.includes('home')) {
       navigate('/home');
-    } else if (window.location.pathname.includes('timetable')) {
+    } else if (currentUrl.includes('timetable')) {
       navigate('/timetable');
     }
   };
 
   const handleClickRoute = (scheduleId: number) => {
-    if (window.location.pathname.includes('home')) {
+    if (currentUrl.includes('home')) {
       navigate(`/semesterSetup/home/${scheduleId}`);
-    } else if (window.location.pathname.includes('timetable')) {
+    } else if (currentUrl.includes('timetable')) {
       navigate(`/semesterSetup/timetable/${scheduleId}`);
     }
   };
@@ -132,14 +140,12 @@ const SemesterSetupBanner = () => {
           {semesterList.map((semester) => (
             <SSemester
               key={semester.id}
-              selected={selectedSemester === semester.id}
+              selected={Number(scheduleId) === semester.id}
               onClick={() => setSelectedSemester(semester.id)}
             >
-              {/* <Link to={`/semesterSetup/${semester.id}`}> */}
               <ul onClick={() => handleClickRoute(semester.id)}>
                 <li className="pointer">{semester.semesterName}</li>
               </ul>
-              {/* </Link> */}
             </SSemester>
           ))}
           <SAddSemester>

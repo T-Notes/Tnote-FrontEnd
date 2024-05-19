@@ -1,18 +1,7 @@
 import Swal from 'sweetalert2';
-
-import {
-  ModalLayout,
-  ModalBackground,
-} from '../../components/common/styled/ModalLayout';
-import instanceAxios from '../../utils/InstanceAxios';
+import { ModalBackground } from '../../components/common/styled/ModalLayout';
 import { useEffect, useState } from 'react';
-import {
-  deletedAccount,
-  getUserInfo,
-  logout,
-  updateAlarmToggle,
-  updateUserInfo,
-} from '../../utils/lib/api';
+import { getUserInfo, logout, updateAlarmToggle } from '../../utils/lib/api';
 import styled from 'styled-components';
 import {
   IcAfter,
@@ -24,11 +13,10 @@ import {
 } from '../../assets/icons';
 import EditProfile from './EditProfile';
 import ModalPortal from '../../utils/ModalPortal';
-import { result } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 import PrivacyPolicyModal from '../Landing/PrivacyPolicyModal';
-import { useRecoilValue } from 'recoil';
 import axios from 'axios';
+import { useModals } from '../../utils/useHooks/useModals';
 
 const SSettingWrapper = styled.div`
   border: 1px solid var(--Black-Black50, #d5d5d5);
@@ -190,7 +178,7 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
   // 수정 폼 모달
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [isPolicyModal, setIsPolicyModal] = useState<boolean>(false);
+
   const [userData, setUserData] = useState<UserData>({
     email: '',
     name: '',
@@ -199,7 +187,7 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     career: undefined,
     alarm: false,
   });
-  const code = localStorage.getItem('code');
+  const { openModal } = useModals();
 
   // 수정 폼 모달 제어함수
   const openEditModal = () => {
@@ -221,7 +209,7 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
   };
 
   const handleClickPolicyModal = () => {
-    setIsPolicyModal(true);
+    openModal(PrivacyPolicyModal, {});
   };
 
   const handleClickLogout = async () => {
@@ -362,13 +350,6 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
           )}
         </SSettingWrapper>
       </ModalBackground>
-      {isPolicyModal && (
-        <PrivacyPolicyModal
-          isOpen={isPolicyModal}
-          onRequestClose={() => setIsPolicyModal(false)}
-          onPrivacyAgreement={() => setIsPolicyModal(false)}
-        />
-      )}
     </ModalPortal>
   );
 };

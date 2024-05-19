@@ -1,25 +1,30 @@
 import { useEffect, useState } from 'react';
-import { getAllSemesterNames, getSemesterData } from '../../utils/lib/api';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import {
+  getAllSemesterNames,
+  getUserInfo,
+  updateUserInfo,
+} from '../../utils/lib/api';
+import { useLocation, useNavigate } from 'react-router-dom';
 import DropdownInput from '../common/DropdownInput';
 import SemesterDropdownList from './SemesterDropdownList';
 
+interface SemesterData {
+  id: string;
+  semesterName: string;
+}
 const AllSemesterNamesForm = () => {
   const navigate = useNavigate();
-  const { scheduleId } = useParams();
-  const user = localStorage.getItem('userId');
-  const [semesterOptions, setSemesterOptions] = useState<any[]>([]);
-  const [selectedSemester, setSelectedSemester] = useState<string>('');
-  const [isDropdownSemester, setIsDropdownSemester] = useState<boolean>(false);
-  const [defaultSemester, setDefaultSemester] = useState<string>('');
 
+  const user = localStorage.getItem('userId');
+  const [semesterOptions, setSemesterOptions] = useState<SemesterData[]>([]);
+  const [isDropdownSemesterToggle, setIsDropdownSemesterToggle] =
+    useState<boolean>(false);
+  const [defaultSemester, setDefaultSemester] = useState<string>('');
+  const [reload, setReload] = useState<boolean>(false);
   const currentUrl = useLocation();
 
-  const openDropdownSemester = () => {
-    setIsDropdownSemester(true);
-  };
-  const closeDropdownSemester = () => {
-    setIsDropdownSemester(false);
+  const handleChangeSemesterToggle = () => {
+    setIsDropdownSemesterToggle(!isDropdownSemesterToggle);
   };
 
   useEffect(() => {
@@ -27,6 +32,7 @@ const AllSemesterNamesForm = () => {
       const getSemesterNames = async () => {
         try {
           const response = await getAllSemesterNames();
+
           setSemesterOptions(response);
         } catch {}
       };
@@ -34,43 +40,47 @@ const AllSemesterNamesForm = () => {
     }
   }, [user]);
 
-  const handleClickSemester = (semesterName: string, semesterId: string) => {
-    const selectedSemesterId = semesterOptions.find((s) => s.id === semesterId);
+  const handleClickSemester = async (
+    semesterName: string,
+    scheduleId: string,
+  ) => {
+    const userData = {
+      scheduleId: scheduleId,
+      semesterName: semesterName,
+    };
+    await updateUserInfo(userData);
 
-    if (selectedSemesterId) {
-      if (
-        currentUrl.pathname === '/home' ||
-        currentUrl.pathname === `/home/${scheduleId}`
-      ) {
-        navigate(`/home/${selectedSemesterId.id}`);
-      } else if (
-        currentUrl.pathname === '/timetable' ||
-        currentUrl.pathname === `/timetable/${scheduleId}`
-      ) {
-        navigate(`/timetable/${selectedSemesterId.id}`);
-      }
-    }
-
-    setSelectedSemester(semesterName);
-    closeDropdownSemester();
+    handleChangeSemesterToggle();
+    setReload((prev) => !prev);
   };
 
   useEffect(() => {
-    if (scheduleId) {
-      const getSemesterName = async () => {
-        const response = await getSemesterData(scheduleId);
-        const defaultSemesterName = response.data[0].semesterName;
-        setDefaultSemester(defaultSemesterName);
-      };
-      getSemesterName();
-    }
-  }, [scheduleId]);
+    const getSemesterId = async () => {
+      const response = await getUserInfo(user);
+      const scheduleId = response.data.scheduleId;
+      const semesterName = response.data.semesterName;
+      if (semesterName) {
+        setDefaultSemester(semesterName);
+      }
+
+      if (scheduleId && scheduleId !== 0) {
+        currentUrl.pathname.includes('home')
+          ? navigate(`/home/${scheduleId}`)
+          : navigate(`/timetable/${scheduleId}`);
+      } else {
+        currentUrl.pathname.includes('home')
+          ? navigate(`/home`)
+          : navigate(`/timetable`);
+      }
+    };
+    getSemesterId();
+  }, [reload]);
 
   return (
     <>
       <DropdownInput
         placeholder="학기를 추가해주세요"
-        value={defaultSemester || selectedSemester}
+        value={defaultSemester}
         size="small"
         theme={{ background: 'white' }}
         dropdownList={
@@ -82,9 +92,8 @@ const AllSemesterNamesForm = () => {
             onSelectedSemester={handleClickSemester}
           />
         }
-        isDropdown={isDropdownSemester}
-        openDropdown={openDropdownSemester}
-        closeDropdown={closeDropdownSemester}
+        isToggle={isDropdownSemesterToggle}
+        handleChangeToggle={handleChangeSemesterToggle}
       ></DropdownInput>
     </>
   );

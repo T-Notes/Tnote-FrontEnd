@@ -162,6 +162,7 @@ export const createSemester = async (semesterData: object) => {
 export const getSemesterData = async (scheduleId: string | undefined) => {
   try {
     const response = await instanceAxios.get(`/tnote/schedule/${scheduleId}`);
+
     return response.data;
   } catch {
     throw new Error('해당 학기의 정보를 조회하는데 에러가 발생했습니다.');
@@ -377,9 +378,22 @@ export const getAllObservation = async (scheduleId: string | undefined) => {
   } catch {}
 };
 
+// 학기 일지 전체 조회(아카이브)
+export const getAllLogsBySchedule = async (
+  scheduleId: string | undefined,
+  page: number,
+) => {
+  try {
+    const response = await instanceAxios.get(
+      `tnote/home/${scheduleId}/LogsByFilter?page=${page}&size=8&logType=ALL`,
+    );
+    return response.data;
+  } catch {}
+};
+
 // 월별 모든 일지 가져오기
 
-export const getAllLogs = async (
+export const getAllLogsByMonth = async (
   scheduleId: string | undefined,
   date: string,
 ) => {
@@ -413,11 +427,17 @@ export const getRecentLogs = async () => {
 
 // 일지 검색
 
-export const getSearchLogsValue = async (keyword: string) => {
+export const getSearchLogsValue = async (
+  keyword: string,
+  scheduleId: string | undefined,
+) => {
   try {
-    const response = await instanceAxios.get('/tnote/home/searching', {
-      params: { keyword: keyword },
-    });
+    const response = await instanceAxios.get(
+      `/tnote/home/searching/${scheduleId}`,
+      {
+        params: { keyword: keyword },
+      },
+    );
     return response.data;
   } catch {}
 };
@@ -446,16 +466,7 @@ export const getFilteredLogsByDate = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `tnote/home/${scheduleId}/dateLogs`,
-      {
-        params: {
-          startDate: startDate,
-          endDate: endDate,
-          page: 0,
-          size: 8,
-          logType: logType,
-        },
-      },
+      `tnote/home/${scheduleId}/dateLogs?startDate=${startDate}&endDate=${endDate}&page=0&size=8&logType=${logType}`,
     );
 
     return response.data;

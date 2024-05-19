@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { subMonths, addMonths } from 'date-fns';
 
 export const useCurrentDate = () => {
@@ -13,13 +13,17 @@ export const useCurrentDate = () => {
     setCurrentDate((prevDate) => addMonths(prevDate, 1));
   };
 
+  const formatNumber = (num: number) => {
+    return num < 10 ? '0' + num : num;
+  };
+
   return {
     currentDate,
     handlePrevMonth,
     handleNextMonth,
     setCurrentDate,
     year: currentDate.getFullYear(),
-    month: currentDate.getMonth() + 1,
-    day: currentDate.getDate(),
+    month: formatNumber(currentDate.getMonth() + 1),
+    day: formatNumber(currentDate.getDate()),
   };
 };

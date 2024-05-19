@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { IcFile } from '../../assets/icons';
 import instanceAxios from '../../utils/InstanceAxios';
 import { getRecentLogs } from '../../utils/lib/api';
-import ArchiveFilteredLogs from './ArchiveFilteredLogs';
 
 const SArchiveRecentLogsWrapper = styled.div`
   display: flex;
@@ -48,10 +47,11 @@ interface RecentLogs {
 }
 
 interface newRecentLogs {
-  id: number | null;
+  id: number;
   title: string;
   studentName: string;
   createdAt: string;
+  logType: string;
 }
 const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
   const navigate = useNavigate();
@@ -64,6 +64,7 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
         const getRecentData = async () => {
           const response = await getRecentLogs();
           const data = response.data;
+
           if (data) {
             const promises = data.map(async (item: RecentLogs) => {
               let recentEndPoint = '';
@@ -78,6 +79,7 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
               }
               if (recentEndPoint) {
                 const response = await instanceAxios.get(recentEndPoint);
+
                 return response.data.data;
               }
             });
@@ -93,14 +95,33 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
     }
   }, [scheduleId]);
 
+  const handleClickRecentLog = (logId: number, logType: string) => {
+    let logEndpointMid = '';
+    if (logType === 'CLASS_LOG') {
+      logEndpointMid = 'classLog';
+    }
+    if (logType === 'PROCEEDING') {
+      logEndpointMid = 'proceeding';
+    }
+    if (logType === 'CONSULTATION') {
+      logEndpointMid = 'consultation';
+    }
+    if (logType === 'OBSERVATION') {
+      logEndpointMid = 'observation';
+    }
+    navigate(`/archive/${logEndpointMid}/${scheduleId}/${logId}`);
+  };
   return (
     <SArchiveRecentLogsWrapper>
       <STitle>최근 조회</STitle>
       <SRecentSearchContainer>
-        {newRecentLogs.map((item, index) => {
+        {newRecentLogs.map((item) => {
           const newTimestamp = item.createdAt.slice(0, 10);
           return (
-            <SRecentSearchItem key={index}>
+            <SRecentSearchItem
+              key={item.id}
+              onClick={() => handleClickRecentLog(item.id, item.logType)}
+            >
               <IcFile />
               <div>{item.studentName || item.title}</div>
               <div>{`${newTimestamp} 작성`}</div>
@@ -108,7 +129,6 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
           );
         })}
       </SRecentSearchContainer>
-      <ArchiveFilteredLogs scheduleId={scheduleId} />
     </SArchiveRecentLogsWrapper>
   );
 };

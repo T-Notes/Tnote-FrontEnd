@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 import Todo from './Todo';
-import { getAllTaskByDate } from '../../utils/lib/api';
+import { getAllTaskByDate, getSemesterData } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import ClassLogModal from '../Write/ClassLogModal';
@@ -100,15 +100,51 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
   const [observationContent, setObservationContent] = useState<Task[]>([]);
   const [todo, setTodo] = useState<Task[]>([]);
   const [reload, setReload] = useState<boolean>(false);
+  const [semesterStartDate, setSemesterStartDate] = useState<string>('');
+  const [semesterEndDate, setSemesterEndDate] = useState<string>('');
+  const isEdit = true;
   const currentDate = new Date().toISOString().slice(0, 10);
 
-  const formattedDate = clickedDate
-    ? clickedDate.replace(
-        /(\d{4})-(\d{2})-(\d{2})/,
-        (match, year, month, day) =>
-          `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`,
-      )
-    : `${year}년 ${month}월 ${day}일`;
+  const formattedDate = (() => {
+    const clickedDateTime = clickedDate ? new Date(clickedDate) : null;
+    const semesterStartDateObj = semesterStartDate
+      ? new Date(semesterStartDate)
+      : null;
+    const semesterEndDateObj = semesterEndDate
+      ? new Date(semesterEndDate)
+      : null;
+
+    if (
+      clickedDateTime &&
+      semesterStartDateObj &&
+      semesterEndDateObj &&
+      clickedDateTime >= semesterStartDateObj &&
+      clickedDateTime <= semesterEndDateObj
+    ) {
+      const year = clickedDateTime.getFullYear();
+      const month = String(clickedDateTime.getMonth() + 1).padStart(2, '0');
+      const day = String(clickedDateTime.getDate()).padStart(2, '0');
+
+      return `${year}년 ${month}월 ${day}일`;
+    } else {
+      return `${year}년 ${String(month).padStart(2, '0')}월 ${String(
+        day,
+      ).padStart(2, '0')}일`;
+    }
+  })();
+
+  useEffect(() => {
+    if (scheduleId) {
+      const getDateRange = async () => {
+        const response = await getSemesterData(scheduleId);
+        console.log(3, response.data);
+
+        setSemesterStartDate(response.data[0].startDate);
+        setSemesterEndDate(response.data[0].endDate);
+      };
+      getDateRange();
+    }
+  }, [clickedDate]);
 
   useEffect(() => {
     if (scheduleId) {
@@ -118,7 +154,6 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
             const allData = await getAllTaskByDate(scheduleId, clickedDate);
 
             const logData = allData.data;
-            console.log('logData', logData);
 
             setTodo(logData.todos);
             setClassLogContent(logData.classLogs);
@@ -135,28 +170,23 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
           }
         } catch (error) {
           console.error('Error fetching data:', error);
-          Swal.fire({
-            text: '학기에 포함된 날짜만 선택 가능합니다.',
-            confirmButtonText: '확인',
-            confirmButtonColor: '#632CFA',
-          });
         }
       };
       fetchData();
     }
   }, [reload, scheduleId, clickedDate]);
 
-  const handleOpenClassLogIdModal = (logId: any) => {
-    openModal(ClassLogModal, { logId });
+  const handleOpenClassLogIdModal = (logId: number) => {
+    openModal(ClassLogModal, { scheduleId, logId, isEdit });
   };
-  const handleOpenProceedingIdModal = (logId: any) => {
-    openModal(WorkLogModal, { logId });
+  const handleOpenProceedingIdModal = (logId: number) => {
+    openModal(WorkLogModal, { scheduleId, logId, isEdit });
   };
-  const handleOpenConsultationIdModal = (logId: any) => {
-    openModal(ConsultationRecordsModal, { logId });
+  const handleOpenConsultationIdModal = (logId: number) => {
+    openModal(ConsultationRecordsModal, { scheduleId, logId, isEdit });
   };
-  const handleOpenObservationIdModal = (logId: any) => {
-    openModal(StudentRecordsModal, { logId });
+  const handleOpenObservationIdModal = (logId: number) => {
+    openModal(StudentRecordsModal, { scheduleId, logId, isEdit });
   };
 
   return (

@@ -22,6 +22,7 @@ const SWarningContent = styled.div`
 const customStyles = {
   overlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: '10',
   },
   content: {
     top: '50%',
@@ -37,6 +38,7 @@ const customStyles = {
     padding: '20px',
     borderRadius: '8px',
     boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
+    zIndex: '9',
   },
 };
 

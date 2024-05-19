@@ -3,11 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcGoBack } from '../assets/icons';
+import ArchiveContent from '../components/Archive/ArchiveContent';
 import WorkLogModal from '../components/Write/WorkLogModal';
-import EditProceedingModal from '../components/WriteEdit/EditProceedingModal';
+import { formatDate } from '../utils/formatDate';
 import instanceAxios from '../utils/InstanceAxios';
 import { getProceedingDetailData } from '../utils/lib/api';
-import ModalPortal from '../utils/ModalPortal';
+import { useModals } from '../utils/useHooks/useModals';
 
 const SArchiveTitle = styled.div`
   display: flex;
@@ -33,8 +34,12 @@ const STitleAndDate = styled.div`
   align-items: center;
 `;
 const STitleAndDateText = styled.div`
+  display: flex;
   font-size: 20px;
   font-weight: 600;
+  > div {
+    padding-left: 5px;
+  }
 `;
 const SDate = styled.div`
   margin-left: auto;
@@ -96,36 +101,44 @@ interface Proceeding {
   workContents: string;
   startDate: string;
   endDate: string;
+  proceedingImageUrls: string;
 }
 
 const ArchiveProceeding = () => {
-  const { logId } = useParams();
+  const { logId, scheduleId } = useParams();
+
   const navigate = useNavigate();
   const [proceedingLogData, setProceedingLogData] = useState<Proceeding>({
     title: '',
     workContents: '',
     startDate: '',
     endDate: '',
+    proceedingImageUrls: '',
   });
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const { openModal } = useModals();
+  const isEdit = true;
+
   const handleClickEdit = () => {
-    setIsEdit((prev) => !prev);
+    openModal(WorkLogModal, { scheduleId, logId, isEdit });
   };
-  const [reload, setReload] = useState<boolean>(false);
 
   useEffect(() => {
     const getDetailData = async () => {
       const res = await getProceedingDetailData(logId);
+      const data = res.data;
+      console.log(data);
+
       setProceedingLogData({
-        title: res.data.title,
-        workContents: res.data.workContents,
-        startDate: res.data.startDate.slice(0, 10),
-        endDate: res.data.endDate.slice(0, 10),
+        title: data.title,
+        workContents: data.workContents,
+        startDate: data.startDate,
+        endDate: data.endDate,
+
+        proceedingImageUrls: data.proceedingImageUrls,
       });
-      console.log(res.data);
     };
     getDetailData();
-  }, [reload]);
+  }, []);
 
   const handleDelete = async () => {
     await Swal.fire({
@@ -138,7 +151,9 @@ const ArchiveProceeding = () => {
       if (result.isConfirmed) {
         instanceAxios.delete(`/tnote/proceeding/${logId}`);
         Swal.fire('삭제가 완료되었습니다.');
-        navigate(-1);
+        setTimeout(() => {
+          navigate(`/archiveSemesterDetail/${scheduleId}`);
+        }, 100);
       }
     });
   };
@@ -150,28 +165,30 @@ const ArchiveProceeding = () => {
           <STitle>업무일지</STitle>
         </SArchiveTitle>
         <STitleAndDate>
-          <STitleAndDateText>제목:</STitleAndDateText>
-          <STitleAndDateText>{`${proceedingLogData.title}`}</STitleAndDateText>
-          <SDate>{`${proceedingLogData.startDate} ~ ${proceedingLogData.endDate}`}</SDate>
+          <STitleAndDateText>
+            제목: <div>{`${proceedingLogData.title}`}</div>
+          </STitleAndDateText>
+          <SDate>{`${formatDate(proceedingLogData.startDate)} ~ ${formatDate(
+            proceedingLogData.endDate,
+          )}`}</SDate>
         </STitleAndDate>
         <STextareaContainer>
-          <SLabel>회의록</SLabel>
-          <STextarea readOnly defaultValue={proceedingLogData.workContents} />
+          <ArchiveContent
+            label="업무일지"
+            contentValue={proceedingLogData.workContents}
+            isFile={false}
+          />
+          <ArchiveContent
+            label="첨부파일"
+            contentValue={proceedingLogData.proceedingImageUrls}
+            isFile={true}
+          />
         </STextareaContainer>
         <SButtons>
           <SDelete onClick={handleDelete}>삭제</SDelete>
           <SEdit onClick={handleClickEdit}>수정</SEdit>
         </SButtons>
       </SArchiveClassLog>
-      <ModalPortal>
-        {isEdit && (
-          <EditProceedingModal
-            onClose={handleClickEdit}
-            logId={logId}
-            setReload={setReload}
-          />
-        )}
-      </ModalPortal>
     </SArchiveClassLogWrapper>
   );
 };
