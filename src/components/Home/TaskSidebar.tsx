@@ -137,7 +137,6 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
     if (scheduleId) {
       const getDateRange = async () => {
         const response = await getSemesterData(scheduleId);
-        console.log(3, response.data);
 
         setSemesterStartDate(response.data[0].startDate);
         setSemesterEndDate(response.data[0].endDate);
