@@ -261,7 +261,7 @@ const ScheduleCalendar = ({
 
                     let currentDate = startDate;
                     while (currentDate <= endDate) {
-                      daysInRange.push(currentDate);
+                      daysInRange.push(new Date(currentDate));
                       currentDate = addDays(currentDate, 1);
                     }
 
@@ -275,7 +275,7 @@ const ScheduleCalendar = ({
                     <>
                       {visibleLogs.map((item, index) => (
                         <SLogContainer key={index}>
-                          <SLog color={getRandomColor()}>
+                          <SLog color={item.color}>
                             {item.title || item.studentName}
                           </SLog>
                         </SLogContainer>

@@ -8,6 +8,7 @@ import { IcPen, IcSmallDatePicker, IcTitle } from '../../assets/icons';
 import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 
 import { getConsultationDetailData } from '../../utils/lib/api';
+import useRandomColor from '../../utils/useHooks/useRandomColor';
 
 import FileUpload from '../common/FileUpload';
 import { Button } from '../common/styled/Button';
@@ -145,6 +146,7 @@ const ConsultationRecordsModal = ({
   const [imgUrl, setImgUrl] = useState<File[]>([]);
   const [fileName, setFileName] = useState<string[]>([]);
   const formData = new FormData();
+  const getRandomColor = useRandomColor();
 
   const handleCounselingButtonClick = (buttonName: string) => {
     setSelectedCounselingButton(buttonName);
@@ -245,6 +247,7 @@ const ConsultationRecordsModal = ({
           consultationContents: counselingContent,
           consultationResult: counselingResult,
           isAllDay: parentsIsAllDay,
+          color: getRandomColor(),
         };
 
         if (!logData.counselingField || !logData.counselingType) {

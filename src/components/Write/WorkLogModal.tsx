@@ -12,6 +12,7 @@ import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 import { getProceedingDetailData } from '../../utils/lib/api';
 import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
+import useRandomColor from '../../utils/useHooks/useRandomColor';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -132,7 +133,7 @@ const WorkLogModal = ({
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File[]>([]);
   const [fileName, setFileName] = useState<string[]>([]);
-
+  const getRandomColor = useRandomColor();
   const formData = new FormData();
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -218,6 +219,7 @@ const WorkLogModal = ({
           location: place,
           workContents: workContents,
           isAllDay: parentsIsAllDay,
+          color: getRandomColor(),
         };
 
         // 이미지 파일

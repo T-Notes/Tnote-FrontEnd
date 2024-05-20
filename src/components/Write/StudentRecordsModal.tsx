@@ -14,6 +14,7 @@ import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 import { getObservationDetailData } from '../../utils/lib/api';
 import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
+import useRandomColor from '../../utils/useHooks/useRandomColor';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -78,6 +79,7 @@ const StudentRecordsModal = ({
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File[]>([]);
   const [fileName, setFileName] = useState<string[]>([]);
+  const getRandomColor = useRandomColor();
   const formData = new FormData();
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -163,6 +165,7 @@ const StudentRecordsModal = ({
           observationContents: observationContent,
           guidance: teachingPlan,
           isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
+          color: getRandomColor(),
         };
         // 이미지 파일
         if (imgUrl.length >= 1) {

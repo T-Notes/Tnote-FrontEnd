@@ -11,6 +11,7 @@ import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import ReactModal from 'react-modal';
 import { getClassLogDetailData, patchClassLog } from '../../utils/lib/api';
 import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
+import useRandomColor from '../../utils/useHooks/useRandomColor';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -98,7 +99,7 @@ const ClassLogModal = ({
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File[]>([]);
   const [fileName, setFileName] = useState<string[]>([]);
-
+  const getRandomColor = useRandomColor();
   const [contentType, setContentType] =
     useState<keyof SaveContents>('학습계획');
 
@@ -160,7 +161,7 @@ const ClassLogModal = ({
           magnitude: saveContents.진도표,
           isAllDay: parentsIsAllDay,
         };
-        // await patchClassLog(String(logId), editData);
+
         if (imgUrl.length >= 1) {
           for (let i = 0; i < imgUrl.length; i++) {
             formData.append('classLogImages', imgUrl[i]);
@@ -203,6 +204,7 @@ const ClassLogModal = ({
             submission: saveContents.제출과제,
             magnitude: saveContents.진도표,
             isAllDay: parentsIsAllDay,
+            color: getRandomColor(),
           };
 
           // 이미지 파일
