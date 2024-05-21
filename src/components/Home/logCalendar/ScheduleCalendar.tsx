@@ -264,6 +264,7 @@ const ScheduleCalendar = ({
                       daysInRange.push(new Date(currentDate));
                       currentDate = addDays(currentDate, 1);
                     }
+                    daysInRange.push(endDate);
 
                     return daysInRange.some((date) => isSameDay(date, day));
                   });
