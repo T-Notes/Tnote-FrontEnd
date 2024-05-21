@@ -187,7 +187,7 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     career: undefined,
     alarm: false,
   });
-  const { openModal } = useModals();
+  const { openModal, closeModal } = useModals();
 
   // 수정 폼 모달 제어함수
   const openEditModal = () => {
@@ -208,8 +208,12 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     setUserData((prev) => ({ ...prev, alarm: false }));
   };
 
+  const handleIsCheckedTrue = () => {
+    closeModal(PrivacyPolicyModal);
+  };
+
   const handleClickPolicyModal = () => {
-    openModal(PrivacyPolicyModal, {});
+    openModal(PrivacyPolicyModal, { handleIsCheckedTrue });
   };
 
   const handleClickLogout = async () => {
@@ -226,8 +230,6 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     });
   };
   useEffect(() => {
-    console.log(1);
-
     const getUserData = async () => {
       try {
         const response = await getUserInfo(userId);
