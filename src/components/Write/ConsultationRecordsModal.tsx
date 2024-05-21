@@ -184,8 +184,6 @@ const ConsultationRecordsModal = ({
   };
 
   const handleClickSubmit = async () => {
-    console.log(scheduleId);
-
     if (scheduleId) {
       if (isEdit) {
         try {
@@ -230,69 +228,70 @@ const ConsultationRecordsModal = ({
               },
             },
           );
-          window.location.reload();
-          onClose();
+          // window.location.reload();
+          // onClose();
         } catch (err) {
           if ((err = 'Consultation date must be within the schedule dates')) {
             window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
           }
         }
-      }
-      try {
-        const logData = {
-          studentName: title,
-          startDate: new Date(
-            date.startDate.getTime() -
-              date.startDate.getTimezoneOffset() * 60000,
-          ),
-          endDate: new Date(
-            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
-          ),
-          counselingField: selectedCounselingButton,
-          counselingType: selectedTargetButton,
-          consultationContents: counselingContent,
-          consultationResult: counselingResult,
-          isAllDay: parentsIsAllDay,
-          color: getRandomColor(),
-        };
+      } else {
+        try {
+          const logData = {
+            studentName: title,
+            startDate: new Date(
+              date.startDate.getTime() -
+                date.startDate.getTimezoneOffset() * 60000,
+            ),
+            endDate: new Date(
+              date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+            ),
+            counselingField: selectedCounselingButton,
+            counselingType: selectedTargetButton,
+            consultationContents: counselingContent,
+            consultationResult: counselingResult,
+            isAllDay: parentsIsAllDay,
+            color: getRandomColor(),
+          };
 
-        if (!logData.counselingField || !logData.counselingType) {
-          Swal.fire({
-            title: '입력 에러',
-            text: '상담 분야와 상담 대상을 선택해주세요.',
-          });
-        }
-
-        // 이미지 파일
-        if (imgUrl.length >= 1) {
-          for (let i = 0; i < imgUrl.length; i++) {
-            formData.append('consultationImages', imgUrl[i]);
+          if (!logData.counselingField || !logData.counselingType) {
+            Swal.fire({
+              title: '입력 에러',
+              text: '상담 분야와 상담 대상을 선택해주세요.',
+            });
           }
-        }
 
-        const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
-          type: 'application/json',
-        });
-        formData.append('requestDto', jsonDataTypeValue);
+          // 이미지 파일
+          if (imgUrl.length >= 1) {
+            for (let i = 0; i < imgUrl.length; i++) {
+              formData.append('consultationImages', imgUrl[i]);
+            }
+          }
 
-        const accessToken = localStorage.getItem('accessToken');
+          const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+            type: 'application/json',
+          });
+          formData.append('requestDto', jsonDataTypeValue);
 
-        await axios.post(
-          `https://j9972.kr/tnote/consultation/${scheduleId}`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${accessToken}`,
-              accept: 'application/json',
+          const accessToken = localStorage.getItem('accessToken');
+
+          await axios.post(
+            `https://j9972.kr/tnote/consultation/${scheduleId}`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${accessToken}`,
+                accept: 'application/json',
+              },
             },
-          },
-        );
-        window.location.reload();
-        onClose();
-      } catch (err) {
-        if ((err = 'Consultation date must be within the schedule dates')) {
-          window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
+          );
+          // window.location.reload();
+          // onClose();
+        } catch (err) {
+          if ((err = 'Consultation date must be within the schedule dates')) {
+            window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
+          }
         }
       }
     } else {

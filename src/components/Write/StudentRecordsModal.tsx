@@ -157,52 +157,53 @@ const StudentRecordsModal = ({
             window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
           }
         }
-      }
-      try {
-        const logData = {
-          studentName: title,
-          startDate: new Date(
-            date.startDate.getTime() -
-              date.startDate.getTimezoneOffset() * 60000,
-          ),
-          endDate: new Date(
-            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
-          ),
-          observationContents: observationContent,
-          guidance: teachingPlan,
-          isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
-          color: getRandomColor(),
-        };
-        // 이미지 파일
-        if (imgUrl.length >= 1) {
-          for (let i = 0; i < imgUrl.length; i++) {
-            formData.append('observationImages', imgUrl[i]);
+      } else {
+        try {
+          const logData = {
+            studentName: title,
+            startDate: new Date(
+              date.startDate.getTime() -
+                date.startDate.getTimezoneOffset() * 60000,
+            ),
+            endDate: new Date(
+              date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+            ),
+            observationContents: observationContent,
+            guidance: teachingPlan,
+            isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
+            color: getRandomColor(),
+          };
+          // 이미지 파일
+          if (imgUrl.length >= 1) {
+            for (let i = 0; i < imgUrl.length; i++) {
+              formData.append('observationImages', imgUrl[i]);
+            }
           }
-        }
 
-        const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
-          type: 'application/json',
-        });
-        formData.append('observationRequestDto', jsonDataTypeValue);
+          const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+            type: 'application/json',
+          });
+          formData.append('observationRequestDto', jsonDataTypeValue);
 
-        const accessToken = localStorage.getItem('accessToken');
+          const accessToken = localStorage.getItem('accessToken');
 
-        await axios.post(
-          `https://j9972.kr/tnote/observation/${scheduleId}`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${accessToken}`,
-              accept: 'application/json',
+          await axios.post(
+            `https://j9972.kr/tnote/observation/${scheduleId}`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${accessToken}`,
+                accept: 'application/json',
+              },
             },
-          },
-        );
-        window.location.reload();
-        onClose();
-      } catch (err) {
-        if ((err = 'Observation date must be within the schedule dates')) {
-          window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
+          );
+          window.location.reload();
+          onClose();
+        } catch (err) {
+          if ((err = 'Observation date must be within the schedule dates')) {
+            window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
+          }
         }
       }
     } else {
