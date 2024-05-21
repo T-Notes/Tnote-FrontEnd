@@ -111,46 +111,52 @@ const StudentRecordsModal = ({
   const handleClickSubmit = async () => {
     if (scheduleId) {
       if (isEdit) {
-        const editData = {
-          studentName: title,
-          startDate: new Date(
-            date.startDate.getTime() -
-              date.startDate.getTimezoneOffset() * 60000,
-          ),
-          endDate: new Date(
-            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
-          ),
-          observationContents: observationContent,
-          guidance: teachingPlan,
-          isAllDay: parentsIsAllDay,
-        };
-        // 이미지 파일
-        if (imgUrl.length >= 1) {
-          for (let i = 0; i < imgUrl.length; i++) {
-            formData.append('observationImages', imgUrl[i]);
+        try {
+          const editData = {
+            studentName: title,
+            startDate: new Date(
+              date.startDate.getTime() -
+                date.startDate.getTimezoneOffset() * 60000,
+            ),
+            endDate: new Date(
+              date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+            ),
+            observationContents: observationContent,
+            guidance: teachingPlan,
+            isAllDay: parentsIsAllDay,
+          };
+          // 이미지 파일
+          if (imgUrl.length >= 1) {
+            for (let i = 0; i < imgUrl.length; i++) {
+              formData.append('observationImages', imgUrl[i]);
+            }
+          }
+
+          const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
+            type: 'application/json',
+          });
+          formData.append('observationUpdateRequestDto', jsonDataTypeValue);
+
+          const accessToken = localStorage.getItem('accessToken');
+
+          await axios.patch(
+            `https://j9972.kr/tnote/observation/${logId}`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${accessToken}`,
+                accept: 'application/json',
+              },
+            },
+          );
+          window.location.reload();
+          onClose();
+        } catch (err) {
+          if ((err = 'Observation date must be within the schedule dates')) {
+            window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
           }
         }
-
-        const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
-          type: 'application/json',
-        });
-        formData.append('observationUpdateRequestDto', jsonDataTypeValue);
-
-        const accessToken = localStorage.getItem('accessToken');
-
-        await axios.patch(
-          `https://j9972.kr/tnote/observation/${logId}`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${accessToken}`,
-              accept: 'application/json',
-            },
-          },
-        );
-        window.location.reload();
-        onClose();
       }
       try {
         const logData = {
@@ -195,7 +201,9 @@ const StudentRecordsModal = ({
         window.location.reload();
         onClose();
       } catch (err) {
-        console.log(err);
+        if ((err = 'Observation date must be within the schedule dates')) {
+          window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
+        }
       }
     } else {
       Swal.fire({

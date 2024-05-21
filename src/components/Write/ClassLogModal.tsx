@@ -146,48 +146,54 @@ const ClassLogModal = ({
   const handleClickSubmit = async () => {
     if (scheduleId) {
       if (isEdit) {
-        const editData = {
-          title: title,
-          startDate: new Date(
-            date.startDate.getTime() -
-              date.startDate.getTimezoneOffset() * 60000,
-          ),
-          endDate: new Date(
-            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
-          ),
-          plan: saveContents.학습계획,
-          classContents: saveContents.수업내용,
-          submission: saveContents.제출과제,
-          magnitude: saveContents.진도표,
-          isAllDay: parentsIsAllDay,
-        };
+        try {
+          const editData = {
+            title: title,
+            startDate: new Date(
+              date.startDate.getTime() -
+                date.startDate.getTimezoneOffset() * 60000,
+            ),
+            endDate: new Date(
+              date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+            ),
+            plan: saveContents.학습계획,
+            classContents: saveContents.수업내용,
+            submission: saveContents.제출과제,
+            magnitude: saveContents.진도표,
+            isAllDay: parentsIsAllDay,
+          };
 
-        if (imgUrl.length >= 1) {
-          for (let i = 0; i < imgUrl.length; i++) {
-            formData.append('classLogImages', imgUrl[i]);
+          if (imgUrl.length >= 1) {
+            for (let i = 0; i < imgUrl.length; i++) {
+              formData.append('classLogImages', imgUrl[i]);
+            }
+          }
+
+          const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
+            type: 'application/json',
+          });
+          formData.append('classLogUpdateRequestDto', jsonDataTypeValue);
+
+          const accessToken = localStorage.getItem('accessToken');
+
+          await axios.patch(
+            `https://j9972.kr/tnote/classLog/${logId}`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${accessToken}`,
+                accept: 'application/json',
+              },
+            },
+          );
+          window.location.reload();
+          onClose();
+        } catch (err) {
+          if ((err = 'ClassLog date must be within the schedule dates')) {
+            window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
           }
         }
-
-        const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
-          type: 'application/json',
-        });
-        formData.append('classLogUpdateRequestDto', jsonDataTypeValue);
-
-        const accessToken = localStorage.getItem('accessToken');
-
-        await axios.patch(
-          `https://j9972.kr/tnote/classLog/${logId}`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${accessToken}`,
-              accept: 'application/json',
-            },
-          },
-        );
-        window.location.reload();
-        onClose();
       } else {
         try {
           const logData = {
@@ -235,7 +241,9 @@ const ClassLogModal = ({
           window.location.reload();
           onClose();
         } catch (err) {
-          console.log(err);
+          if ((err = 'ClassLog date must be within the schedule dates')) {
+            window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
+          }
         }
       }
     } else {
