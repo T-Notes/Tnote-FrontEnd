@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import { IcGoBack } from '../assets/icons';
+import { IcGoBack, IcImageClip } from '../assets/icons';
 import ArchiveContent from '../components/Archive/ArchiveContent';
 import ConsultationRecordsModal from '../components/Write/ConsultationRecordsModal';
 import { formatDate } from '../utils/formatDate';
@@ -47,27 +47,12 @@ const SDate = styled.div`
   font-size: 16px;
   font-weight: 500;
 `;
-const SLabel = styled.label`
-  font-size: 17px;
-  font-weight: 600;
-  padding-bottom: 10px;
-`;
+
 const STextareaContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const STextarea = styled.textarea`
-  height: 130px;
-  width: 100%;
-  color: #a6a6a6;
-  overflow-y: scroll;
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #a6a6a6;
-  background: #ffff;
-  margin-bottom: 15px;
-  margin-bottom: 30px;
-`;
+
 const SDelete = styled.button`
   padding-left: 20px;
   padding-right: 20px;
@@ -96,6 +81,37 @@ const SButtons = styled.div`
   padding-bottom: 50px;
   display: flex;
 `;
+
+const SLabel = styled.label`
+  font-size: 18px;
+  font-weight: 600;
+  padding-bottom: 10px;
+`;
+const SFileBox = styled.div`
+  display: flex;
+  height: 70px;
+  width: 100%;
+  color: #a6a6a6;
+  overflow-y: scroll;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #a6a6a6;
+  background: #ffff;
+  margin-bottom: 30px;
+  font-size: 14px;
+`;
+const SImage = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 50px;
+  background-color: #e8e8e8;
+  color: #a6a6a6;
+  margin-right: 10px;
+`;
+const SClipIcon = styled.div`
+  margin-right: 5px;
+`;
 interface Consultation {
   studentName: string;
   consultationContents: string;
@@ -104,7 +120,7 @@ interface Consultation {
   counselingType: string;
   startDate: string;
   endDate: string;
-  consultationImageUrls: string;
+  consultationImageUrls: File[];
 }
 const ArchiveConsultation = () => {
   const { logId, scheduleId } = useParams();
@@ -118,7 +134,7 @@ const ArchiveConsultation = () => {
     counselingType: '',
     startDate: '',
     endDate: '',
-    consultationImageUrls: '',
+    consultationImageUrls: [],
   });
 
   const { openModal } = useModals();
@@ -140,7 +156,7 @@ const ArchiveConsultation = () => {
         counselingType: res.data.counselingType,
         startDate: res.data.startDate.slice(0, 10),
         endDate: res.data.endDate.slice(0, 10),
-        consultationImageUrls: res.data.consultationImageUrls,
+        consultationImageUrls: res.data.images,
       });
     };
     getDetailData();
@@ -192,11 +208,23 @@ const ArchiveConsultation = () => {
               contentValue={consultationLogData.consultationResult}
               isFile={false}
             />
-            <ArchiveContent
-              label="첨부파일"
-              contentValue={consultationLogData.consultationImageUrls}
-              isFile={true}
-            />
+            <SLabel>첨부파일</SLabel>
+            <SFileBox>
+              {consultationLogData.consultationImageUrls.length > 0 ? (
+                <>
+                  {consultationLogData.consultationImageUrls.map(
+                    (file: any, index: number) => (
+                      <SImage key={index}>
+                        <SClipIcon>
+                          <IcImageClip />
+                        </SClipIcon>
+                        <div>{file.originalFileName}</div>
+                      </SImage>
+                    ),
+                  )}
+                </>
+              ) : null}
+            </SFileBox>
           </STextareaContainer>
           <SButtons>
             <SDelete onClick={handleDelete}>삭제</SDelete>
