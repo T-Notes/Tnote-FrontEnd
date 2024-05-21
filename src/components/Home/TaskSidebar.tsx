@@ -41,6 +41,7 @@ const SDateFont = styled.div`
   padding-bottom: 10px;
 `;
 const SLogs = styled.div`
+  cursor: pointer;
   display: flex;
   padding: 10px;
   background-color: white;

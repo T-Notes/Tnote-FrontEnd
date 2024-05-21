@@ -7,6 +7,7 @@ import StudentRecordsModal from '../Write/StudentRecordsModal';
 import WorkLogModal from '../Write/WorkLogModal';
 
 const SSearchValueWrapper = styled.div`
+  cursor: pointer;
   display: flex;
   padding-top: 15px;
   padding-bottom: 15px;
