@@ -38,7 +38,7 @@ const SDateFont = styled.div`
   font-size: 20px;
   font-weight: 500;
   padding-top: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 `;
 const SLogs = styled.div`
   display: flex;

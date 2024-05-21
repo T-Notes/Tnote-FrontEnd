@@ -70,7 +70,7 @@ const SCheckbox = styled.div`
   padding-left: 7px;
 `;
 const STodoInputContainer = styled.div`
-  max-height: 120px;
+  max-height: 80px;
   overflow-y: auto;
   overflow-x: hidden;
 `;
