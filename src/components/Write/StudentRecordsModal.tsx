@@ -223,6 +223,7 @@ const StudentRecordsModal = ({
           console.log(2, response.data);
           const data = response.data;
           setTitle(data.studentName);
+          setImgUrl(data.images);
           setObservationContent(data.observationContents);
           setTeachingPlan(data.guidance);
           setDate({
@@ -291,6 +292,7 @@ const StudentRecordsModal = ({
           />
           <FileUpload
             fileName={fileName}
+            imgUrl={imgUrl}
             handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
               handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
             }

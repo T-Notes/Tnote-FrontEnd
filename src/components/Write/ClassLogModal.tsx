@@ -225,7 +225,7 @@ const ClassLogModal = ({
       getClassLogDetailData(String(logId))
         .then((response) => {
           const data = response.data;
-
+          setImgUrl(data.images);
           setTitle(data.title);
 
           setDate({
@@ -317,6 +317,7 @@ const ClassLogModal = ({
         </SContentWrap>
         <FileUpload
           fileName={fileName}
+          imgUrl={imgUrl}
           handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
             handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
           }

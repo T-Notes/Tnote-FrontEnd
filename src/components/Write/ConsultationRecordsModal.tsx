@@ -316,6 +316,7 @@ const ConsultationRecordsModal = ({
         .then((response) => {
           const data = response.data;
           setTitle(data.studentName);
+          setImgUrl(data.images);
           setCounselingContent(data.consultationContents);
           setCounselingResult(data.consultationResult);
           setSelectedCounselingButton(data.counselingField);
@@ -449,6 +450,7 @@ const ConsultationRecordsModal = ({
           />
           <FileUpload
             fileName={fileName}
+            imgUrl={imgUrl}
             handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
               handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
             }

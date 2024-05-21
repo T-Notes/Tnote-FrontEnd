@@ -184,7 +184,7 @@ const WorkLogModal = ({
               formData.append('proceedingImages', imgUrl[i]);
             }
           }
-          console.log(formData.getAll('proceedingImages'));
+          console.log(1, formData.getAll('proceedingImages'));
 
           const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
             type: 'application/json',
@@ -204,8 +204,8 @@ const WorkLogModal = ({
               },
             },
           );
-          window.location.reload();
-          onClose();
+          // window.location.reload();
+          // onClose();
         } catch (err) {
           if ((err = 'Proceeding date must be within the schedule dates')) {
             window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
@@ -234,7 +234,7 @@ const WorkLogModal = ({
               formData.append('proceedingImages', imgUrl[i]);
             }
           }
-
+          console.log(2, formData.getAll('proceedingImages'));
           const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
             type: 'application/json',
           });
@@ -253,8 +253,8 @@ const WorkLogModal = ({
               },
             },
           );
-          window.location.reload();
-          onClose();
+          // window.location.reload();
+          // onClose();
         } catch (err) {
           if ((err = 'Proceeding date must be within the schedule dates')) {
             window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
@@ -274,10 +274,12 @@ const WorkLogModal = ({
     if (logId) {
       getProceedingDetailData(String(logId))
         .then((response) => {
-          console.log(2, response.data);
           const data = response.data;
+          console.log(data.images);
+          setImgUrl(data.images);
           setTitle(data.title);
           setPlace(data.location);
+
           setWorkContents(data.workContents);
           setDate({
             startDate: new Date(data.startDate),
@@ -355,7 +357,8 @@ const WorkLogModal = ({
               />
             </SContentWrap>
             <FileUpload
-              fileName={fileName}
+              // fileName={fileName}
+              imgUrl={imgUrl}
               handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
                 handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
               }
