@@ -90,14 +90,6 @@ instanceAxios.interceptors.response.use(
           });
         }
       });
-    } else if (errorMessage === 'incorrect date in subject') {
-      Swal.fire({
-        text: '학기에 포함된 날짜만 선택 가능합니다.',
-        confirmButtonText: '확인',
-        confirmButtonColor: '#632CFA',
-      }).then((res) => {
-        window.location.reload();
-      });
     }
 
     // 토큰 만료 이외의 다른 오류 처리
