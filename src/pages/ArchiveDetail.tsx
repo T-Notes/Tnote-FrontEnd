@@ -33,7 +33,7 @@ const STitle = styled.h1`
 const SArchiveDateContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 10px;
 `;
 
 const SArchiveCurrentDate = styled.div`
@@ -93,8 +93,8 @@ const ArchiveDetail = () => {
         <STitle> {`${semesterName} 아카이브`}</STitle>
       </SArchiveTitle>
       <SArchiveDateContainer>
-        <SArchiveCurrentDate>{`${year}년 ${month}월 ${day}일`}</SArchiveCurrentDate>
-        <SSelectDateButton onClick={() => handleNoFeature('TODAY')}>
+        {/* <SArchiveCurrentDate>{`${year}년 ${month}월 ${day}일`}</SArchiveCurrentDate> */}
+        {/* <SSelectDateButton onClick={() => handleNoFeature('TODAY')}>
           오늘
         </SSelectDateButton>
         <SSelectDateButton onClick={() => handleNoFeature('WEEK')}>
@@ -105,7 +105,7 @@ const ArchiveDetail = () => {
         </SSelectDateButton>
         <SSelectDateButton onClick={() => handleNoFeature('TODAY')}>
           직접지정
-        </SSelectDateButton>
+        </SSelectDateButton> */}
       </SArchiveDateContainer>
       <ArchiveRecentLogs scheduleId={scheduleId} />
       <ArchiveFilteredLogs scheduleId={scheduleId} />
