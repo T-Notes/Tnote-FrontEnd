@@ -228,8 +228,8 @@ const ConsultationRecordsModal = ({
               },
             },
           );
-          // window.location.reload();
-          // onClose();
+          window.location.reload();
+          onClose();
         } catch (err) {
           if ((err = 'Consultation date must be within the schedule dates')) {
             window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
@@ -286,8 +286,8 @@ const ConsultationRecordsModal = ({
               },
             },
           );
-          // window.location.reload();
-          // onClose();
+          window.location.reload();
+          onClose();
         } catch (err) {
           if ((err = 'Consultation date must be within the schedule dates')) {
             window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');

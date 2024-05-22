@@ -9,7 +9,7 @@ import { IcPen } from '../../assets/icons';
 import Swal from 'sweetalert2';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import ReactModal from 'react-modal';
-import { getClassLogDetailData, patchClassLog } from '../../utils/lib/api';
+import { getClassLogDetailData } from '../../utils/lib/api';
 import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 import useRandomColor from '../../utils/useHooks/useRandomColor';
 

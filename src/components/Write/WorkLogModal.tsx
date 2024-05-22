@@ -184,7 +184,6 @@ const WorkLogModal = ({
               formData.append('proceedingImages', imgUrl[i]);
             }
           }
-          console.log(1, formData.getAll('proceedingImages'));
 
           const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
             type: 'application/json',
@@ -204,8 +203,8 @@ const WorkLogModal = ({
               },
             },
           );
-          // window.location.reload();
-          // onClose();
+          window.location.reload();
+          onClose();
         } catch (err) {
           if ((err = 'Proceeding date must be within the schedule dates')) {
             window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
@@ -253,8 +252,8 @@ const WorkLogModal = ({
               },
             },
           );
-          // window.location.reload();
-          // onClose();
+          window.location.reload();
+          onClose();
         } catch (err) {
           if ((err = 'Proceeding date must be within the schedule dates')) {
             window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
