@@ -169,7 +169,15 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
             setObservationContent(logData.observations);
           }
         } catch (error) {
-          console.error('Error fetching data:', error);
+          if (error === 'incorrect date in subject') {
+            Swal.fire({
+              text: '학기에 포함된 날짜만 선택 가능합니다.',
+              confirmButtonText: '확인',
+              confirmButtonColor: '#632CFA',
+            }).then((res) => {
+              window.location.reload();
+            });
+          }
         }
       };
       fetchData();
