@@ -43,7 +43,7 @@ const SCalender = styled(DatePicker)`
   text-align: center;
 
   ${({ theme }) => theme.fonts.button1}
-  color:   ${({ theme }) => theme.colors.gray100};
+  color:  black
 `;
 const STildeIcon = styled.p`
   font-size: 28px;
