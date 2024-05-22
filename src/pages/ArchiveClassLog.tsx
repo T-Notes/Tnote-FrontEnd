@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import { IcGoBack } from '../assets/icons';
+import { IcGoBack, IcImageClip } from '../assets/icons';
 import ArchiveContent from '../components/Archive/ArchiveContent';
 import ClassLogModal from '../components/Write/ClassLogModal';
 import { formatDate } from '../utils/formatDate';
@@ -81,7 +81,36 @@ const SButtons = styled.div`
   padding-bottom: 50px;
   display: flex;
 `;
-
+const SLabel = styled.label`
+  font-size: 18px;
+  font-weight: 600;
+  padding-bottom: 10px;
+`;
+const SFileBox = styled.div`
+  display: flex;
+  height: 70px;
+  width: 100%;
+  color: #a6a6a6;
+  overflow-y: scroll;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #a6a6a6;
+  background: #ffff;
+  margin-bottom: 30px;
+  font-size: 14px;
+`;
+const SImage = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 50px;
+  background-color: #e8e8e8;
+  color: #a6a6a6;
+  margin-right: 10px;
+`;
+const SClipIcon = styled.div`
+  margin-right: 5px;
+`;
 interface ClassLog {
   id: number | null;
   title: string;
@@ -91,8 +120,9 @@ interface ClassLog {
   magnitude: string;
   plan: string;
   submission: string;
-  classLogImageUrls: string;
+  classLogImageUrls: File[];
 }
+
 // 수정 버튼을 클릭 -> 상태를 수정 상태로 변경
 // 상태가 true라면 수정용 모달을 띄우기
 const ArchiveClassLog = () => {
@@ -113,7 +143,7 @@ const ArchiveClassLog = () => {
     magnitude: '',
     plan: '',
     submission: '',
-    classLogImageUrls: '',
+    classLogImageUrls: [],
   });
 
   useEffect(() => {
@@ -129,7 +159,7 @@ const ArchiveClassLog = () => {
         magnitude: res.data.magnitude,
         plan: res.data.plan,
         submission: res.data.submission,
-        classLogImageUrls: res.data.classLogImageUrls,
+        classLogImageUrls: res.data.images,
       });
     };
     getDetailData();
@@ -191,11 +221,23 @@ const ArchiveClassLog = () => {
             contentValue={classLogData.magnitude}
             isFile={false}
           />
-          <ArchiveContent
-            label="첨부파일"
-            contentValue={classLogData.classLogImageUrls}
-            isFile={true}
-          />
+          <SLabel>첨부파일</SLabel>
+          <SFileBox>
+            {classLogData.classLogImageUrls.length > 0 ? (
+              <>
+                {classLogData.classLogImageUrls.map(
+                  (file: any, index: number) => (
+                    <SImage key={index}>
+                      <SClipIcon>
+                        <IcImageClip />
+                      </SClipIcon>
+                      <div>{file.originalFileName}</div>
+                    </SImage>
+                  ),
+                )}
+              </>
+            ) : null}
+          </SFileBox>
         </STextareaContainer>
         <SButtons>
           <SDelete onClick={handleDelete}>삭제</SDelete>

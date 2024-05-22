@@ -81,7 +81,7 @@ const Landing = () => {
   };
 
   const handleClickLandingModal = () => {
-    openModal(PrivacyPolicyModal, { closeModal, handleIsCheckedTrue });
+    openModal(PrivacyPolicyModal, { handleIsCheckedTrue });
   };
   return (
     <SLandingWrapper>

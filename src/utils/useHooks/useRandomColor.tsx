@@ -1,20 +1,10 @@
-import { useState } from 'react';
-
 const useRandomColor = () => {
   const colors = ['#FEF5E6', '#FFD9D9', '#D2F0FF', '#F0EBFF'];
-  const [index, setIndex] = useState(0);
 
-  const getRandomColor = (() => {
-    const colors = ['#FEF5E6', '#FFD9D9', '#D2F0FF', '#F0EBFF'];
-    let index = 0;
-
-    return () => {
-      const color = colors[index];
-      index = (index + 1) % colors.length;
-
-      return color;
-    };
-  })();
+  const getRandomColor = () => {
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    return colors[randomIndex];
+  };
 
   return getRandomColor;
 };

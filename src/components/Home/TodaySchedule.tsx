@@ -21,10 +21,9 @@ const SClassContainer = styled.div`
   font-weight: 600;
   width: 100%;
   overflow: hidden;
-  white-space: nowrap; /* 글자가 넘칠 경우 줄바꿈을 방지합니다. */
-  text-overflow: ellipsis; /* 넘어간 텍스트를 생략 부호(...)로 표시합니다. */
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
-const SClass = styled.div``;
 
 const SSchedule = styled.div`
   display: flex;
@@ -94,7 +93,6 @@ const TodaySchedule = () => {
     9: '9교시',
   };
 
-  // 현재시간과 교시 함수
   const getCurrentHour = () => {
     const currentHours = currentDate.getHours();
     if (currentHours === 9) {
@@ -109,7 +107,7 @@ const TodaySchedule = () => {
       return '5교시';
     } else if (currentHours === 14) {
       return '6교시';
-    } else if (currentHours === 15) {
+    } else if (currentHours === 15 || currentHours === 16) {
       return '7교시';
     } else if (currentHours === 17) {
       return '8교시';
@@ -121,7 +119,6 @@ const TodaySchedule = () => {
   };
   const currentHour = getCurrentHour();
 
-  // 오늘 수업일정 조회
   useEffect(() => {
     if (scheduleId) {
       const getTodaySchedule = async () => {
@@ -141,30 +138,28 @@ const TodaySchedule = () => {
         <SSchedule>
           {Array.from({ length: 9 }, (_, index) => index + 1).map((hour) => (
             <SClassContainer key={hour}>
-              <SClass>
-                <STimetables
-                  style={{
-                    color:
-                      timetables[hour] === currentHour ? '#3378FF' : 'inherit',
-                  }}
-                >
-                  {timetables[hour]}
-                </STimetables>
-                {todayClass.map((item, index) => {
-                  const classTimeChange = parseInt(item.classTime.slice(0, 1));
-                  const backgroundColor = colorMapping[item.color] || '';
-                  return (
-                    <div key={index}>
-                      {classTimeChange === hour ? (
-                        <STodayClassWrapper color={backgroundColor}>
-                          <div>{item.classLocation}</div>
-                          <div>{item.subjectName}</div>
-                        </STodayClassWrapper>
-                      ) : null}
-                    </div>
-                  );
-                })}
-              </SClass>
+              <STimetables
+                style={{
+                  color:
+                    timetables[hour] === currentHour ? '#3378FF' : 'inherit',
+                }}
+              >
+                {timetables[hour]}
+              </STimetables>
+              {todayClass.map((item, index) => {
+                const classTimeChange = parseInt(item.classTime.slice(0, 1));
+                const backgroundColor = colorMapping[item.color] || '';
+                return (
+                  <div key={index}>
+                    {classTimeChange === hour ? (
+                      <STodayClassWrapper color={backgroundColor}>
+                        <div>{item.classLocation}</div>
+                        <div>{item.subjectName}</div>
+                      </STodayClassWrapper>
+                    ) : null}
+                  </div>
+                );
+              })}
             </SClassContainer>
           ))}
         </SSchedule>

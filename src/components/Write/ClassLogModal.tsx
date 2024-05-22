@@ -11,6 +11,7 @@ import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import ReactModal from 'react-modal';
 import { getClassLogDetailData, patchClassLog } from '../../utils/lib/api';
 import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
+import useRandomColor from '../../utils/useHooks/useRandomColor';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -98,7 +99,7 @@ const ClassLogModal = ({
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File[]>([]);
   const [fileName, setFileName] = useState<string[]>([]);
-
+  const getRandomColor = useRandomColor();
   const [contentType, setContentType] =
     useState<keyof SaveContents>('학습계획');
 
@@ -141,106 +142,81 @@ const ClassLogModal = ({
 
     setParentsIsAllDay(isAllDay);
   };
-
   const handleClickSubmit = async () => {
-    if (scheduleId) {
-      if (isEdit) {
-        const editData = {
-          title: title,
-          startDate: new Date(
-            date.startDate.getTime() -
-              date.startDate.getTimezoneOffset() * 60000,
-          ),
-          endDate: new Date(
-            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
-          ),
-          plan: saveContents.학습계획,
-          classContents: saveContents.수업내용,
-          submission: saveContents.제출과제,
-          magnitude: saveContents.진도표,
-          isAllDay: parentsIsAllDay,
-        };
-        // await patchClassLog(String(logId), editData);
-        if (imgUrl.length >= 1) {
-          for (let i = 0; i < imgUrl.length; i++) {
-            formData.append('classLogImages', imgUrl[i]);
-          }
-        }
-
-        const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
-          type: 'application/json',
-        });
-        formData.append('classLogUpdateRequestDto', jsonDataTypeValue);
-
-        const accessToken = localStorage.getItem('accessToken');
-
-        await axios.patch(
-          `https://j9972.kr/tnote/classLog/${logId}`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${accessToken}`,
-              accept: 'application/json',
-            },
-          },
-        );
-        window.location.reload();
-        onClose();
-      } else {
-        try {
-          const logData = {
-            title: title,
-            startDate: new Date(
-              date.startDate.getTime() -
-                date.startDate.getTimezoneOffset() * 60000,
-            ),
-            endDate: new Date(
-              date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
-            ),
-            plan: saveContents.학습계획,
-            classContents: saveContents.수업내용,
-            submission: saveContents.제출과제,
-            magnitude: saveContents.진도표,
-            isAllDay: parentsIsAllDay,
-          };
-
-          // 이미지 파일
-          if (imgUrl.length >= 1) {
-            for (let i = 0; i < imgUrl.length; i++) {
-              formData.append('classLogImages', imgUrl[i]);
-            }
-          }
-
-          const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
-            type: 'application/json',
-          });
-          formData.append('classLogRequestDto', jsonDataTypeValue);
-
-          const accessToken = localStorage.getItem('accessToken');
-
-          await axios.post(
-            `https://j9972.kr/tnote/classLog/${scheduleId}`,
-            formData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                Authorization: `Bearer ${accessToken}`,
-                accept: 'application/json',
-              },
-            },
-          );
-          window.location.reload();
-          onClose();
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    } else {
+    if (!scheduleId) {
       Swal.fire({
         title: '학기가 있어야 합니다.',
         text: '학기 추가 혹은 학기 선택을 먼저 해주십시오.',
       });
+      return;
+    }
+
+    if (!date || !date.startDate || !date.endDate) {
+      window.alert('유효한 날짜를 선택해주십시오.');
+      return;
+    }
+
+    const formattedStartDate = new Date(
+      date.startDate.getTime() - date.startDate.getTimezoneOffset() * 60000,
+    );
+    const formattedEndDate = new Date(
+      date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+    );
+
+    const logData = {
+      title: title,
+      startDate: formattedStartDate,
+      endDate: formattedEndDate,
+      plan: saveContents.학습계획,
+      classContents: saveContents.수업내용,
+      submission: saveContents.제출과제,
+      magnitude: saveContents.진도표,
+      isAllDay: parentsIsAllDay,
+      color: getRandomColor(),
+    };
+
+    const formData = new FormData();
+
+    if (imgUrl.length > 0) {
+      imgUrl.forEach((file) => {
+        formData.append('classLogImages', file);
+      });
+    }
+
+    const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+      type: 'application/json',
+    });
+
+    formData.append(
+      isEdit ? 'classLogUpdateRequestDto' : 'classLogRequestDto',
+      jsonDataTypeValue,
+    );
+
+    const accessToken = localStorage.getItem('accessToken');
+
+    try {
+      const url = `https://j9972.kr/tnote/classLog/${
+        isEdit ? logId : scheduleId
+      }`;
+      const method = isEdit ? axios.patch : axios.post;
+
+      await method(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${accessToken}`,
+          accept: 'application/json',
+        },
+      });
+
+      window.location.reload();
+      onClose();
+    } catch (err) {
+      if (
+        (err as any).response?.data?.message ===
+        'ClassLog date must be within the schedule dates'
+      ) {
+        window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
+      }
     }
   };
 
@@ -249,7 +225,7 @@ const ClassLogModal = ({
       getClassLogDetailData(String(logId))
         .then((response) => {
           const data = response.data;
-
+          setImgUrl(data.images);
           setTitle(data.title);
 
           setDate({
@@ -268,6 +244,7 @@ const ClassLogModal = ({
         });
     }
   }, [logId]);
+  console.log(date.startDate);
 
   return (
     <ReactModal
@@ -340,6 +317,7 @@ const ClassLogModal = ({
         </SContentWrap>
         <FileUpload
           fileName={fileName}
+          imgUrl={imgUrl}
           handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
             handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
           }

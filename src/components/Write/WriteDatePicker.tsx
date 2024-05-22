@@ -22,9 +22,6 @@ const SCalender = styled(DatePicker)`
   text-align: center;
   ${({ theme }) => theme.fonts.caption3}
   color: ${({ selected }) => (selected ? 'black' : '#A6A6A6')};
-  .react-datepicker__header {
-    background-color: #007bff; /* 파란색 */
-  }
 `;
 const STildeIcon = styled.span`
   font-size: 20px;
@@ -111,7 +108,6 @@ const WriteDatePicker = ({
     setIsAllDay(!isAllDay);
   };
 
-  // 부모 컴포넌트에 날짜 data 보내기
   useEffect(() => {
     onStartDateChange(startDate, endDate, isAllDay);
   }, [startDate, endDate, isAllDay]);
@@ -123,7 +119,6 @@ const WriteDatePicker = ({
           selected={onStartDate ? new Date(onStartDate) : startDate}
           onChange={(date) => handleDateChangeStartDate(date as Date, endDate)}
           minDate={new Date('2000-01-01')}
-          // maxDate={new Date(endDate)}
           showTimeSelect
           timeFormat="HH:mm"
           timeIntervals={30}
@@ -135,7 +130,6 @@ const WriteDatePicker = ({
         <SCalender
           selected={onEndDate ? new Date(onEndDate) : endDate}
           onChange={(date) => handleDateChangeEndDate(startDate, date as Date)}
-          // minDate={new Date(startDate)}
           showTimeSelect
           timeFormat="HH:mm"
           timeIntervals={30}

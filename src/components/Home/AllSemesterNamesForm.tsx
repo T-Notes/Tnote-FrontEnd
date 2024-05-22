@@ -57,6 +57,7 @@ const AllSemesterNamesForm = () => {
   useEffect(() => {
     const getSemesterId = async () => {
       const response = await getUserInfo(user);
+
       const scheduleId = response.data.scheduleId;
       const semesterName = response.data.semesterName;
       if (semesterName) {
@@ -79,18 +80,20 @@ const AllSemesterNamesForm = () => {
   return (
     <>
       <DropdownInput
-        placeholder="학기를 추가해주세요"
+        placeholder="학기를 추가해 주세요"
         value={defaultSemester}
         size="small"
         theme={{ background: 'white' }}
         dropdownList={
-          <SemesterDropdownList
-            options={semesterOptions.map((option) => ({
-              id: option.id,
-              semesterName: option.semesterName,
-            }))}
-            onSelectedSemester={handleClickSemester}
-          />
+          semesterOptions.length > 0 ? (
+            <SemesterDropdownList
+              options={semesterOptions.map((option) => ({
+                id: option.id,
+                semesterName: option.semesterName,
+              }))}
+              onSelectedSemester={handleClickSemester}
+            />
+          ) : null
         }
         isToggle={isDropdownSemesterToggle}
         handleChangeToggle={handleChangeSemesterToggle}

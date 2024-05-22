@@ -51,12 +51,13 @@ const SDropdownInputWrapper = styled.div<StyledDropdownInputProps>`
 `;
 const SDropdownInput = styled.input`
   width: 250px;
-  cursor: pointer;
-  ${({ theme }) => theme.fonts.caption};
+
+  ${({ theme }) => theme.fonts.caption}
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray600};
   }
 `;
+
 interface DropdownProps {
   placeholder: string;
   value: string;
@@ -64,7 +65,7 @@ interface DropdownProps {
   theme: {
     background: string;
   };
-  dropdownList: ReactNode;
+  dropdownList: ReactNode | null;
   handleChangeToggle: () => void;
   isToggle: boolean;
 }
@@ -88,16 +89,22 @@ const DropdownInput = (props: DropdownProps) => {
           readOnly
           onClick={handleChangeToggle}
         />
-        {isToggle ? (
-          <IcCloseDropdownSmall
-            onClick={handleChangeToggle}
-            className="pointer"
-          />
-        ) : (
-          <IcOpenDropdownSmall
-            onClick={handleChangeToggle}
-            className="pointer"
-          />
+        {dropdownList !== null && (
+          <div>
+            <>
+              {isToggle ? (
+                <IcCloseDropdownSmall
+                  onClick={handleChangeToggle}
+                  className="pointer"
+                />
+              ) : (
+                <IcOpenDropdownSmall
+                  onClick={handleChangeToggle}
+                  className="pointer"
+                />
+              )}
+            </>
+          </div>
         )}
         {isToggle && dropdownList}
       </SDropdownInputWrapper>

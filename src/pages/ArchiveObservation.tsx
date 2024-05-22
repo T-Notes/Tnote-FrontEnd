@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import { IcGoBack } from '../assets/icons';
+import { IcGoBack, IcImageClip } from '../assets/icons';
 import ArchiveContent from '../components/Archive/ArchiveContent';
 import StudentRecordsModal from '../components/Write/StudentRecordsModal';
 import { formatDate } from '../utils/formatDate';
@@ -46,27 +46,12 @@ const SDate = styled.div`
   font-size: 16px;
   font-weight: 500;
 `;
-const SLabel = styled.label`
-  font-size: 17px;
-  font-weight: 600;
-  padding-bottom: 10px;
-`;
+
 const STextareaContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const STextarea = styled.textarea`
-  height: 130px;
-  width: 100%;
-  color: #a6a6a6;
-  overflow-y: scroll;
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #a6a6a6;
-  background: #ffff;
-  margin-bottom: 15px;
-  margin-bottom: 30px;
-`;
+
 const SDelete = styled.button`
   padding-left: 20px;
   padding-right: 20px;
@@ -95,14 +80,43 @@ const SButtons = styled.div`
   padding-bottom: 50px;
   display: flex;
 `;
-
+const SLabel = styled.label`
+  font-size: 18px;
+  font-weight: 600;
+  padding-bottom: 10px;
+`;
+const SFileBox = styled.div`
+  display: flex;
+  height: 70px;
+  width: 100%;
+  color: #a6a6a6;
+  overflow-y: scroll;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #a6a6a6;
+  background: #ffff;
+  margin-bottom: 30px;
+  font-size: 14px;
+`;
+const SImage = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 50px;
+  background-color: #e8e8e8;
+  color: #a6a6a6;
+  margin-right: 10px;
+`;
+const SClipIcon = styled.div`
+  margin-right: 5px;
+`;
 interface Proceeding {
   studentName: string;
   guidance: string;
   observationContents: string;
   startDate: string;
   endDate: string;
-  observationImageUrls: string;
+  observationImageUrls: File[];
 }
 
 const ArchiveObservation = () => {
@@ -115,7 +129,7 @@ const ArchiveObservation = () => {
     observationContents: '',
     startDate: '',
     endDate: '',
-    observationImageUrls: '',
+    observationImageUrls: [],
   });
   const { openModal } = useModals();
   const isEdit = true;
@@ -134,7 +148,7 @@ const ArchiveObservation = () => {
         observationContents: res.data.observationContents,
         startDate: res.data.startDate,
         endDate: res.data.endDate,
-        observationImageUrls: res.data.observationImageUrls,
+        observationImageUrls: res.data.images,
       });
     };
     getDetailData();
@@ -184,11 +198,23 @@ const ArchiveObservation = () => {
               contentValue={observationLogData.guidance}
               isFile={false}
             />
-            <ArchiveContent
-              label="첨부파일"
-              contentValue={observationLogData.observationImageUrls}
-              isFile={true}
-            />
+            <SLabel>첨부파일</SLabel>
+            <SFileBox>
+              {observationLogData.observationImageUrls.length > 0 ? (
+                <>
+                  {observationLogData.observationImageUrls.map(
+                    (file: any, index: number) => (
+                      <SImage key={index}>
+                        <SClipIcon>
+                          <IcImageClip />
+                        </SClipIcon>
+                        <div>{file.originalFileName}</div>
+                      </SImage>
+                    ),
+                  )}
+                </>
+              ) : null}
+            </SFileBox>
           </STextareaContainer>
           <SButtons>
             <SDelete onClick={handleDelete}>삭제</SDelete>
