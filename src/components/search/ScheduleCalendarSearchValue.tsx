@@ -7,6 +7,7 @@ import StudentRecordsModal from '../Write/StudentRecordsModal';
 import WorkLogModal from '../Write/WorkLogModal';
 
 const SSearchValueWrapper = styled.div`
+  cursor: pointer;
   display: flex;
   padding-top: 15px;
   padding-bottom: 15px;
@@ -19,6 +20,23 @@ const SSearchValueWrapper = styled.div`
     padding-right: 70px;
   }
 `;
+const SSearchDateRange = styled.div`
+  width: 280px;
+`;
+const SSearchTimeRange = styled.div`
+  display: flex;
+  align-items: center;
+
+  width: 200px;
+`;
+
+const SLogColor = styled.div<{ color: string }>`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background-color: ${({ color }) => color};
+`;
 
 interface SearchValue {
   id: number;
@@ -27,6 +45,7 @@ interface SearchValue {
   startDate: string;
   endDate: string;
   logType: string;
+  color: string;
 }
 
 interface Props {
@@ -48,26 +67,26 @@ const ScheduleCalendarSearchValue = ({ searchValueList }: Props) => {
       openModal(StudentRecordsModal, { logId, scheduleId, isEdit });
     }
   };
-  console.log(searchValueList);
 
   return (
     <>
-      {searchValueList.map((item) => {
+      {searchValueList.map((item, index) => {
         const searchStartDate = item.startDate.slice(0, 10);
         const searchEndDate = item.endDate.slice(0, 10);
         const searchStartTime = item.startDate.slice(11, 16);
         const searchEndTime = item.endDate.slice(11, 16);
         return (
           <SSearchValueWrapper
-            key={item.id}
+            key={index}
             onClick={() => handleClickOpenLogModal(item.id, item.logType)}
           >
-            <div>
+            <SSearchDateRange>
               {searchStartDate}~{searchEndDate}
-            </div>
-            <div>
+            </SSearchDateRange>
+            <SSearchTimeRange>
+              <SLogColor color={item.color}></SLogColor>
               {searchStartTime}~{searchEndTime}
-            </div>
+            </SSearchTimeRange>
             <div>{item.studentName || item.title}</div>
           </SSearchValueWrapper>
         );

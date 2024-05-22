@@ -137,6 +137,7 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
       semesterName: data.semesterName,
       lastClass: data.lastClass,
     }));
+
     setStartDate(new Date(data.startDate));
     setEndDate(new Date(data.endDate));
   };
@@ -148,14 +149,14 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
   }, [scheduleId, reload]);
 
   const handleUpdateSemester = async () => {
-    // 기본 저장 기능 추가
     if (scheduleId) {
       const patchData = {
         semesterName: semesterData.semesterName,
         lastClass: semesterData.lastClass,
-        startDate: startDate,
-        endDate: endDate,
+        startDate: startDate?.toISOString().slice(0, 10),
+        endDate: endDate?.toISOString().slice(0, 10),
       };
+
       const editSemester = await updateSemester(scheduleId, patchData);
       const data = editSemester.data;
 
@@ -180,12 +181,12 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
         semesterName: semesterData.semesterName,
         lastClass: semesterData.lastClass,
         email: '',
-        startDate: startDate,
-        endDate: endDate,
+        startDate: startDate?.toISOString().slice(0, 10),
+        endDate: endDate?.toISOString().slice(0, 10),
       };
+
       const response = await createSemester(createData);
       const data = response.data;
-      console.log(1, response);
 
       setSemesterData((prev) => ({
         ...prev,

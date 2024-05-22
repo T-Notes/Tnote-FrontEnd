@@ -1,18 +1,12 @@
 import styled from 'styled-components';
 import { IcBefore } from '../../assets/icons';
-import ModalPortal from '../../utils/ModalPortal';
-import {
-  ModalBackground,
-  ModalLayout,
-  ModalNoBlackBackground,
-} from '../common/styled/ModalLayout';
 import UserInfoForm from '../ProfileInfo/UserInfoForm';
 
 const SBackground = styled.div`
   position: absolute;
-  top: 50%; /* 부모 모달의 중앙에 위치하도록 설정 */
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* 부모 모달의 중앙에 위치하도록 설정 */
+  transform: translate(-50%, -50%);
 `;
 const SModalLayout = styled.div`
   border: 1px solid var(--Black-Black50, #d5d5d5);
@@ -42,8 +36,9 @@ const EditProfile = ({ closeEditModal, isEditMode }: CloseEditModal) => {
         <SModalLayout>
           <SSettingHeader>
             <IcBefore onClick={closeEditModal} className="pointer" />
-            <SH1>Setting</SH1>
+            <SH1>프로필 수정</SH1>
           </SSettingHeader>
+
           <UserInfoForm
             isEditMode={isEditMode}
             closeEditModal={closeEditModal}

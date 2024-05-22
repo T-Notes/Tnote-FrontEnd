@@ -12,6 +12,7 @@ import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 import { getProceedingDetailData } from '../../utils/lib/api';
 import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
+import useRandomColor from '../../utils/useHooks/useRandomColor';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -132,7 +133,7 @@ const WorkLogModal = ({
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File[]>([]);
   const [fileName, setFileName] = useState<string[]>([]);
-
+  const getRandomColor = useRandomColor();
   const formData = new FormData();
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -162,94 +163,103 @@ const WorkLogModal = ({
   const handleClickSubmit = async () => {
     if (scheduleId) {
       if (isEdit) {
-        const editData = {
-          title,
-          startDate: new Date(
-            date.startDate.getTime() -
-              date.startDate.getTimezoneOffset() * 60000,
-          ),
-          endDate: new Date(
-            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
-          ),
-          location: place,
-          workContents: workContents,
-          isAllDay: parentsIsAllDay,
-        };
+        try {
+          const editData = {
+            title,
+            startDate: new Date(
+              date.startDate.getTime() -
+                date.startDate.getTimezoneOffset() * 60000,
+            ),
+            endDate: new Date(
+              date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+            ),
+            location: place,
+            workContents: workContents,
+            isAllDay: parentsIsAllDay,
+          };
 
-        // 이미지 파일
-        if (imgUrl.length >= 1) {
-          for (let i = 0; i < imgUrl.length; i++) {
-            formData.append('proceedingImages', imgUrl[i]);
+          // 이미지 파일
+          if (imgUrl.length >= 1) {
+            for (let i = 0; i < imgUrl.length; i++) {
+              formData.append('proceedingImages', imgUrl[i]);
+            }
+          }
+          console.log(1, formData.getAll('proceedingImages'));
+
+          const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
+            type: 'application/json',
+          });
+          formData.append('updateRequestDto', jsonDataTypeValue);
+
+          const accessToken = localStorage.getItem('accessToken');
+
+          await axios.patch(
+            `https://j9972.kr/tnote/proceeding/${logId}`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${accessToken}`,
+                accept: 'application/json',
+              },
+            },
+          );
+          // window.location.reload();
+          // onClose();
+        } catch (err) {
+          if ((err = 'Proceeding date must be within the schedule dates')) {
+            window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
           }
         }
-        console.log(formData.getAll('proceedingImages'));
+      } else {
+        try {
+          const logData = {
+            title,
+            startDate: new Date(
+              date.startDate.getTime() -
+                date.startDate.getTimezoneOffset() * 60000,
+            ),
+            endDate: new Date(
+              date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
+            ),
+            location: place,
+            workContents: workContents,
+            isAllDay: parentsIsAllDay,
+            color: getRandomColor(),
+          };
 
-        const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
-          type: 'application/json',
-        });
-        formData.append('updateRequestDto', jsonDataTypeValue);
+          // 이미지 파일
+          if (imgUrl.length >= 1) {
+            for (let i = 0; i < imgUrl.length; i++) {
+              formData.append('proceedingImages', imgUrl[i]);
+            }
+          }
+          console.log(2, formData.getAll('proceedingImages'));
+          const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
+            type: 'application/json',
+          });
+          formData.append('proceedingRequestDto', jsonDataTypeValue);
 
-        const accessToken = localStorage.getItem('accessToken');
+          const accessToken = localStorage.getItem('accessToken');
 
-        await axios.patch(
-          `https://j9972.kr/tnote/proceeding/${logId}`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${accessToken}`,
-              accept: 'application/json',
+          await axios.post(
+            `https://j9972.kr/tnote/proceeding/${scheduleId}`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${accessToken}`,
+                accept: 'application/json',
+              },
             },
-          },
-        );
-        window.location.reload();
-        onClose();
-      }
-      try {
-        const logData = {
-          title,
-          startDate: new Date(
-            date.startDate.getTime() -
-              date.startDate.getTimezoneOffset() * 60000,
-          ),
-          endDate: new Date(
-            date.endDate.getTime() - date.endDate.getTimezoneOffset() * 60000,
-          ),
-          location: place,
-          workContents: workContents,
-          isAllDay: parentsIsAllDay,
-        };
-
-        // 이미지 파일
-        if (imgUrl.length >= 1) {
-          for (let i = 0; i < imgUrl.length; i++) {
-            formData.append('proceedingImages', imgUrl[i]);
+          );
+          // window.location.reload();
+          // onClose();
+        } catch (err) {
+          if ((err = 'Proceeding date must be within the schedule dates')) {
+            window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
           }
         }
-        console.log(formData.getAll('proceedingImages'));
-
-        const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
-          type: 'application/json',
-        });
-        formData.append('proceedingRequestDto', jsonDataTypeValue);
-
-        const accessToken = localStorage.getItem('accessToken');
-
-        await axios.post(
-          `https://j9972.kr/tnote/proceeding/${scheduleId}`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${accessToken}`,
-              accept: 'application/json',
-            },
-          },
-        );
-        window.location.reload();
-        onClose();
-      } catch (err) {
-        console.log(err);
       }
     } else {
       Swal.fire({
@@ -264,10 +274,12 @@ const WorkLogModal = ({
     if (logId) {
       getProceedingDetailData(String(logId))
         .then((response) => {
-          console.log(2, response.data);
           const data = response.data;
+          console.log(data.images);
+          setImgUrl(data.images);
           setTitle(data.title);
           setPlace(data.location);
+
           setWorkContents(data.workContents);
           setDate({
             startDate: new Date(data.startDate),
@@ -345,7 +357,8 @@ const WorkLogModal = ({
               />
             </SContentWrap>
             <FileUpload
-              fileName={fileName}
+              // fileName={fileName}
+              imgUrl={imgUrl}
               handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
                 handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
               }

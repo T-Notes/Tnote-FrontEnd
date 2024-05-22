@@ -77,7 +77,7 @@ interface MoreLogs {
 
 const MoreLogModal = ({ clickDay, isOpen, onClose, scheduleId }: MoreLogs) => {
   if (!clickDay) return null;
-  const getRandomColor = useRandomColor();
+
   const [allLogsByDay, setAllLogsByDay] = useState<any[]>([]);
   const dayOfMonth = format(clickDay, 'd', { locale: koLocale });
   const dayOfWeek = format(clickDay, 'EEEE', { locale: koLocale }).slice(0, 1);
@@ -121,7 +121,7 @@ const MoreLogModal = ({ clickDay, isOpen, onClose, scheduleId }: MoreLogs) => {
         </SDay>
         <SLogContainer>
           {allLogsByDay.map((item, idx) => (
-            <SLog key={idx} color={getRandomColor()}>
+            <SLog key={idx} color={item.color}>
               {item.title || item.studentName}
             </SLog>
           ))}

@@ -38,9 +38,10 @@ const SDateFont = styled.div`
   font-size: 20px;
   font-weight: 500;
   padding-top: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 `;
 const SLogs = styled.div`
+  cursor: pointer;
   display: flex;
   padding: 10px;
   background-color: white;
@@ -137,7 +138,6 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
     if (scheduleId) {
       const getDateRange = async () => {
         const response = await getSemesterData(scheduleId);
-        console.log(3, response.data);
 
         setSemesterStartDate(response.data[0].startDate);
         setSemesterEndDate(response.data[0].endDate);

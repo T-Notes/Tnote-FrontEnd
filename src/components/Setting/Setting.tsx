@@ -9,7 +9,6 @@ import {
   IcOffToggle,
   IcOnToggle,
   IcProfileLarge,
-  IcWarning,
 } from '../../assets/icons';
 import EditProfile from './EditProfile';
 import ModalPortal from '../../utils/ModalPortal';
@@ -48,22 +47,20 @@ const SMySetting = styled.div`
 `;
 const SEmailContainer = styled.div`
   padding-bottom: 30px;
-  display: flex; /* 내부 요소를 가로로 정렬하기 위해 flex 사용 */
-  align-items: center; /* 수직 가운데 정렬 */
+  display: flex;
+  align-items: center;
   padding-top: 30px;
 `;
 const SLabel = styled.div`
   font-size: 16px;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.gray000};
-  /* padding-top: 30px; */
   padding-bottom: 10px;
 `;
 const SCaption = styled.div`
   font-size: 16px;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.gray700};
-  /* padding-bottom: 10px; */
 `;
 const SButton = styled.button`
   font-size: 14px;
@@ -175,7 +172,7 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
   const userId = localStorage.getItem('userId');
   const oauthAccessToken = localStorage.getItem('oauthAccessToken');
   const accessToken = localStorage.getItem('accessToken');
-  // 수정 폼 모달
+
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
@@ -187,9 +184,8 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     career: undefined,
     alarm: false,
   });
-  const { openModal } = useModals();
+  const { openModal, closeModal } = useModals();
 
-  // 수정 폼 모달 제어함수
   const openEditModal = () => {
     setIsOpenEditModal(true);
     setIsEditMode(true);
@@ -198,7 +194,6 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     setIsOpenEditModal(false);
   };
 
-  // 알람 제어 함수
   const handleOnAlarm = async () => {
     await updateAlarmToggle(true);
     setUserData((prev) => ({ ...prev, alarm: true }));
@@ -208,8 +203,12 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     setUserData((prev) => ({ ...prev, alarm: false }));
   };
 
+  const handleIsCheckedTrue = () => {
+    closeModal(PrivacyPolicyModal);
+  };
+
   const handleClickPolicyModal = () => {
-    openModal(PrivacyPolicyModal, {});
+    openModal(PrivacyPolicyModal, { handleIsCheckedTrue });
   };
 
   const handleClickLogout = async () => {
@@ -226,8 +225,6 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     });
   };
   useEffect(() => {
-    console.log(1);
-
     const getUserData = async () => {
       try {
         const response = await getUserInfo(userId);
@@ -244,21 +241,18 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     getUserData();
   }, [userId]);
 
-  // 계정 탈퇴
   const handleClickDeleteAccount = () => {
     Swal.fire({
       title: '계정 삭제',
       html: '계정을 삭제할 시 모든 데이터가 지워지며<br>해당 작업을 복구 할 수 없습니다.<br>정말 탈퇴를 원하시면 이메일을 입력해주세요.',
-      input: 'email', // 이메일 입력란 추가
-      inputPlaceholder: 'abcde@gmail.com', // 입력란 placeholder 설정
-      showCancelButton: true,
+      input: 'email',
+      inputPlaceholder: 'abcde@gmail.com',
       confirmButtonText: '계정 영구 삭제',
       cancelButtonText: '취소',
     }).then((result) => {
       if (result.isConfirmed) {
-        // 계정 영구 삭제 버튼 클릭 시
-        const email = result.value; // 입력된 이메일 값 가져오기
-        // deletedAccount(code); // 계정탈퇴 요청
+        const email = result.value;
+
         axios
           .delete('https://j9972.kr/tnote/user', {
             headers: {
