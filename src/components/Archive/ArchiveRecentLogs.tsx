@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { IcFile } from '../../assets/icons';
 import instanceAxios from '../../utils/InstanceAxios';
@@ -62,7 +62,7 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
     if (scheduleId) {
       try {
         const getRecentData = async () => {
-          const response = await getRecentLogs();
+          const response = await getRecentLogs(scheduleId);
           const data = response.data;
 
           if (data) {

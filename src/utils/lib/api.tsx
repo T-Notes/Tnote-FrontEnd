@@ -418,9 +418,11 @@ export const getSemesterSearchValue = async (semesterName: string) => {
 };
 
 // 최근 조회한 일지
-export const getRecentLogs = async () => {
+export const getRecentLogs = async (scheduleId: string | undefined) => {
   try {
-    const response = await instanceAxios.get('/tnote/home/recentLogs');
+    const response = await instanceAxios.get(
+      `/tnote/home/recentLogs/${scheduleId}`,
+    );
     return response.data;
   } catch {}
 };
