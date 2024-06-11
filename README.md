@@ -94,14 +94,15 @@ BE
 
 - 학급일지, 업무일지, 상담기록, 학생 관찰 기록 4가지 분야의 수업 일지를 작성할 수 있습니다.
 
-## ![img_004](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/203f564f-aca0-463b-b0d2-11a12995b535)
+![img_004](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/755cefda-1709-44d4-9160-6c990de9cb90)
+![img_004_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/203f564f-aca0-463b-b0d2-11a12995b535)
 
 <br>
 
 ### 5. 학기 추가
 
-- 학기 추가하기 버튼을 누르면 자동으로 학기 추가가 됩니다.
-- 직접 학기를 추가하기 원한다면, 학기이름,기간,마지막 교시를 입력합니다.
+- 학기 추가하기 버튼을 누르면 자동으로 학기 추가가 됩니다. (ex:2024년 2학기)
+- 직접 학기를 추가하기 원한다면, 학기이름, 기간, 마지막 교시를 입력합니다.
 
 ![img_005](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/64ff3ac3-747a-4db4-948f-2cc616724443)
 ![img_005_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/aafe1060-54d5-4215-8e68-f2f20a084229)
