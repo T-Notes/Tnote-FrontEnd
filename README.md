@@ -38,7 +38,16 @@ BE
 
 # 🔧 Skill Stack
 
-추가할 예정
-<br><br>
+- TypeScript
+- React
+- RESTful API
+- Styled Components,
+- Recoil
+
+  <br><br>
 
 # 👩‍🏫 Tnote를 소개합니다
+
+### 1. 랜딩페이지
+
+![img_001](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/52436d52-1227-4977-b8bd-6bc68223b78a)
