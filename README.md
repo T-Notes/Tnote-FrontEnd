@@ -41,7 +41,7 @@ BE
 - TypeScript
 - React
 - RESTful API
-- Styled Components,
+- Styled Components
 - Recoil
 
   <br><br>
@@ -54,11 +54,7 @@ BE
 
 ![img_001](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/228dc837-2feb-4512-acf2-b0fa1cf0cc36)
 
-- todo를 체크하면 취소선이 나타납니다.
-
 ![img_001_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/f856f880-357e-4693-94ff-922991736d9e)
-
----
 
 <br>
 
@@ -78,8 +74,6 @@ BE
 
 ![img_002_02](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/f808efe5-451e-4d6f-9c1f-161ad3dce7f6)
 
----
-
 <br>
 
 ### 3. 메인 홈
@@ -93,8 +87,6 @@ BE
 - todo 체크 박스를 클릭하면 취소선이 나타납니다.
 
   ![img_003_02](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/12362a47-49f7-450b-97d6-93291dbc9780)
-
----
 
 <br>
 
@@ -114,8 +106,6 @@ BE
 ![img_005](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/64ff3ac3-747a-4db4-948f-2cc616724443)
 ![img_005_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/aafe1060-54d5-4215-8e68-f2f20a084229)
 
----
-
 <br>
 
 ### 6. 수업 추가
@@ -130,8 +120,6 @@ BE
 - 수업 일정을 수정하거나 삭제할 수 있습니다.
   ![img)006_03](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/e852478e-5c57-481c-940f-c1e416f01361)
 
----
-
 <br>
 
 ### 7. 아카이브
@@ -142,12 +130,11 @@ BE
 ![img_007_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/ff023700-4fa4-4b5d-9c89-efcb4c8715bd)
 ![img_007_02](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/6c118c24-a940-48d8-9746-cf86f835eff4)
 
----
-
 <br>
 
 ### 8. 사용자 정보 설정
 
 - 사용자 정보를 확인하고, 수정할 수 있습니다.
 - 로그아웃 및 계정 탈퇴가 가능합니다.
+
   ![img_007](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/44f2382c-9a92-4aba-92a4-dacd5fd11bfc)
