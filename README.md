@@ -71,3 +71,24 @@ BE
 ## 3. 메인 홈
 
 ![img_004](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/cddc6370-6dd3-4a62-b3c0-b8bee0d97c2c)
+
+## 4. 학기 추가
+
+1. 학기 추가하기 버튼을 누르면 자동으로 학기 추가가 됩니다.
+2. 직접 학기를 추가하기 원한다면, 학기이름,기간,마지막 교시를 입력합니다.
+
+![img_004](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/64ff3ac3-747a-4db4-948f-2cc616724443)
+![img_004_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/aafe1060-54d5-4215-8e68-f2f20a084229)
+
+## 5. 수업 추가
+
+1. 학기 설정 시 마지막 학기를 기준으로 나만의 시간표가 만들어집니다.
+2. 수업 추가 버튼을 클릭하여 수업을 시간표에 추가할 수 있습니다.
+3. day OR week로 설정을 바꾸어 시간표를 확인 할 수 있습니다.
+4. 수업 일정을 수정하거나 삭제할 수 있습니다.
+
+![img_005](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/f43a3a80-9853-4e2f-bf7c-cb8ec7f89186)
+![img_005_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/d2a7a5ab-2f75-4b86-9091-ff6a88ef1868)
+![img_005_02](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/99d61671-186a-4981-afe7-7f59587cf641)
+
+![img)005_03](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/e852478e-5c57-481c-940f-c1e416f01361)
