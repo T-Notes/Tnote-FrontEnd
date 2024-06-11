@@ -66,11 +66,24 @@ BE
 
 ## 2-1. 학교 검색
 
-![img_003](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/09c94ef7-a6be-433e-9f58-06051312e768)
+![img_002_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/09c94ef7-a6be-433e-9f58-06051312e768)
 
 ## 3. 메인 홈
 
-![img_004](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/cddc6370-6dd3-4a62-b3c0-b8bee0d97c2c)
+- 추가한 학기가 있다면, TODO를 작성 할 수 있습니다.
+  <br>
+  <br>
+
+![img_003](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/cddc6370-6dd3-4a62-b3c0-b8bee0d97c2c)
+
+![img_003_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/85f8a27b-4693-48b1-b43d-11f6fdea3e94)
+![img_003_02](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/12362a47-49f7-450b-97d6-93291dbc9780)
+
+## 수업 일지 작성
+
+- 학급일지, 업무일지, 상담기록, 학생 관찰 기록 4가지 분야의 수업 일지를 작성할 수 있습니다.
+
+![img_000](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/203f564f-aca0-463b-b0d2-11a12995b535)
 
 ## 4. 학기 추가
 
@@ -92,3 +105,17 @@ BE
 ![img_005_02](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/99d61671-186a-4981-afe7-7f59587cf641)
 
 ![img)005_03](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/e852478e-5c57-481c-940f-c1e416f01361)
+
+## 6. 아카이브
+
+- 모든 학기를 아카이브에서 확인할 수 있습니다.
+- 학기 검색 및 삭제가 가능합니다.
+
+![img_006_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/ff023700-4fa4-4b5d-9c89-efcb4c8715bd)
+![img_006_02](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/6c118c24-a940-48d8-9746-cf86f835eff4)
+
+## 7. 사용자 정보 설정
+
+- 사용자 정보를 확인하고, 수정할 수 있습니다.
+- 로그아웃 및 계정 탈퇴가 가능합니다.
+  ![img_007](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/44f2382c-9a92-4aba-92a4-dacd5fd11bfc)
