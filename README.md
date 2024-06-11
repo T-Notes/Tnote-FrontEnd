@@ -50,71 +50,103 @@ BE
 
 ### 1. 랜딩페이지
 
-1. 개인 정보 보호 정책에 동의했을 때만 로그인이 가능합니다.
+- 개인 정보 보호 정책에 동의했을 때만 로그인이 가능합니다.
 
 ![img_001](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/228dc837-2feb-4512-acf2-b0fa1cf0cc36)
 
+- todo를 체크하면 취소선이 나타납니다.
+
 ![img_001_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/f856f880-357e-4693-94ff-922991736d9e)
 
-## 2. 사용자 정보 입력
+---
 
-1. 사용자의 이름은 카카오 정보를 통해 자동으로 받아옵니다.
-2. 과목 선택은 드롭다운 옵션 중에서 선택 가능하며 , 연차는 숫자만 입력 할 수 있습니다.
-3. 학교는 전국 초중고 모두 검색 가능합니다.
+<br>
+
+### 2. 사용자 정보 입력
+
+- 사용자 이름은 카카오 정보를 통해 자동으로 받아옵니다.
+- 학교는 전국 초중고 모두 검색 가능합니다.
 
 ![img_002](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/6b592db3-47d4-4ca1-bed1-e8bb9a1b5595)
+<br>
 
-## 2-1. 학교 검색
+### 2-1. 학교 검색
 
 ![img_002_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/09c94ef7-a6be-433e-9f58-06051312e768)
 
-## 3. 메인 홈
+- 모든 정보가 입력이 되어야 버튼이 활성화됩니다.
+
+![img_002_02](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/f808efe5-451e-4d6f-9c1f-161ad3dce7f6)
+
+---
+
+<br>
+
+### 3. 메인 홈
 
 - 추가한 학기가 있다면, TODO를 작성 할 수 있습니다.
-  <br>
-  <br>
 
 ![img_003](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/cddc6370-6dd3-4a62-b3c0-b8bee0d97c2c)
 
 ![img_003_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/85f8a27b-4693-48b1-b43d-11f6fdea3e94)
-![img_003_02](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/12362a47-49f7-450b-97d6-93291dbc9780)
 
-## 수업 일지 작성
+- todo 체크 박스를 클릭하면 취소선이 나타납니다.
+
+  ![img_003_02](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/12362a47-49f7-450b-97d6-93291dbc9780)
+
+---
+
+<br>
+
+### 4. 수업 일지 작성
 
 - 학급일지, 업무일지, 상담기록, 학생 관찰 기록 4가지 분야의 수업 일지를 작성할 수 있습니다.
 
-![img_000](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/203f564f-aca0-463b-b0d2-11a12995b535)
+## ![img_004](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/203f564f-aca0-463b-b0d2-11a12995b535)
 
-## 4. 학기 추가
+<br>
 
-1. 학기 추가하기 버튼을 누르면 자동으로 학기 추가가 됩니다.
-2. 직접 학기를 추가하기 원한다면, 학기이름,기간,마지막 교시를 입력합니다.
+### 5. 학기 추가
 
-![img_004](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/64ff3ac3-747a-4db4-948f-2cc616724443)
-![img_004_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/aafe1060-54d5-4215-8e68-f2f20a084229)
+- 학기 추가하기 버튼을 누르면 자동으로 학기 추가가 됩니다.
+- 직접 학기를 추가하기 원한다면, 학기이름,기간,마지막 교시를 입력합니다.
 
-## 5. 수업 추가
+![img_005](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/64ff3ac3-747a-4db4-948f-2cc616724443)
+![img_005_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/aafe1060-54d5-4215-8e68-f2f20a084229)
 
-1. 학기 설정 시 마지막 학기를 기준으로 나만의 시간표가 만들어집니다.
-2. 수업 추가 버튼을 클릭하여 수업을 시간표에 추가할 수 있습니다.
-3. day OR week로 설정을 바꾸어 시간표를 확인 할 수 있습니다.
-4. 수업 일정을 수정하거나 삭제할 수 있습니다.
+---
 
-![img_005](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/f43a3a80-9853-4e2f-bf7c-cb8ec7f89186)
-![img_005_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/d2a7a5ab-2f75-4b86-9091-ff6a88ef1868)
-![img_005_02](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/99d61671-186a-4981-afe7-7f59587cf641)
+<br>
 
-![img)005_03](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/e852478e-5c57-481c-940f-c1e416f01361)
+### 6. 수업 추가
 
-## 6. 아카이브
+- 학기 설정 시 마지막 학기를 기준으로 나만의 시간표가 만들어집니다.
+- 수업 추가 버튼을 클릭하여 수업을 시간표에 추가할 수 있습니다.
+  ![img_006](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/f43a3a80-9853-4e2f-bf7c-cb8ec7f89186)
+
+- day OR week로 설정을 바꾸어 시간표를 확인 할 수 있습니다.
+  ![img_006_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/d2a7a5ab-2f75-4b86-9091-ff6a88ef1868)
+  ![img_006_02](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/99d61671-186a-4981-afe7-7f59587cf641)
+- 수업 일정을 수정하거나 삭제할 수 있습니다.
+  ![img)006_03](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/e852478e-5c57-481c-940f-c1e416f01361)
+
+---
+
+<br>
+
+### 7. 아카이브
 
 - 모든 학기를 아카이브에서 확인할 수 있습니다.
 - 학기 검색 및 삭제가 가능합니다.
 
-![img_006_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/ff023700-4fa4-4b5d-9c89-efcb4c8715bd)
-![img_006_02](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/6c118c24-a940-48d8-9746-cf86f835eff4)
+![img_007_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/ff023700-4fa4-4b5d-9c89-efcb4c8715bd)
+![img_007_02](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/6c118c24-a940-48d8-9746-cf86f835eff4)
 
-## 7. 사용자 정보 설정
+---
+
+<br>
+
+### 8. 사용자 정보 설정
 
 - 사용자 정보를 확인하고, 수정할 수 있습니다.
 - 로그아웃 및 계정 탈퇴가 가능합니다.
