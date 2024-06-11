@@ -50,4 +50,24 @@ BE
 
 ### 1. 랜딩페이지
 
-![img_001](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/52436d52-1227-4977-b8bd-6bc68223b78a)
+1. 개인 정보 보호 정책에 동의했을 때만 로그인이 가능합니다.
+
+![img_001](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/228dc837-2feb-4512-acf2-b0fa1cf0cc36)
+
+![img_001_01](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/f856f880-357e-4693-94ff-922991736d9e)
+
+## 2. 사용자 정보 입력
+
+1. 사용자의 이름은 카카오 정보를 통해 자동으로 받아옵니다.
+2. 과목 선택은 드롭다운 옵션 중에서 선택 가능하며 , 연차는 숫자만 입력 할 수 있습니다.
+3. 학교는 전국 초중고 모두 검색 가능합니다.
+
+![img_002](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/6b592db3-47d4-4ca1-bed1-e8bb9a1b5595)
+
+## 2-1. 학교 검색
+
+![img_003](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/09c94ef7-a6be-433e-9f58-06051312e768)
+
+## 3. 메인 홈
+
+![img_004](https://github.com/T-Notes/Tnote-FrontEnd/assets/105706403/cddc6370-6dd3-4a62-b3c0-b8bee0d97c2c)
