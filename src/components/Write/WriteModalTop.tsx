@@ -87,7 +87,7 @@ const WritingModalTop = ({
           type="text"
           maxLength={30}
           placeholder="제목을 입력하세요"
-          onChange={onTitleChange}
+          onInput={onTitleChange}
           value={title || ''}
         ></STitleInput>
         <STitleLength>({title.length} / 30)</STitleLength>
