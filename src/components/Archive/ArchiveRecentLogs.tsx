@@ -18,6 +18,7 @@ const STitle = styled.div`
 `;
 const SRecentSearchContainer = styled.div`
   display: flex;
+  margin-right: auto;
 `;
 const SRecentSearchItem = styled.div`
   display: flex;
@@ -34,7 +35,7 @@ const SRecentSearchItem = styled.div`
   padding-bottom: 20px;
   padding-left: 30px;
   padding-right: 30px;
-  margin-right: auto;
+  margin-right: 38px;
 `;
 
 interface Archive {
