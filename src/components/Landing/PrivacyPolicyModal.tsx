@@ -34,11 +34,18 @@ const SPolicyContentBox = styled.section`
 
 const SPrivacyAgreementBtnBox = styled(Button)`
   margin-top: 30px;
-  width: 400px;
+  padding: 18px 20px 18px 20px;
+  width: 420px;
   height: 60px;
+  gap: 8px;
 
-  background-color: ${({ theme }) => theme.colors.purple100}; // active
-  color: ${({ theme }) => theme.colors.white}; // active
+  background-color: ${({ theme }) => theme.colors.purple100};
+  color: ${({ theme }) => theme.colors.white};
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: center;
 `;
 
 const SPrivacyPolicyTitle = styled.h1`
