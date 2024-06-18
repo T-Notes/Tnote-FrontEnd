@@ -182,6 +182,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
     if (scheduleId) {
       const getAllLogs = async () => {
         const res = await getAllLogsBySchedule(scheduleId, currentPage);
+        console.log(res.data.logs);
         setTotalLogs(res.data.totalLog);
         setFilteredLogsList(res.data.logs);
       };
@@ -214,10 +215,11 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
         showCancelButton: true,
       }).then((res) => {
         if (res.isConfirmed) {
-          instanceAxios.delete(
-            `/tnote/${logEndPointMiddle}/${checkedDeleteId}`,
-          );
-          window.location.reload();
+          instanceAxios
+            .delete(`/tnote/${logEndPointMiddle}/${checkedDeleteId}`)
+            .then((res) => {
+              window.location.reload();
+            });
         }
       });
     } else {
@@ -227,14 +229,14 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
     }
   };
 
-  const handleChangePageAtLogs = (id: number) => {
-    if (currentFilteredOption === '학급일지' || currentFilteredOption === '') {
+  const handleChangePageAtLogs = (id: number, type: string) => {
+    if (type === 'CLASS_LOG') {
       navigate(`/archive/classLog/${scheduleId}/${id}`);
-    } else if (currentFilteredOption === '업무일지') {
+    } else if (type === 'PROCEEDING') {
       navigate(`/archive/proceeding/${scheduleId}/${id}`);
-    } else if (currentFilteredOption === '상담기록') {
+    } else if (type === 'CONSULTATION') {
       navigate(`/archive/consultation/${scheduleId}/${id}`);
-    } else if (currentFilteredOption === '학생관찰기록') {
+    } else if (type === 'OBSERVATION') {
       navigate(`/archive/observation/${scheduleId}/${id}`);
     }
   };
@@ -286,7 +288,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
               <SLogContainer key={index}>
                 {isDelete && (
                   <>
-                    {checkedDeleteId === item.id ? (
+                    {checkedDeleteId === item.id && logType === item.logType ? (
                       <SCheckedBox>
                         <IcCheckedBox
                           onClick={() =>
@@ -310,7 +312,9 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
                   {item.logType === 'CLASS_LOG' && (
                     <SLogType
                       className="pointer"
-                      onClick={() => handleChangePageAtLogs(item.id)}
+                      onClick={() =>
+                        handleChangePageAtLogs(item.id, item.logType)
+                      }
                     >
                       <p>{item.title || item.studentName}/학급일지</p>
                     </SLogType>
@@ -319,7 +323,9 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
                   {item.logType === 'PROCEEDING' && (
                     <SLogType
                       className="pointer"
-                      onClick={() => handleChangePageAtLogs(item.id)}
+                      onClick={() =>
+                        handleChangePageAtLogs(item.id, item.logType)
+                      }
                     >
                       <p>{item.title || item.studentName}/업무일지</p>
                     </SLogType>
@@ -327,7 +333,9 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
                   {item.logType === 'CONSULTATION' && (
                     <SLogType
                       className="pointer"
-                      onClick={() => handleChangePageAtLogs(item.id)}
+                      onClick={() =>
+                        handleChangePageAtLogs(item.id, item.logType)
+                      }
                     >
                       <p>{item.title || item.studentName}/상담기록</p>
                     </SLogType>
@@ -336,7 +344,9 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
                   {item.logType === 'OBSERVATION' && (
                     <SLogType
                       className="pointer"
-                      onClick={() => handleChangePageAtLogs(item.id)}
+                      onClick={() =>
+                        handleChangePageAtLogs(item.id, item.logType)
+                      }
                     >
                       <p>{item.title || item.studentName}/학생 관찰 기록</p>
                     </SLogType>
