@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-import { useToggle } from '../../utils/useHooks/useToggle';
-
 import {
   IcClose,
   IcSelectedIcon,
@@ -15,10 +13,8 @@ import {
 import ClassDayList from './ClassDayList';
 import { useEffect, useState } from 'react';
 import { Button } from '../common/styled/Button';
-import instanceAxios from '../../utils/InstanceAxios';
-import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
-import { useSetRecoilState } from 'recoil';
-import { useNavigate, useParams } from 'react-router-dom';
+
+import { useParams } from 'react-router-dom';
 import DropdownInput from '../common/DropdownInput';
 import {
   crateSubject,
@@ -62,10 +58,7 @@ const SLabel = styled.label`
   padding-top: 10px;
   padding-bottom: 10px;
 `;
-const SClassAddForm = styled.div`
-  /* display: flex;
-  flex-direction: column; */
-`;
+
 const SClassAddFormInput = styled.input`
   padding-bottom: 10px;
   padding-top: 10px;
@@ -73,21 +66,19 @@ const SClassAddFormInput = styled.input`
   border-bottom: 1px solid #cccccc;
 `;
 
-const SClass = styled.div<{ selected: boolean }>`
+const SClass = styled.div<{ selected: boolean; $isActive: boolean }>`
   background-color: ${(props) => (props.selected ? '#632CFA' : '#ffff')};
   border-radius: 35px;
   color: ${(props) => (props.selected ? '#ffff' : '#000000')};
   padding: 7px;
-  font-size: 14px;
+  font-family: Pretendard;
+  font-size: 15px;
   font-weight: 500;
-`;
+  line-height: 24px;
+  text-align: left;
 
-const SColorPreview = styled.div`
-  background-color: ${({ color }) => color};
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  margin-bottom: 10px;
+  cursor: ${(props) => (props.$isActive ? 'pointer' : 'default')};
+  opacity: ${(props) => (props.$isActive ? 1 : 0.2)};
 `;
 
 const SSaveClassBtn = styled(Button)`
@@ -119,10 +110,6 @@ const SColor = styled.div`
   padding-right: 7px;
 `;
 
-const SDropdownInput = styled(DropdownInput)`
-  font-size: 14px;
-  font-weight: 500;
-`;
 interface IsClassAddProps {
   onCloseAddClass: () => void;
   setReloadTrigger: React.Dispatch<React.SetStateAction<boolean>>;
@@ -135,24 +122,23 @@ const ClassAddForm = ({
   onCloseAddClass,
   setReloadTrigger,
   isEditMode,
-  setIsEditMode,
   subjectId,
 }: IsClassAddProps) => {
   const { scheduleId } = useParams();
-  const navigate = useNavigate();
+
   const [subjectName, setSubjectName] = useState<string>('');
   const [classTime, setClassTime] = useState<string>('');
-  const [classDay, setClassDay] = useState<string>(''); //  유저에게 보여질 상태
+  const [classDay, setClassDay] = useState<string>('');
   const [classLocation, setClassLocation] = useState<string>('');
-  const [color, setColor] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [memo, setMemo] = useState<string>('');
-  const { currentDate } = useCurrentDate();
-  const date = currentDate;
+
   const [isClassDayDropdownToggle, setIsClassDayDropdownToggle] =
     useState(false);
 
-  const [enDay, setEnDay] = useState<string>(''); // 서버에 보낼 상태
+  const [enDay, setEnDay] = useState<string>('');
+
+  const lastClass = localStorage.getItem('lastClass');
 
   const handleChangeClassDayToggle = () => {
     setIsClassDayDropdownToggle(!isClassDayDropdownToggle);
@@ -170,7 +156,7 @@ const ClassAddForm = ({
     { id: 9, class: '9' },
   ];
 
-  const ClassColor = [
+  const classColor = [
     { id: 1, color: '파란색', code: '#0EA5E91A' },
     { id: 2, color: '보라색', code: '#E5E6FE' },
     { id: 3, color: '노란색', code: '#FEF5E6' },
@@ -179,7 +165,6 @@ const ClassAddForm = ({
     { id: 6, color: '분홍색', code: '#FEE6F9' },
     { id: 7, color: '회색', code: '#D9D9D9' },
   ];
-
   const handleChangeSubjectName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSubjectName(e.target.value);
   };
@@ -190,8 +175,8 @@ const ClassAddForm = ({
   const handleSelectedClassDay = (day: any) => {
     const enDay = handleChangeKoreanToEnglishDay(day);
 
-    setEnDay(enDay); // 서버에 보낼 상태
-    setClassDay(day); // 유저에게 보여질 상태
+    setEnDay(enDay);
+    setClassDay(day);
 
     handleChangeClassDayToggle();
   };
@@ -204,7 +189,6 @@ const ClassAddForm = ({
 
   const handleClickColor = (color: string) => {
     setSelectedColor(color);
-    setColor(color);
   };
   const handleChangeMemo = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMemo(e.target.value);
@@ -229,19 +213,19 @@ const ClassAddForm = ({
       scheduleId: scheduleId,
     };
     if (isEditMode) {
-      // 수정 요청
       await editSubject(subjectId, pathData);
       setReloadTrigger((prev) => !prev);
-      onCloseAddClass(); // 저장 후 추가 툴팁 닫아주기
+      onCloseAddClass();
     } else {
-      // post 요청
       await crateSubject(scheduleId, postData);
       setReloadTrigger((prev) => !prev);
-      onCloseAddClass(); // 저장 후 추가 툴팁 닫아주기
+      onCloseAddClass();
     }
   };
 
-  // 한국어를 영어로 변환하는 함수
+  /**
+ 한국어를 영어로 변환하는 함수
+*/
   const handleChangeKoreanToEnglishDay = (ko: string) => {
     let enDay = '';
     if (ko === '월요일') {
@@ -268,13 +252,12 @@ const ClassAddForm = ({
         const data = response.data;
         console.log(data);
 
-        // 수정하는 상황일때
         setSubjectName(data.subjectName);
         setClassTime(data.classTime.replace('교시', ''));
 
         const enDay = handleChangeKoreanToEnglishDay(data.classDay);
-        setEnDay(enDay); // 서버에 보내는 상태
-        setClassDay(data.classDay); // 유저에게 보여지는 상태
+        setEnDay(enDay);
+        setClassDay(data.classDay);
         setClassLocation(data.classLocation);
         setSelectedColor(data.color);
         setMemo(data.memo);
@@ -291,7 +274,7 @@ const ClassAddForm = ({
           <IcClose onClick={onCloseAddClass} />
         </SHeader>
         <SClassAddFormBody>
-          <SClassAddForm>
+          <div>
             <STitle>
               <SLabel>과목 이름</SLabel>
               <SClassAddFormInput
@@ -303,15 +286,21 @@ const ClassAddForm = ({
 
             <SLabel>수업 교시</SLabel>
             <SClassNum>
-              {classNum.map((classNum) => (
-                <SClass
-                  key={classNum.id}
-                  onClick={() => handleSelectedClass(classNum.class)}
-                  selected={classTime === classNum.class}
-                >
-                  <p>{classNum.class}</p>
-                </SClass>
-              ))}
+              {classNum.map((classNum) => {
+                const isActive = Number(classNum.class) <= Number(lastClass);
+                return (
+                  <SClass
+                    key={classNum.id}
+                    onClick={() =>
+                      isActive && handleSelectedClass(classNum.class)
+                    }
+                    selected={classTime === classNum.class}
+                    $isActive={isActive}
+                  >
+                    <p>{classNum.class}</p>
+                  </SClass>
+                );
+              })}
             </SClassNum>
             <SClassDays>
               <SLabel>수업 요일</SLabel>
@@ -319,7 +308,7 @@ const ClassAddForm = ({
                 size="mini"
                 theme={{ background: 'white' }}
                 placeholder="수업 요일을 선택해주세요"
-                value={classDay} // 유저에게 보여질 상태
+                value={classDay}
                 isToggle={isClassDayDropdownToggle}
                 handleChangeToggle={handleChangeClassDayToggle}
                 dropdownList={
@@ -335,10 +324,10 @@ const ClassAddForm = ({
                 value={classLocation}
               ></SClassAddFormInput>
             </STitle>
-          </SClassAddForm>
+          </div>
           <SLabel>색상 선택</SLabel>
           <SClassColor>
-            {ClassColor.map((colors) => (
+            {classColor.map((colors) => (
               <SColor
                 key={colors.id}
                 onClick={() => handleClickColor(colors.color)}
