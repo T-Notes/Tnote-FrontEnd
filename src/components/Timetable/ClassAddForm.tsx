@@ -83,11 +83,20 @@ const SClass = styled.div<{ selected: boolean; $isActive: boolean }>`
 
 const SSaveClassBtn = styled(Button)`
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.purple100};
-  color: ${({ theme }) => theme.colors.white};
+  font-family: Pretendard;
+  line-height: 24px;
   font-size: 18px;
   font-weight: 500;
   padding: 10px;
+  &.activeSubmit {
+    background-color: #632cfa;
+    color: white;
+  }
+  &.inactiveSubmit {
+    background-color: #e8e8e8;
+    color: #000000;
+    cursor: default;
+  }
 `;
 const SClassAddFormBody = styled.div`
   padding: 10px;
@@ -266,6 +275,14 @@ const ClassAddForm = ({
     }
   }, []);
 
+  const isActiveSubmitBtn =
+    !!subjectName &&
+    !!classTime &&
+    !!enDay &&
+    !!classLocation &&
+    !!selectedColor;
+
+  console.log(1, isActiveSubmitBtn);
   return (
     <SClassAddFormWrapper>
       <SClassAddFormLayout>
@@ -357,7 +374,12 @@ const ClassAddForm = ({
             ></SClassAddFormInput>
           </STitle>
 
-          <SSaveClassBtn onClick={handleSaveClassForm}>수업 저장</SSaveClassBtn>
+          <SSaveClassBtn
+            onClick={() => isActiveSubmitBtn && handleSaveClassForm()}
+            className={isActiveSubmitBtn ? 'activeSubmit' : 'inactiveSubmit'}
+          >
+            수업 저장
+          </SSaveClassBtn>
         </SClassAddFormBody>
       </SClassAddFormLayout>
     </SClassAddFormWrapper>

@@ -563,3 +563,13 @@ export const updateAlarmToggle = async (alarm: boolean) => {
     return response.data;
   } catch {}
 };
+
+// 일주일 단위 시간표 조회
+export const weekSchedule = async (scheduleId: string | undefined) => {
+  try {
+    const response = await instanceAxios.get(
+      `/tnote/schedule/week/${scheduleId}`,
+    );
+    return response.data;
+  } catch {}
+};

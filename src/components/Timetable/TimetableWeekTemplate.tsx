@@ -1,12 +1,9 @@
+import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import styled from 'styled-components';
-import instanceAxios from '../../utils/InstanceAxios';
-import { useToggle } from '../../utils/useHooks/useToggle';
 import ClassInfoPopup from './ClassInfoPopup';
 import { colorMapping } from '../../utils/colorMapping';
-import ClassAddForm from './ClassAddForm';
+import { weekSchedule } from '../../utils/lib/api';
 
 const STimetableWrapper = styled.table`
   margin-top: 30px;
@@ -28,16 +25,6 @@ const SThead = styled.td`
   color: #5b5b5b;
   font-weight: 700;
 `;
-// 색상 이름과 코드가 매핑된 배열
-// const colorMapping: { [key: string]: string } = {
-//   파란색: '#0EA5E91A',
-//   보라색: '#E5E6FE',
-//   노란색: '#FEF5E6',
-//   빨간색: '#FEE6E6',
-//   초록색: '#E6FEE7',
-//   분홍색: '#FEE6F9',
-//   회색: '#D9D9D9',
-// };
 
 const SSubjectBox = styled.div<{ color: string }>`
   cursor: pointer;
@@ -50,8 +37,8 @@ const SSubjectBox = styled.div<{ color: string }>`
   background-color: ${({ color }) => color || '#fffff'};
   width: auto;
   overflow: hidden;
-  white-space: nowrap; /* 글자가 넘칠 경우 줄바꿈을 방지합니다. */
-  text-overflow: ellipsis; /* 넘어간 텍스트를 생략 부호(...)로 표시합니다. */
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 const SClassAndTime = styled.td`
   padding: 10px;
@@ -83,12 +70,11 @@ const TimetableWeekTemplate = ({
   lastClass,
 }: TimetableTemplate) => {
   const { scheduleId } = useParams();
-  let lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10); // '8교시'형태로 반환되는 값 중에서 문자열을 제외하고 숫자만 추출하는 정규식
+  let lastClassNumber = parseInt(lastClass.replace(/\D/g, ''), 10);
   const [subjectsList, setSubjectList] = useState<any[]>([]);
-  // 과목 조회 모달 상태관리
+
   const [isOpenSubjectDataModal, setIsOpenSubjectDataModal] =
     useState<boolean>(false);
-  const [color, setColor] = useState<string>('');
 
   const openSubjectDataModal = (subjectId: string) => {
     setSubjectId(subjectId);
@@ -105,18 +91,12 @@ const TimetableWeekTemplate = ({
     if (scheduleId) {
       const getTimetable = async () => {
         try {
-          await instanceAxios
-            .get(`/tnote/schedule/week/${scheduleId}`)
-            .then((res) => {
-              const getData = res.data;
-              const subjectArray = getData.data[0].subjects;
-              setColor(subjectArray.map((item: any) => item.color));
-              setSubjectList(subjectArray);
-              setLastClass(getData.data[0].lastClass || '9교시');
-            });
-        } catch (err) {
-          console.log('시간표 조회에 실패했습니다.', err);
-        }
+          const res = await weekSchedule(scheduleId);
+          const subjectArray = res.data[0].subjects;
+          setSubjectList(subjectArray);
+          setLastClass(res.data[0].lastClass || '9교시');
+          localStorage.setItem('lastClass', res.data[0].lastClass.slice(0, 1));
+        } catch (err) {}
       };
       getTimetable();
     }
@@ -124,12 +104,8 @@ const TimetableWeekTemplate = ({
 
   useEffect(() => {
     if (lastClass === '') {
-      // 유저가 선택하기 전이라면 기본 값 9교시로 설정.
       lastClassNumber = 9;
     } else {
-      // 유저가 마지막 교시를 선택했다면, 해당 교시까지의 시간표 출력.
-
-      // 선택한 교시까지의 시간표 출력
       for (let hour = 1; hour <= lastClassNumber; hour++) {}
     }
   }, [lastClass]);
@@ -143,7 +119,7 @@ const TimetableWeekTemplate = ({
     { id: 6, day: '토요일' },
     { id: 7, day: '일요일' },
   ];
-  const timetables: any = [
+  const timetables = [
     { id: 1, class: '1교시', time: '09:00' },
     { id: 2, class: '2교시', time: '10:00' },
     { id: 3, class: '3교시', time: '11:00' },
@@ -154,11 +130,9 @@ const TimetableWeekTemplate = ({
     { id: 8, class: '8교시', time: '17:00' },
     { id: 9, class: '9교시', time: '18:00' },
   ];
-  // lastClass 값에 따라 필요한 시간표만 추출
+
   const filteredTimetables = timetables.slice(0, lastClassNumber);
 
-  // 두 값을 비교 후 맞다면 true를, 아니라면 false를 반환하는 함수를 만들자
-  // 배열의 값과  filteredTimetables의 값이 맞다면 렌더링하기
   const isSameClassDay = (
     day1: string | undefined,
     day2: string | undefined,
@@ -171,8 +145,7 @@ const TimetableWeekTemplate = ({
   ) => {
     return time1 === time2;
   };
-  // 1교시~9교시 까지의 리스트 만들기
-  // 유저에게 넘어온 lastClass 에 맞게 보여주기
+
   return (
     <STimetableWrapper>
       <thead>
@@ -194,7 +167,6 @@ const TimetableWeekTemplate = ({
             </SClassAndTime>
             {days.map((d) => (
               <SDaysWrapper key={d.id}>
-                {/* 여기서 data의 정보를 넣어줌 */}
                 {subjectsList.map((item) => {
                   if (
                     isSameClassDay(item.classDay, d.day) &&
