@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import DatePicker from 'react-datepicker';
+import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useEffect, useState } from 'react';
 import PrivacyPolicyCheckbox from '../Landing/PrivacyPolicyCheckbox';
@@ -10,7 +10,14 @@ const SDatePickerBox = styled.div`
   align-items: center;
 `;
 
-const SCalender = styled(DatePicker)`
+const DatePickerWrapper = ({
+  isActive,
+  ...props
+}: ReactDatePickerProps & { isActive: boolean }) => {
+  return <DatePicker {...props} />;
+};
+
+const SCalender = styled(DatePickerWrapper)<{ isActive: boolean }>`
   display: flex;
   border: none;
   border-bottom: 1px solid #e8e8e8;
@@ -21,8 +28,9 @@ const SCalender = styled(DatePicker)`
   align-items: center;
   text-align: center;
   ${({ theme }) => theme.fonts.caption3}
-  color: ${({ selected }) => (selected ? 'black' : '#A6A6A6')};
+  color: ${(props) => (props.isActive ? '#000000' : '#A6A6A6')};
 `;
+
 const STildeIcon = styled.span`
   font-size: 20px;
   color: ${({ theme }) => theme.colors.gray000};
@@ -59,23 +67,28 @@ const WriteDatePicker = ({
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [isAllDay, setIsAllDay] = useState<boolean>(false);
+  const [isStartActive, setIsStartActive] = useState<boolean>(false);
+  const [isEndActive, setIsEndActive] = useState<boolean>(false);
   const { isToggle, handleChangeToggle } = useToggle();
 
-  const handleDateChangeStartDate = (start: Date, end: Date) => {
-    setStartDate(start);
-    if (end < start) {
-      setEndDate(start);
-    } else {
-      setEndDate(end);
+  const handleDateChangeStartDate = (date: Date | null) => {
+    if (date) {
+      setStartDate(date);
+      setIsStartActive(true);
+      if (endDate < date) {
+        setEndDate(date);
+      }
     }
   };
 
-  const handleDateChangeEndDate = (start: Date, end: Date) => {
-    setStartDate(start);
-    if (end < start) {
-      alert('종료일이 시작일보다 빠릅니다.');
-    } else {
-      setEndDate(end);
+  const handleDateChangeEndDate = (date: Date | null) => {
+    if (date) {
+      if (date < startDate) {
+        alert('종료일이 시작일보다 빠릅니다.');
+      } else {
+        setEndDate(date);
+        setIsEndActive(true);
+      }
     }
   };
 
@@ -97,13 +110,17 @@ const WriteDatePicker = ({
       59,
     );
     if (isAllDay) {
-      //종일 버튼 해제 시
+      // 종일 버튼 해제 시
       setStartDate(new Date());
       setEndDate(new Date());
+      setIsStartActive(false);
+      setIsEndActive(false);
     } else {
       // 종일 버튼 선택 시
       setStartDate(startAllDay);
       setEndDate(endAllDay);
+      setIsStartActive(true);
+      setIsEndActive(true);
     }
     setIsAllDay(!isAllDay);
   };
@@ -117,7 +134,7 @@ const WriteDatePicker = ({
       <SDatePickerBox>
         <SCalender
           selected={onStartDate ? new Date(onStartDate) : startDate}
-          onChange={(date) => handleDateChangeStartDate(date as Date, endDate)}
+          onChange={(date: Date) => handleDateChangeStartDate(date as Date)}
           minDate={new Date('2000-01-01')}
           showTimeSelect
           timeFormat="HH:mm"
@@ -125,16 +142,18 @@ const WriteDatePicker = ({
           timeCaption="시간"
           shouldCloseOnSelect={true}
           dateFormat="yyyy-MM-dd (eee) HH:mm"
+          isActive={isStartActive}
         />
         <STildeIcon>~</STildeIcon>
         <SCalender
           selected={onEndDate ? new Date(onEndDate) : endDate}
-          onChange={(date) => handleDateChangeEndDate(startDate, date as Date)}
+          onChange={(date: Date) => handleDateChangeEndDate(date as Date)}
           showTimeSelect
           timeFormat="HH:mm"
           timeIntervals={30}
           dateFormat="yyyy-MM-dd (eee) HH:mm"
           shouldCloseOnSelect={true}
+          isActive={isEndActive}
         />
         <SAllDay>
           <PrivacyPolicyCheckbox
