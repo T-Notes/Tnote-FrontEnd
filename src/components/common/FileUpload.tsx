@@ -70,7 +70,7 @@ const SShowInput = styled.div`
   border-radius: 8px;
   border: 1px solid #e8e8e8;
   width: 400px;
-  &::placeholder {
+  .placeholder {
     color: #a6a6a6;
   }
 `;
@@ -122,7 +122,9 @@ const FileUpload = (props: any) => {
               ))}
             </>
           ) : (
-            <div>2MB 이하의 jpg, png 파일 업로드 가능합니다.</div>
+            <div className="placeholder">
+              2MB 이하의 jpg, png 파일 업로드 가능합니다.
+            </div>
           )}
         </SShowInput>
 
