@@ -259,7 +259,6 @@ const ClassAddForm = ({
       const selectedSubjectData = async () => {
         const response = await getSelectedSubjectData(scheduleId, subjectId);
         const data = response.data;
-        console.log(data);
 
         setSubjectName(data.subjectName);
         setClassTime(data.classTime.replace('교시', ''));
