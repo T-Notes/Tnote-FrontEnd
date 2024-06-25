@@ -261,7 +261,7 @@ const ClassLogModal = ({
           console.log(error);
         });
     }
-  }, [logId]);
+  }, [logId, isEdit]);
 
   // useEffect(() => {
   //   if (logId) {

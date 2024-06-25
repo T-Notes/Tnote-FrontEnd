@@ -5,6 +5,7 @@ import ReactModal from 'react-modal';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcPen, IcSmallDatePicker, IcTitle } from '../../assets/icons';
+import { convertUrlToFile } from '../../utils/convertUrlToFile';
 import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 
 import { getConsultationDetailData } from '../../utils/lib/api';
@@ -311,7 +312,7 @@ const ConsultationRecordsModal = ({
     counselingContent;
 
   useEffect(() => {
-    if (logId) {
+    if (logId && isEdit) {
       getConsultationDetailData(String(logId))
         .then((response) => {
           const data = response.data;
@@ -325,12 +326,24 @@ const ConsultationRecordsModal = ({
             startDate: new Date(data.startDate),
             endDate: new Date(data.endDate),
           });
+
+          const imagePromises = data.images.map((image: any) => {
+            return convertUrlToFile(image.url, image.originalFileName);
+          });
+
+          Promise.all(imagePromises)
+            .then((files) => {
+              setImgUrl((prevFiles) => [...prevFiles, ...files]);
+            })
+            .catch((error) => {
+              console.error('Failed to convert image URLs to files:', error);
+            });
         })
         .catch((error) => {
-          console.log(error);
+          console.error('Failed to fetch consultation detail:', error);
         });
     }
-  }, [logId]);
+  }, [logId, isEdit]);
 
   return (
     <ReactModal
@@ -448,14 +461,7 @@ const ConsultationRecordsModal = ({
             value={counselingResult}
             onChange={handleCounselingResultChange}
           />
-          <FileUpload
-            fileName={fileName}
-            imgUrl={imgUrl}
-            handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
-              handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
-            }
-            inputId="valueFile"
-          />
+          <FileUpload imgUrl={imgUrl} setImgUrl={setImgUrl} />
         </SCounselingResult>
 
         <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>

@@ -13,6 +13,7 @@ import WritingModalTop from './WriteModalTop';
 import { getProceedingDetailData } from '../../utils/lib/api';
 import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 import useRandomColor from '../../utils/useHooks/useRandomColor';
+import { convertUrlToFile } from '../../utils/convertUrlToFile';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -270,7 +271,7 @@ const WorkLogModal = ({
   const isFormValid = title && date.startDate && date.endDate && workContents;
 
   useEffect(() => {
-    if (logId) {
+    if (logId && isEdit) {
       getProceedingDetailData(String(logId))
         .then((response) => {
           const data = response.data;
@@ -284,12 +285,19 @@ const WorkLogModal = ({
             startDate: new Date(data.startDate),
             endDate: new Date(data.endDate),
           });
+          const imagePromises = data.images.map((image: any) => {
+            return convertUrlToFile(image.url, image.originalFileName);
+          });
+
+          Promise.all(imagePromises).then((files) => {
+            setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
+          });
         })
         .catch((error) => {
           console.log(error);
         });
     }
-  }, [logId]);
+  }, [logId, isEdit]);
 
   return (
     <ReactModal
@@ -355,14 +363,7 @@ const WorkLogModal = ({
                 onChange={handleContentChange}
               />
             </SContentWrap>
-            <FileUpload
-              // fileName={fileName}
-              imgUrl={imgUrl}
-              handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
-                handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
-              }
-              inputId="file"
-            />
+            <FileUpload imgUrl={imgUrl} setImgUrl={setImgUrl} />
             <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
               등록
             </SLogsSubmitBtn>

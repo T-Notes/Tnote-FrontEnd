@@ -15,6 +15,7 @@ import WritingModalTop from './WriteModalTop';
 import { getObservationDetailData } from '../../utils/lib/api';
 import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 import useRandomColor from '../../utils/useHooks/useRandomColor';
+import { convertUrlToFile } from '../../utils/convertUrlToFile';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -217,10 +218,9 @@ const StudentRecordsModal = ({
     title && date.startDate && date.endDate && observationContent;
 
   useEffect(() => {
-    if (logId) {
+    if (logId && isEdit) {
       getObservationDetailData(String(logId))
         .then((response) => {
-          console.log(2, response.data);
           const data = response.data;
           setTitle(data.studentName);
           setImgUrl(data.images);
@@ -230,12 +230,19 @@ const StudentRecordsModal = ({
             startDate: new Date(data.startDate),
             endDate: new Date(data.endDate),
           });
+          const imagePromises = data.images.map((image: any) => {
+            return convertUrlToFile(image.url, image.originalFileName);
+          });
+
+          Promise.all(imagePromises).then((files) => {
+            setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
+          });
         })
         .catch((error) => {
           console.log(error);
         });
     }
-  }, [logId]);
+  }, [logId, isEdit]);
 
   return (
     <ReactModal
@@ -290,14 +297,7 @@ const StudentRecordsModal = ({
             value={teachingPlan}
             onChange={handleTeachingPlanChange}
           />
-          <FileUpload
-            fileName={fileName}
-            imgUrl={imgUrl}
-            handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
-              handleChangeLogImgFileUpload(e, setImgUrl, setFileName)
-            }
-            inputId="valueFile"
-          />
+          <FileUpload imgUrl={imgUrl} setImgUrl={setImgUrl} />
         </STeachingPlan>
 
         <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
