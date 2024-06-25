@@ -317,7 +317,6 @@ const ConsultationRecordsModal = ({
         .then((response) => {
           const data = response.data;
           setTitle(data.studentName);
-          setImgUrl(data.images);
           setCounselingContent(data.consultationContents);
           setCounselingResult(data.consultationResult);
           setSelectedCounselingButton(data.counselingField);

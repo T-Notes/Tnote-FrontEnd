@@ -12,6 +12,7 @@ import ReactModal from 'react-modal';
 import { getClassLogDetailData } from '../../utils/lib/api';
 import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
 import useRandomColor from '../../utils/useHooks/useRandomColor';
+import { convertUrlToFile } from '../../utils/convertUrlToFile';
 
 const STextarea = styled.textarea`
   height: 180px;
@@ -220,18 +221,6 @@ const ClassLogModal = ({
     }
   };
 
-  // 파일객체로 바꾸기
-  const convertUrlToFile = async (
-    url: string,
-    originalFileName: string,
-  ): Promise<File> => {
-    const response = await fetch(url); // { mode: 'no-cors' }
-    const data = await response.blob();
-    const ext = url.split('.').pop(); // url 구조에 맞게 수정할 것
-    const metadata = { type: `image/${ext}` };
-    return new File([data], originalFileName, metadata);
-  };
-  // 수정
   useEffect(() => {
     if (logId && isEdit) {
       getClassLogDetailData(String(logId))
@@ -262,34 +251,6 @@ const ClassLogModal = ({
         });
     }
   }, [logId, isEdit]);
-
-  // useEffect(() => {
-  //   if (logId) {
-  //     getClassLogDetailData(String(logId))
-  //       .then((response) => {
-  //         const data = response.data;
-  //         const imagePromises = data.images.map((image: any) => {
-  //           return convertUrlToFile(image.url, image.originalFileName);
-  //         });
-
-  //         setTitle(data.title);
-
-  //         setDate({
-  //           startDate: new Date(data.startDate),
-  //           endDate: new Date(data.endDate),
-  //         });
-  //         setSaveContents({
-  //           학습계획: data.plan,
-  //           수업내용: data.classContents,
-  //           제출과제: data.submission,
-  //           진도표: data.magnitude,
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   }
-  // }, [logId]);
 
   return (
     <ReactModal
@@ -360,15 +321,7 @@ const ClassLogModal = ({
             onChange={handleContentChange}
           />
         </SContentWrap>
-        <FileUpload
-          // fileName={fileName}
-          imgUrl={imgUrl}
-          setImgUrl={setImgUrl}
-          // handleChangeImg={(e: ChangeEvent<HTMLInputElement>) =>
-          //   handleChangeLogImgFileUpload(e, setImgUrl)
-          // }
-          // inputId="file"
-        />
+        <FileUpload imgUrl={imgUrl} setImgUrl={setImgUrl} />
         <SLogsSubmitBtn onClick={handleClickSubmit} disabled={!isFormValid}>
           등록
         </SLogsSubmitBtn>

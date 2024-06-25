@@ -223,7 +223,6 @@ const StudentRecordsModal = ({
         .then((response) => {
           const data = response.data;
           setTitle(data.studentName);
-          setImgUrl(data.images);
           setObservationContent(data.observationContents);
           setTeachingPlan(data.guidance);
           setDate({

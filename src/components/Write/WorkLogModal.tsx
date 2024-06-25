@@ -276,7 +276,7 @@ const WorkLogModal = ({
         .then((response) => {
           const data = response.data;
           console.log(data.images);
-          setImgUrl(data.images);
+
           setTitle(data.title);
           setPlace(data.location);
 
