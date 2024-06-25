@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { IcClip, IcImageDelete } from '../../assets/icons';
 
@@ -56,6 +57,10 @@ const SFileNames = styled.div`
     font-size: 12px;
     font-weight: 500;
   }
+  .fileDelete {
+    display: flex;
+    padding-left: 10px;
+  }
 `;
 const SShowInput = styled.div`
   display: flex;
@@ -70,7 +75,26 @@ const SShowInput = styled.div`
   }
 `;
 const FileUpload = (props: any) => {
-  const { fileName, handleChangeImg, inputId, imgUrl } = props;
+  const { handleChangeImg, imgUrl, setImgUrl } = props;
+
+  const handleChangeFileImg = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    const newFiles: File[] = [];
+    if (files) {
+      for (let i = 0; i < files.length; i++) {
+        newFiles.push(files[i]);
+      }
+
+      setImgUrl((prevFiles: File[]) => [...prevFiles, ...newFiles]);
+    }
+  };
+
+  const handleDeleteFileImg = (fileName: string) => {
+    setImgUrl((prevFiles: File[]) =>
+      prevFiles.filter((file) => file.name !== fileName),
+    );
+  };
 
   return (
     <>
@@ -87,9 +111,11 @@ const FileUpload = (props: any) => {
               {imgUrl.map((file: any, index: number) => (
                 <SFileNames key={index}>
                   <div>
-                    {file.originalFileName}
-                    <div>
-                      <IcImageDelete />
+                    {file.name || file.originalFileName}
+                    <div className="fileDelete">
+                      <IcImageDelete
+                        onClick={() => handleDeleteFileImg(file.name)}
+                      />
                     </div>
                   </div>
                 </SFileNames>
@@ -100,10 +126,10 @@ const FileUpload = (props: any) => {
           )}
         </SShowInput>
 
-        <SUploadBtn htmlFor={inputId} className="pointer">
+        <SUploadBtn htmlFor="uploadImg" className="pointer">
           업로드
         </SUploadBtn>
-        <input type="file" id={inputId} onChange={handleChangeImg} />
+        <input type="file" id="uploadImg" onChange={handleChangeFileImg} />
       </SFileWrapper>
     </>
   );
