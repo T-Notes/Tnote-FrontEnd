@@ -98,8 +98,7 @@ interface SetupProps {
 }
 const SemesterForm = ({ setReload, reload }: SetupProps) => {
   const { scheduleId } = useParams();
-  // const [isStartActive, setIsStartActive] = useState<boolean>(false);
-  // const [isEndActive, setIsEndActive] = useState<boolean>(false);
+
   const [isActiveDateColor, setIsActiveDateColor] = useState<boolean>(false);
   const { isToggle, setIsToggle, handleChangeToggle } = useToggle();
   const url = window.location.href;
@@ -112,8 +111,8 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
     subjects: null,
   });
 
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
   const handleChangeSemesterName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const semesterName = e.target.value;
@@ -133,8 +132,11 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
     const semesterData = await getSemesterData(scheduleId);
 
     const data = semesterData.data[0];
+
     if (data.startDate && data.endDate) {
       setIsActiveDateColor(true);
+    } else {
+      setIsActiveDateColor(false);
     }
 
     setSemesterData((prev) => ({
