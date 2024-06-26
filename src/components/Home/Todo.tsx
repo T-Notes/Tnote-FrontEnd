@@ -17,11 +17,7 @@ import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { Task } from './TaskSidebar';
 
-const STodoWrapper = styled.div`
-  /* max-height: 180px;
-  overflow-y: auto;
-  overflow-x: hidden; */
-`;
+const STodoWrapper = styled.div``;
 const STodoHeader = styled.div`
   display: flex;
 `;
@@ -90,17 +86,10 @@ interface Todo {
 const Todo = memo(({ todo, setTodo, clickedDate, setReload }: TodoOutside) => {
   const { scheduleId } = useParams();
   const [todoContent, setTodoContent] = useState<string>('');
-  const [todoId, setTodoId] = useState<number>();
-  const [isCheckBox, setIsCheckBox] = useState<boolean>(false);
-  const [todoList, setTodoList] = useState<Todo[]>([]);
 
-  const handleChangeTodoInput = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    todoId: number,
-  ) => {
+  const handleChangeTodoInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newContent = e.target.value;
 
-    setTodoId(todoId);
     setTodoContent(newContent);
   };
 
@@ -137,19 +126,6 @@ const Todo = memo(({ todo, setTodo, clickedDate, setReload }: TodoOutside) => {
     setReload((prev) => !prev);
   };
 
-  useEffect(() => {
-    const getTodoList = async () => {
-      try {
-        if (scheduleId) {
-          const response = await getTodo(scheduleId, clickedDate);
-
-          setTodoList(response.data);
-        }
-      } catch {}
-    };
-    getTodoList();
-  }, []);
-
   const handleAddTodo = async () => {
     const isAnyEmpty = todo.some((item) => item.content.trim() === '');
 
@@ -173,8 +149,6 @@ const Todo = memo(({ todo, setTodo, clickedDate, setReload }: TodoOutside) => {
   };
 
   const handleInputBlur = async (todoId: number | undefined) => {
-    console.log(2, 'onBlur!');
-
     if (todoId) {
       const date = clickedDate;
       const todoData = {
@@ -215,7 +189,7 @@ const Todo = memo(({ todo, setTodo, clickedDate, setReload }: TodoOutside) => {
                 defaultValue={todoItem.content}
                 $completed={todoItem.status}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleChangeTodoInput(e, todoItem.id)
+                  handleChangeTodoInput(e)
                 }
                 onBlur={() => handleInputBlur(todoItem.id)}
                 readOnly={todoItem.status}
