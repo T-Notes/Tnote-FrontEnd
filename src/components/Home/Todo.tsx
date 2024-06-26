@@ -63,7 +63,7 @@ const STodoContainer = styled.div`
   padding-bottom: 8px;
   .icon {
     margin-left: auto;
-    margin-right: 10px;
+    /* margin-right: 10px; */
   }
 `;
 const SCheckbox = styled.div`
