@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-import React, { useState, useEffect, useRef } from 'react';
-
 import SubjectDropdownList from './SubjectDropdownList';
 import { IcCloseDropdown, IcOpenDropdown, IcSearch } from '../../assets/icons';
 
@@ -12,7 +10,6 @@ const SInputWrapper = styled.div`
   align-items: center;
   opacity: 1;
   border-radius: 8px;
-  cursor: pointer;
   padding: 10px 10px 10px 16px;
   border: 1px solid #d5d5d5;
 `;

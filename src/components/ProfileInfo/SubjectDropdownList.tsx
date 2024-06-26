@@ -8,29 +8,36 @@ const SDropdownWrapper = styled.div`
   border-radius: 8px;
   background-color: white;
   box-shadow: 0px 6px 15px 0px #00000033;
-  top: calc(100% + 4px); /* SDropdownLabel 아래로 위치 */
+  top: calc(100% + 4px);
   left: 0;
-  z-index: 3; /* SDropdownLabel 위에 나타나도록 설정 */
+  z-index: 3;
   overflow-y: scroll;
 `;
 
 const SList = styled.ul`
+  display: flex;
+  align-items: center;
+  height: 40px;
   padding: 5px 10px;
-`;
-const SItem = styled.li`
-  ${({ theme }) => theme.fonts.caption}
-  padding-left: 24px;
+  margin-left: 4px;
+  margin-right: 10px;
   cursor: pointer;
   &:hover {
     background-color: #e6f6fc;
+    border-radius: 4px;
   }
+`;
+const SItem = styled.li`
+  display: flex;
+  height: auto;
+  ${({ theme }) => theme.fonts.caption}
+  padding-left: 24px;
 `;
 interface selectedOptionProps {
   onSelectedOption: (selectedOption: string) => void;
 }
 
 const SubjectDropdownList = ({ onSelectedOption }: selectedOptionProps) => {
-  // map함수를 만들어서 리스트를 만드는 것이 좋을것같다.
   const subjectList = [
     { id: 1, option: '국어' },
     { id: 2, option: '수학' },
@@ -45,13 +52,13 @@ const SubjectDropdownList = ({ onSelectedOption }: selectedOptionProps) => {
     { id: 11, option: '선택안함' },
   ];
   return (
-    // 개선 : 드롭다운 목록 리스트를 select,option 태그로 변경하는 것이 웹표준을 준수하는 것이지 않을까?
     <SDropdownWrapper>
       {subjectList.map((subject) => (
-        <SList key={subject.id}>
-          <SItem onClick={() => onSelectedOption(subject.option)}>
-            {subject.option}
-          </SItem>
+        <SList
+          key={subject.id}
+          onClick={() => onSelectedOption(subject.option)}
+        >
+          <SItem>{subject.option}</SItem>
         </SList>
       ))}
     </SDropdownWrapper>
