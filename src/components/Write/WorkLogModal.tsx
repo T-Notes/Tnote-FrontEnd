@@ -228,13 +228,12 @@ const WorkLogModal = ({
             color: getRandomColor(),
           };
 
-          // 이미지 파일
           if (imgUrl.length >= 1) {
             for (let i = 0; i < imgUrl.length; i++) {
               formData.append('proceedingImages', imgUrl[i]);
             }
           }
-          console.log(2, formData.getAll('proceedingImages'));
+
           const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
             type: 'application/json',
           });
@@ -275,7 +274,6 @@ const WorkLogModal = ({
       getProceedingDetailData(String(logId))
         .then((response) => {
           const data = response.data;
-          console.log(data.images);
 
           setTitle(data.title);
           setPlace(data.location);
