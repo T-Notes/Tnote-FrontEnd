@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { IcClip, IcImageDelete } from '../../assets/icons';
@@ -75,15 +76,19 @@ const SShowInput = styled.div`
   }
 `;
 const FileUpload = (props: any) => {
-  const { handleChangeImg, imgUrl, setImgUrl } = props;
+  const { imgUrl, setImgUrl } = props;
 
   const handleChangeFileImg = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
+    const maxFileSize = 1073741824; // 1GB 파일 사이즈
 
     const newFiles: File[] = [];
     if (files) {
       for (let i = 0; i < files.length; i++) {
-        newFiles.push(files[i]);
+        const file = files[i];
+        if (file.size < maxFileSize) {
+          newFiles.push(files[i]);
+        } else window.alert('1GB 이하의 jpg, png 파일만 업로드 가능합니다.');
       }
 
       setImgUrl((prevFiles: File[]) => [...prevFiles, ...newFiles]);
@@ -96,13 +101,23 @@ const FileUpload = (props: any) => {
     );
   };
 
+  const handleFileClick = (file: File) => {
+    const url = URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url); // 메모리 해제
+  };
   return (
     <>
       <SFileWrapper>
         <IcClip />
         <SFileText>파일 첨부</SFileText>
         <SFileUploadInput
-          placeholder="2MB 이하의 jpg, png 파일 업로드 가능합니다."
+          placeholder="1GB 이하의 jpg, png 파일 업로드 가능합니다."
           readOnly
         />
         <SShowInput>
@@ -111,7 +126,9 @@ const FileUpload = (props: any) => {
               {imgUrl.map((file: any, index: number) => (
                 <SFileNames key={index}>
                   <div>
-                    {file.name || file.originalFileName}
+                    <span onClick={() => handleFileClick(file)}>
+                      {file.name || file.originalFileName}
+                    </span>
                     <div className="fileDelete">
                       <IcImageDelete
                         onClick={() => handleDeleteFileImg(file.name)}
@@ -123,7 +140,7 @@ const FileUpload = (props: any) => {
             </>
           ) : (
             <div className="placeholder">
-              2MB 이하의 jpg, png 파일 업로드 가능합니다.
+              1GB 이하의 jpg, png 파일 업로드 가능합니다.
             </div>
           )}
         </SShowInput>
