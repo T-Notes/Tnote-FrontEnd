@@ -14,15 +14,24 @@ const SGubunWrapper = styled.div`
 `;
 
 const SList = styled.ul`
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin-left: 4px;
+  margin-right: 10px;
+  border-radius: 4px;
   padding: 5px 10px;
-`;
-const SItem = styled.li`
-  ${({ theme }) => theme.fonts.caption}
-  padding-left: 24px;
   cursor: pointer;
   &:hover {
     background-color: #e6f6fc;
   }
+`;
+const SItem = styled.li`
+  ${({ theme }) => theme.fonts.caption}
+  padding-left: 14px;
+`;
+const SItemContainer = styled.div`
+  margin-top: 4px;
 `;
 
 interface GubunListProps {
@@ -38,17 +47,18 @@ const GubunDropdownList = ({ onSelectedGubun }: GubunListProps) => {
   return (
     <>
       <SGubunWrapper>
-        {GubunList.map((gubun) => (
-          <SList key={gubun.id}>
-            <SItem
+        <SItemContainer>
+          {GubunList.map((gubun) => (
+            <SList
+              key={gubun.id}
               onClick={() => {
                 onSelectedGubun(gubun.typeValue);
               }}
             >
-              {gubun.typeValue}
-            </SItem>
-          </SList>
-        ))}
+              <SItem>{gubun.typeValue}</SItem>
+            </SList>
+          ))}
+        </SItemContainer>
       </SGubunWrapper>
     </>
   );

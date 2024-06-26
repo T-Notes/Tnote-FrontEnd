@@ -33,6 +33,9 @@ const SItem = styled.li`
   ${({ theme }) => theme.fonts.caption}
   padding-left: 24px;
 `;
+const SItemContainer = styled.div`
+  margin-top: 4px;
+`;
 interface selectedOptionProps {
   onSelectedOption: (selectedOption: string) => void;
 }
@@ -53,14 +56,16 @@ const SubjectDropdownList = ({ onSelectedOption }: selectedOptionProps) => {
   ];
   return (
     <SDropdownWrapper>
-      {subjectList.map((subject) => (
-        <SList
-          key={subject.id}
-          onClick={() => onSelectedOption(subject.option)}
-        >
-          <SItem>{subject.option}</SItem>
-        </SList>
-      ))}
+      <SItemContainer>
+        {subjectList.map((subject) => (
+          <SList
+            key={subject.id}
+            onClick={() => onSelectedOption(subject.option)}
+          >
+            <SItem>{subject.option}</SItem>
+          </SList>
+        ))}
+      </SItemContainer>
     </SDropdownWrapper>
   );
 };

@@ -7,26 +7,35 @@ const SRegionWrapper = styled.div`
   background-color: white;
   box-shadow: 0px 6px 15px 0px #00000033;
   position: absolute;
-  top: calc(100% + 4px); /* SDropdownLabel 아래로 위치 */
+  top: calc(100% + 4px);
   left: 0;
-  z-index: 6; /* SDropdownLabel 위에 나타나도록 설정 */
+  z-index: 6;
   overflow-y: scroll;
 `;
 const SList = styled.ul`
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin-left: 4px;
+  margin-right: 10px;
+  border-radius: 4px;
   padding: 5px 10px;
-`;
-const SItem = styled.li`
-  ${({ theme }) => theme.fonts.caption}
-  padding-left: 24px;
   cursor: pointer;
   &:hover {
     background-color: #e6f6fc;
   }
 `;
+const SItem = styled.li`
+  ${({ theme }) => theme.fonts.caption}
+  padding-left: 14px;
+`;
+const SItemContainer = styled.div`
+  margin-top: 4px;
+`;
 interface SchoolCityListProps {
   onSelectedRegion: (region: string) => void;
 }
-// 학교 검색 모달 -> 시/도*
+
 const RegionDropdownList = ({ onSelectedRegion }: SchoolCityListProps) => {
   const regionList = [
     { cityNum: '100260', cityName: '서울특별시' },
@@ -48,13 +57,16 @@ const RegionDropdownList = ({ onSelectedRegion }: SchoolCityListProps) => {
   return (
     <>
       <SRegionWrapper>
-        {regionList.map((region) => (
-          <SList key={region.cityNum}>
-            <SItem onClick={() => onSelectedRegion(region.cityName)}>
-              {region.cityName}
-            </SItem>
-          </SList>
-        ))}
+        <SItemContainer>
+          {regionList.map((region) => (
+            <SList
+              key={region.cityNum}
+              onClick={() => onSelectedRegion(region.cityName)}
+            >
+              <SItem>{region.cityName}</SItem>
+            </SList>
+          ))}
+        </SItemContainer>
       </SRegionWrapper>
     </>
   );
