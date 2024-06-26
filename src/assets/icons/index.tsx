@@ -36,8 +36,6 @@ export { ReactComponent as IcRedColor } from './redButtonIcon.svg';
 export { ReactComponent as IcGrayColor } from './grayButtonIcon.svg';
 export { ReactComponent as IcGreenColor } from './greenButtonIcon.svg';
 export { ReactComponent as IcPurpleColor } from './purpleButtonIcon.svg';
-export { ReactComponent as IcOnToggle } from './onToggleIcon.svg';
-export { ReactComponent as IcOffToggle } from './offToggleIcon.svg';
 export { ReactComponent as IcDelete } from './deleteIcon.svg';
 export { ReactComponent as IcGrayPen } from './lightGrayPen.svg';
 export { ReactComponent as IcFile } from './fileIcon.svg';

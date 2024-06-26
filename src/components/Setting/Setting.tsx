@@ -3,19 +3,14 @@ import { ModalBackground } from '../../components/common/styled/ModalLayout';
 import { useEffect, useState } from 'react';
 import { getUserInfo, logout, updateAlarmToggle } from '../../utils/lib/api';
 import styled from 'styled-components';
-import {
-  IcAfter,
-  IcClose,
-  IcOffToggle,
-  IcOnToggle,
-  IcProfileLarge,
-} from '../../assets/icons';
+import { IcAfter, IcClose, IcProfileLarge } from '../../assets/icons';
 import EditProfile from './EditProfile';
 import ModalPortal from '../../utils/ModalPortal';
 import { useNavigate } from 'react-router-dom';
 import PrivacyPolicyModal from '../Landing/PrivacyPolicyModal';
 import axios from 'axios';
 import { useModals } from '../../utils/useHooks/useModals';
+import ToggleButton from '../common/ToggleButton';
 
 const SSettingWrapper = styled.div`
   border: 1px solid var(--Black-Black50, #d5d5d5);
@@ -114,14 +109,7 @@ const SAlarmContainer = styled.div`
   align-items: center;
   padding-top: 30px;
 `;
-const SOnToggleIcon = styled(IcOnToggle)`
-  margin-left: auto;
-  cursor: pointer;
-`;
-const SOffToggleIcon = styled(IcOffToggle)`
-  margin-left: auto;
-  cursor: pointer;
-`;
+
 const SDeletedAccountContainer = styled.div`
   display: flex;
   align-items: center;
@@ -194,15 +182,6 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
     setIsOpenEditModal(false);
   };
 
-  const handleOnAlarm = async () => {
-    await updateAlarmToggle(true);
-    setUserData((prev) => ({ ...prev, alarm: true }));
-  };
-  const handleOffAlarm = async () => {
-    await updateAlarmToggle(false);
-    setUserData((prev) => ({ ...prev, alarm: false }));
-  };
-
   const handleIsCheckedTrue = () => {
     closeModal(PrivacyPolicyModal);
   };
@@ -224,6 +203,11 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
       }
     });
   };
+
+  const handleSetAlarm = (alarm: boolean) => {
+    setUserData((prev) => ({ ...prev, alarm }));
+  };
+
   useEffect(() => {
     const getUserData = async () => {
       try {
@@ -314,11 +298,7 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
                   Tonte 관련 정보를 이메일로 받아보실 수 있습니다.
                 </SCaption>
               </SColumn>
-              {userData.alarm ? (
-                <SOnToggleIcon onClick={handleOffAlarm} />
-              ) : (
-                <SOffToggleIcon onClick={handleOnAlarm} />
-              )}
+              <ToggleButton alarm={userData.alarm} setAlarm={handleSetAlarm} />
             </SAlarmContainer>
             <SDeletedAccountContainer>
               <SColumn>
