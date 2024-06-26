@@ -18,13 +18,13 @@ const SToggleButton = styled.div<{ $isActive: boolean }>`
 `;
 
 const SToggleCircle = styled.div<{ $isActive: boolean }>`
-  width: 21px;
-  height: 21px;
+  width: 23px;
+  height: 23px;
   background-color: white;
   border-radius: 50%;
   position: absolute;
-  top: 5px;
-  left: ${({ $isActive }) => ($isActive ? '27px' : '2px')};
+  top: 4.4px;
+  left: ${({ $isActive }) => ($isActive ? '23px' : '4px')};
   transition: left 0.2s ease;
 `;
 interface Toggle {
