@@ -274,6 +274,7 @@ const ClassLogModal = ({
           onStartDateChange={handleDate}
           onStartDate={date.startDate}
           onEndDate={date.endDate}
+          isEdit={isEdit}
         />
         <SContentWrap>
           <SType>

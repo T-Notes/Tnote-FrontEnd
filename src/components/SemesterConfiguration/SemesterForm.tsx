@@ -98,9 +98,11 @@ interface SetupProps {
 }
 const SemesterForm = ({ setReload, reload }: SetupProps) => {
   const { scheduleId } = useParams();
+  // const [isStartActive, setIsStartActive] = useState<boolean>(false);
+  // const [isEndActive, setIsEndActive] = useState<boolean>(false);
+  const [isActiveDateColor, setIsActiveDateColor] = useState<boolean>(false);
   const { isToggle, setIsToggle, handleChangeToggle } = useToggle();
   const url = window.location.href;
-
   const navigate = useNavigate();
   const [semesterData, setSemesterData] = useState<SemesterDataProps>({
     id: null,
@@ -131,6 +133,9 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
     const semesterData = await getSemesterData(scheduleId);
 
     const data = semesterData.data[0];
+    if (data.startDate && data.endDate) {
+      setIsActiveDateColor(true);
+    }
 
     setSemesterData((prev) => ({
       ...prev,
@@ -138,8 +143,8 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
       lastClass: data.lastClass,
     }));
 
-    setStartDate(new Date(data.startDate));
-    setEndDate(new Date(data.endDate));
+    setStartDate(data.startDate ? new Date(data.startDate) : new Date());
+    setEndDate(data.endDate ? new Date(data.endDate) : new Date());
   };
 
   useEffect(() => {
@@ -256,6 +261,7 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
           startDate={startDate}
           setEndDate={setEndDate}
           endDate={endDate}
+          isActiveDateColor={isActiveDateColor}
         />
 
         <SLabel>마지막 교시</SLabel>

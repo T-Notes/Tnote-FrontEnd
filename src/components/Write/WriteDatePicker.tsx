@@ -57,12 +57,14 @@ interface DateProps {
   ) => void;
   onStartDate: string | Date;
   onEndDate: string | Date;
+  isEdit: boolean;
 }
 
 const WriteDatePicker = ({
   onStartDateChange,
   onStartDate,
   onEndDate,
+  isEdit,
 }: DateProps) => {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
@@ -126,6 +128,10 @@ const WriteDatePicker = ({
   };
 
   useEffect(() => {
+    if (isEdit) {
+      setIsStartActive(true);
+      setIsEndActive(true);
+    }
     onStartDateChange(startDate, endDate, isAllDay);
   }, [startDate, endDate, isAllDay]);
 

@@ -365,6 +365,7 @@ const ConsultationRecordsModal = ({
         title={title}
         onStartDate={date.startDate}
         onEndDate={date.endDate}
+        isEdit={isEdit}
       />
       {/* 스크롤 내용 */}
       <SScroll>

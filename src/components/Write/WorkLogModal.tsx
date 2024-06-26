@@ -322,6 +322,7 @@ const WorkLogModal = ({
             title={title}
             onStartDate={date.startDate}
             onEndDate={date.endDate}
+            isEdit={isEdit}
           />
           <SScroll>
             <SContentWrap>

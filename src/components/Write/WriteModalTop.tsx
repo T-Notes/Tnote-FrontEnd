@@ -64,6 +64,7 @@ export interface ModalTopProps {
   dateLabel: string;
   onStartDate: string | Date;
   onEndDate: string | Date;
+  isEdit: boolean;
 }
 const WritingModalTop = ({
   onTitleChange,
@@ -73,6 +74,7 @@ const WritingModalTop = ({
   dateLabel,
   onStartDate,
   onEndDate,
+  isEdit,
 }: ModalTopProps) => {
   return (
     <SWrapper>
@@ -103,6 +105,7 @@ const WritingModalTop = ({
             onStartDateChange={onStartDateChange}
             onStartDate={onStartDate}
             onEndDate={onEndDate}
+            isEdit={isEdit}
           />
         </div>
       </SPeriod>

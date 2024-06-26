@@ -63,9 +63,8 @@ const SemesterSetupBanner = () => {
   const { year, month, day } = useCurrentDate();
 
   const [isPostSemester, setIsPostSemester] = useState<boolean>(false);
-  const [selectedSemester, setSelectedSemester] = useState<number | null>(null);
 
-  // 학기 자동 생성 기준
+  /** 학기 자동 생성 기준*/
   const autoCreateSemester = () => {
     let createdSemester = '';
     if (1 <= Number(month) && Number(month) <= 6) {
@@ -84,8 +83,8 @@ const SemesterSetupBanner = () => {
           semesterName: createdSemester,
           lastClass: '',
           email: '',
-          startDate: `${year}-${month}-${day}`,
-          endDate: `${year}-${month}-${day}`,
+          startDate: '',
+          endDate: '',
         };
         const response = await createSemester(data);
         const newSemesterId = response.data.id;
@@ -93,8 +92,10 @@ const SemesterSetupBanner = () => {
         if (newSemesterId) {
           if (currentUrl.includes('home')) {
             navigate(`/semesterSetup/home/${newSemesterId}`);
+            window.location.reload();
           } else if (currentUrl.includes('timetable')) {
             navigate(`/semesterSetup/timetable/${newSemesterId}`);
+            window.location.reload();
           }
         }
 
@@ -141,7 +142,6 @@ const SemesterSetupBanner = () => {
             <SSemester
               key={semester.id}
               selected={Number(scheduleId) === semester.id}
-              onClick={() => setSelectedSemester(semester.id)}
             >
               <ul onClick={() => handleClickRoute(semester.id)}>
                 <li className="pointer">{semester.semesterName}</li>
