@@ -4,8 +4,13 @@ import koLocale from 'date-fns/locale/ko';
 import { IcClose } from '../../../assets/icons';
 import { useEffect, useState } from 'react';
 import { getAllTaskByDate } from '../../../utils/lib/api';
-import useRandomColor from '../../../utils/useHooks/useRandomColor';
+
 import ReactModal from 'react-modal';
+import { useModals } from '../../../utils/useHooks/useModals';
+import ClassLogModal from '../../Write/ClassLogModal';
+import WorkLogModal from '../../Write/WorkLogModal';
+import ConsultationRecordsModal from '../../Write/ConsultationRecordsModal';
+import StudentRecordsModal from '../../Write/StudentRecordsModal';
 
 const moreLogsCustomStyles = {
   overlay: {
@@ -77,6 +82,7 @@ interface MoreLogs {
 
 const MoreLogModal = ({ clickDay, isOpen, onClose, scheduleId }: MoreLogs) => {
   if (!clickDay) return null;
+  const { openModal } = useModals();
 
   const [allLogsByDay, setAllLogsByDay] = useState<any[]>([]);
   const dayOfMonth = format(clickDay, 'd', { locale: koLocale });
@@ -84,6 +90,19 @@ const MoreLogModal = ({ clickDay, isOpen, onClose, scheduleId }: MoreLogs) => {
 
   const formattedDate = format(clickDay, 'yyyy-MM-dd');
 
+  const handleOpenLogModal = (item: any) => {
+    const logId = item.id;
+    const isEdit = true;
+    if (item.logType === 'CLASS_LOG') {
+      openModal(ClassLogModal, { logId, scheduleId, isEdit });
+    } else if (item.logType === 'PROCEEDING') {
+      openModal(WorkLogModal, { logId, scheduleId, isEdit });
+    } else if (item.logType === 'CONSULTATION') {
+      openModal(ConsultationRecordsModal, { logId, scheduleId, isEdit });
+    } else if (item.logType === 'OBSERVATION') {
+      openModal(StudentRecordsModal, { logId, scheduleId, isEdit });
+    }
+  };
   useEffect(() => {
     const getDate = async () => {
       try {
@@ -121,7 +140,13 @@ const MoreLogModal = ({ clickDay, isOpen, onClose, scheduleId }: MoreLogs) => {
         </SDay>
         <SLogContainer>
           {allLogsByDay.map((item, idx) => (
-            <SLog key={idx} color={item.color}>
+            <SLog
+              key={idx}
+              color={item.color}
+              onClick={() => {
+                handleOpenLogModal(item);
+              }}
+            >
               {item.title || item.studentName}
             </SLog>
           ))}
