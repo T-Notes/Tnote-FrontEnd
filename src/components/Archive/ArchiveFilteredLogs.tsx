@@ -121,12 +121,10 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
 
   const [filteredLogsList, setFilteredLogsList] = useState<any[]>([]);
   const options = ['전체', '학급일지', '업무일지', '상담기록', '학생관찰기록'];
-  const [currentFilteredOption, setCurrentFilteredOption] =
-    useState<string>('');
+
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [checkedDeleteId, setCheckedDeleteId] = useState<number | null>(null);
   const [logType, setLogType] = useState<string>('');
-  // const [reload, setReload] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalLogs, setTotalLogs] = useState<number>(0);
   const { handleChangeToggle, isToggle } = useToggle();
@@ -144,7 +142,6 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   };
 
   const handleClickFilter = async (option: string) => {
-    setCurrentFilteredOption(option);
     try {
       let res;
       switch (option) {
@@ -182,7 +179,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
     if (scheduleId) {
       const getAllLogs = async () => {
         const res = await getAllLogsBySchedule(scheduleId, currentPage);
-        console.log(res.data.logs);
+
         setTotalLogs(res.data.totalLog);
         setFilteredLogsList(res.data.logs);
       };
