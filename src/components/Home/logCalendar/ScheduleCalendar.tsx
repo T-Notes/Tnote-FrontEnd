@@ -37,7 +37,6 @@ const SCalendarHeader = styled.div`
 `;
 const SCalendarDate = styled.div`
   height: auto;
-  border: 1px solid black;
 `;
 
 const SWeekBox = styled.div`
