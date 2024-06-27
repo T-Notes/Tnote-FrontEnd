@@ -111,8 +111,8 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
     subjects: null,
   });
 
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [endDate, setEndDate] = useState<Date | null>(new Date());
 
   const handleChangeSemesterName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const semesterName = e.target.value;
