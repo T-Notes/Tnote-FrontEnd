@@ -6,6 +6,8 @@ import Swal from 'sweetalert2';
 import { IcGoBack, IcImageClip } from '../assets/icons';
 import ArchiveContent from '../components/Archive/ArchiveContent';
 import ClassLogModal from '../components/Write/ClassLogModal';
+import { convertUrlToFile } from '../utils/convertUrlToFile';
+import { downloadFile } from '../utils/downloadFile';
 import { formatDate } from '../utils/formatDate';
 import instanceAxios from '../utils/InstanceAxios';
 import { getClassLogDetailData } from '../utils/lib/api';
@@ -120,11 +122,9 @@ interface ClassLog {
   magnitude: string;
   plan: string;
   submission: string;
-  classLogImageUrls: File[];
+  images: File[];
 }
 
-// 수정 버튼을 클릭 -> 상태를 수정 상태로 변경
-// 상태가 true라면 수정용 모달을 띄우기
 const ArchiveClassLog = () => {
   const { logId, scheduleId } = useParams();
   const navigate = useNavigate();
@@ -143,9 +143,9 @@ const ArchiveClassLog = () => {
     magnitude: '',
     plan: '',
     submission: '',
-    classLogImageUrls: [],
+    images: [],
   });
-
+  const [imgUrl, setImgUrl] = useState<File[]>([]);
   useEffect(() => {
     const getDetailData = async () => {
       const res = await getClassLogDetailData(logId);
@@ -159,7 +159,14 @@ const ArchiveClassLog = () => {
         magnitude: res.data.magnitude,
         plan: res.data.plan,
         submission: res.data.submission,
-        classLogImageUrls: res.data.images,
+        images: res.data.images,
+      });
+      const imagePromises = res.data.images.map((image: any) => {
+        return convertUrlToFile(image.url, image.originalFileName);
+      });
+
+      Promise.all(imagePromises).then((files) => {
+        setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
       });
     };
     getDetailData();
@@ -183,6 +190,11 @@ const ArchiveClassLog = () => {
       }
     });
   };
+
+  const handleClickDownloadFile = (file: File) => {
+    downloadFile(file);
+  };
+
   return (
     <SArchiveClassLogWrapper>
       <SArchiveClassLog>
@@ -223,18 +235,18 @@ const ArchiveClassLog = () => {
           />
           <SLabel>첨부파일</SLabel>
           <SFileBox>
-            {classLogData.classLogImageUrls.length > 0 ? (
+            {imgUrl.length > 0 ? (
               <>
-                {classLogData.classLogImageUrls.map(
-                  (file: any, index: number) => (
-                    <SImage key={index}>
-                      <SClipIcon>
-                        <IcImageClip />
-                      </SClipIcon>
-                      <div>{file.originalFileName}</div>
-                    </SImage>
-                  ),
-                )}
+                {imgUrl.map((file: any, index: number) => (
+                  <SImage key={index}>
+                    <SClipIcon>
+                      <IcImageClip />
+                    </SClipIcon>
+                    <div onClick={() => handleClickDownloadFile(file)}>
+                      {file.name || file.originalFileName}
+                    </div>
+                  </SImage>
+                ))}
               </>
             ) : null}
           </SFileBox>

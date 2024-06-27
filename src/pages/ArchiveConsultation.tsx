@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import { IcGoBack, IcImageClip } from '../assets/icons';
 import ArchiveContent from '../components/Archive/ArchiveContent';
 import ConsultationRecordsModal from '../components/Write/ConsultationRecordsModal';
+import { convertUrlToFile } from '../utils/convertUrlToFile';
+import { downloadFile } from '../utils/downloadFile';
 import { formatDate } from '../utils/formatDate';
 import instanceAxios from '../utils/InstanceAxios';
 import { getConsultationDetailData } from '../utils/lib/api';
@@ -136,7 +138,7 @@ const ArchiveConsultation = () => {
     endDate: '',
     consultationImageUrls: [],
   });
-
+  const [imgUrl, setImgUrl] = useState<File[]>([]);
   const { openModal } = useModals();
   const isEdit = true;
 
@@ -157,6 +159,14 @@ const ArchiveConsultation = () => {
         startDate: res.data.startDate.slice(0, 10),
         endDate: res.data.endDate.slice(0, 10),
         consultationImageUrls: res.data.images,
+      });
+
+      const imagePromises = res.data.images.map((image: any) => {
+        return convertUrlToFile(image.url, image.originalFileName);
+      });
+
+      Promise.all(imagePromises).then((files) => {
+        setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
       });
     };
     getDetailData();
@@ -179,6 +189,10 @@ const ArchiveConsultation = () => {
         }, 100);
       }
     });
+  };
+
+  const handleClickDownloadFile = (file: File) => {
+    downloadFile(file);
   };
   return (
     <>
@@ -210,18 +224,18 @@ const ArchiveConsultation = () => {
             />
             <SLabel>첨부파일</SLabel>
             <SFileBox>
-              {consultationLogData.consultationImageUrls.length > 0 ? (
+              {imgUrl.length > 0 ? (
                 <>
-                  {consultationLogData.consultationImageUrls.map(
-                    (file: any, index: number) => (
-                      <SImage key={index}>
-                        <SClipIcon>
-                          <IcImageClip />
-                        </SClipIcon>
-                        <div>{file.originalFileName}</div>
-                      </SImage>
-                    ),
-                  )}
+                  {imgUrl.map((file: any, index: number) => (
+                    <SImage key={index}>
+                      <SClipIcon>
+                        <IcImageClip />
+                      </SClipIcon>
+                      <div onClick={() => handleClickDownloadFile(file)}>
+                        {file.name || file.originalFileName}
+                      </div>
+                    </SImage>
+                  ))}
                 </>
               ) : null}
             </SFileBox>

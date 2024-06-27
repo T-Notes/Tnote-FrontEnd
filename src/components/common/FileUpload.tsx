@@ -2,6 +2,7 @@ import axios from 'axios';
 import { ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { IcClip, IcImageDelete } from '../../assets/icons';
+import { downloadFile } from '../../utils/downloadFile';
 
 const SFileWrapper = styled.div`
   display: flex;
@@ -102,15 +103,12 @@ const FileUpload = (props: any) => {
   };
 
   const handleFileClick = (file: File) => {
-    const url = URL.createObjectURL(file);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = file.name;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url); // 메모리 해제
+    console.log('logFile', file);
+
+    downloadFile(file);
   };
+  console.log('imgUrl', imgUrl);
+
   return (
     <>
       <SFileWrapper>
