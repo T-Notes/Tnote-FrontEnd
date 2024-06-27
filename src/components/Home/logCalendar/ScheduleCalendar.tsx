@@ -37,6 +37,7 @@ const SCalendarHeader = styled.div`
 `;
 const SCalendarDate = styled.div`
   height: auto;
+  border: 1px solid black;
 `;
 
 const SWeekBox = styled.div`
@@ -63,7 +64,7 @@ const SDays = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 80px;
+  height: 100px; //80px
   flex: 1;
   flex: 1 0 14%;
   padding-top: 5px;
