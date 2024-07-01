@@ -54,7 +54,7 @@ const SLogo = styled.div`
   padding-left: calc(13.5%);
   padding-right: 25px;
 
-  @media (min-width: 1441px) {
+  @media (min-width: 1440px) {
     svg {
       width: 146px;
       height: 40px;
@@ -121,7 +121,7 @@ const SWriteBtn = styled.div`
   max-width: 116px;
   height: auto;
   padding: 8px 20px 8px 20px;
-  gap: 10px;
+  gap: 0px;
   border-radius: 999px;
   background-color: #632cfa;
   color: white;
@@ -244,7 +244,10 @@ const HomeNavigationBar = () => {
             {isDropdown ? <IcNavigationClose /> : <IcNavigationOpen />}
           </SDropdownIcon>
           {isDropdown && (
-            <WriteDropdownList onClickOpenModal={handleClickOpenModal} />
+            <WriteDropdownList
+              onClickOpenModal={handleClickOpenModal}
+              toggle={dropdownToggle}
+            />
           )}
         </SWriteBtn>
         <SUserProfileInfoWrapper>

@@ -9,44 +9,85 @@ import { getSemesterSearchValue, removeSemester } from '../utils/lib/api';
 import _debounce from 'lodash/debounce';
 import { IcCheckedBox, IcDelete, IcUncheckedBox } from '../assets/icons';
 import Swal from 'sweetalert2';
+import DeleteButton from '../components/common/DeleteButton';
 
 const SArchiveWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 230px;
-  right: 300px;
-  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  padding-left: 30px;
+  padding-right: 21.25vw;
 `;
-const SSearchValueContainer = styled.div`
-  margin-top: 40px;
-`;
+
 const SArchiveHeader = styled.div`
-  padding-top: 70px;
+  padding-top: 100px;
   display: flex;
   align-items: center;
+  padding-bottom: 60px;
 `;
-const SEdit = styled.button`
+const SDelete = styled.button`
   display: flex;
   align-items: center;
-  padding-right: 15px;
-  padding-left: 15px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px 12px 10px 12px;
+  gap: 8px;
   border: 1px solid #a6a6a6;
   border-radius: 50px;
-  color: #a6a6a6;
   margin-left: 20px;
+  .text {
+    font-family: Pretendard;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 23.87px;
+    text-align: center;
+    color: #a6a6a6;
+  }
 
-  font-size: 16px;
-  font-weight: 500;
+  @media (max-width: 767px) {
+    .text {
+      font-size: 14px;
+    }
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .text {
+      font-size: 16px;
+    }
+  }
 `;
-const SDelete = styled(SEdit)``;
 
 const Sh1 = styled.h1`
-  ${({ theme }) => theme.fonts.h2}
+  font-family: Pretendard;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 38.19px;
+  text-align: left;
   margin-right: auto;
+  @media (min-width: 481px) and (max-width: 767px) {
+    font-size: 24px;
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    font-size: 28px;
+  }
 `;
+const SSearchInput = styled.div`
+  width: 300px;
+  height: auto;
+  background-color: #f7f9fc;
+  @media (max-width: 1023px) {
+    width: 230px;
+  }
+`;
+const SDeleteIcon = styled.div`
+  width: 24px;
+  height: 24px;
 
+  @media (min-width: 481px) and (max-width: 767px) {
+    width: 18px;
+    height: 18px;
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    width: 20px;
+    height: 20px;
+  }
+`;
 interface SearchValue {
   id: number;
   semesterName: string;
@@ -124,64 +165,40 @@ const Archive = () => {
     <SArchiveWrapper>
       <SArchiveHeader>
         <Sh1>내 아카이브</Sh1>
-        <SearchInput
-          size="small"
-          theme={{ background: 'blue400' }}
-          handleSearchInputChange={handleChangeSearchValue}
-          placeholder="텍스트를 입력하세요"
-          value={searchValue}
+        <SSearchInput>
+          <SearchInput
+            handleSearchInputChange={handleChangeSearchValue}
+            placeholder="검색어를 입력하세요"
+            value={searchValue}
+          />
+        </SSearchInput>
+        <DeleteButton
+          onClick={isDelete ? handleClickDelete : handleDeleteModeActivate}
         />
-
-        {isDelete ? (
-          <SDelete onClick={handleClickDelete}>
-            삭제
-            <IcDelete />
-          </SDelete>
-        ) : (
-          <SDelete onClick={handleDeleteModeActivate}>
-            삭제
-            <IcDelete />
-          </SDelete>
-        )}
       </SArchiveHeader>
 
-      {searchValueList.length > 0 ? (
-        <SSearchValueContainer>
-          {searchValueList.map((item) => (
-            <>
-              {isDelete ? (
+      {searchValueList.length > 0 && (
+        <div>
+          {searchValueList.map((item, index) => (
+            <SSemesterContainer
+              key={index}
+              onClick={() => handleSelectedSemester(item.id)}
+            >
+              {isDelete && (
                 <>
-                  <SSemesterContainer key={item.id}>
-                    {isDeleteChecked === item.id ? (
-                      <IcCheckedBox
-                        onClick={() => handleDeletedCheck(item.id)}
-                      />
-                    ) : (
-                      <IcUncheckedBox
-                        onClick={() => handleDeletedCheck(item.id)}
-                      />
-                    )}
-
-                    <div onClick={() => handleSelectedSemester(item.id)}>
-                      {item.semesterName}
-                    </div>
-                  </SSemesterContainer>
-                </>
-              ) : (
-                <>
-                  <SSemesterContainer
-                    key={item.id}
-                    onClick={() => handleSelectedSemester(item.id)}
-                  >
-                    <div>{item.semesterName}</div>
-                  </SSemesterContainer>
+                  {isDeleteChecked === item.id ? (
+                    <IcCheckedBox onClick={() => handleDeletedCheck(item.id)} />
+                  ) : (
+                    <IcUncheckedBox
+                      onClick={() => handleDeletedCheck(item.id)}
+                    />
+                  )}
                 </>
               )}
-            </>
+              <div>{item.semesterName}</div>
+            </SSemesterContainer>
           ))}
-        </SSearchValueContainer>
-      ) : (
-        <></>
+        </div>
       )}
       {!searchValue && (
         <NotSearchArchive

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { IcFile } from '../../assets/icons';
 import instanceAxios from '../../utils/InstanceAxios';
@@ -11,31 +11,69 @@ const SArchiveRecentLogsWrapper = styled.div`
 `;
 
 const STitle = styled.div`
-  font-size: 18px;
+  font-family: Pretendard;
+  font-size: 23px;
   font-weight: 500;
-  margin-top: 35px;
-  margin-bottom: 10px;
+  line-height: 27.45px;
+  text-align: left;
+  margin-top: 50px;
+  margin-bottom: 20px;
+
+  @media (min-width: 481px) and (max-width: 767px) {
+    font-size: 17px;
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    font-size: 19px;
+  }
 `;
 const SRecentSearchContainer = styled.div`
+  width: 100%;
   display: flex;
-  margin-right: auto;
+  gap: 3vw;
 `;
 const SRecentSearchItem = styled.div`
   display: flex;
+  flex: 1 1 0;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   border: 1px solid #e8e8e8;
   border-radius: 8px;
+  padding: 24px 20px 20px 20px;
+  overflow: hidden;
+  @media (min-width: 481px) and (max-width: 767px) {
+    padding: 10px;
+  }
+  @media (min-width: 768px) and (max-width: 1070px) {
+    padding: 12px;
+  }
+`;
+const SFileTitle = styled.p`
+  padding-top: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+`;
+const SCreatedAt = styled.p`
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+`;
+const SFileCaption = styled.div`
+  width: 100%;
   color: #5b5b5b;
-  font-size: 14px;
-  font-weight: 500;
-  gap: 10px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 30px;
-  padding-right: 30px;
-  margin-right: 38px;
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+  text-align: center;
+
+  @media (min-width: 481px) and (max-width: 767px) {
+    font-size: 14px;
+  }
+  @media (min-width: 768px) and (max-width: 1070px) {
+    font-size: 16px;
+  }
 `;
 
 interface Archive {
@@ -58,7 +96,6 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
   const navigate = useNavigate();
   const [newRecentLogs, setNewRecentLogs] = useState<newRecentLogs[]>([]);
 
-  // 최신조회
   useEffect(() => {
     if (scheduleId) {
       try {
@@ -84,7 +121,7 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
                 return response.data.data;
               }
             });
-            // 모든 프로미스가 완료될 때까지 기다림
+
             const endPoints = await Promise.all(promises);
             setNewRecentLogs(endPoints);
           }
@@ -124,8 +161,10 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
               onClick={() => handleClickRecentLog(item.id, item.logType)}
             >
               <IcFile />
-              <div>{item.studentName || item.title}</div>
-              <div>{`${newTimestamp} 작성`}</div>
+              <SFileCaption>
+                <SFileTitle>{item.studentName || item.title}</SFileTitle>
+                <SCreatedAt>{`${newTimestamp} 작성`}</SCreatedAt>
+              </SFileCaption>
             </SRecentSearchItem>
           );
         })}

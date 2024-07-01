@@ -5,25 +5,35 @@ import styled from 'styled-components';
 import { IcCheckedBox, IcUncheckedBox } from '../../assets/icons';
 import { getAllSemesterNames } from '../../utils/lib/api';
 
-const SArchiveListWrapper = styled.div`
-  margin-top: 40px;
-`;
 export const SSemesterContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: center;
   padding-top: 15px;
   padding-bottom: 15px;
   padding-left: 10px;
   padding-right: 10px;
   border: 1px solid #e8e8e8;
   color: #5b5b5b;
-  font-size: 14px;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 23.87px;
+  text-align: left;
   margin-bottom: 20px;
   border-radius: 8px;
+  gap: 8px;
   cursor: pointer;
+
+  @media (min-width: 481px) and (max-width: 767px) {
+    font-size: 14px;
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    font-size: 16px;
+  }
 `;
 const SCheckDiv = styled.div`
   display: flex;
+
   align-items: center;
   > div {
     padding-left: 10px;
@@ -60,7 +70,7 @@ const NotSearchArchive = ({
   }, []);
 
   return (
-    <SArchiveListWrapper>
+    <>
       {allSemester.map((item) => (
         <SSemesterContainer key={item.id}>
           {isDelete ? (
@@ -81,7 +91,7 @@ const NotSearchArchive = ({
           )}
         </SSemesterContainer>
       ))}
-    </SArchiveListWrapper>
+    </>
   );
 };
 

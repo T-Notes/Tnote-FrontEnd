@@ -4,6 +4,8 @@ import styled from 'styled-components';
 
 const SLayoutWrapper = styled.div`
   position: fixed;
+  left: 0;
+  top: 0;
 `;
 
 const SContentWrapper = styled.div`
