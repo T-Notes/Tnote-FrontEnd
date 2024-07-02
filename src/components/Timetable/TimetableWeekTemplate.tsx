@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ClassInfoPopup from './ClassInfoPopup';
-import { colorMapping } from '../../utils/colorMapping';
+import { colorMapping, pointColorMapping } from '../../utils/colorMapping';
 import { weekSchedule } from '../../utils/lib/api';
 
 const STimetableWrapper = styled.table`
@@ -29,13 +29,14 @@ const SThead = styled.td`
   color: #5b5b5b;
 `;
 
-const SSubjectBox = styled.td<{ color: string }>`
+const SSubjectBox = styled.td<{ color: string; $pointColor: string }>`
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 70px;
   cursor: pointer;
   padding: 6px;
+  border-left: 3px solid ${({ $pointColor }) => $pointColor || '#fffff'};
   background-color: ${({ color }) => color || '#fffff'};
   color: #5b5b5b;
 `;
@@ -205,12 +206,14 @@ const TimetableWeekTemplate = ({
                     isSameClassTime(item.classTime, t.class)
                   ) {
                     const backgroundColor = colorMapping[item.color] || '';
-
+                    const pointBorderColor =
+                      pointColorMapping[item.color] || '';
                     return (
                       <SSubjectBox
                         key={item.id}
                         onClick={() => openSubjectDataModal(item.id)}
                         color={backgroundColor}
+                        $pointColor={pointBorderColor}
                       >
                         <SSubjectName>{item.subjectName}</SSubjectName>
                         <SLocation>{item.classLocation}</SLocation>

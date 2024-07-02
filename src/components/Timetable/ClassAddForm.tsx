@@ -27,16 +27,18 @@ const SClassAddFormWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: ${({ theme }) => theme.colors.gray1100};
-  width: 300px;
+  background-color: #f8f8f8;
+  width: 23vw;
   height: 100vh;
+  padding-left: 18px;
+  padding-right: 22px;
   position: fixed;
   right: 0;
   top: 0;
 `;
 const SClassAddFormLayout = styled.div`
   box-shadow: 0px 9px 16px 0px #00000017;
-  width: 250px;
+  width: 100%;
   height: 80%;
   background-color: #ffff;
 `;
@@ -117,6 +119,45 @@ const SClassColor = styled.div`
 `;
 const SColor = styled.div`
   padding-right: 7px;
+`;
+
+const SDropdownClassDay = styled.div`
+  width: 12vw;
+  background-color: white;
+  position: relative;
+  display: flex;
+  align-items: center;
+  opacity: 1;
+  border-radius: 4px;
+  padding: 9px 12px 9px 12px;
+  border: 1px solid #d9d9d9;
+
+  > input {
+    font-family: Pretendard;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16.71px;
+    text-align: left;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    &::placeholder {
+      color: #a6a6a6;
+    }
+
+    @media (max-width: 1380px) {
+      font-size: 14px;
+    }
+
+    @media (max-width: 1023px) {
+      font-size: 14px;
+    }
+
+    @media (max-width: 879px) {
+      font-size: 14px;
+    }
+  }
 `;
 
 interface IsClassAddProps {
@@ -281,7 +322,6 @@ const ClassAddForm = ({
     !!classLocation &&
     !!selectedColor;
 
-  console.log(1, isActiveSubmitBtn);
   return (
     <SClassAddFormWrapper>
       <SClassAddFormLayout>
@@ -320,17 +360,17 @@ const ClassAddForm = ({
             </SClassNum>
             <SClassDays>
               <SLabel>수업 요일</SLabel>
-              <DropdownInput
-                size="mini"
-                theme={{ background: 'white' }}
-                placeholder="수업 요일을 선택해주세요"
-                value={classDay}
-                isToggle={isClassDayDropdownToggle}
-                handleChangeToggle={handleChangeClassDayToggle}
-                dropdownList={
-                  <ClassDayList handleClickDay={handleSelectedClassDay} />
-                }
-              />
+              <SDropdownClassDay>
+                <DropdownInput
+                  placeholder="수업 요일을 선택해주세요"
+                  value={classDay}
+                  isToggle={isClassDayDropdownToggle}
+                  handleChangeToggle={handleChangeClassDayToggle}
+                  dropdownList={
+                    <ClassDayList handleClickDay={handleSelectedClassDay} />
+                  }
+                />
+              </SDropdownClassDay>
             </SClassDays>
             <STitle>
               <SLabel>수업 위치 작성</SLabel>

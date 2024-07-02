@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { colorMapping } from '../../utils/colorMapping';
+import { colorMapping, pointColorMapping } from '../../utils/colorMapping';
 import { getTodayTimetable } from '../../utils/lib/api';
 import ClassInfoPopup from './ClassInfoPopup';
 
@@ -14,9 +14,10 @@ interface ClassProps {
   subjectName: string;
 }
 
-const SDayTimetableWrapper = styled.div<{ color: string }>`
+const SDayTimetableWrapper = styled.div<{ color: string; $pointColor: string }>`
   display: flex;
   flex-direction: column;
+  border-left: 3px solid ${({ $pointColor }) => $pointColor || '#fffff'};
   background-color: ${({ color }) => color || '#fffff'};
   width: 100%;
 `;
@@ -205,11 +206,13 @@ const TimetableDayTemplate = memo(
             <SClass>
               {classList.map((subject, index) => {
                 const backgroundColor = colorMapping[subject.color] || '';
+                const pointBorderColor = pointColorMapping[subject.color] || '';
                 if (isSameClassTime(time.class, subject.classTime)) {
                   return (
                     <SDayTimetableWrapper
                       key={index}
                       color={backgroundColor}
+                      $pointColor={pointBorderColor}
                       onClick={() => openSubjectDataModal(subject.id)}
                     >
                       <SClassText>
