@@ -1,20 +1,25 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-
+import { useNavigate, useParams } from 'react-router-dom';
 import AllSemesterNamesForm from './AllSemesterNamesForm';
 
 const SSemesterMenuWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 28px;
 `;
 const SButton = styled.button`
-  ${({ theme }) => theme.fonts.h4}
-  color:  ${({ theme }) => theme.colors.gray000};
+  font-family: Pretendard;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 23.87px;
+  text-align: left;
+  padding: 0px 0px 0px 1.78vw;
+  color: #666666;
   cursor: pointer;
-  padding-left: 10px;
-  padding-right: 10px;
+
+  @media (max-width: 767px) {
+    font-size: 16px;
+  }
 `;
 const SAddAndSetup = styled.div`
   margin-left: auto;

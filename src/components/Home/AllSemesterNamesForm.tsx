@@ -7,7 +7,12 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom';
 import DropdownInput from '../common/DropdownInput';
 import SemesterDropdownList from './SemesterDropdownList';
+import styled from 'styled-components';
 
+const SSemesterInputWrapper = styled.div`
+  width: 19.8vw;
+  background-color: white;
+`;
 interface SemesterData {
   id: string;
   semesterName: string;
@@ -78,12 +83,10 @@ const AllSemesterNamesForm = () => {
   }, [reload]);
 
   return (
-    <>
+    <SSemesterInputWrapper>
       <DropdownInput
         placeholder="학기를 추가해 주세요"
         value={defaultSemester}
-        size="small"
-        theme={{ background: 'white' }}
         dropdownList={
           semesterOptions.length > 0 ? (
             <SemesterDropdownList
@@ -98,7 +101,7 @@ const AllSemesterNamesForm = () => {
         isToggle={isDropdownSemesterToggle}
         handleChangeToggle={handleChangeSemesterToggle}
       ></DropdownInput>
-    </>
+    </SSemesterInputWrapper>
   );
 };
 

@@ -5,19 +5,34 @@ import styled from 'styled-components';
 import instanceAxios from '../../utils/InstanceAxios';
 import { getRemainingDayData } from '../../utils/lib/api';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
+
 const STimetableHeader = styled.h1`
-  padding-top: 20px;
-  font-size: 20px;
+  //styleName: Font/Web_Header_4_semibold;
+  font-family: Pretendard;
+  font-size: 28px;
   font-weight: 600;
+  line-height: 38px;
+  text-align: left;
+  margin-top: 20px;
+
+  @media (max-width: 1380px) {
+    font-size: 22px;
+  }
+
+  @media (max-width: 1023px) {
+    font-size: 20px;
+  }
+
+  @media (max-width: 879px) {
+    font-size: 16px;
+  }
 `;
 const SColorBlue = styled.span`
   color: #4987ff;
 `;
-interface IsClassAddProps {
-  onClassAdd: () => void;
-}
+
 const TimetableHeader = () => {
-  const { scheduleId } = useParams(); //현재 url에서 추출한 동적으로 변하는 id값
+  const { scheduleId } = useParams();
   const { currentDate } = useCurrentDate();
   const date = currentDate.toISOString().split('T')[0];
   const [remainingDay, setRemainingDay] = useState<number>(0);
