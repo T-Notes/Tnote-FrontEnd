@@ -12,6 +12,41 @@ import styled from 'styled-components';
 const SSemesterInputWrapper = styled.div`
   width: 19.8vw;
   background-color: white;
+  position: relative;
+  display: flex;
+  align-items: center;
+  opacity: 1;
+  border-radius: 8px;
+  padding: 14px 18px 14px 16px;
+  border: 1px solid #d5d5d5;
+  @media (max-width: 1023px) {
+    padding: 6px 10px;
+  }
+  > input {
+    font-family: Pretendard;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 33.41px;
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    &::placeholder {
+      color: #a6a6a6;
+    }
+
+    @media (max-width: 1380px) {
+      font-size: 22px;
+    }
+
+    @media (max-width: 1023px) {
+      font-size: 20px;
+    }
+
+    @media (max-width: 879px) {
+      font-size: 16px;
+    }
+  }
 `;
 interface SemesterData {
   id: string;

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { getTodayTimetable } from '../../utils/lib/api';
-import { colorMapping } from '../../utils/colorMapping';
+import { colorMapping, pointColorMapping } from '../../utils/colorMapping';
 
 const STodayScheduleWrapper = styled.div`
   display: flex;
@@ -10,15 +10,23 @@ const STodayScheduleWrapper = styled.div`
   margin-left: auto;
 `;
 const SFont = styled.div`
-  font-size: 16px;
+  font-family: Pretendard;
+  font-size: 23px;
   font-weight: 600;
-  color: ${({ theme }) => theme.colors.gray000};
-  margin-bottom: 10px;
-  margin-top: 30px;
-  padding-left: 10px;
+  line-height: 27.45px;
+  text-align: left;
+  color: #5b5b5b;
+  white-space: nowrap;
+  @media (max-width: 1200px) {
+    font-size: 16px;
+  }
+  padding: 10px 10px 10px 20px;
+  margin-top: 27px;
 `;
 const SClassContainer = styled.div`
-  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  color: #5b5b5b;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
@@ -27,36 +35,47 @@ const SClassContainer = styled.div`
 
 const SSchedule = styled.div`
   display: flex;
-  width: 600px;
-  color: ${({ theme }) => theme.colors.gray000};
-  padding-top: 10px;
-  padding-bottom: 5px;
-  padding-left: 15px;
-  padding-right: 15px;
-  height: 80px;
-  background-color: ${({ theme }) => theme.colors.blue400};
-`;
+  width: 39.8vw;
+  padding: 15px 23px;
+  height: 12vh;
+  background-color: #f7f9fc;
 
-const STodayClassWrapper = styled.div<{ color: string }>`
-  display: flex;
-  flex-direction: column;
-  font-size: 11px;
-  align-items: center;
-  padding-top: 5px;
-  width: auto;
-  height: 50px;
-  background-color: ${({ color }) => color || '#fffff'};
-  > div {
-    padding-bottom: 3px;
+  @media (max-width: 1439px) {
+    width: 42vw;
+  }
+  @media (max-width: 960px) {
+    width: 56vw;
   }
 `;
-const STimetables = styled.div`
+
+const STodayClassWrapper = styled.div<{ color: string; $pointColor: string }>`
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  width: auto;
+  overflow: hidden;
+  height: 7vh;
+  border-left: 5px solid ${({ $pointColor }) => $pointColor || '#fffff'};
+  background-color: ${({ color }) => color || '#fffff'};
+  font-family: Pretendard;
   font-size: 13px;
+  font-weight: 600;
+  line-height: 15.51px;
+  text-align: left;
+`;
+const STimetables = styled.div`
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19.09px;
+  text-align: left;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 3px;
+  margin-bottom: 8px;
 `;
+
 interface TodayClass {
   subjectName: string;
   classTime: string;
@@ -141,7 +160,7 @@ const TodaySchedule = () => {
               <STimetables
                 style={{
                   color:
-                    timetables[hour] === currentHour ? '#3378FF' : 'inherit',
+                    timetables[hour] === currentHour ? '#3378FF' : '#5b5b5b',
                 }}
               >
                 {timetables[hour]}
@@ -149,12 +168,16 @@ const TodaySchedule = () => {
               {todayClass.map((item, index) => {
                 const classTimeChange = parseInt(item.classTime.slice(0, 1));
                 const backgroundColor = colorMapping[item.color] || '';
+                const pointBorderColor = pointColorMapping[item.color] || '';
                 return (
                   <div key={index}>
                     {classTimeChange === hour ? (
-                      <STodayClassWrapper color={backgroundColor}>
-                        <div>{item.classLocation}</div>
-                        <div>{item.subjectName}</div>
+                      <STodayClassWrapper
+                        color={backgroundColor}
+                        $pointColor={pointBorderColor}
+                      >
+                        <p>{item.classLocation}</p>
+                        <p>{item.subjectName}</p>
                       </STodayClassWrapper>
                     ) : null}
                   </div>

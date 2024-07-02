@@ -8,36 +8,69 @@ const SRemainingDayWrapper = styled.div`
   flex-direction: column;
 `;
 const SFont = styled.div`
-  font-size: 16px;
+  font-family: Pretendard;
+  font-size: 23px;
   font-weight: 600;
-  color: ${({ theme }) => theme.colors.gray000};
-  padding-left: 10px;
-  margin-bottom: 10px;
-  margin-top: 30px;
+  line-height: 27.45px;
+  text-align: left;
+  color: #5b5b5b;
+  padding: 10px 10px 10px 20px;
+  margin-top: 27px;
+
+  white-space: nowrap;
+  @media (max-width: 1200px) {
+    font-size: 16px;
+  }
 `;
 const SDayBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 250px;
-  height: 80px;
-  padding: 10px;
+  width: 19.7vw;
+  height: 12vh;
+  background-color: #f7f9fc;
 
-  background-color: ${({ theme }) => theme.colors.blue400};
+  @media (max-width: 1439px) {
+    width: 15vw;
+  }
 `;
 const SRemainingDay = styled.p`
-  color: ${({ theme }) => theme.colors.blue700};
-  ${({ theme }) => theme.fonts.button};
+  font-family: Pretendard;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 44px;
+  text-align: center;
+  color: #0ea5e9;
+  @media (max-width: 1439px) {
+    font-size: 26px;
+  }
+  @media (max-width: 767px) {
+    font-size: 16px;
+  }
 `;
 
 const SRemainingDayText = styled.p`
-  color: ${({ theme }) => theme.colors.gray100};
-  ${({ theme }) => theme.fonts.button};
+  font-family: Pretendard;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 44px;
+  text-align: center;
+  color: #a6a6a6;
+
+  @media (max-width: 1439px) {
+    font-size: 26px;
+  }
+  @media (max-width: 1300px) {
+    font-size: 20px;
+  }
+  @media (max-width: 1023px) {
+    font-size: 16px;
+  }
 `;
 
 const RemainingDays = () => {
-  const { scheduleId } = useParams(); //현재 url에서 추출한 동적으로 변하는 id값
+  const { scheduleId } = useParams();
   const [remainingDay, setRemainingDay] = useState<number>();
   const current = new Date();
   const newCurrent = current.toISOString().slice(0, 10);
@@ -62,7 +95,7 @@ const RemainingDays = () => {
       <SFont>이번 학기 남은 일수</SFont>
       <SDayBox>
         {typeof remainingDay === 'number' ? (
-          <SRemainingDay>{remainingDay}</SRemainingDay>
+          <SRemainingDay>{`D-${remainingDay}`}</SRemainingDay>
         ) : (
           <SRemainingDayText>{'생성된 학기 없음'}</SRemainingDayText>
         )}

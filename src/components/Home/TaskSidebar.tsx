@@ -15,7 +15,7 @@ const STaskSidebarWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.blue400};
-  width: 300px;
+  width: 21.25vw;
   height: 100vh;
   position: fixed;
   right: 0;

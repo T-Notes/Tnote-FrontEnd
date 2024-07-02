@@ -7,20 +7,10 @@ import ScheduleCalendar from '../components/Home/logCalendar/ScheduleCalendar';
 import TaskSidebar from '../components/Home/TaskSidebar';
 import TodaySchedule from '../components/Home/TodaySchedule';
 
-const SHomeWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 200px;
-  right: 300px;
-  /* left: 230px; // 사이드바에서 30px 띄우기
-  right: 330px; // 사이드바에서 30px 띄우기 */
-  bottom: 0;
-`;
 const SDayAndScheduleWrapper = styled.div`
   display: flex;
 `;
 const SHomeSemester = styled.div`
-  padding-left: 30px;
   padding-right: 30px;
 `;
 const Home = () => {
@@ -40,7 +30,7 @@ const Home = () => {
     setClickedDate(formattedDate);
   };
   return (
-    <SHomeWrapper>
+    <div>
       <SHomeSemester>
         <SemesterMenu onClickAddBtn={handleClickLinkToAddSemesterPage} />
         <SDayAndScheduleWrapper>
@@ -51,7 +41,7 @@ const Home = () => {
 
       <ScheduleCalendar onDayClick={handleDayClick} />
       <TaskSidebar clickedDate={clickedDate} />
-    </SHomeWrapper>
+    </div>
   );
 };
 
