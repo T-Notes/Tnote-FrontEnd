@@ -88,7 +88,17 @@ const FileUpload = (props: any) => {
   const handleChangeFileImg = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     const maxFileSize = 1073741824; // 1GB 파일 사이즈
-    const allowedExtensions = ['jpg', 'png', 'xls', 'xlsx', 'ppt', 'pptx']; // 허용할 확장자 목록
+    const allowedExtensions = [
+      'jpg',
+      'jpeg',
+      'png',
+      'gif',
+      'pdf',
+      'xls',
+      'xlsx',
+      'ppt',
+      'pptx',
+    ]; // 허용할 확장자 목록
     const newFiles: File[] = [];
     if (files) {
       for (let i = 0; i < files.length; i++) {
