@@ -9,7 +9,8 @@ const GlobalStyle = createGlobalStyle`
       
         &::-webkit-scrollbar {
     background-color: transparent;
-    width: 0.5rem;
+    width: 6px;
+    height: 7px;
     
   }
 body {
