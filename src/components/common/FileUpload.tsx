@@ -27,6 +27,7 @@ const SFileText = styled.p`
 
 const SFileUploadInput = styled.input`
   display: none;
+
   ${({ theme }) => theme.fonts.caption3}
   margin-left: 20px;
   padding: 10px;
@@ -49,6 +50,8 @@ const SUploadBtn = styled.label`
   ${({ theme }) => theme.fonts.caption3}
 `;
 const SFileNames = styled.div`
+  white-space: nowrap;
+
   > div {
     display: flex;
     border-radius: 8px;
@@ -66,12 +69,15 @@ const SFileNames = styled.div`
 `;
 const SShowInput = styled.div`
   display: flex;
+  overflow: auto;
+  overflow-y: scroll;
   ${({ theme }) => theme.fonts.caption3}
   margin-left: 20px;
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #e8e8e8;
   width: 400px;
+
   .placeholder {
     color: #a6a6a6;
   }
@@ -82,14 +88,23 @@ const FileUpload = (props: any) => {
   const handleChangeFileImg = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     const maxFileSize = 1073741824; // 1GB 파일 사이즈
-
+    const allowedExtensions = ['jpg', 'png', 'xls', 'xlsx', 'ppt', 'pptx']; // 허용할 확장자 목록
     const newFiles: File[] = [];
     if (files) {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        if (file.size < maxFileSize) {
-          newFiles.push(files[i]);
-        } else window.alert('1GB 이하의 jpg, png 파일만 업로드 가능합니다.');
+        const fileExtension = file.name.split('.').pop()?.toLowerCase();
+        if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
+          window.alert('지원하지 않는 형식의 파일입니다.');
+          continue;
+        }
+
+        if (file.size > maxFileSize) {
+          window.alert('1GB 이하의 파일만 첨부 가능합니다.');
+          continue;
+        }
+
+        newFiles.push(file);
       }
 
       setImgUrl((prevFiles: File[]) => [...prevFiles, ...newFiles]);
@@ -115,7 +130,7 @@ const FileUpload = (props: any) => {
         <IcClip />
         <SFileText>파일 첨부</SFileText>
         <SFileUploadInput
-          placeholder="1GB 이하의 jpg, png 파일 업로드 가능합니다."
+          placeholder="1GB 이하의 이미지파일(jpg,png,heic), 문서파일(Excel,PPT) 업로드 가능합니다."
           readOnly
         />
         <SShowInput>
@@ -138,7 +153,8 @@ const FileUpload = (props: any) => {
             </>
           ) : (
             <div className="placeholder">
-              1GB 이하의 jpg, png 파일 업로드 가능합니다.
+              1GB 이하의 이미지파일(jpg,png,heic), 문서파일(Excel,PPT) 업로드
+              가능합니다.
             </div>
           )}
         </SShowInput>
