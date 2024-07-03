@@ -9,7 +9,7 @@ const SSemesterMenuWrapper = styled.div`
 `;
 const SButton = styled.button`
   font-family: Pretendard;
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 500;
   line-height: 23.87px;
   text-align: left;
@@ -17,8 +17,16 @@ const SButton = styled.button`
   color: #666666;
   cursor: pointer;
 
-  @media (max-width: 767px) {
-    font-size: 16px;
+  @media (max-width: 1439px) {
+    font-size: 23px;
+  }
+
+  @media (max-width: 1279px) {
+    font-size: 20px;
+  }
+
+  @media (max-width: 1023px) {
+    font-size: 18px;
   }
 `;
 const SAddAndSetup = styled.div`

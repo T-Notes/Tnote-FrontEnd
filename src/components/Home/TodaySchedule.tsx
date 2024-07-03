@@ -17,8 +17,16 @@ const SFont = styled.div`
   text-align: left;
   color: #5b5b5b;
   white-space: nowrap;
-  @media (max-width: 1200px) {
-    font-size: 16px;
+  @media (max-width: 1439px) {
+    font-size: 23px;
+  }
+
+  @media (max-width: 1279px) {
+    font-size: 20px;
+  }
+
+  @media (max-width: 1023px) {
+    font-size: 18px;
   }
   padding: 10px 10px 10px 20px;
   margin-top: 27px;
@@ -41,10 +49,23 @@ const SSchedule = styled.div`
   background-color: #f7f9fc;
 
   @media (max-width: 1439px) {
-    width: 42vw;
+    /* font-size: 24px; */
+  }
+
+  @media (max-width: 1279px) {
+    /* font-size: 22px; */
+  }
+
+  @media (max-width: 1023px) {
+    /* font-size: 20px; */
+  }
+
+  @media (max-width: 1080px) {
+    width: 60vw;
+    flex: 1;
   }
   @media (max-width: 960px) {
-    width: 56vw;
+    width: 65vw;
   }
 `;
 

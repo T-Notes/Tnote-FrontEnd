@@ -16,10 +16,17 @@ const SFont = styled.div`
   color: #5b5b5b;
   padding: 10px 10px 10px 20px;
   margin-top: 27px;
-
   white-space: nowrap;
-  @media (max-width: 1200px) {
-    font-size: 16px;
+  @media (max-width: 1439px) {
+    font-size: 23px;
+  }
+
+  @media (max-width: 1279px) {
+    font-size: 20px;
+  }
+
+  @media (max-width: 1023px) {
+    font-size: 18px;
   }
 `;
 const SDayBox = styled.div`
@@ -29,10 +36,14 @@ const SDayBox = styled.div`
   justify-content: center;
   width: 19.7vw;
   height: 12vh;
+  flex: 1;
   background-color: #f7f9fc;
 
   @media (max-width: 1439px) {
-    width: 15vw;
+    width: 17vw;
+  }
+  @media (max-width: 960px) {
+    width: 21vw;
   }
 `;
 const SRemainingDay = styled.p`

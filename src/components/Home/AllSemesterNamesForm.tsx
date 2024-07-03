@@ -17,10 +17,10 @@ const SSemesterInputWrapper = styled.div`
   align-items: center;
   opacity: 1;
   border-radius: 8px;
-  padding: 14px 18px 14px 16px;
+  padding: 12px 16px;
   border: 1px solid #d5d5d5;
-  @media (max-width: 1023px) {
-    padding: 6px 10px;
+  @media (max-width: 1279px) {
+    padding: 3px 10px;
   }
   > input {
     font-family: Pretendard;
@@ -35,16 +35,16 @@ const SSemesterInputWrapper = styled.div`
       color: #a6a6a6;
     }
 
-    @media (max-width: 1380px) {
+    @media (max-width: 1439px) {
+      font-size: 24px;
+    }
+
+    @media (max-width: 1279px) {
       font-size: 22px;
     }
 
     @media (max-width: 1023px) {
       font-size: 20px;
-    }
-
-    @media (max-width: 879px) {
-      font-size: 16px;
     }
   }
 `;

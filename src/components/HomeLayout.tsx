@@ -10,8 +10,8 @@ const SLayoutWrapper = styled.div`
 
 const SContentWrapper = styled.div`
   margin-left: 13.54vw;
-  padding-left: 30px;
-  padding-right: 21.3vw; // 460px
+  /* padding-left: 30px; */
+  /* padding-right: 21.3vw; // 460px */
   @media (max-width: 960px) {
     margin-left: 0px;
   }
