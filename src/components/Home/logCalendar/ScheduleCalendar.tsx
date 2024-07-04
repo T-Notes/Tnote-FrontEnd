@@ -21,7 +21,6 @@ import { useParams } from 'react-router-dom';
 import { getAllLogsByMonth, getSearchLogsValue } from '../../../utils/lib/api';
 import ScheduleCalendarSearchValue from '../../search/ScheduleCalendarSearchValue';
 import MoreLogModal from './MoreLogModal';
-import useRandomColor from '../../../utils/useHooks/useRandomColor';
 import { useModals } from '../../../utils/useHooks/useModals';
 
 const SCalendarWrapper = styled.div`
@@ -31,9 +30,13 @@ const SCalendarWrapper = styled.div`
 
 const SCalendarHeader = styled.div`
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  ${({ theme }) => theme.fonts.button1}
+
+  font-family: Pretendard;
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 27.45px;
+  text-align: left;
 `;
 const SCalendarDate = styled.div`
   height: auto;
@@ -43,62 +46,63 @@ const SWeekBox = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-around;
-  background-color: ${({ theme }) => theme.colors.blue400};
-  font-size: 14px;
-  font-weight: 600;
+  background-color: #f7f9fc;
+
   color: #2f2f2f;
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 21.48px;
+  text-align: center;
 `;
 const SWeek = styled.div`
-  padding: 10px;
+  padding: 10px 0px;
 `;
-const SDaysBox = styled.div`
+
+const SDaysContainer = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
   flex: 1;
   flex-wrap: wrap;
 `;
-const SDays = styled.div`
-  font-size: 14px;
+const SDaysBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100px; //80px
+  white-space: nowrap;
+  overflow: hidden;
+
+  height: 130px;
   flex: 1;
   flex: 1 0 14%;
   padding-top: 5px;
   padding-bottom: 5px;
-  .today {
-    color: #ffff;
-    background-color: #7f51fc;
-    padding-left: 5px;
-    padding-right: 5px;
-    border-radius: 8px;
-  }
+
   cursor: pointer;
 `;
 const SCalendarHeaderWrapper = styled.div`
   display: flex;
   align-items: center;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-top: 20px;
-  padding-bottom: 30px;
+  padding: 30px 30px 50px 30px;
 `;
 const STodayButton = styled(Button)`
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
   border: 1px solid #d5d5d5;
   border-radius: 35px;
   color: #a6a6a6;
   margin-right: auto;
   margin-left: 20px;
+  padding: 13px 25px;
+
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19.09px;
+  text-align: left;
 `;
-const SYearMonth = styled.h2`
-  padding-left: 20px;
-  padding-right: 20px;
+const SYearMonth = styled.div`
+  padding-left: 4vw;
+  padding-right: 4vw;
 `;
 
 const SLogContainer = styled.ul`
@@ -106,30 +110,84 @@ const SLogContainer = styled.ul`
 `;
 
 const SLog = styled.div<{ color: string }>`
+  font-family: Pretendard;
   font-size: 13px;
+  font-weight: 600;
+  line-height: 15.51px;
+  text-align: center;
+  color: #2f2f2f;
   width: 100%;
   display: flex;
   justify-content: center;
-  /* border-radius: 8px; */
-  padding: 3px;
-  background-color: ${({ color }) => color};
+  padding: 8px 16px;
+  background-color: ${({ color }) => (color ? color : '#ffff')};
+  > p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 const SMoreLogs = styled.div`
-  font-size: 13px;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 15.51px;
+  text-align: center;
+
+  width: 100%;
   color: #a6a6a6;
-  padding-top: 3px;
+  padding: 3px 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
   &:hover {
     color: #3378ff;
   }
 `;
-
+const SDay = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40px;
+  padding: 10px 0px;
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 21.48px;
+  text-align: center;
+  .today {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffff;
+    background-color: #7f51fc;
+    border-radius: 25px;
+    width: 1.56vw;
+    height: 1.56vw;
+    gap: 10px;
+    padding: 5px;
+    @media (max-width: 1439px) {
+      padding: auto;
+    }
+    @media (max-width: 1279px) {
+      padding: 10px;
+    }
+  }
+`;
+const SMySchedule = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
 const ScheduleCalendar = ({
   onDayClick,
 }: {
   onDayClick: (clickedDate: Date) => void;
 }) => {
   const { scheduleId } = useParams();
-  const getRandomColor = useRandomColor();
+
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchValueList, setSearchValueList] = useState<any[]>([]);
   const [allLogs, setAllLogs] = useState<any[]>([]);
@@ -139,9 +197,7 @@ const ScheduleCalendar = ({
 
   const startWeek = startOfWeek(startOfMonth(currentDate));
   const endWeek = endOfWeek(endOfMonth(currentDate));
-  const [itemColorsMap, setItemColorsMap] = useState<Record<string, string>>(
-    {},
-  );
+
   const days = [];
   let day = startWeek;
 
@@ -221,8 +277,6 @@ const ScheduleCalendar = ({
         </SCalendarHeader>
         <STodayButton onClick={handleMoveCurrentDate}>오늘</STodayButton>
         <SearchInput
-          size="small"
-          theme={{ background: 'blue400' }}
           handleSearchInputChange={handleChangeSearchValue}
           placeholder="텍스트를 입력하세요"
           value={searchValue}
@@ -240,18 +294,20 @@ const ScheduleCalendar = ({
               <SWeek key={index}>{week}</SWeek>
             ))}
           </SWeekBox>
-          <SDaysBox>
+          <SDaysContainer>
             {days.map((day, index) => (
-              <SDays
+              <SDaysBox
                 key={index}
                 className={
                   isSameMonth(day, currentDate) ? 'white' : 'lightGray'
                 }
                 onClick={() => onDayClick(day)}
               >
-                <div className={isToday(day) ? 'today' : ''}>
-                  {format(day, 'd')}
-                </div>
+                <SDay>
+                  <div className={isToday(day) ? 'today' : ''}>
+                    {format(day, 'd')}
+                  </div>
+                </SDay>
 
                 {(() => {
                   const logsForDay = allLogs.filter((item) => {
@@ -273,25 +329,25 @@ const ScheduleCalendar = ({
                   const hiddenLogsCount =
                     logsForDay.length - visibleLogs.length;
                   return (
-                    <>
+                    <SMySchedule>
                       {visibleLogs.map((item, index) => (
                         <SLogContainer key={index}>
                           <SLog color={item.color}>
-                            {item.title || item.studentName}
+                            <p>{item.title || item.studentName}</p>
                           </SLog>
                         </SLogContainer>
                       ))}
                       {hiddenLogsCount > 0 && (
                         <SMoreLogs
                           onClick={() => handleClickMoreLogs(day)}
-                        >{`그 외 ${hiddenLogsCount}개 더 보기`}</SMoreLogs>
+                        >{`${hiddenLogsCount}개 더보기`}</SMoreLogs>
                       )}
-                    </>
+                    </SMySchedule>
                   );
                 })()}
-              </SDays>
+              </SDaysBox>
             ))}
-          </SDaysBox>
+          </SDaysContainer>
         </SCalendarDate>
       )}
     </SCalendarWrapper>

@@ -1,12 +1,6 @@
 import styled from 'styled-components';
 import { IcSearch } from '../../assets/icons';
 
-// interface StyledSearchInputProps {
-//   size?: 'small' | 'large';
-//   theme: {
-//     background: string;
-//   };
-// }
 const SSearchWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -27,10 +21,6 @@ interface SearchProps {
   placeholder: string;
   value: string;
   handleSearchInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  // size?: 'small' | 'large';
-  // theme: {
-  //   background: string;
-  // };
 }
 const SearchInput = (props: SearchProps) => {
   const { placeholder, value, handleSearchInputChange } = props;

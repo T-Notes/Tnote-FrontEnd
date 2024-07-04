@@ -63,7 +63,7 @@ const SRemainingDay = styled.p`
 
 const SRemainingDayText = styled.p`
   font-family: Pretendard;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 600;
   line-height: 44px;
   text-align: center;

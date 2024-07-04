@@ -24,7 +24,7 @@ const SSemesterInputWrapper = styled.div`
   }
   > input {
     font-family: Pretendard;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 600;
     line-height: 33.41px;
     text-align: left;
@@ -33,6 +33,7 @@ const SSemesterInputWrapper = styled.div`
     white-space: nowrap;
     &::placeholder {
       color: #a6a6a6;
+      font-size: 24px;
     }
 
     @media (max-width: 1439px) {
