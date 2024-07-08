@@ -12,26 +12,24 @@ import WorkLogModal from '../../Write/WorkLogModal';
 import ConsultationRecordsModal from '../../Write/ConsultationRecordsModal';
 import StudentRecordsModal from '../../Write/StudentRecordsModal';
 
-const moreLogsCustomStyles = {
+const moreLogsCustomStyles = (top: number, left: number) => ({
   overlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   content: {
-    top: '50%',
-    left: '50%',
+    top: `${top}px`,
+    left: `${left}px`,
     right: 'auto',
     bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
     backgroundColor: '#fff',
     boxShadow: '0px 2px 4px 0px #0000004d',
-    width: '220px',
+    width: '208px',
     height: '240px',
     padding: '10px',
     border: '1px solid #D5D5D5',
     borderRadius: '12px',
   },
-};
+});
 
 const SDay = styled.div`
   display: flex;
@@ -61,6 +59,7 @@ const SLog = styled.div<{ color: string }>`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
 `;
 const SLogContainer = styled.div`
   max-height: 145px;
@@ -82,17 +81,32 @@ const SDayOfMonth = styled.p`
   font-weight: 500;
   line-height: 27px;
   text-align: center;
-
   color: #2f2f2f;
+`;
+const SLogContent = styled.div`
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 interface MoreLogs {
   clickDay: Date | undefined;
   isOpen: boolean;
   onClose: () => void;
   scheduleId: string;
+  modalPosition: {
+    top: number;
+    left: number;
+  };
 }
 
-const MoreLogModal = ({ clickDay, isOpen, onClose, scheduleId }: MoreLogs) => {
+const MoreLogModal = ({
+  clickDay,
+  isOpen,
+  onClose,
+  scheduleId,
+  modalPosition,
+}: MoreLogs) => {
   if (!clickDay) return null;
   const { openModal } = useModals();
 
@@ -138,7 +152,7 @@ const MoreLogModal = ({ clickDay, isOpen, onClose, scheduleId }: MoreLogs) => {
     <ReactModal
       isOpen={isOpen}
       ariaHideApp={false}
-      style={moreLogsCustomStyles}
+      style={moreLogsCustomStyles(modalPosition.top, modalPosition.left)}
     >
       <>
         <SDay>
@@ -159,7 +173,7 @@ const MoreLogModal = ({ clickDay, isOpen, onClose, scheduleId }: MoreLogs) => {
                 handleOpenLogModal(item);
               }}
             >
-              {item.title || item.studentName}
+              <SLogContent>{item.title || item.studentName}</SLogContent>
             </SLog>
           ))}
         </SLogContainer>

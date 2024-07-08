@@ -187,7 +187,13 @@ const ScheduleCalendar = ({
   onDayClick: (clickedDate: Date) => void;
 }) => {
   const { scheduleId } = useParams();
-
+  const [modalPosition, setModalPosition] = useState<{
+    top: number;
+    left: number;
+  }>({
+    top: 0,
+    left: 0,
+  });
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchValueList, setSearchValueList] = useState<any[]>([]);
   const [allLogs, setAllLogs] = useState<any[]>([]);
@@ -236,8 +242,19 @@ const ScheduleCalendar = ({
     }
   }, [scheduleId, currentDate]);
 
-  const handleClickMoreLogs = (day: Date) => {
-    openModal(MoreLogModal, { clickDay: day, scheduleId });
+  const handleClickMoreLogs = (e: any, day: Date) => {
+    const rect = e.target.getBoundingClientRect();
+    const newModalPosition = {
+      top: rect.top - 120,
+      left: rect.left,
+    };
+    setModalPosition(newModalPosition);
+
+    openModal(MoreLogModal, {
+      clickDay: day,
+      scheduleId,
+      modalPosition: newModalPosition,
+    });
   };
 
   const handleChangeSearchValue = (e: ChangeEvent<HTMLInputElement>) => {
@@ -339,7 +356,7 @@ const ScheduleCalendar = ({
                       ))}
                       {hiddenLogsCount > 0 && (
                         <SMoreLogs
-                          onClick={() => handleClickMoreLogs(day)}
+                          onClick={(e: any) => handleClickMoreLogs(e, day)}
                         >{`${hiddenLogsCount}개 더보기`}</SMoreLogs>
                       )}
                     </SMySchedule>
