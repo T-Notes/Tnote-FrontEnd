@@ -140,7 +140,7 @@ const FileUpload = (props: any) => {
         <IcClip />
         <SFileText>파일 첨부</SFileText>
         <SFileUploadInput
-          placeholder="1GB 이하의 이미지파일(jpg,png,heic), 문서파일(Excel,PPT) 업로드 가능합니다."
+          placeholder="1GB 이하의 이미지파일(jpg,png), 문서파일(Excel,PPT) 업로드 가능합니다."
           readOnly
         />
         <SShowInput>
@@ -163,7 +163,7 @@ const FileUpload = (props: any) => {
             </>
           ) : (
             <div className="placeholder">
-              1GB 이하의 이미지파일(jpg,png,heic), 문서파일(Excel,PPT) 업로드
+              1GB 이하의 이미지파일(jpg,png), 문서파일(Excel,PPT) 업로드
               가능합니다.
             </div>
           )}
