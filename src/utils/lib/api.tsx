@@ -385,7 +385,7 @@ export const getAllLogsBySchedule = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `tnote/home/${scheduleId}/LogsByFilter?page=${page}&size=8&logType=ALL`,
+      `tnote/archive/${scheduleId}/LogsByFilter?page=${page}&size=8&logType=ALL`,
     );
     return response.data;
   } catch {}
@@ -399,16 +399,16 @@ export const getAllLogsByMonth = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/home/${scheduleId}/monthlyLogs?date=${date}`,
+      `/tnote/archive/${scheduleId}/monthlyLogs?date=${date}`,
     );
     return response.data;
   } catch {}
 };
 
-// 학기 검색
+// 아카이브 내 일지 검색 기능
 export const getSemesterSearchValue = async (semesterName: string) => {
   try {
-    const response = await instanceAxios.get('/tnote/home/semester', {
+    const response = await instanceAxios.get('/tnote/archive/semester', {
       params: { semesterName: semesterName }, // 객체 형태로 전달,
     });
     return response.data;
@@ -421,7 +421,7 @@ export const getSemesterSearchValue = async (semesterName: string) => {
 export const getRecentLogs = async (scheduleId: string | undefined) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/home/recentLogs/${scheduleId}`,
+      `/tnote/archive/recentLogs/${scheduleId}`,
     );
     return response.data;
   } catch {}
@@ -468,7 +468,7 @@ export const getFilteredLogsByDate = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `tnote/home/${scheduleId}/dateLogs?startDate=${startDate}&endDate=${endDate}&page=0&size=8&logType=${logType}`,
+      `tnote/archive/${scheduleId}/dateLogs?startDate=${startDate}&endDate=${endDate}&page=0&size=8&logType=${logType}`,
     );
 
     return response.data;
@@ -545,7 +545,7 @@ export const getAllTaskByDate = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/home/${scheduleId}/dailyLogs`,
+      `/tnote/archive/${scheduleId}/dailyLogs`,
       {
         params: { date: date },
       },
@@ -569,6 +569,23 @@ export const weekSchedule = async (scheduleId: string | undefined) => {
   try {
     const response = await instanceAxios.get(
       `/tnote/schedule/week/${scheduleId}`,
+    );
+    return response.data;
+  } catch {}
+};
+
+// 일지 다중 삭제 기능
+interface LogsProps {
+  classLogIds: number[];
+  proceedingIds: number[];
+  observationIds: number[];
+  consultationIds: number[];
+}
+export const logsDelete = async (logs: LogsProps) => {
+  try {
+    const response = await instanceAxios.post(
+      '/tnote/archive/deleteLogs',
+      logs,
     );
     return response.data;
   } catch {}
