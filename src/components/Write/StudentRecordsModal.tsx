@@ -114,7 +114,7 @@ const StudentRecordsModal = ({
       if (isEdit) {
         try {
           const editData = {
-            studentName: title,
+            title: title,
             startDate: new Date(
               date.startDate.getTime() -
                 date.startDate.getTimezoneOffset() * 60000,
@@ -161,7 +161,7 @@ const StudentRecordsModal = ({
       } else {
         try {
           const logData = {
-            studentName: title,
+            title: title,
             startDate: new Date(
               date.startDate.getTime() -
                 date.startDate.getTimezoneOffset() * 60000,
@@ -222,7 +222,7 @@ const StudentRecordsModal = ({
       getObservationDetailData(String(logId))
         .then((response) => {
           const data = response.data;
-          setTitle(data.studentName);
+          setTitle(data.title);
           setObservationContent(data.observationContents);
           setTeachingPlan(data.guidance);
           setDate({

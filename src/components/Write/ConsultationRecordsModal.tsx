@@ -189,7 +189,7 @@ const ConsultationRecordsModal = ({
       if (isEdit) {
         try {
           const editData = {
-            studentName: title,
+            title: title,
             startDate: new Date(
               date.startDate.getTime() -
                 date.startDate.getTimezoneOffset() * 60000,
@@ -239,7 +239,7 @@ const ConsultationRecordsModal = ({
       } else {
         try {
           const logData = {
-            studentName: title,
+            title: title,
             startDate: new Date(
               date.startDate.getTime() -
                 date.startDate.getTimezoneOffset() * 60000,
@@ -316,7 +316,7 @@ const ConsultationRecordsModal = ({
       getConsultationDetailData(String(logId))
         .then((response) => {
           const data = response.data;
-          setTitle(data.studentName);
+          setTitle(data.title);
           setCounselingContent(data.consultationContents);
           setCounselingResult(data.consultationResult);
           setSelectedCounselingButton(data.counselingField);
