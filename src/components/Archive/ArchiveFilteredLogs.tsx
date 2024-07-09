@@ -8,13 +8,13 @@ import {
   IcOpenDropdownSmall,
   IcUncheckedBox,
 } from '../../assets/icons';
-import instanceAxios from '../../utils/InstanceAxios';
 import {
   getAllClassLog,
   getAllProceedings,
   getAllConsultations,
   getAllObservation,
   getAllLogsBySchedule,
+  logsDelete,
 } from '../../utils/lib/api';
 import { useToggle } from '../../utils/useHooks/useToggle';
 import DeleteButton from '../common/DeleteButton';
@@ -153,6 +153,12 @@ const SFilterIcon = styled.div`
 interface Archive {
   scheduleId: string | undefined;
 }
+interface DeleteIds {
+  classLogIds: number[];
+  proceedingIds: number[];
+  observationIds: number[];
+  consultationIds: number[];
+}
 const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const navigate = useNavigate();
 
@@ -160,8 +166,10 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const options = ['전체', '학급일지', '업무일지', '상담기록', '학생관찰기록'];
 
   const [isDelete, setIsDelete] = useState<boolean>(false);
-  const [checkedDeleteId, setCheckedDeleteId] = useState<number | null>(null);
-  const [logType, setLogType] = useState<string>('');
+  const [checkedDeleteIds, setCheckedDeleteIds] = useState<
+    { id: number; logType: string }[]
+  >([]);
+
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalLogs, setTotalLogs] = useState<number>(0);
   const { handleChangeToggle, isToggle } = useToggle();
@@ -173,9 +181,18 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const handleDeleteModeActivate = () => {
     setIsDelete(true);
   };
+
   const handleDeletedCheck = (item: number, logType: string) => {
-    setLogType(logType);
-    setCheckedDeleteId((prev) => (prev === item ? null : item));
+    setCheckedDeleteIds((prev) => {
+      const alreadyChecked = prev.find(
+        (log) => log.id === item && log.logType === logType,
+      );
+      if (alreadyChecked) {
+        return prev.filter((log) => log.id !== item || log.logType !== logType);
+      } else {
+        return [...prev, { id: item, logType: logType }];
+      }
+    });
   };
 
   const handleClickFilter = async (option: string) => {
@@ -224,22 +241,28 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
     }
   }, [currentPage]);
 
-  const handleDelete = () => {
-    let logEndPointMiddle = '';
+  const handleDelete = async () => {
+    const logsDeleteIds: DeleteIds = {
+      classLogIds: [],
+      proceedingIds: [],
+      observationIds: [],
+      consultationIds: [],
+    };
+    if (checkedDeleteIds) {
+      for (const log of checkedDeleteIds) {
+        if (log.logType === 'CLASS_LOG') {
+          logsDeleteIds.classLogIds.push(log.id);
+        } else if (log.logType === 'PROCEEDING') {
+          logsDeleteIds.proceedingIds.push(log.id);
+        } else if (log.logType === 'OBSERVATION') {
+          logsDeleteIds.observationIds.push(log.id);
+        } else if (log.logType === 'CONSULTATION') {
+          logsDeleteIds.consultationIds.push(log.id);
+        }
+      }
+    }
 
-    if (logType === 'CLASS_LOG') {
-      logEndPointMiddle = 'classLog';
-    }
-    if (logType === 'PROCEEDING') {
-      logEndPointMiddle = 'proceeding';
-    }
-    if (logType === 'CONSULTATION') {
-      logEndPointMiddle = 'consultation';
-    }
-    if (logType === 'OBSERVATION') {
-      logEndPointMiddle = 'observation';
-    }
-    if (checkedDeleteId) {
+    if (checkedDeleteIds) {
       Swal.fire({
         title: '항목 삭제',
         text: '정말 삭제하시겠습니까?',
@@ -249,11 +272,9 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
         showCancelButton: true,
       }).then((res) => {
         if (res.isConfirmed) {
-          instanceAxios
-            .delete(`/tnote/${logEndPointMiddle}/${checkedDeleteId}`)
-            .then((res) => {
-              window.location.reload();
-            });
+          logsDelete(logsDeleteIds).then((res) => {
+            window.location.reload();
+          });
         }
       });
     } else {
@@ -264,15 +285,16 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   };
 
   const handleChangePageAtLogs = (id: number, type: string) => {
-    if (type === 'CLASS_LOG') {
-      navigate(`/archive/classLog/${scheduleId}/${id}`);
-    } else if (type === 'PROCEEDING') {
-      navigate(`/archive/proceeding/${scheduleId}/${id}`);
-    } else if (type === 'CONSULTATION') {
-      navigate(`/archive/consultation/${scheduleId}/${id}`);
-    } else if (type === 'OBSERVATION') {
-      navigate(`/archive/observation/${scheduleId}/${id}`);
-    }
+    navigate(`/archive/logDetail/${type}/${id}`);
+    // if (type === 'CLASS_LOG') {
+    //   navigate(`/archive/classLog/${scheduleId}/${id}`);
+    // } else if (type === 'PROCEEDING') {
+    //   navigate(`/archive/proceeding/${scheduleId}/${id}`);
+    // } else if (type === 'CONSULTATION') {
+    //   navigate(`/archive/consultation/${scheduleId}/${id}`);
+    // } else if (type === 'OBSERVATION') {
+    //   navigate(`/archive/observation/${scheduleId}/${id}`);
+    // }
   };
 
   return (
@@ -314,11 +336,14 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
         {filteredLogsList &&
           filteredLogsList.map((item, index) => {
             const newTimestamp = item.createdAt.slice(0, 10);
+            const isChecked = checkedDeleteIds.some(
+              (log) => log.id === item.id && log.logType === item.logType,
+            );
             return (
               <SLogContainer key={index}>
                 {isDelete && (
                   <>
-                    {checkedDeleteId === item.id && logType === item.logType ? (
+                    {isChecked ? (
                       <SCheckedBox>
                         <IcCheckedBox
                           onClick={() =>
