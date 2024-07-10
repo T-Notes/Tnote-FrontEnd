@@ -122,7 +122,7 @@ const SColor = styled.div`
 `;
 
 const SDropdownClassDay = styled.div`
-  width: 12vw;
+  width: 100%;
   background-color: white;
   position: relative;
   display: flex;

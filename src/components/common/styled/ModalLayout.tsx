@@ -69,7 +69,7 @@ export const searchCustomStyles = {
   },
   content: {
     width: '460px',
-    height: '420px',
+    height: '440px',
     top: '50%',
     left: '50%',
     right: 'auto',

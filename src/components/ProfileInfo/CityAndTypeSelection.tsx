@@ -12,7 +12,26 @@ const SInputBox = styled.div`
   margin-bottom: 24px;
 `;
 const SDropdownInput = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 300px;
+  background-color: #f7f9fc;
   margin-left: auto;
+  padding: 10px 10px 10px 16px;
+  border-radius: 4px;
+  border: 1px solid #d5d5d5;
+  > input {
+    font-family: Pretendard;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.09px;
+    text-align: left;
+
+    &::placeholder {
+      color: #d5d5d5;
+    }
+  }
 `;
 const SLabel = styled.label`
   ${({ theme }) => theme.fonts.caption};
@@ -48,8 +67,6 @@ const CityAndTypeSelection = ({
         </SLabel>
         <SDropdownInput>
           <DropdownInput
-            size="small"
-            theme={{ background: 'blue400' }}
             placeholder="옵션을 선택해주세요"
             value={value}
             handleChangeToggle={handleChangeToggle}
