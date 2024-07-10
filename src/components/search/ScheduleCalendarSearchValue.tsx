@@ -68,11 +68,14 @@ interface SearchValue {
   color: string;
 }
 
-interface Props {
+interface SearchValueProps {
   searchValueList: SearchValue[];
+  searchValue: string;
 }
 
-const ScheduleCalendarSearchValue = ({ searchValueList }: Props) => {
+const ScheduleCalendarSearchValue = (props: SearchValueProps) => {
+  const { searchValueList, searchValue } = props;
+
   const { scheduleId } = useParams();
   const { openModal } = useModals();
   const isEdit = true;
@@ -95,6 +98,12 @@ const ScheduleCalendarSearchValue = ({ searchValueList }: Props) => {
         const searchEndDate = item.endDate.slice(0, 10);
         const searchStartTime = item.startDate.slice(11, 16);
         const searchEndTime = item.endDate.slice(11, 16);
+
+        const content = item.studentName || item.title;
+        const highlightedContent = content.replace(
+          new RegExp(searchValue, 'gi'),
+          (match) => `<span style="color: #632CFA">${match}</span>`,
+        );
         return (
           <SSearchValueWrapper
             key={index}
@@ -109,7 +118,10 @@ const ScheduleCalendarSearchValue = ({ searchValueList }: Props) => {
                 {searchStartTime}~{searchEndTime}
               </p>
             </SSearchTimeRange>
-            <SLogContent>{item.studentName || item.title}</SLogContent>
+
+            <SLogContent
+              dangerouslySetInnerHTML={{ __html: highlightedContent }}
+            />
           </SSearchValueWrapper>
         );
       })}
