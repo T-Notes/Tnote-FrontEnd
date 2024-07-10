@@ -428,14 +428,13 @@ export const getRecentLogs = async (scheduleId: string | undefined) => {
 };
 
 // 일지 검색
-
 export const getSearchLogsValue = async (
   keyword: string,
   scheduleId: string | undefined,
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/home/searching/${scheduleId}`,
+      `/tnote/archive/searching/${scheduleId}`,
       {
         params: { keyword: keyword },
       },
@@ -587,6 +586,34 @@ export const logsDelete = async (logs: LogsProps) => {
       '/tnote/archive/deleteLogs',
       logs,
     );
+    return response.data;
+  } catch {}
+};
+
+interface SearchParams {
+  startDate?: string;
+  endDate?: string;
+  searchType?: string;
+  keyword?: string;
+  page?: number;
+  size?: number;
+}
+
+// 아카이브 내 일지 검색 기능
+export const searchArchiveLog = async (params: SearchParams) => {
+  const {
+    startDate = '',
+    endDate = '',
+    searchType = '',
+    keyword = '',
+    page = 0,
+    size = 8,
+  } = params;
+
+  try {
+    const response = await instanceAxios.get('/tnote/archive/searching/log', {
+      params: { startDate, endDate, searchType, keyword, page, size },
+    });
     return response.data;
   } catch {}
 };

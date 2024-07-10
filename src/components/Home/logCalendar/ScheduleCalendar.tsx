@@ -115,7 +115,7 @@ const SLog = styled.div<{ color: string }>`
   font-weight: 600;
   line-height: 15.51px;
   text-align: center;
-  color: #2f2f2f;
+  color: #ffffff;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -302,7 +302,10 @@ const ScheduleCalendar = ({
 
       {searchValue ? (
         <>
-          <ScheduleCalendarSearchValue searchValueList={searchValueList} />
+          <ScheduleCalendarSearchValue
+            searchValueList={searchValueList}
+            searchValue={searchValue}
+          />
         </>
       ) : (
         <SCalendarDate>

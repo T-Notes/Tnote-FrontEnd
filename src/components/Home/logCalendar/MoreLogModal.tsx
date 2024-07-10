@@ -56,6 +56,7 @@ const SLog = styled.div<{ color: string }>`
   margin-bottom: 2px;
   margin-right: 3px;
   background-color: ${({ color }) => color};
+  color: #ffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

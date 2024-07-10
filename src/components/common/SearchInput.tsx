@@ -10,11 +10,18 @@ const SSearchWrapper = styled.div`
   border: 1px solid #d5d5d5;
 `;
 const SSearchInput = styled.input`
-  ${({ theme }) => theme.fonts.caption}
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19.09px;
+  text-align: left;
+
   &::placeholder {
-    color: ${({ theme }) => theme.colors.gray600};
+    color: #d5d5d5;
   }
+
   width: 200px;
+  height: 44px;
   padding: 10px;
 `;
 interface SearchProps {

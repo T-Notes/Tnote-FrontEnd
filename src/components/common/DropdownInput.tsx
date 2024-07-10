@@ -2,6 +2,11 @@ import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import { IcCloseDropdownSmall, IcOpenDropdownSmall } from '../../assets/icons';
 
+const SDropdownWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  border: 1px solid red;
+`;
 const SDropdownInput = styled.input`
   width: 100%;
 `;

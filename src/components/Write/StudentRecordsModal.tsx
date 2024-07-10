@@ -1,11 +1,9 @@
 import axios from 'axios';
 import { ChangeEvent, useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
-
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcPen } from '../../assets/icons';
-
 import FileUpload from '../common/FileUpload';
 import { writeFormCustomStyles } from '../common/styled/ModalLayout';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
@@ -13,8 +11,6 @@ import { CustomModalProps, DateProps } from './ClassLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 import { getObservationDetailData } from '../../utils/lib/api';
-import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
-import useRandomColor from '../../utils/useHooks/useRandomColor';
 import { convertUrlToFile } from '../../utils/convertUrlToFile';
 
 const STextarea = styled.textarea`
@@ -79,8 +75,7 @@ const StudentRecordsModal = ({
   });
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File[]>([]);
-  const [fileName, setFileName] = useState<string[]>([]);
-  const getRandomColor = useRandomColor();
+
   const formData = new FormData();
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -172,7 +167,7 @@ const StudentRecordsModal = ({
             observationContents: observationContent,
             guidance: teachingPlan,
             isAllDay: parentsIsAllDay, // 종일 버튼 로직 추가하기
-            color: getRandomColor(),
+            color: '#F59E0B',
           };
           // 이미지 파일
           if (imgUrl.length >= 1) {
