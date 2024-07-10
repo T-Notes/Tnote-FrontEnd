@@ -28,7 +28,7 @@ const SClassAddFormWrapper = styled.div`
   align-items: center;
   justify-content: center;
   background-color: #f8f8f8;
-  width: 23vw;
+  width: 384px; // 20vw
   height: 100vh;
   padding-left: 18px;
   padding-right: 22px;
@@ -39,42 +39,67 @@ const SClassAddFormWrapper = styled.div`
 const SClassAddFormLayout = styled.div`
   box-shadow: 0px 9px 16px 0px #00000017;
   width: 100%;
-  height: 80%;
+  height: 80vh;
   background-color: #ffff;
+  @media (max-height: 970px) {
+    height: 90vh;
+  }
 `;
 const SHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 10px;
-  background-color: ${({ theme }) => theme.colors.gray1100};
-  font-size: 18px;
+  padding: 20px 20px 20px 30px;
+  background-color: #f8f8f8;
+
+  font-family: Pretendard;
+  font-size: 24px;
   font-weight: 500;
+  line-height: 28.64px;
+  text-align: left;
 `;
 const STitle = styled.div`
   display: flex;
   flex-direction: column;
 `;
 const SLabel = styled.label`
-  font-size: 16px;
+  font-family: Pretendard;
+  font-size: 18px;
   font-weight: 500;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  line-height: 23.87px;
+  text-align: left;
+  padding: 30px 20px 10px 20px;
 `;
 
 const SClassAddFormInput = styled.input`
-  padding-bottom: 10px;
-  padding-top: 10px;
-  margin-bottom: 30px;
+  margin: 0px 20px 0px 20px;
   border-bottom: 1px solid #cccccc;
-`;
-
-const SClass = styled.div<{ selected: boolean; $isActive: boolean }>`
-  background-color: ${(props) => (props.selected ? '#632CFA' : '#ffff')};
-  border-radius: 35px;
-  color: ${(props) => (props.selected ? '#ffff' : '#000000')};
-  padding: 7px;
   font-family: Pretendard;
-  font-size: 15px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: left;
+  color: #2f2f2f;
+  &::placeholder {
+    color: #a6a6a6;
+  }
+`;
+const SClassNum = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0px 10px 0px 10px;
+`;
+const SClass = styled.div<{ selected: boolean; $isActive: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${(props) => (props.selected ? '#632CFA' : '#ffff')};
+  border-radius: 10px;
+  color: ${(props) => (props.selected ? '#ffff' : '#000000')};
+  padding: 4px 10px 4px 10px;
+
+  font-family: Pretendard;
+  font-size: 18px;
   font-weight: 500;
   line-height: 24px;
   text-align: left;
@@ -84,12 +109,16 @@ const SClass = styled.div<{ selected: boolean; $isActive: boolean }>`
 `;
 
 const SSaveClassBtn = styled(Button)`
-  width: 100%;
+  margin-top: 4vh;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 95%;
   font-family: Pretendard;
   line-height: 24px;
   font-size: 18px;
   font-weight: 500;
-  padding: 10px;
+  padding: 15px;
+
   &.activeSubmit {
     background-color: #632cfa;
     color: white;
@@ -103,11 +132,7 @@ const SSaveClassBtn = styled(Button)`
 const SClassAddFormBody = styled.div`
   padding: 10px;
 `;
-const SClassNum = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+
 const SClassDays = styled.div`
   display: flex;
   flex-direction: column;
@@ -115,14 +140,17 @@ const SClassDays = styled.div`
 const SClassColor = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  margin: 0px 20px 0px 20px;
 `;
 const SColor = styled.div`
-  padding-right: 7px;
+  /* border: 1px solid red; */
+  /* width: 30px;
+  height: 30px; */
 `;
 
 const SDropdownClassDay = styled.div`
-  width: 100%;
+  margin: 0px 20px 0px 20px;
   background-color: white;
   position: relative;
   display: flex;
@@ -131,7 +159,6 @@ const SDropdownClassDay = styled.div`
   border-radius: 4px;
   padding: 9px 12px 9px 12px;
   border: 1px solid #d9d9d9;
-
   > input {
     font-family: Pretendard;
     font-size: 14px;
@@ -339,25 +366,27 @@ const ClassAddForm = ({
                 value={subjectName}
               ></SClassAddFormInput>
             </STitle>
+            <STitle>
+              <SLabel>수업 교시</SLabel>
+              <SClassNum>
+                {classNum.map((classNum) => {
+                  const isActive = Number(classNum.class) <= Number(lastClass);
+                  return (
+                    <SClass
+                      key={classNum.id}
+                      onClick={() =>
+                        isActive && handleSelectedClass(classNum.class)
+                      }
+                      selected={classTime === classNum.class}
+                      $isActive={isActive}
+                    >
+                      <p>{classNum.class}</p>
+                    </SClass>
+                  );
+                })}
+              </SClassNum>
+            </STitle>
 
-            <SLabel>수업 교시</SLabel>
-            <SClassNum>
-              {classNum.map((classNum) => {
-                const isActive = Number(classNum.class) <= Number(lastClass);
-                return (
-                  <SClass
-                    key={classNum.id}
-                    onClick={() =>
-                      isActive && handleSelectedClass(classNum.class)
-                    }
-                    selected={classTime === classNum.class}
-                    $isActive={isActive}
-                  >
-                    <p>{classNum.class}</p>
-                  </SClass>
-                );
-              })}
-            </SClassNum>
             <SClassDays>
               <SLabel>수업 요일</SLabel>
               <SDropdownClassDay>
@@ -381,29 +410,32 @@ const ClassAddForm = ({
               ></SClassAddFormInput>
             </STitle>
           </div>
-          <SLabel>색상 선택</SLabel>
-          <SClassColor>
-            {classColor.map((colors) => (
-              <SColor
-                key={colors.id}
-                onClick={() => handleClickColor(colors.color)}
-              >
-                {selectedColor === colors.color ? (
-                  <IcSelectedIcon />
-                ) : (
-                  <>
-                    {colors.color === '파란색' && <IcBlueColor />}
-                    {colors.color === '보라색' && <IcPurpleColor />}
-                    {colors.color === '노란색' && <IcYellowColor />}
-                    {colors.color === '빨간색' && <IcRedColor />}
-                    {colors.color === '초록색' && <IcGreenColor />}
-                    {colors.color === '분홍색' && <IcPinkColor />}
-                    {colors.color === '회색' && <IcGrayColor />}
-                  </>
-                )}
-              </SColor>
-            ))}
-          </SClassColor>
+          <STitle>
+            <SLabel>색상 선택</SLabel>
+            <SClassColor>
+              {classColor.map((colors) => (
+                <SColor
+                  key={colors.id}
+                  onClick={() => handleClickColor(colors.color)}
+                >
+                  {selectedColor === colors.color ? (
+                    <IcSelectedIcon />
+                  ) : (
+                    <>
+                      {colors.color === '파란색' && <IcBlueColor />}
+                      {colors.color === '보라색' && <IcPurpleColor />}
+                      {colors.color === '노란색' && <IcYellowColor />}
+                      {colors.color === '빨간색' && <IcRedColor />}
+                      {colors.color === '초록색' && <IcGreenColor />}
+                      {colors.color === '분홍색' && <IcPinkColor />}
+                      {colors.color === '회색' && <IcGrayColor />}
+                    </>
+                  )}
+                </SColor>
+              ))}
+            </SClassColor>
+          </STitle>
+
           <STitle>
             <SLabel>메모</SLabel>
             <SClassAddFormInput
