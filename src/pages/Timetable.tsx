@@ -5,7 +5,14 @@ import ClassAddForm from '../components/Timetable/ClassAddForm';
 import TimetableChangeBtn from '../components/Timetable/TimetableChangeBtn';
 import TimetableHeader from '../components/Timetable/TimetableHeader';
 
-const STimetableWrapper = styled.div``;
+const STimetableWrapper = styled.div`
+  padding-right: 21.3vw;
+
+  padding-left: 30px;
+  @media (max-width: 1440px) {
+    padding-right: 30vw;
+  }
+`;
 
 const Timetable = () => {
   const [isAddClass, setIsAddClass] = useState<boolean>(false);
