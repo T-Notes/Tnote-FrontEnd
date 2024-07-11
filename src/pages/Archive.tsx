@@ -96,6 +96,7 @@ const Archive = () => {
   const [totalLogs, setTotalLogs] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [searchType, setSearchType] = useState<string>('');
+  const [dateType, setDateType] = useState<string>('');
 
   const handleDeleteModeActivate = () => {
     setIsDelete(true);
@@ -108,6 +109,28 @@ const Archive = () => {
   };
 
   const handleClickPeriodSearchOption = (item: string) => {
+    console.log(item);
+
+    let selectedType = '';
+    if (item === '전체 기간') {
+      selectedType = 'ALL';
+    }
+    if (item === '1일') {
+      selectedType = 'ONE_DAY';
+    }
+    if (item === '1주') {
+      selectedType = 'ONE_WEEK';
+    }
+    if (item === '1개월') {
+      selectedType = 'ONE_MONTH';
+    }
+    if (item === '6개월') {
+      selectedType = 'SIX_MONTH';
+    }
+    if (item === '1년') {
+      selectedType = 'ONE_YEAR';
+    }
+    setDateType(selectedType);
     setPeriodOption(item);
     setIsPeriodToggle(false);
   };
@@ -125,6 +148,7 @@ const Archive = () => {
     setTitleOption(item);
     setIsTitleToggle(false);
   };
+
   const handleChangeSearchValue = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
@@ -139,8 +163,7 @@ const Archive = () => {
 
   const handleArchiveLogsSearch = async () => {
     const getSearchValue = await searchArchiveLog({
-      startDate: '2023-01-01',
-      endDate: '2024-07-31',
+      dateType: dateType,
       searchType: searchType,
       keyword: searchValue,
       page: currentPage,

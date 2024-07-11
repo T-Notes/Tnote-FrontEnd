@@ -267,16 +267,6 @@ export const logout = async () => {
   } catch {}
 };
 
-// 계정탈퇴
-
-export const deletedAccount = async (code: string | null) => {
-  try {
-    const response = await instanceAxios.delete(`/tnote/user?code=${code}`);
-    console.log(response);
-    localStorage.clear();
-    return response;
-  } catch {}
-};
 export interface SubjectDate {
   subjectName: string;
   classTime: string;
@@ -403,18 +393,6 @@ export const getAllLogsByMonth = async (
     );
     return response.data;
   } catch {}
-};
-
-// 아카이브 내 일지 검색 기능
-export const getSemesterSearchValue = async (semesterName: string) => {
-  try {
-    const response = await instanceAxios.get('/tnote/archive/semester', {
-      params: { semesterName: semesterName }, // 객체 형태로 전달,
-    });
-    return response.data;
-  } catch (err) {
-    throw new Error('학기 검색 실패');
-  }
 };
 
 // 최근 조회한 일지
@@ -591,8 +569,7 @@ export const logsDelete = async (logs: LogsProps) => {
 };
 
 interface SearchParams {
-  startDate?: string;
-  endDate?: string;
+  dateType?: string;
   searchType?: string;
   keyword?: string;
   page?: number;
@@ -602,8 +579,7 @@ interface SearchParams {
 // 아카이브 내 일지 검색 기능
 export const searchArchiveLog = async (params: SearchParams) => {
   const {
-    startDate = '',
-    endDate = '',
+    dateType = '',
     searchType = '',
     keyword = '',
     page = 0,
@@ -612,7 +588,7 @@ export const searchArchiveLog = async (params: SearchParams) => {
 
   try {
     const response = await instanceAxios.get('/tnote/archive/searching/log', {
-      params: { startDate, endDate, searchType, keyword, page, size },
+      params: { dateType, searchType, keyword, page, size },
     });
     return response.data;
   } catch {}
