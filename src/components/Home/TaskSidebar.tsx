@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { useEffect, useState } from 'react';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 import Todo from './Todo';
@@ -39,6 +40,10 @@ const SFont = styled.div`
   @media (max-height: 899px) {
     font-size: 16px;
   }
+
+  @media (max-height: 720px) {
+    font-size: 14px;
+  }
 `;
 
 const SDateFont = styled.div`
@@ -52,6 +57,9 @@ const SDateFont = styled.div`
   margin-bottom: 20px;
   @media (max-height: 1079px) {
     font-size: 22px;
+  }
+  @media (max-height: 720px) {
+    font-size: 20px;
   }
 `;
 const SLogs = styled.div`
@@ -82,6 +90,10 @@ const SLogContent = styled.div`
   overflow: hidden;
   white-space: nowrap;
   margin-right: 6px;
+
+  @media (max-height: 720px) {
+    font-size: 12px;
+  }
 `;
 const SLogCreatedAt = styled.p`
   margin-left: auto;
@@ -94,6 +106,10 @@ const SLogCreatedAt = styled.p`
 
   overflow: hidden;
   white-space: nowrap;
+
+  @media (max-height: 720px) {
+    font-size: 12px;
+  }
 `;
 const SFlex = styled.div`
   display: flex;
@@ -102,6 +118,12 @@ const SFlex = styled.div`
   padding-top: 28px;
   padding-bottom: 20px;
   padding-left: 10px;
+
+  @media (max-height: 720px) {
+    padding-top: 20px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+  }
 `;
 const SLogLength = styled.div`
   display: flex;
@@ -140,6 +162,13 @@ export interface Task {
   studentName: string;
   createdAt: string;
 }
+
+export interface TodoProps {
+  id: number;
+  content: string;
+  date: string;
+  status: boolean;
+}
 interface Reload {
   clickedDate: string | undefined;
 }
@@ -152,7 +181,7 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
   const [workLogContent, setWorkLogContent] = useState<Task[]>([]);
   const [consultationsContent, setConsultationsContent] = useState<Task[]>([]);
   const [observationContent, setObservationContent] = useState<Task[]>([]);
-  const [todo, setTodo] = useState<Task[]>([]);
+  const [todo, setTodo] = useState<TodoProps[]>([]);
   const [reload, setReload] = useState<boolean>(false);
   const [semesterStartDate, setSemesterStartDate] = useState<string>('');
   const [semesterEndDate, setSemesterEndDate] = useState<string>('');
@@ -259,8 +288,8 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
         <Todo
           todo={todo}
           setTodo={setTodo}
-          clickedDate={clickedDate}
-          setReload={setReload}
+          clickedDate={clickedDate ? clickedDate : ''}
+          // setReload={setReload}
         />
       </div>
       <SLogGroup>
@@ -312,7 +341,7 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
               key={observation.id}
               onClick={() => handleOpenObservationIdModal(observation.id)}
             >
-              <SLogContent>{observation.studentName}</SLogContent>
+              <SLogContent>{observation.title}</SLogContent>
               <SLogCreatedAt>{`${observation.createdAt.slice(
                 0,
                 10,
@@ -333,7 +362,7 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
               key={consultation.id}
               onClick={() => handleOpenConsultationIdModal(consultation.id)}
             >
-              <SLogContent>{consultation.studentName}</SLogContent>
+              <SLogContent>{consultation.title}</SLogContent>
               <SLogCreatedAt>{`${consultation.createdAt.slice(
                 0,
                 10,

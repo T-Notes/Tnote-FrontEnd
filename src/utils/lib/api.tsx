@@ -78,68 +78,115 @@ export const getSchoolSearchValue = async (
 interface TodoProps {
   content: string | undefined;
 }
-export const createTodo = async (
-  scheduleId: string | undefined,
-  todoData: TodoProps,
-  date: string | undefined,
-) => {
-  try {
-    const response = await instanceAxios.post(
-      `/tnote/todos/${scheduleId}`,
-      todoData,
-      {
-        params: { date },
-      },
-    );
-    return response.data;
-  } catch (error) {
-    throw new Error('Todo 작성을 게시하는데 에러가 발생했습니다.');
-  }
+// export const createTodo = async (
+//   scheduleId: string | undefined,
+//   todoData: TodoProps,
+//   date: string | undefined,
+// ) => {
+//   try {
+//     const response = await instanceAxios.post(
+//       `/tnote/todos/${scheduleId}`,
+//       todoData,
+//       {
+//         params: { date },
+//       },
+//     );
+//     return response.data;
+//   } catch (error) {
+//     throw new Error('Todo 작성을 게시하는데 에러가 발생했습니다.');
+//   }
+// };
+interface TodoPost {
+  scheduleId: string;
+  content: string;
+  date: string | undefined;
+}
+export const createTodo = async ({ scheduleId, content, date }: TodoPost) => {
+  const { data } = await instanceAxios.post(
+    `/tnote/todos/${scheduleId}`,
+    { content },
+    {
+      params: { date },
+    },
+  );
+  return data.data;
+};
+interface TodoUpdate {
+  scheduleId: string;
+  todoId: number;
+  content: string;
+  date: string | undefined;
+  status: boolean;
+}
+// export const updateTodo = async () => {
+//   try {
+//     const response = await instanceAxios.patch(
+//       `/tnote/todos/${scheduleId}/${todoId}`,
+//       todoData,
+//       {
+//         params: { date },
+//       },
+//     );
+//     return response;
+//   } catch (error) {
+//     throw new Error('todo 수정에 에러가 발생했습니다.');
+//   }
+// };
+export const updateTodo = async ({
+  scheduleId,
+  todoId,
+  content,
+  date,
+  status,
+}: TodoUpdate) => {
+  const { data } = await instanceAxios.patch(
+    `/tnote/todos/${scheduleId}/${todoId}`,
+    { content, status },
+    {
+      params: { date },
+    },
+  );
+  return data;
 };
 
-export const updateTodo = async (
-  scheduleId: string | undefined,
-  todoId: number | undefined,
-  todoData: TodoProps,
-  date: string | undefined,
-) => {
-  try {
-    const response = await instanceAxios.patch(
-      `/tnote/todos/${scheduleId}/${todoId}`,
-      todoData,
-      {
-        params: { date },
-      },
-    );
-    return response;
-  } catch (error) {
-    throw new Error('todo 수정에 에러가 발생했습니다.');
-  }
-};
+// export const getTodo = async (
+//   scheduleId: string | undefined,
+//   date: string | undefined,
+// ) => {
+//   try {
+//     const response = await instanceAxios.get(`/tnote/todos/${scheduleId}`, {
+//       params: date,
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.log(error);
 
-export const getTodo = async (
-  scheduleId: string | undefined,
-  date: string | undefined,
-) => {
+//     throw new Error('todo list를 조회하는데 에러가 발생했습니다.');
+//   }
+// };
+
+export const getTodo = async ({ queryKey }: { queryKey: string[] }) => {
+  const [_, scheduleId, date] = queryKey; // queryKey에서 scheduleId와 date 추출
+
   try {
     const response = await instanceAxios.get(`/tnote/todos/${scheduleId}`, {
-      params: date,
+      params: { date },
     });
-    return response.data;
+    return response.data.data;
   } catch (error) {
     throw new Error('todo list를 조회하는데 에러가 발생했습니다.');
   }
 };
 
-export const removeTodo = async (
-  scheduleId: string | undefined,
-  todoId: number | undefined,
-) => {
-  try {
-    await instanceAxios.delete(`/tnote/todos/${scheduleId}/${todoId}`);
-  } catch (error) {
-    throw new Error('todo 삭제 에러가 발생했습니다.');
-  }
+interface TodoDelete {
+  scheduleId: string;
+  todoId: number;
+}
+export const removeTodo = async ({ scheduleId, todoId }: TodoDelete) => {
+  const { data } = await instanceAxios.delete(
+    `/tnote/todos/${scheduleId}/${todoId}`,
+  );
+  return data;
 };
 interface CreateSemester {
   semesterName: string;
