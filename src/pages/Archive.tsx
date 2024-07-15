@@ -15,8 +15,15 @@ import Pagination from '../components/common/Pagination';
 const SArchiveWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding-right: 21.3vw;
+  padding-right: 20vw;
   padding-left: 30px;
+  @media (max-width: 1400px) {
+    padding-right: 10vw;
+  }
+
+  @media (max-width: 1200px) {
+    padding-right: 5vw;
+  }
 `;
 
 const SArchiveHeader = styled.div`
@@ -24,6 +31,11 @@ const SArchiveHeader = styled.div`
   display: flex;
   align-items: center;
   padding-bottom: 60px;
+  @media (max-width: 890px) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const Sh1 = styled.h1`
@@ -39,11 +51,18 @@ const Sh1 = styled.h1`
   @media (min-width: 768px) and (max-width: 1023px) {
     font-size: 28px;
   }
+
+  @media (max-width: 1200px) {
+    font-size: 26px;
+  }
 `;
 const SSearchInput = styled.div`
   width: 300px;
   height: auto;
   background-color: #f7f9fc;
+  @media (max-width: 1080px) {
+    width: 230px;
+  }
   @media (max-width: 1023px) {
     width: 230px;
   }
@@ -53,7 +72,7 @@ const SDropdown = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 6.875vw;
+  width: 130px;
   background-color: #f7f9fc;
 
   padding: 10px 10px 10px 16px;
@@ -72,6 +91,13 @@ const SDropdown = styled.div`
     &::placeholder {
       color: #a6a6a6;
     }
+  }
+`;
+const SSearch = styled.div`
+  display: flex;
+  @media (max-width: 890px) {
+    margin-top: 20px;
+    display: flex;
   }
 `;
 interface SearchValue {
@@ -217,44 +243,46 @@ const Archive = () => {
     <SArchiveWrapper>
       <SArchiveHeader>
         <Sh1>내 아카이브</Sh1>
-        <SDropdown>
-          <DropdownInput
-            placeholder="전체 기간"
-            value={periodOption}
-            handleChangeToggle={handleChangePeriodToggle}
-            isToggle={isPeriodToggle}
-            dropdownList={
-              <ArchiveSearchFilterList
-                option={['전체기간', '1일', '1주', '1개월', '6개월', '1년']}
-                onSelectedOption={handleClickPeriodSearchOption}
-              />
-            }
-          ></DropdownInput>
-        </SDropdown>
-        <SDropdown>
-          <DropdownInput
-            placeholder="일지 제목"
-            value={titleOption}
-            handleChangeToggle={handleChangeTitleToggle}
-            isToggle={isTitleToggle}
-            dropdownList={
-              <ArchiveSearchFilterList
-                option={['일지 제목', '내용', '제목+내용']}
-                onSelectedOption={handleClickTitleSearchOption}
-              />
-            }
-          ></DropdownInput>
-        </SDropdown>
-        <SSearchInput>
-          <SearchInput
-            handleSearchInputChange={handleChangeSearchValue}
-            placeholder="검색어를 입력하세요"
-            value={searchValue}
+        <SSearch>
+          <SDropdown>
+            <DropdownInput
+              placeholder="전체 기간"
+              value={periodOption}
+              handleChangeToggle={handleChangePeriodToggle}
+              isToggle={isPeriodToggle}
+              dropdownList={
+                <ArchiveSearchFilterList
+                  option={['전체기간', '1일', '1주', '1개월', '6개월', '1년']}
+                  onSelectedOption={handleClickPeriodSearchOption}
+                />
+              }
+            ></DropdownInput>
+          </SDropdown>
+          <SDropdown>
+            <DropdownInput
+              placeholder="일지 제목"
+              value={titleOption}
+              handleChangeToggle={handleChangeTitleToggle}
+              isToggle={isTitleToggle}
+              dropdownList={
+                <ArchiveSearchFilterList
+                  option={['일지 제목', '내용', '제목+내용']}
+                  onSelectedOption={handleClickTitleSearchOption}
+                />
+              }
+            ></DropdownInput>
+          </SDropdown>
+          <SSearchInput>
+            <SearchInput
+              handleSearchInputChange={handleChangeSearchValue}
+              placeholder="검색어를 입력하세요"
+              value={searchValue}
+            />
+          </SSearchInput>
+          <DeleteButton
+            onClick={isDelete ? handleClickDelete : handleDeleteModeActivate}
           />
-        </SSearchInput>
-        <DeleteButton
-          onClick={isDelete ? handleClickDelete : handleDeleteModeActivate}
-        />
+        </SSearch>
       </SArchiveHeader>
 
       {searchValue && searchValueList.length > 0 ? (

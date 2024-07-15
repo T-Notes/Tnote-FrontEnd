@@ -5,44 +5,68 @@ import { useEffect, useState } from 'react';
 import { createSemester, getAllSemesterNames } from '../../utils/lib/api';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 
-const SHeader = styled.h1`
-  ${({ theme }) => theme.fonts.h2}
+const SHeader = styled.div`
+  display: flex;
+
+  font-family: Pretendard;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 38.19px;
+  text-align: left;
 `;
 const SSetup = styled.div`
   display: flex;
-  align-items: center;
   margin-bottom: 20px;
 `;
 const SBannerText = styled.div`
   margin-top: 30px;
-  padding-left: 10px;
+  padding-left: 1vw;
 `;
 const SAddSemester = styled.div`
   display: flex;
   align-items: center;
+  padding-left: 0px;
+  margin-left: 0px;
   margin-top: 30px;
 `;
 const SCaption = styled.p`
   padding-bottom: 20px;
 `;
 const SText = styled.div`
-  color: ${({ theme }) => theme.colors.gray1000};
-  ${({ theme }) => theme.fonts.button1};
+  color: #5e5e5e;
+
+  font-family: Pretendard;
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 27.45px;
+  text-align: left;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-left: 30px;
+  padding-left: 2vw;
 `;
 const SWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.gray1100};
-  width: 250px;
+  width: 18.75vw;
+  min-width: 250px;
   height: 100vh;
   position: fixed;
   top: 0;
-  left: 200px;
+  left: 13.54vw;
+  @media (max-width: 1024px) {
+    position: fixed;
+    top: 80px;
+    left: 0;
+  }
+
+  @media (max-width: 1200px) {
+    min-width: 200px;
+  }
 `;
 const SAddSemesterText = styled.div`
   cursor: pointer;
+  margin-left: 15px;
 `;
 const SSemester = styled.div<{ selected: boolean }>`
   color: ${(props) => (props.selected ? '#632CFA' : '#5E5E5E')};
@@ -133,7 +157,10 @@ const SemesterSetupBanner = () => {
     <SWrapper>
       <SBannerText>
         <SSetup>
-          <IcGoBack onClick={handleClickBackRoute} className="pointer" />
+          <div>
+            <IcGoBack onClick={handleClickBackRoute} className="pointer" />
+          </div>
+
           <SHeader>설정</SHeader>
         </SSetup>
         <SText>

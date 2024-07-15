@@ -29,7 +29,7 @@ const SLeftSidebar = styled.div`
   .active {
     background-color: #f0ebff;
   }
-  @media (max-width: 960px) {
+  @media (max-width: 1024px) {
     display: none;
   }
 `;
@@ -262,6 +262,7 @@ const HomeNavigationBar = () => {
           </SUserProfile>
         </SUserProfileInfoWrapper>
       </SLeftSidebar>
+
       {isOpenSetting && <Setting closeSettingModal={closeSettingModal} />}
     </>
   );

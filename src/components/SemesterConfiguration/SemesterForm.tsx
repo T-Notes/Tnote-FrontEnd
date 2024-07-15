@@ -19,7 +19,14 @@ const SWrapper = styled.div`
   display: flex;
   flex-direction: column;
   position: fixed;
-  left: 500px;
+  left: 36vw;
+
+  @media (max-width: 1040px) {
+    left: 40vw;
+  }
+  @media (max-width: 720px) {
+    left: 45vw;
+  }
 `;
 const SSemesterBody = styled.div`
   margin-top: 25px;
@@ -29,7 +36,12 @@ const SLabel = styled.div`
   padding-top: 40px;
   padding-bottom: 20px;
 
-  ${({ theme }) => theme.fonts.caption};
+  //styleName: Font/Web_Body;
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: left;
 `;
 
 const SDelete = styled(Button)`
@@ -37,21 +49,39 @@ const SDelete = styled(Button)`
   height: 50px;
   margin-right: 10px;
   background-color: ${({ theme }) => theme.colors.gray200};
-  ${({ theme }) => theme.fonts.caption};
+
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: center;
 `;
 const SSave = styled(Button)<{ disabled: boolean }>`
   width: 245px;
   height: 50px;
   background-color: ${(props) => (props.disabled ? '#E8E8E8' : '#632CFA')};
   color: ${(props) => (props.disabled ? '#11111' : '#ffff')};
-  ${({ theme }) => theme.fonts.caption};
+
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: center;
 `;
 const SWarningText = styled.p`
-  ${({ theme }) => theme.fonts.caption};
-  color: ${({ theme }) => theme.colors.gray000};
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: left;
+  color: #5b5b5b;
 `;
-const SHeader = styled.h1`
-  ${({ theme }) => theme.fonts.h2}
+const SHeader = styled.div`
+  font-family: Pretendard;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 38.19px;
+  text-align: left;
   margin-top: 30px;
 `;
 

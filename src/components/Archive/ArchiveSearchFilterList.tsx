@@ -33,7 +33,7 @@ interface ArchiveSearchFilterListProps {
 
 const ArchiveSearchFilterList = (props: ArchiveSearchFilterListProps) => {
   const { option, onSelectedOption } = props;
-  // const archiveFilter = options.option;
+
   return (
     <SOptionWrapper>
       {option.map((item, index) => (

@@ -21,6 +21,14 @@ const SSearchValueWrapper = styled.div`
   font-weight: 500;
   line-height: 24px;
   text-align: left;
+
+  @media (max-width: 860px) {
+    font-family: Pretendard;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: left;
+  }
 `;
 const SSearchDateRange = styled.div`
   display: flex;
@@ -30,6 +38,10 @@ const SSearchDateRange = styled.div`
   white-space: nowrap;
   overflow: hidden;
   flex: 1;
+  @media (max-width: 860px) {
+    width: 150px;
+    overflow: hidden;
+  }
 `;
 const SSearchTimeRange = styled.div`
   display: flex;
@@ -38,6 +50,10 @@ const SSearchTimeRange = styled.div`
   width: 16vw;
   white-space: nowrap;
   overflow: hidden;
+
+  @media (max-width: 620px) {
+    flex: 0.8;
+  }
 `;
 
 const SLogColor = styled.div<{ color: string }>`
@@ -46,10 +62,6 @@ const SLogColor = styled.div<{ color: string }>`
   border-radius: 50%;
   margin-right: 10px;
   background-color: ${({ color }) => color};
-
-  @media (max-width: 711px) {
-    display: none;
-  }
 `;
 const SLogContent = styled.div`
   display: flex;

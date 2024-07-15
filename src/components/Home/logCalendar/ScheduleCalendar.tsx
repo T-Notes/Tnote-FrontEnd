@@ -37,6 +37,10 @@ const SCalendarHeader = styled.div`
   font-weight: 600;
   line-height: 27.45px;
   text-align: left;
+
+  @media (max-width: 680px) {
+    font-size: 20px;
+  }
 `;
 const SCalendarDate = styled.div`
   height: auto;
@@ -99,10 +103,21 @@ const STodayButton = styled(Button)`
   font-weight: 600;
   line-height: 19.09px;
   text-align: left;
+  white-space: nowrap;
+
+  @media (max-width: 680px) {
+    font-size: 14px;
+    padding: 10px 15px;
+    margin-left: 10px;
+    margin-right: 20px;
+  }
 `;
 const SYearMonth = styled.div`
   padding-left: 4vw;
   padding-right: 4vw;
+
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const SLogContainer = styled.ul`

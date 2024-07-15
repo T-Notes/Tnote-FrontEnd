@@ -6,8 +6,13 @@ import { colorMapping, pointColorMapping } from '../../utils/colorMapping';
 
 const STodayScheduleWrapper = styled.div`
   display: flex;
+
   flex-direction: column;
   margin-left: auto;
+  @media (max-width: 710px) {
+    overflow: hidden;
+    white-space: nowrap;
+  }
 `;
 const SFont = styled.div`
   font-family: Pretendard;
@@ -45,20 +50,10 @@ const SSchedule = styled.div`
   display: flex;
   width: 39.8vw;
   padding: 15px 23px;
-  height: 12vh;
+  height: 13.8vh;
+  max-height: 150px;
+
   background-color: #f7f9fc;
-
-  @media (max-width: 1439px) {
-    /* font-size: 24px; */
-  }
-
-  @media (max-width: 1279px) {
-    /* font-size: 22px; */
-  }
-
-  @media (max-width: 1023px) {
-    /* font-size: 20px; */
-  }
 
   @media (max-width: 1080px) {
     width: 60vw;
@@ -74,7 +69,8 @@ const STodayClassWrapper = styled.div<{ color: string; $pointColor: string }>`
   flex-direction: column;
   padding: 8px 8px 5px 8px;
   width: 100%;
-  height: 7vh;
+  height: 100%;
+  min-height: 130px;
   border-left: 5px solid ${({ $pointColor }) => $pointColor || '#fffff'};
   background-color: ${({ color }) => color || '#fffff'};
 

@@ -64,7 +64,7 @@ const SDate = styled.p`
 `;
 const SLabel = styled.label`
   font-family: Pretendard;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
   line-height: 28.64px;
   text-align: left;
