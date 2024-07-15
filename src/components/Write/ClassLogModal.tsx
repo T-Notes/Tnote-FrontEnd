@@ -95,6 +95,7 @@ const ClassLogModal = ({
   isEdit,
 }: CustomModalProps) => {
   const formData = new FormData();
+
   const [title, setTitle] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File[]>([]);
@@ -221,9 +222,9 @@ const ClassLogModal = ({
 
   useEffect(() => {
     if (logId && isEdit) {
-      getClassLogDetailData(String(logId))
+      getClassLogDetailData({ queryKey: ['CLASS_LOG', String(logId)] })
         .then((response) => {
-          const data = response.data;
+          const data = response;
           setTitle(data.title);
           setDate({
             startDate: new Date(data.startDate),

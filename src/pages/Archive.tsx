@@ -185,10 +185,6 @@ const Archive = () => {
     }
   }, [searchValue, currentPage]);
 
-  const handleSelectedSemester = (semesterId: number) => {
-    navigate(`/archiveSemesterDetail/${semesterId}`);
-  };
-
   const handleDeletedCheck = (item: number) => {
     setIsDeleteChecked((prevIsDeleteChecked) =>
       prevIsDeleteChecked === item ? null : item,

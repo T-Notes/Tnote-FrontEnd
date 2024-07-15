@@ -214,9 +214,9 @@ const StudentRecordsModal = ({
 
   useEffect(() => {
     if (logId && isEdit) {
-      getObservationDetailData(String(logId))
+      getObservationDetailData({ queryKey: ['OBSERVATION', String(logId)] })
         .then((response) => {
-          const data = response.data;
+          const data = response;
           setTitle(data.title);
           setObservationContent(data.observationContents);
           setTeachingPlan(data.guidance);

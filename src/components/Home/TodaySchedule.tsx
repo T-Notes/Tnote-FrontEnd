@@ -72,17 +72,22 @@ const SSchedule = styled.div`
 const STodayClassWrapper = styled.div<{ color: string; $pointColor: string }>`
   display: flex;
   flex-direction: column;
-  padding: 5px;
-  width: auto;
-  overflow: hidden;
+  padding: 8px 8px 5px 8px;
+  width: 100%;
   height: 7vh;
   border-left: 5px solid ${({ $pointColor }) => $pointColor || '#fffff'};
   background-color: ${({ color }) => color || '#fffff'};
-  font-family: Pretendard;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 15.51px;
-  text-align: left;
+
+  > p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-family: Pretendard;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 15.51px;
+    text-align: left;
+  }
 `;
 const STimetables = styled.div`
   font-family: Pretendard;

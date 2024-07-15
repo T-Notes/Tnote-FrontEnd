@@ -267,9 +267,9 @@ const WorkLogModal = ({
 
   useEffect(() => {
     if (logId && isEdit) {
-      getProceedingDetailData(String(logId))
+      getProceedingDetailData({ queryKey: ['PROCEEDING', String(logId)] })
         .then((response) => {
-          const data = response.data;
+          const data = response;
 
           setTitle(data.title);
           setPlace(data.location);
