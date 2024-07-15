@@ -145,7 +145,7 @@ const Todo = memo(({ clickedDate }: TodoOutside) => {
   const queryClient = useQueryClient();
   const date = clickedDate;
 
-  const { data, isLoading, isError } = useQuery({
+  const { data } = useQuery({
     queryKey: ['todos', scheduleId || '', date || ''],
     queryFn: getTodo,
   });

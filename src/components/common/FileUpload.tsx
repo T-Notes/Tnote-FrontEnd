@@ -128,11 +128,8 @@ const FileUpload = (props: any) => {
   };
 
   const handleFileClick = (file: File) => {
-    console.log('logFile', file);
-
     downloadFile(file);
   };
-  console.log('imgUrl', imgUrl);
 
   return (
     <>
