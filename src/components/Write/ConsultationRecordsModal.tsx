@@ -292,9 +292,9 @@ const ConsultationRecordsModal = ({
 
   useEffect(() => {
     if (logId && isEdit) {
-      getConsultationDetailData(String(logId))
+      getConsultationDetailData({ queryKey: ['CONSULTATION', String(logId)] })
         .then((response) => {
-          const data = response.data;
+          const data = response;
           setTitle(data.title);
           setCounselingContent(data.consultationContents);
           setCounselingResult(data.consultationResult);
