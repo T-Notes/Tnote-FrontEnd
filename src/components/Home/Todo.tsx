@@ -1,13 +1,7 @@
 import styled from 'styled-components';
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  ChangeEvent,
-  memo,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ChangeEvent, memo, SetStateAction, useEffect, useState } from 'react';
 import {
   IcAddWhite,
   IcCheckedBox,
@@ -22,7 +16,6 @@ import {
   updateTodo,
 } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
-import instanceAxios from '../../utils/InstanceAxios';
 
 const STodoWrapper = styled.div``;
 const STodoInputWrapper = styled.div`
@@ -96,7 +89,6 @@ const SCheckbox = styled.div`
   display: flex;
 `;
 const STodoInputContainer = styled.div`
-  /* border: 3px solid red; */
   display: flex;
   flex-direction: column;
   max-height: 210px;
@@ -104,7 +96,6 @@ const STodoInputContainer = styled.div`
   overflow-x: hidden;
 
   @media (max-height: 1079px) {
-    /* max-height: 8vh; */
     max-height: 120px;
   }
 
@@ -113,28 +104,6 @@ const STodoInputContainer = styled.div`
   }
 `;
 
-const SEdit = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #482ee6;
-  color: #ffff;
-  border-radius: 8px;
-  margin-left: 10px;
-  //styleName: Font/Caption;
-  font-family: Pretendard;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 17.9px;
-  text-align: left;
-`;
-const STodoTextField = styled.input`
-  display: flex;
-  padding: 10px;
-  width: 100%;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #a6a6a6;
-`;
 const SVirtualInput = styled.input`
   margin-left: 1vw;
   padding: 0px;
@@ -147,7 +116,7 @@ const SVirtualInput = styled.input`
   overflow: hidden;
   white-space: nowrap;
   outline: none;
-  /* border-bottom: 2px solid #482ee6; */
+
   &:focus {
     outline: none;
     border-bottom: 2px solid #482ee6;
@@ -156,8 +125,6 @@ const SVirtualInput = styled.input`
 
 interface TodoOutside {
   clickedDate: string | undefined;
-  todo: TodoProps[];
-  setTodo: React.Dispatch<SetStateAction<TodoProps[]>>;
 }
 
 interface TodoProps {
@@ -166,19 +133,18 @@ interface TodoProps {
   date: string;
   status: boolean;
 }
-interface TodoPost {
-  scheduleId: string;
-  content: string;
-  date: string;
-}
-const Todo = memo(({ clickedDate, todo, setTodo }: TodoOutside) => {
+
+const Todo = memo(({ clickedDate }: TodoOutside) => {
   const [content, setContent] = useState<string>('');
-  const [updateContent, setUpdateContent] = useState<string>('');
+  const [updateContent, setUpdateContent] = useState<{ [key: number]: string }>(
+    {},
+  );
   const [todoInput, setTodoInput] = useState<boolean>(false);
   const [isCheckedTodo, setIsCheckedTodo] = useState<boolean>(false);
   const { scheduleId } = useParams<{ scheduleId?: string | undefined }>();
   const queryClient = useQueryClient();
   const date = clickedDate;
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ['todos', scheduleId || '', date || ''],
     queryFn: getTodo,
@@ -187,14 +153,6 @@ const Todo = memo(({ clickedDate, todo, setTodo }: TodoOutside) => {
   useEffect(() => {
     setTodoInput(false);
   }, [clickedDate]);
-
-  if (isLoading) {
-    console.log(isLoading);
-  }
-
-  if (isError) {
-    console.log(isError);
-  }
 
   const addTodo = useMutation({
     mutationFn: createTodo,
@@ -227,11 +185,11 @@ const Todo = memo(({ clickedDate, todo, setTodo }: TodoOutside) => {
 
   const handleOnBlur = (todoId: number | null) => {
     if (todoId) {
-      if (scheduleId && todoId && updateContent.trim() !== '') {
+      if (scheduleId && todoId && updateContent[todoId].trim() !== '') {
         modifyTodo.mutate({
           scheduleId,
           todoId,
-          content: updateContent,
+          content: updateContent[todoId],
           date,
           status: isCheckedTodo,
         });
@@ -242,11 +200,30 @@ const Todo = memo(({ clickedDate, todo, setTodo }: TodoOutside) => {
     }
   };
 
-  const handleOnEnter = (e: KeyboardEvent) => {
+  const handleOnEnter = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    todoId: number | null,
+  ) => {
     if (e.key === 'Enter') {
-      ('엔터!');
+      if (scheduleId && content.trim() !== '') {
+        addTodo.mutate({ scheduleId, content, date });
+        setContent('');
+        setTodoInput(true);
+      } else if (todoId && scheduleId && updateContent[todoId].trim() !== '') {
+        modifyTodo.mutate({
+          scheduleId,
+          todoId,
+          content: updateContent[todoId],
+          date,
+          status: isCheckedTodo,
+        });
+
+        const inputElement = e.target as HTMLInputElement;
+        inputElement.blur();
+      }
     }
   };
+
   const handleDelete = (todoId: number) => {
     if (scheduleId) {
       deletedTodo.mutate({ scheduleId, todoId });
@@ -257,9 +234,16 @@ const Todo = memo(({ clickedDate, todo, setTodo }: TodoOutside) => {
     const value = e.target.value;
     setContent(value);
   };
-  const handleChangeUpdate = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeUpdate = (
+    e: ChangeEvent<HTMLInputElement>,
+    todoId: number,
+  ) => {
     const value = e.target.value;
-    setUpdateContent(value);
+
+    setUpdateContent((prev) => ({
+      ...prev,
+      [todoId]: value,
+    }));
   };
 
   const handleToggleCheckBox = (
@@ -283,7 +267,7 @@ const Todo = memo(({ clickedDate, todo, setTodo }: TodoOutside) => {
       <STodoInputWrapper>
         <STodoHeader>
           <SFont>To do</SFont>
-          <STodoTotalNumber>{todo.length}</STodoTotalNumber>
+          <STodoTotalNumber>{data?.length}</STodoTotalNumber>
         </STodoHeader>
 
         {todoInput && (
@@ -294,7 +278,9 @@ const Todo = memo(({ clickedDate, todo, setTodo }: TodoOutside) => {
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleChangeTodo(e)
               }
-              onKeyDown={(e: any) => handleOnEnter(e)}
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
+                handleOnEnter(e, null)
+              }
               value={content}
               onBlur={() => handleOnBlur(null)}
             />
@@ -322,13 +308,14 @@ const Todo = memo(({ clickedDate, todo, setTodo }: TodoOutside) => {
 
               <SInput
                 placeholder="할 일 입력"
-                // $focused={false}
-                onClick={() => {}}
-                defaultValue={todo.content}
+                value={updateContent[todo.id] ?? todo.content}
                 $completed={todo.status}
                 onBlur={() => handleOnBlur(todo.id)}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleChangeUpdate(e)
+                  handleChangeUpdate(e, todo.id)
+                }
+                onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) =>
+                  handleOnEnter(e, todo.id)
                 }
                 readOnly={todo.status}
               />

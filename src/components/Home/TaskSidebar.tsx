@@ -285,12 +285,7 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
         {clickedDate !== '' ? formattedDate : `${year}년 ${month}월 ${day}일`}
       </SDateFont>
       <div>
-        <Todo
-          todo={todo}
-          setTodo={setTodo}
-          clickedDate={clickedDate ? clickedDate : ''}
-          // setReload={setReload}
-        />
+        <Todo clickedDate={clickedDate ? clickedDate : ''} />
       </div>
       <SLogGroup>
         <SFlex>
