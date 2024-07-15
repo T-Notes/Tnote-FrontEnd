@@ -10,9 +10,7 @@ const SWrapper = styled.div`
 `;
 const SDatePickerBox = styled.div`
   display: flex;
-
   align-items: center;
-  gap: 20px;
 `;
 const SDateIc = styled.div`
   display: flex;
@@ -41,7 +39,7 @@ const SCalender = styled(DatePickerWrapper)<{ isActive: boolean }>`
   display: flex;
   border: none;
   border-bottom: 1px solid #e8e8e8;
-  width: 270px;
+  width: 14vw;
   height: 24px;
   padding: 16px 20px;
   justify-content: center;

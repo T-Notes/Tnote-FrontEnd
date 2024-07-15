@@ -18,16 +18,23 @@ const SDelete = styled.button`
     text-align: center;
     color: #a6a6a6;
   }
+  @media (max-width: 680px) {
+    display: none;
+  }
 
   @media (max-width: 767px) {
     .text {
       font-size: 14px;
     }
   }
+
   @media (min-width: 768px) and (max-width: 1023px) {
     .text {
       font-size: 16px;
     }
+  }
+  @media (max-width: 720px) {
+    font-size: 12px;
   }
 `;
 
