@@ -10,8 +10,7 @@ import Swal from 'sweetalert2';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import ReactModal from 'react-modal';
 import { getClassLogDetailData } from '../../utils/lib/api';
-import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
-import useRandomColor from '../../utils/useHooks/useRandomColor';
+
 import { convertUrlToFile } from '../../utils/convertUrlToFile';
 
 const STextarea = styled.textarea`
@@ -99,8 +98,7 @@ const ClassLogModal = ({
   const [title, setTitle] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File[]>([]);
-  // const [fileName, setFileName] = useState<string[]>([]);
-  const getRandomColor = useRandomColor();
+
   const [contentType, setContentType] =
     useState<keyof SaveContents>('학습계획');
 
@@ -173,7 +171,7 @@ const ClassLogModal = ({
       submission: saveContents.제출과제,
       magnitude: saveContents.진도표,
       isAllDay: parentsIsAllDay,
-      color: getRandomColor(),
+      color: '#BAA2FC',
     };
 
     const formData = new FormData();

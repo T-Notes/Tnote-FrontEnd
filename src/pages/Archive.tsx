@@ -1,66 +1,152 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import NotSearchArchive, {
-  SSemesterContainer,
-} from '../components/Archive/NotSearchArchive';
+import NotSearchArchive from '../components/Archive/NotSearchArchive';
 import SearchInput from '../components/common/SearchInput';
-import { getSemesterSearchValue, removeSemester } from '../utils/lib/api';
+import { removeSemester, searchArchiveLog } from '../utils/lib/api';
 import _debounce from 'lodash/debounce';
-import { IcCheckedBox, IcDelete, IcUncheckedBox } from '../assets/icons';
 import Swal from 'sweetalert2';
+import DeleteButton from '../components/common/DeleteButton';
+import DropdownInput from '../components/common/DropdownInput';
+import ArchiveSearchFilterList from '../components/Archive/ArchiveSearchFilterList';
+import ScheduleCalendarSearchValue from '../components/search/ScheduleCalendarSearchValue';
+import Pagination from '../components/common/Pagination';
 
 const SArchiveWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 230px;
-  right: 300px;
-  bottom: 0;
-`;
-const SSearchValueContainer = styled.div`
-  margin-top: 40px;
-`;
-const SArchiveHeader = styled.div`
-  padding-top: 70px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  padding-right: 21.3vw;
+  padding-left: 30px;
 `;
-const SEdit = styled.button`
-  display: flex;
-  align-items: center;
-  padding-right: 15px;
-  padding-left: 15px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border: 1px solid #a6a6a6;
-  border-radius: 50px;
-  color: #a6a6a6;
-  margin-left: 20px;
 
-  font-size: 16px;
-  font-weight: 500;
+const SArchiveHeader = styled.div`
+  padding-top: 100px;
+  display: flex;
+  align-items: center;
+  padding-bottom: 60px;
 `;
-const SDelete = styled(SEdit)``;
 
 const Sh1 = styled.h1`
-  ${({ theme }) => theme.fonts.h2}
+  font-family: Pretendard;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 38.19px;
+  text-align: left;
   margin-right: auto;
+  @media (min-width: 481px) and (max-width: 767px) {
+    font-size: 24px;
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    font-size: 28px;
+  }
 `;
+const SSearchInput = styled.div`
+  width: 300px;
+  height: auto;
+  background-color: #f7f9fc;
+  @media (max-width: 1023px) {
+    width: 230px;
+  }
+`;
+const SDropdown = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 6.875vw;
+  background-color: #f7f9fc;
 
+  padding: 10px 10px 10px 16px;
+  border-radius: 4px;
+  border: 1px solid #d5d5d5;
+  opacity: 0px;
+  margin-right: 8px;
+
+  > input {
+    font-family: Pretendard;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.09px;
+    text-align: left;
+    color: #a6a6a6;
+    &::placeholder {
+      color: #a6a6a6;
+    }
+  }
+`;
 interface SearchValue {
   id: number;
-  semesterName: string;
+  studentName: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  logType: string;
+  color: string;
 }
 const Archive = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchValueList, setSetSearchValueList] = useState<SearchValue[]>([]);
-
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [isDeleteChecked, setIsDeleteChecked] = useState<number | null>(null);
+  const [isPeriodToggle, setIsPeriodToggle] = useState<boolean>(false);
+  const [isTitleToggle, setIsTitleToggle] = useState<boolean>(false);
+  const [periodOption, setPeriodOption] = useState<string>('');
+  const [titleOption, setTitleOption] = useState<string>('');
+  const [totalLogs, setTotalLogs] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [searchType, setSearchType] = useState<string>('');
+  const [dateType, setDateType] = useState<string>('');
 
   const handleDeleteModeActivate = () => {
     setIsDelete(true);
+  };
+  const handleChangePeriodToggle = () => {
+    setIsPeriodToggle(!isPeriodToggle);
+  };
+  const handleChangeTitleToggle = () => {
+    setIsTitleToggle(!isTitleToggle);
+  };
+
+  const handleClickPeriodSearchOption = (item: string) => {
+    console.log(item);
+
+    let selectedType = '';
+    if (item === '전체 기간') {
+      selectedType = 'ALL';
+    }
+    if (item === '1일') {
+      selectedType = 'ONE_DAY';
+    }
+    if (item === '1주') {
+      selectedType = 'ONE_WEEK';
+    }
+    if (item === '1개월') {
+      selectedType = 'ONE_MONTH';
+    }
+    if (item === '6개월') {
+      selectedType = 'SIX_MONTH';
+    }
+    if (item === '1년') {
+      selectedType = 'ONE_YEAR';
+    }
+    setDateType(selectedType);
+    setPeriodOption(item);
+    setIsPeriodToggle(false);
+  };
+
+  const handleClickTitleSearchOption = (item: string) => {
+    if (item === '일지 제목') {
+      setSearchType('title');
+    }
+    if (item === '내용') {
+      setSearchType('content');
+    }
+    if (item === '제목+내용') {
+      setSearchType('titleAndContent');
+    }
+    setTitleOption(item);
+    setIsTitleToggle(false);
   };
 
   const handleChangeSearchValue = (e: ChangeEvent<HTMLInputElement>) => {
@@ -69,24 +155,35 @@ const Archive = () => {
     if (!value) {
       setSetSearchValueList([]);
     }
+    setCurrentPage(0);
+  };
+  const handlePageChange = (selected: { selected: number }) => {
+    setCurrentPage(selected.selected);
   };
 
-  const handleSemesterSearch = async () => {
-    const getSearchValue = await getSemesterSearchValue(searchValue);
-    setSetSearchValueList(getSearchValue.data);
-  };
+  const handleArchiveLogsSearch = async () => {
+    const getSearchValue = await searchArchiveLog({
+      dateType: dateType,
+      searchType: searchType,
+      keyword: searchValue,
+      page: currentPage,
+      size: 8,
+    });
 
-  const debouncedSearch = _debounce(handleSemesterSearch, 500);
+    setSetSearchValueList(getSearchValue.data.logs);
+    setTotalLogs(getSearchValue.data.totalLog);
+  };
+  const debouncedSearch = _debounce(handleArchiveLogsSearch, 100);
 
   useEffect(() => {
-    if (searchValue) {
+    if (searchValue.trim() !== '') {
       debouncedSearch();
 
       return () => {
         debouncedSearch.cancel();
       };
     }
-  }, [searchValue]);
+  }, [searchValue, currentPage]);
 
   const handleSelectedSemester = (semesterId: number) => {
     navigate(`/archiveSemesterDetail/${semesterId}`);
@@ -124,71 +221,65 @@ const Archive = () => {
     <SArchiveWrapper>
       <SArchiveHeader>
         <Sh1>내 아카이브</Sh1>
-        <SearchInput
-          size="small"
-          theme={{ background: 'blue400' }}
-          handleSearchInputChange={handleChangeSearchValue}
-          placeholder="텍스트를 입력하세요"
-          value={searchValue}
+        <SDropdown>
+          <DropdownInput
+            placeholder="전체 기간"
+            value={periodOption}
+            handleChangeToggle={handleChangePeriodToggle}
+            isToggle={isPeriodToggle}
+            dropdownList={
+              <ArchiveSearchFilterList
+                option={['전체기간', '1일', '1주', '1개월', '6개월', '1년']}
+                onSelectedOption={handleClickPeriodSearchOption}
+              />
+            }
+          ></DropdownInput>
+        </SDropdown>
+        <SDropdown>
+          <DropdownInput
+            placeholder="일지 제목"
+            value={titleOption}
+            handleChangeToggle={handleChangeTitleToggle}
+            isToggle={isTitleToggle}
+            dropdownList={
+              <ArchiveSearchFilterList
+                option={['일지 제목', '내용', '제목+내용']}
+                onSelectedOption={handleClickTitleSearchOption}
+              />
+            }
+          ></DropdownInput>
+        </SDropdown>
+        <SSearchInput>
+          <SearchInput
+            handleSearchInputChange={handleChangeSearchValue}
+            placeholder="검색어를 입력하세요"
+            value={searchValue}
+          />
+        </SSearchInput>
+        <DeleteButton
+          onClick={isDelete ? handleClickDelete : handleDeleteModeActivate}
         />
-
-        {isDelete ? (
-          <SDelete onClick={handleClickDelete}>
-            삭제
-            <IcDelete />
-          </SDelete>
-        ) : (
-          <SDelete onClick={handleDeleteModeActivate}>
-            삭제
-            <IcDelete />
-          </SDelete>
-        )}
       </SArchiveHeader>
 
-      {searchValueList.length > 0 ? (
-        <SSearchValueContainer>
-          {searchValueList.map((item) => (
-            <>
-              {isDelete ? (
-                <>
-                  <SSemesterContainer key={item.id}>
-                    {isDeleteChecked === item.id ? (
-                      <IcCheckedBox
-                        onClick={() => handleDeletedCheck(item.id)}
-                      />
-                    ) : (
-                      <IcUncheckedBox
-                        onClick={() => handleDeletedCheck(item.id)}
-                      />
-                    )}
-
-                    <div onClick={() => handleSelectedSemester(item.id)}>
-                      {item.semesterName}
-                    </div>
-                  </SSemesterContainer>
-                </>
-              ) : (
-                <>
-                  <SSemesterContainer
-                    key={item.id}
-                    onClick={() => handleSelectedSemester(item.id)}
-                  >
-                    <div>{item.semesterName}</div>
-                  </SSemesterContainer>
-                </>
-              )}
-            </>
-          ))}
-        </SSearchValueContainer>
+      {searchValue && searchValueList.length > 0 ? (
+        <>
+          <ScheduleCalendarSearchValue
+            searchValueList={searchValueList}
+            searchValue={searchValue}
+          />
+          <Pagination
+            totalLogs={totalLogs}
+            handlePageChange={handlePageChange}
+          />
+        </>
       ) : (
-        <></>
-      )}
-      {!searchValue && (
-        <NotSearchArchive
-          isDelete={isDelete}
-          handleDeletedCheck={handleDeletedCheck}
-          isDeleteChecked={isDeleteChecked}
-        />
+        !searchValue && (
+          <NotSearchArchive
+            isDelete={isDelete}
+            handleDeletedCheck={handleDeletedCheck}
+            isDeleteChecked={isDeleteChecked}
+          />
+        )
       )}
     </SArchiveWrapper>
   );

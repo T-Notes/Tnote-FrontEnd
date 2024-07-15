@@ -1,20 +1,11 @@
+import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import instanceAxios from '../../utils/InstanceAxios';
-
-import {
-  ModalLayout,
-  ModalBackground,
-} from '../../components/common/styled/ModalLayout';
-import styled from 'styled-components';
+import { ModalBackground } from '../../components/common/styled/ModalLayout';
 import { IcClose } from '../../assets/icons';
 import { deletedSubject, getSelectedSubjectData } from '../../utils/lib/api';
-import ClassAddForm from './ClassAddForm';
 import Swal from 'sweetalert2';
 
-const SModalBackground = styled(ModalBackground)`
-  /* background: none; */
-`;
 const SModalLayout = styled.div`
   width: 510px;
   height: 270px;
@@ -135,44 +126,42 @@ const ClassInfoPopup = ({
       });
     });
   };
-  // 수정을 클릭하면 classAddForm 다시 띄우기
+
   const handleUpdate = () => {
     setIsEditMode(true);
     handleOpenAddClass();
     closeSubjectDataModal();
   };
   return (
-    <SModalBackground>
+    <ModalBackground>
       <SModalLayout>
-        <>
-          <STitleHeaderContainer>
-            <STitleHeader>
-              <div> {subject} 수업</div>
-              <IcClose onClick={closeSubjectDataModal} className="pointer" />
-            </STitleHeader>
-          </STitleHeaderContainer>
-          <SClassInfo>
-            <SFlex>
-              <SLabel>일시</SLabel>
-              <SContent>{classDay}</SContent>
-              <SContentClassTime>{classTime}</SContentClassTime>
-            </SFlex>
-            <SFlex>
-              <SLabel>장소</SLabel>
-              <SContent>{classLocation}</SContent>
-            </SFlex>
-            <SFlex>
-              <SLabel>메모</SLabel>
-              <SContent>{memo}</SContent>
-            </SFlex>
-          </SClassInfo>
-          <SButtons>
-            <SDelete onClick={handleDelete}>삭제</SDelete>
-            <SEdit onClick={handleUpdate}>수업 수정</SEdit>
-          </SButtons>
-        </>
+        <STitleHeaderContainer>
+          <STitleHeader>
+            <div> {subject} 수업</div>
+            <IcClose onClick={closeSubjectDataModal} className="pointer" />
+          </STitleHeader>
+        </STitleHeaderContainer>
+        <SClassInfo>
+          <SFlex>
+            <SLabel>일시</SLabel>
+            <SContent>{classDay}</SContent>
+            <SContentClassTime>{classTime}</SContentClassTime>
+          </SFlex>
+          <SFlex>
+            <SLabel>장소</SLabel>
+            <SContent>{classLocation}</SContent>
+          </SFlex>
+          <SFlex>
+            <SLabel>메모</SLabel>
+            <SContent>{memo}</SContent>
+          </SFlex>
+        </SClassInfo>
+        <SButtons>
+          <SDelete onClick={handleDelete}>삭제</SDelete>
+          <SEdit onClick={handleUpdate}>수업 수정</SEdit>
+        </SButtons>
       </SModalLayout>
-    </SModalBackground>
+    </ModalBackground>
   );
 };
 

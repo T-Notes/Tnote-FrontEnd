@@ -7,7 +7,48 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom';
 import DropdownInput from '../common/DropdownInput';
 import SemesterDropdownList from './SemesterDropdownList';
+import styled from 'styled-components';
 
+const SSemesterInputWrapper = styled.div`
+  width: 19.8vw;
+  background-color: white;
+  position: relative;
+  display: flex;
+  align-items: center;
+  opacity: 1;
+  border-radius: 8px;
+  padding: 12px 16px;
+  border: 1px solid #d5d5d5;
+  @media (max-width: 1279px) {
+    padding: 3px 10px;
+  }
+  > input {
+    font-family: Pretendard;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 33.41px;
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    &::placeholder {
+      color: #a6a6a6;
+      font-size: 24px;
+    }
+
+    @media (max-width: 1439px) {
+      font-size: 24px;
+    }
+
+    @media (max-width: 1279px) {
+      font-size: 22px;
+    }
+
+    @media (max-width: 1023px) {
+      font-size: 20px;
+    }
+  }
+`;
 interface SemesterData {
   id: string;
   semesterName: string;
@@ -78,12 +119,10 @@ const AllSemesterNamesForm = () => {
   }, [reload]);
 
   return (
-    <>
+    <SSemesterInputWrapper>
       <DropdownInput
         placeholder="학기를 추가해 주세요"
         value={defaultSemester}
-        size="small"
-        theme={{ background: 'white' }}
         dropdownList={
           semesterOptions.length > 0 ? (
             <SemesterDropdownList
@@ -98,7 +137,7 @@ const AllSemesterNamesForm = () => {
         isToggle={isDropdownSemesterToggle}
         handleChangeToggle={handleChangeSemesterToggle}
       ></DropdownInput>
-    </>
+    </SSemesterInputWrapper>
   );
 };
 

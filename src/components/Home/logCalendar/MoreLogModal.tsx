@@ -12,26 +12,24 @@ import WorkLogModal from '../../Write/WorkLogModal';
 import ConsultationRecordsModal from '../../Write/ConsultationRecordsModal';
 import StudentRecordsModal from '../../Write/StudentRecordsModal';
 
-const moreLogsCustomStyles = {
+const moreLogsCustomStyles = (top: number, left: number) => ({
   overlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   content: {
-    top: '50%',
-    left: '50%',
+    top: `${top}px`,
+    left: `${left}px`,
     right: 'auto',
     bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
     backgroundColor: '#fff',
     boxShadow: '0px 2px 4px 0px #0000004d',
-    width: '210px',
-    height: '230px',
+    width: '208px',
+    height: '240px',
     padding: '10px',
     border: '1px solid #D5D5D5',
     borderRadius: '12px',
   },
-};
+});
 
 const SDay = styled.div`
   display: flex;
@@ -48,39 +46,68 @@ const SDayContent = styled.div`
   padding-left: 15px;
 `;
 const SLog = styled.div<{ color: string }>`
+  font-family: Pretendard;
   font-size: 13px;
   font-weight: 600;
-  width: auto;
+  line-height: 15.51px;
+  text-align: center;
   display: flex;
   padding: 10px 10px 10px 16px;
   margin-bottom: 2px;
   margin-right: 3px;
   background-color: ${({ color }) => color};
-  overflow-y: scroll;
+  color: #ffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
 `;
 const SLogContainer = styled.div`
   max-height: 145px;
   overflow-y: auto;
 `;
 const SDayOfWeek = styled.p`
+  font-family: Pretendard;
   font-size: 12px;
   font-weight: 500;
+  line-height: 14.32px;
+  text-align: center;
+
   color: #2f2f2f;
   padding-bottom: 3.5px;
 `;
 const SDayOfMonth = styled.p`
+  font-family: Pretendard;
   font-size: 16px;
   font-weight: 500;
+  line-height: 27px;
+  text-align: center;
   color: #2f2f2f;
+`;
+const SLogContent = styled.div`
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 interface MoreLogs {
   clickDay: Date | undefined;
   isOpen: boolean;
   onClose: () => void;
   scheduleId: string;
+  modalPosition: {
+    top: number;
+    left: number;
+  };
 }
 
-const MoreLogModal = ({ clickDay, isOpen, onClose, scheduleId }: MoreLogs) => {
+const MoreLogModal = ({
+  clickDay,
+  isOpen,
+  onClose,
+  scheduleId,
+  modalPosition,
+}: MoreLogs) => {
   if (!clickDay) return null;
   const { openModal } = useModals();
 
@@ -126,7 +153,7 @@ const MoreLogModal = ({ clickDay, isOpen, onClose, scheduleId }: MoreLogs) => {
     <ReactModal
       isOpen={isOpen}
       ariaHideApp={false}
-      style={moreLogsCustomStyles}
+      style={moreLogsCustomStyles(modalPosition.top, modalPosition.left)}
     >
       <>
         <SDay>
@@ -147,7 +174,7 @@ const MoreLogModal = ({ clickDay, isOpen, onClose, scheduleId }: MoreLogs) => {
                 handleOpenLogModal(item);
               }}
             >
-              {item.title || item.studentName}
+              <SLogContent>{item.title || item.studentName}</SLogContent>
             </SLog>
           ))}
         </SLogContainer>

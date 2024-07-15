@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { colorMapping } from '../../utils/colorMapping';
+import { colorMapping, pointColorMapping } from '../../utils/colorMapping';
 import { getTodayTimetable } from '../../utils/lib/api';
 import ClassInfoPopup from './ClassInfoPopup';
 
@@ -14,40 +14,80 @@ interface ClassProps {
   subjectName: string;
 }
 
-const SDayTimetableWrapper = styled.div<{ color: string }>`
+const SDayTimetableWrapper = styled.div<{ color: string; $pointColor: string }>`
   display: flex;
   flex-direction: column;
-
+  border-left: 3px solid ${({ $pointColor }) => $pointColor || '#fffff'};
   background-color: ${({ color }) => color || '#fffff'};
   width: 100%;
 `;
 const SDayColumn = styled.div`
-  margin-top: 20px;
   display: flex;
   flex-direction: column;
+  margin-top: 43px;
 `;
 
 const SDayTime = styled.div`
   border-top: 1px solid #cccccc;
   display: flex;
-  width: 800px;
-  /* width: 100vw; */
+  width: 100%;
+  height: 66px;
 `;
 const SClass = styled.div`
   display: flex;
-  color: #4b4b4b;
-  font-size: 14px;
-  font-weight: 500;
   width: 100%;
 `;
 const STime = styled.div`
-  padding: 13px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 5vw;
   color: #71717a;
-  font-size: 16px;
+  font-family: Pretendard;
+  font-size: 20px;
   font-weight: 500;
+  line-height: 28px;
+  text-align: right;
+  padding: 5.5px 12px;
+
+  @media (max-width: 1439px) {
+    font-size: 18px;
+  }
+
+  @media (max-width: 1330px) {
+    font-size: 16px;
+  }
+
+  @media (max-width: 1240px) {
+    font-size: 14px;
+  }
+  @media (max-width: 1145px) {
+    width: 7vw;
+  }
+  @media (max-width: 820px) {
+    width: 10vw;
+  }
 `;
 const SClassText = styled.div`
-  padding: 5px;
+  color: #4b4b4b;
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: left;
+  padding: 5px 6px;
+
+  @media (max-width: 1380px) {
+    font-size: 16px;
+  }
+
+  @media (max-width: 1023px) {
+    font-size: 14px;
+  }
+
+  @media (max-width: 879px) {
+    font-size: 12px;
+  }
 `;
 interface DayTemplateProps {
   dayIndex: number;
@@ -118,7 +158,7 @@ const TimetableDayTemplate = memo(
       { id: 8, class: '8교시', time: '17:00' },
       { id: 9, class: '9교시', time: '18:00' },
     ];
-    // lastClass 값에 따라 필요한 시간표만 추출
+
     const filteredTimetables = timetables.slice(0, lastClassNumber);
 
     const isSameClassTime = (
@@ -166,16 +206,17 @@ const TimetableDayTemplate = memo(
             <SClass>
               {classList.map((subject, index) => {
                 const backgroundColor = colorMapping[subject.color] || '';
+                const pointBorderColor = pointColorMapping[subject.color] || '';
                 if (isSameClassTime(time.class, subject.classTime)) {
                   return (
                     <SDayTimetableWrapper
                       key={index}
                       color={backgroundColor}
+                      $pointColor={pointBorderColor}
                       onClick={() => openSubjectDataModal(subject.id)}
                     >
                       <SClassText>
                         <div>{`${subject.classLocation} ${subject.subjectName}`}</div>
-                        <br />
                         <div>
                           {subject.memo ? (
                             <div>{`메모: ${subject.memo}`}</div>
@@ -185,7 +226,7 @@ const TimetableDayTemplate = memo(
                     </SDayTimetableWrapper>
                   );
                 } else {
-                  return null; // 일치하지 않는 경우는 null을 반환하여 렌더링되지 않도록 합니다.
+                  return null;
                 }
               })}
             </SClass>

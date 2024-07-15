@@ -9,25 +9,35 @@ import WorkLogModal from '../Write/WorkLogModal';
 const SSearchValueWrapper = styled.div`
   cursor: pointer;
   display: flex;
+  flex: 1;
   padding-top: 15px;
   padding-bottom: 15px;
-  margin-left: 30px;
-  margin-right: 30px;
+  margin-left: 1.6vw;
+  margin-right: 1.6vw;
   border-bottom: 1px solid #e8e8e8;
-  font-size: 16px;
+
+  font-family: Pretendard;
+  font-size: 18px;
   font-weight: 500;
-  > div {
-    padding-right: 70px;
-  }
+  line-height: 24px;
+  text-align: left;
 `;
 const SSearchDateRange = styled.div`
-  width: 280px;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  width: 14vw;
+  white-space: nowrap;
+  overflow: hidden;
+  flex: 1;
 `;
 const SSearchTimeRange = styled.div`
   display: flex;
+  flex: 1;
   align-items: center;
-
-  width: 200px;
+  width: 16vw;
+  white-space: nowrap;
+  overflow: hidden;
 `;
 
 const SLogColor = styled.div<{ color: string }>`
@@ -36,8 +46,18 @@ const SLogColor = styled.div<{ color: string }>`
   border-radius: 50%;
   margin-right: 10px;
   background-color: ${({ color }) => color};
-`;
 
+  @media (max-width: 711px) {
+    display: none;
+  }
+`;
+const SLogContent = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+`;
 interface SearchValue {
   id: number;
   studentName: string;
@@ -48,11 +68,14 @@ interface SearchValue {
   color: string;
 }
 
-interface Props {
+interface SearchValueProps {
   searchValueList: SearchValue[];
+  searchValue: string;
 }
 
-const ScheduleCalendarSearchValue = ({ searchValueList }: Props) => {
+const ScheduleCalendarSearchValue = (props: SearchValueProps) => {
+  const { searchValueList, searchValue } = props;
+
   const { scheduleId } = useParams();
   const { openModal } = useModals();
   const isEdit = true;
@@ -75,6 +98,12 @@ const ScheduleCalendarSearchValue = ({ searchValueList }: Props) => {
         const searchEndDate = item.endDate.slice(0, 10);
         const searchStartTime = item.startDate.slice(11, 16);
         const searchEndTime = item.endDate.slice(11, 16);
+
+        const content = item.studentName || item.title;
+        const highlightedContent = content.replace(
+          new RegExp(searchValue, 'gi'),
+          (match) => `<span style="color: #632CFA">${match}</span>`,
+        );
         return (
           <SSearchValueWrapper
             key={index}
@@ -85,9 +114,14 @@ const ScheduleCalendarSearchValue = ({ searchValueList }: Props) => {
             </SSearchDateRange>
             <SSearchTimeRange>
               <SLogColor color={item.color}></SLogColor>
-              {searchStartTime}~{searchEndTime}
+              <p>
+                {searchStartTime}~{searchEndTime}
+              </p>
             </SSearchTimeRange>
-            <div>{item.studentName || item.title}</div>
+
+            <SLogContent
+              dangerouslySetInnerHTML={{ __html: highlightedContent }}
+            />
           </SSearchValueWrapper>
         );
       })}

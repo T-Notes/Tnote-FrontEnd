@@ -28,15 +28,17 @@ const SItem = styled.li`
 `;
 const WriteDropdownList = ({
   onClickOpenModal,
+  toggle,
 }: {
   onClickOpenModal: (option: string) => void;
+  toggle: () => void;
 }) => {
   const options = ['학급일지', '업무일지', '상담기록', '학생 관찰 일지'];
   const handleClickOpenModal = (option: string) => {
     onClickOpenModal(option);
   };
   return (
-    <>
+    <div>
       <SWrapper>
         {options.map((option, idx) => (
           <SList key={idx} onClick={() => handleClickOpenModal(option)}>
@@ -44,7 +46,7 @@ const WriteDropdownList = ({
           </SList>
         ))}
       </SWrapper>
-    </>
+    </div>
   );
 };
 

@@ -11,8 +11,6 @@ import { CustomModalProps, DateProps } from './ClassLogModal';
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 import { getProceedingDetailData } from '../../utils/lib/api';
-import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
-import useRandomColor from '../../utils/useHooks/useRandomColor';
 import { convertUrlToFile } from '../../utils/convertUrlToFile';
 
 const STextarea = styled.textarea`
@@ -133,8 +131,6 @@ const WorkLogModal = ({
   const [workContents, setWorkContents] = useState<string>('');
   const [parentsIsAllDay, setParentsIsAllDay] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<File[]>([]);
-  const [fileName, setFileName] = useState<string[]>([]);
-  const getRandomColor = useRandomColor();
   const formData = new FormData();
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -225,7 +221,7 @@ const WorkLogModal = ({
             location: place,
             workContents: workContents,
             isAllDay: parentsIsAllDay,
-            color: getRandomColor(),
+            color: '#FF6F6F',
           };
 
           if (imgUrl.length >= 1) {

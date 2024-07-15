@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import ReactModal from 'react-modal';
-
 import { searchCustomStyles } from '../common/styled/ModalLayout';
-
 import styled from 'styled-components';
 import { IcClose } from '../../assets/icons';
 import { Button } from '../common/styled/Button';
@@ -53,7 +51,17 @@ const SLabel = styled.label`
 const SPoint = styled.span`
   color: ${({ theme }) => theme.colors.purple100};
 `;
-
+const SSearchContainer = styled.div`
+  width: 300px;
+  background-color: #f7f9fc;
+  > input {
+    font-family: Pretendard;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.09px;
+    text-align: left;
+  }
+`;
 interface searchModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -171,13 +179,14 @@ const UserSchoolModal = (props: searchModalProps) => {
                 <SPoint>*</SPoint>
               </SLabel>
               <SSearchWrapper>
-                <SearchInput
-                  size="small"
-                  theme={{ background: 'blue400' }}
-                  handleSearchInputChange={handleSchoolSearchInputChange}
-                  placeholder="텍스트를 입력하세요"
-                  value={schoolSearchData.schoolName}
-                ></SearchInput>
+                <SSearchContainer>
+                  <SearchInput
+                    handleSearchInputChange={handleSchoolSearchInputChange}
+                    placeholder="텍스트를 입력하세요"
+                    value={schoolSearchData.schoolName}
+                  ></SearchInput>
+                </SSearchContainer>
+
                 {showSchoolDataLoader && (
                   <SchoolDataLoader
                     schoolData={schoolSearchData}

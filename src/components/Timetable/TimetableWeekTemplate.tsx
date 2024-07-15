@@ -2,53 +2,87 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ClassInfoPopup from './ClassInfoPopup';
-import { colorMapping } from '../../utils/colorMapping';
+import { colorMapping, pointColorMapping } from '../../utils/colorMapping';
 import { weekSchedule } from '../../utils/lib/api';
 
 const STimetableWrapper = styled.table`
-  margin-top: 30px;
-  width: auto;
-  height: auto;
+  margin-top: 43px;
+  width: 100%;
   border-collapse: collapse;
 `;
 
 const SDaysWrapper = styled.td`
   border-bottom: 1px solid #ddd;
   border-right: 1px solid #ddd;
-  width: 145px;
-  height: 60px;
+  width: 10vw;
+  height: 70px;
 `;
 
 const SThead = styled.td`
   border-bottom: 1px solid #ddd;
+
+  font-family: Pretendard;
   font-size: 12px;
-  color: #5b5b5b;
   font-weight: 700;
+  line-height: 14.32px;
+  text-align: left;
+  color: #5b5b5b;
 `;
 
-const SSubjectBox = styled.div<{ color: string }>`
+const SSubjectBox = styled.td<{ color: string; $pointColor: string }>`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 70px;
   cursor: pointer;
-  font-size: 12px;
-  height: 100%;
-  gap: 4px;
-  padding-top: 11px;
-  padding-left: 10px;
-  color: #5b5b5b;
+  padding: 6px;
+  border-left: 3px solid ${({ $pointColor }) => $pointColor || '#fffff'};
   background-color: ${({ color }) => color || '#fffff'};
-  width: auto;
+  color: #5b5b5b;
+`;
+const SClassAndTime = styled.td`
+  color: #5b5b5b;
+  padding-right: 12px;
+  font-family: Pretendard;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 14.32px;
+  text-align: right;
+`;
+const SSubjectName = styled.p`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-`;
-const SClassAndTime = styled.td`
-  padding: 10px;
+
+  font-family: Pretendard;
   font-size: 12px;
-  color: #5b5b5b;
   font-weight: 700;
+  line-height: 14.32px;
+  text-align: left;
 `;
 const SLocation = styled.p`
-  font-weight: 600;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  font-family: Pretendard;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 14.32px;
+  text-align: left;
 `;
+const SMemo = styled.p`
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  font-family: Pretendard;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 14.32px;
+  text-align: left;
+`;
+
 interface TimetableTemplate {
   setReloadTrigger: React.Dispatch<React.SetStateAction<boolean>>;
   reloadTrigger: boolean;
@@ -86,7 +120,6 @@ const TimetableWeekTemplate = ({
     setIsOpenSubjectDataModal(false);
   };
 
-  // api 연결 후 주석 제거
   useEffect(() => {
     if (scheduleId) {
       const getTimetable = async () => {
@@ -173,16 +206,20 @@ const TimetableWeekTemplate = ({
                     isSameClassTime(item.classTime, t.class)
                   ) {
                     const backgroundColor = colorMapping[item.color] || '';
-
+                    const pointBorderColor =
+                      pointColorMapping[item.color] || '';
                     return (
                       <SSubjectBox
                         key={item.id}
                         onClick={() => openSubjectDataModal(item.id)}
                         color={backgroundColor}
+                        $pointColor={pointBorderColor}
                       >
-                        <SLocation>{item.subjectName}</SLocation>
-                        <p>{item.classLocation}</p>
-                        {item.memo ? <p>{`메모: ${item.memo}`}</p> : null}
+                        <SSubjectName>{item.subjectName}</SSubjectName>
+                        <SLocation>{item.classLocation}</SLocation>
+                        {item.memo ? (
+                          <SMemo>{`메모: ${item.memo}`}</SMemo>
+                        ) : null}
                       </SSubjectBox>
                     );
                   }

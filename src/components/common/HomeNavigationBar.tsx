@@ -19,91 +19,127 @@ import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
 import StudentRecordsModal from '../Write/StudentRecordsModal';
 import { useModals } from '../../utils/useHooks/useModals';
 
-//** styled **//
 const SLeftSidebar = styled.div`
   display: flex;
   flex-direction: column;
-  width: 200px;
+  width: 13.54vw;
   height: 100vh;
-  flex-shrink: 0;
-  background-color: ${({ theme }) => theme.colors.blue400};
-  position: fixed;
-  top: 0;
-  left: 0;
   border-right: 1px solid #ccc;
+  background-color: #f7f9fc;
   .active {
     background-color: #f0ebff;
+  }
+  @media (max-width: 960px) {
+    display: none;
   }
 `;
 const SHomeCategoryGroup = styled.div`
   border-bottom: 1px solid #ccc;
-  margin-bottom: 15px;
+  margin-bottom: 17px;
 `;
 const SCategory = styled.div`
   display: flex;
   align-items: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 35px;
-  cursor: pointer;
+  top: 90px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: calc(13.5%);
+  padding-right: 0px;
+  gap: 14px;
+  opacity: 0px;
 `;
 const SLogo = styled.div`
-  padding-left: 20px;
-  padding-right: 30px;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  padding-left: calc(13.5%);
+  padding-right: 25px;
+
+  @media (min-width: 1440px) {
+    svg {
+      width: 146px;
+      height: 40px;
+    }
+  }
 `;
 const SCategoryText = styled.div`
-  ${({ theme }) => theme.fonts.category};
-  color: ${({ theme }) => theme.colors.gray400};
-  margin-left: 3px;
+  font-family: Inter;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 19.36px;
+  text-align: left;
+  color: #666666;
 `;
 const SUserProfileInfoWrapper = styled.div`
   display: flex;
   align-items: center;
-  width: 200px;
+  margin-top: auto;
   height: 83px;
-  border: none;
+  padding-left: calc(6.5%);
+  padding-right: calc(6.5%);
+  gap: 6px;
   border-top: 1px solid #d5d5d5;
-  position: fixed;
-  bottom: 0;
-  padding: 8px;
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    svg {
+      max-width: 42px;
+      max-height: 42px;
+    }
+  }
 `;
 const SUserProfile = styled.div`
-  width: 140px;
-  height: auto;
+  width: 8vw;
   cursor: pointer;
-
-  margin-left: 5px;
-  overflow-wrap: break-word;
 `;
 const SUserName = styled.div`
-  font-size: 16px;
+  font-family: Pretendard;
+  font-size: 14px;
   font-weight: 600;
-  color: ${({ theme }) => theme.colors.gray800};
+  line-height: 16.71px;
+  text-align: left;
+  color: #444444;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `;
 const SUserEmail = styled.div`
-  font-size: 14px;
+  font-family: Pretendard;
+  font-size: 12px;
   font-weight: 500;
-  color: ${({ theme }) => theme.colors.gray800};
+  line-height: 14.32px;
+  text-align: left;
+  color: #5b5b5b;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `;
 const SWriteBtn = styled.div`
-  width: 130px;
-  height: 40px;
-  margin-left: 30px;
-  padding: 8px 20px 8px 24px;
-  background-color: #632cfa;
-  color: white;
-  border-radius: 999px;
+  position: relative;
   display: flex;
   align-items: center;
-  opacity: 1;
-  position: relative;
+  margin-left: 6.5%;
+  justify-content: center;
+  max-width: 116px;
+  height: auto;
+  padding: 8px 20px 8px 20px;
+  gap: 0px;
+  border-radius: 999px;
+  background-color: #632cfa;
+  color: white;
+  .text {
+    font-family: Pretendard;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.09px;
+    text-align: left;
+  }
 `;
 const SDropdownIcon = styled.div`
   margin-left: auto;
 `;
-
+const SProfileContainer = styled.div`
+  width: 42px;
+  max-height: 42px;
+`;
 const HomeNavigationBar = () => {
   const { scheduleId } = useParams();
   const userId = localStorage.getItem('userId');
@@ -120,7 +156,7 @@ const HomeNavigationBar = () => {
   const closeSettingModal = () => {
     setIsOpenSetting(false);
   };
-  // 렌더링 되자마자 회원정보 가져오기
+
   useEffect(() => {
     const getUserData = async () => {
       try {
@@ -203,16 +239,21 @@ const HomeNavigationBar = () => {
         </SHomeCategoryGroup>
 
         <SWriteBtn onClick={dropdownToggle} className="pointer">
-          글쓰기
+          <p className="text">글쓰기</p>
           <SDropdownIcon>
             {isDropdown ? <IcNavigationClose /> : <IcNavigationOpen />}
           </SDropdownIcon>
           {isDropdown && (
-            <WriteDropdownList onClickOpenModal={handleClickOpenModal} />
+            <WriteDropdownList
+              onClickOpenModal={handleClickOpenModal}
+              toggle={dropdownToggle}
+            />
           )}
         </SWriteBtn>
         <SUserProfileInfoWrapper>
-          <IcProfile />
+          <SProfileContainer>
+            <IcProfile />
+          </SProfileContainer>
           <SUserProfile>
             <SUserName onClick={openSettingModal}>
               {`${name} 선생님`}

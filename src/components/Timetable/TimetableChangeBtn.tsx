@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { css } from 'styled-components';
 import { IcRoundBackBtn, IcRoundFrontBtn } from '../../assets/icons';
 import TimetableDayTemplate from './TimetableDayTemplate';
 import TimetableWeekTemplate from './TimetableWeekTemplate';
@@ -8,38 +7,56 @@ import TimetableWeekTemplate from './TimetableWeekTemplate';
 const SWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 24px;
 `;
 const STimetableButton = styled.button<{ selected: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 70px;
-  height: 28px;
-  padding: 10px;
   border-radius: 8px;
   border: 1px;
   gap: 10px;
   border: 1px solid #e8e8e8;
   margin-right: 10px;
+  padding: 4px 15.5px 4px 15.5px;
+  font-family: Inter;
+  font-size: 14px;
   font-weight: 500;
-
-  background-color: ${(props) => (props.selected ? '#ff6f6f' : '#ffff')};
-  color: ${(props) => (props.selected ? '#ffff' : '#5b5b5b')};
+  line-height: 20px;
+  text-align: left;
+  background-color: ${(props) => (props.selected ? '#ff6f6f' : '#FFFFFF')};
+  color: ${(props) => (props.selected ? '#FFFFFF' : '#5b5b5b')};
 `;
 
-const STimetableButtonWeek = styled(STimetableButton)`
-  margin-right: 30px;
-`;
 const SDay = styled.div`
-  font-size: 20px;
+  display: flex;
+  align-items: center;
+  font-family: Pretendard;
+  font-size: 24px;
   font-weight: 500;
-  margin-left: 20px;
-`;
-const SIcRoundBackBtn = styled(IcRoundBackBtn)`
-  margin-right: 15px;
-`;
+  line-height: 28.64px;
+  text-align: left;
 
+  @media (max-width: 1380px) {
+    font-size: 22px;
+  }
+
+  @media (max-width: 1023px) {
+    font-size: 20px;
+  }
+
+  @media (max-width: 879px) {
+    font-size: 16px;
+  }
+`;
+const SIcRoundPrevBtn = styled(IcRoundBackBtn)`
+  margin-right: 14px;
+  margin-left: 19px;
+`;
+const SIcRoundNextBtn = styled(IcRoundFrontBtn)`
+  margin-right: 20px;
+`;
 interface TodayClick {
   isTodayClick: boolean;
   setIsTodayClick: React.Dispatch<React.SetStateAction<boolean>>;
@@ -63,7 +80,6 @@ const TimetableChangeBtn = ({
   const initialState = new Date().getDay();
   const [selectedButton, setSelectedButton] = useState<string>('');
   const [dayIndex, setDayIndex] = useState<number>(initialState);
-  // const [isAddClass, setIsAddClass] = useState<boolean>(false);
   const [lastClass, setLastClass] = useState<string>('9교시');
 
   const handleClickTodayButton = (buttonType: string) => {
@@ -93,19 +109,19 @@ const TimetableChangeBtn = ({
         >
           오늘
         </STimetableButton>
-        <STimetableButtonWeek
+        <STimetableButton
           onClick={() => handleClickWeekButton('WEEK')}
           selected={selectedButton === 'WEEK' || selectedButton === ''}
         >
           일주일
-        </STimetableButtonWeek>
+        </STimetableButton>
 
-        <SIcRoundBackBtn
+        <SIcRoundPrevBtn
           className="pointer"
           style={{ display: isTodayClick ? 'inline-block' : 'none' }}
           onClick={() => moveDay('prev')}
         />
-        <IcRoundFrontBtn
+        <SIcRoundNextBtn
           className="pointer"
           style={{ display: isTodayClick ? 'inline-block' : 'none' }}
           onClick={() => moveDay('next')}

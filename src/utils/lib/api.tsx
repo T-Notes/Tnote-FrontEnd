@@ -78,68 +78,115 @@ export const getSchoolSearchValue = async (
 interface TodoProps {
   content: string | undefined;
 }
-export const createTodo = async (
-  scheduleId: string | undefined,
-  todoData: TodoProps,
-  date: string | undefined,
-) => {
-  try {
-    const response = await instanceAxios.post(
-      `/tnote/todos/${scheduleId}`,
-      todoData,
-      {
-        params: { date },
-      },
-    );
-    return response.data;
-  } catch (error) {
-    throw new Error('Todo 작성을 게시하는데 에러가 발생했습니다.');
-  }
+// export const createTodo = async (
+//   scheduleId: string | undefined,
+//   todoData: TodoProps,
+//   date: string | undefined,
+// ) => {
+//   try {
+//     const response = await instanceAxios.post(
+//       `/tnote/todos/${scheduleId}`,
+//       todoData,
+//       {
+//         params: { date },
+//       },
+//     );
+//     return response.data;
+//   } catch (error) {
+//     throw new Error('Todo 작성을 게시하는데 에러가 발생했습니다.');
+//   }
+// };
+interface TodoPost {
+  scheduleId: string;
+  content: string;
+  date: string | undefined;
+}
+export const createTodo = async ({ scheduleId, content, date }: TodoPost) => {
+  const { data } = await instanceAxios.post(
+    `/tnote/todos/${scheduleId}`,
+    { content },
+    {
+      params: { date },
+    },
+  );
+  return data.data;
+};
+interface TodoUpdate {
+  scheduleId: string;
+  todoId: number;
+  content: string;
+  date: string | undefined;
+  status: boolean;
+}
+// export const updateTodo = async () => {
+//   try {
+//     const response = await instanceAxios.patch(
+//       `/tnote/todos/${scheduleId}/${todoId}`,
+//       todoData,
+//       {
+//         params: { date },
+//       },
+//     );
+//     return response;
+//   } catch (error) {
+//     throw new Error('todo 수정에 에러가 발생했습니다.');
+//   }
+// };
+export const updateTodo = async ({
+  scheduleId,
+  todoId,
+  content,
+  date,
+  status,
+}: TodoUpdate) => {
+  const { data } = await instanceAxios.patch(
+    `/tnote/todos/${scheduleId}/${todoId}`,
+    { content, status },
+    {
+      params: { date },
+    },
+  );
+  return data;
 };
 
-export const updateTodo = async (
-  scheduleId: string | undefined,
-  todoId: number | undefined,
-  todoData: TodoProps,
-  date: string | undefined,
-) => {
-  try {
-    const response = await instanceAxios.patch(
-      `/tnote/todos/${scheduleId}/${todoId}`,
-      todoData,
-      {
-        params: { date },
-      },
-    );
-    return response;
-  } catch (error) {
-    throw new Error('todo 수정에 에러가 발생했습니다.');
-  }
-};
+// export const getTodo = async (
+//   scheduleId: string | undefined,
+//   date: string | undefined,
+// ) => {
+//   try {
+//     const response = await instanceAxios.get(`/tnote/todos/${scheduleId}`, {
+//       params: date,
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.log(error);
 
-export const getTodo = async (
-  scheduleId: string | undefined,
-  date: string | undefined,
-) => {
+//     throw new Error('todo list를 조회하는데 에러가 발생했습니다.');
+//   }
+// };
+
+export const getTodo = async ({ queryKey }: { queryKey: string[] }) => {
+  const [_, scheduleId, date] = queryKey; // queryKey에서 scheduleId와 date 추출
+
   try {
     const response = await instanceAxios.get(`/tnote/todos/${scheduleId}`, {
-      params: date,
+      params: { date },
     });
-    return response.data;
+    return response.data.data;
   } catch (error) {
     throw new Error('todo list를 조회하는데 에러가 발생했습니다.');
   }
 };
 
-export const removeTodo = async (
-  scheduleId: string | undefined,
-  todoId: number | undefined,
-) => {
-  try {
-    await instanceAxios.delete(`/tnote/todos/${scheduleId}/${todoId}`);
-  } catch (error) {
-    throw new Error('todo 삭제 에러가 발생했습니다.');
-  }
+interface TodoDelete {
+  scheduleId: string;
+  todoId: number;
+}
+export const removeTodo = async ({ scheduleId, todoId }: TodoDelete) => {
+  const { data } = await instanceAxios.delete(
+    `/tnote/todos/${scheduleId}/${todoId}`,
+  );
+  return data;
 };
 interface CreateSemester {
   semesterName: string;
@@ -267,16 +314,6 @@ export const logout = async () => {
   } catch {}
 };
 
-// 계정탈퇴
-
-export const deletedAccount = async (code: string | null) => {
-  try {
-    const response = await instanceAxios.delete(`/tnote/user?code=${code}`);
-    console.log(response);
-    localStorage.clear();
-    return response;
-  } catch {}
-};
 export interface SubjectDate {
   subjectName: string;
   classTime: string;
@@ -385,7 +422,7 @@ export const getAllLogsBySchedule = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `tnote/home/${scheduleId}/LogsByFilter?page=${page}&size=8&logType=ALL`,
+      `tnote/archive/${scheduleId}/LogsByFilter?page=${page}&size=8&logType=ALL`,
     );
     return response.data;
   } catch {}
@@ -399,43 +436,30 @@ export const getAllLogsByMonth = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/home/${scheduleId}/monthlyLogs?date=${date}`,
+      `/tnote/archive/${scheduleId}/monthlyLogs?date=${date}`,
     );
     return response.data;
   } catch {}
-};
-
-// 학기 검색
-export const getSemesterSearchValue = async (semesterName: string) => {
-  try {
-    const response = await instanceAxios.get('/tnote/home/semester', {
-      params: { semesterName: semesterName }, // 객체 형태로 전달,
-    });
-    return response.data;
-  } catch (err) {
-    throw new Error('학기 검색 실패');
-  }
 };
 
 // 최근 조회한 일지
 export const getRecentLogs = async (scheduleId: string | undefined) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/home/recentLogs/${scheduleId}`,
+      `/tnote/archive/recentLogs/${scheduleId}`,
     );
     return response.data;
   } catch {}
 };
 
 // 일지 검색
-
 export const getSearchLogsValue = async (
   keyword: string,
   scheduleId: string | undefined,
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/home/searching/${scheduleId}`,
+      `/tnote/archive/searching/${scheduleId}`,
       {
         params: { keyword: keyword },
       },
@@ -468,7 +492,7 @@ export const getFilteredLogsByDate = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `tnote/home/${scheduleId}/dateLogs?startDate=${startDate}&endDate=${endDate}&page=0&size=8&logType=${logType}`,
+      `tnote/archive/${scheduleId}/dateLogs?startDate=${startDate}&endDate=${endDate}&page=0&size=8&logType=${logType}`,
     );
 
     return response.data;
@@ -545,7 +569,7 @@ export const getAllTaskByDate = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/home/${scheduleId}/dailyLogs`,
+      `/tnote/archive/${scheduleId}/dailyLogs`,
       {
         params: { date: date },
       },
@@ -570,6 +594,49 @@ export const weekSchedule = async (scheduleId: string | undefined) => {
     const response = await instanceAxios.get(
       `/tnote/schedule/week/${scheduleId}`,
     );
+    return response.data;
+  } catch {}
+};
+
+// 일지 다중 삭제 기능
+interface LogsProps {
+  classLogIds: number[];
+  proceedingIds: number[];
+  observationIds: number[];
+  consultationIds: number[];
+}
+export const logsDelete = async (logs: LogsProps) => {
+  try {
+    const response = await instanceAxios.post(
+      '/tnote/archive/deleteLogs',
+      logs,
+    );
+    return response.data;
+  } catch {}
+};
+
+interface SearchParams {
+  dateType?: string;
+  searchType?: string;
+  keyword?: string;
+  page?: number;
+  size?: number;
+}
+
+// 아카이브 내 일지 검색 기능
+export const searchArchiveLog = async (params: SearchParams) => {
+  const {
+    dateType = '',
+    searchType = '',
+    keyword = '',
+    page = 0,
+    size = 8,
+  } = params;
+
+  try {
+    const response = await instanceAxios.get('/tnote/archive/searching/log', {
+      params: { dateType, searchType, keyword, page, size },
+    });
     return response.data;
   } catch {}
 };

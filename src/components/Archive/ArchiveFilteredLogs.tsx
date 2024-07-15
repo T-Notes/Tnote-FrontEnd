@@ -3,59 +3,63 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import {
-  IcBlackDelete,
   IcCheckedBox,
   IcCloseDropdownSmall,
   IcOpenDropdownSmall,
   IcUncheckedBox,
 } from '../../assets/icons';
-import instanceAxios from '../../utils/InstanceAxios';
 import {
   getAllClassLog,
   getAllProceedings,
   getAllConsultations,
   getAllObservation,
   getAllLogsBySchedule,
+  logsDelete,
 } from '../../utils/lib/api';
 import { useToggle } from '../../utils/useHooks/useToggle';
+import DeleteButton from '../common/DeleteButton';
 import Pagination from '../common/Pagination';
 
-const SDelete = styled.button`
-  display: flex;
-  align-items: center;
-  padding-right: 15px;
-  padding-left: 15px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border: 1px solid #a6a6a6;
-  border-radius: 50px;
-  color: #5b5b5b;
-  margin-right: 20px;
-  font-size: 16px;
-  font-weight: 500;
-  > p {
-    padding-right: 3px;
-  }
-`;
 const SFilter = styled.button`
   display: flex;
   position: relative;
   align-items: center;
-  padding-right: 15px;
-  padding-left: 15px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  height: 40px;
+  padding: 10px 12px 10px 12px;
+  gap: 8px;
   border: 1px solid #a6a6a6;
   border-radius: 50px;
-  color: #5b5b5b;
-  font-size: 16px;
-  font-weight: 500;
+  margin-left: 24px;
+  .text {
+    font-family: Pretendard;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 23.87px;
+    text-align: center;
+    color: #a6a6a6;
+  }
+
+  @media (max-width: 767px) {
+    .text {
+      font-size: 14px;
+    }
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .text {
+      font-size: 16px;
+    }
+  }
 `;
 const SArchiveButtons = styled.div`
-  margin-top: 30px;
-  margin-bottom: 20px;
-  margin-left: auto;
   display: flex;
+  margin-top: 50px;
+  margin-bottom: 40px;
+  margin-left: auto;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 23.87px;
+  text-align: center;
 `;
 const SDropdownList = styled.ul`
   ${({ theme }) => theme.fonts.caption}
@@ -87,9 +91,20 @@ const SLogContainer = styled.div`
   border-radius: 8px;
   padding: 20px;
   color: #5b5b5b;
-  font-size: 16px;
-  font-weight: 500;
   margin-bottom: 5px;
+
+  font-family: Pretendard;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 23.87px;
+  text-align: left;
+
+  @media (max-width: 1023px) {
+    font-size: 18px;
+  }
+  @media (max-width: 767px) {
+    font-size: 16px;
+  }
 `;
 const SCreatedAt = styled.div`
   margin-left: auto;
@@ -99,9 +114,19 @@ const SLogContainerHeader = styled.div`
   border: 1px solid #e8e8e8;
   border-radius: 8px;
   padding: 20px;
-  font-size: 16px;
-  font-weight: 500;
   background-color: #f7f9fc;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 28px;
+  text-align: center;
+
+  @media (max-width: 1023px) {
+    font-size: 18px;
+  }
+  @media (max-width: 767px) {
+    font-size: 16px;
+  }
 `;
 const SDate = styled.div`
   margin-left: auto;
@@ -112,9 +137,27 @@ const SLogType = styled.span`
 const SCheckedBox = styled.div`
   padding-right: 20px;
 `;
+const SFilterIcon = styled.div`
+  width: 24px;
+  height: 24px;
 
+  @media (min-width: 481px) and (max-width: 767px) {
+    width: 18px;
+    height: 18px;
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    width: 20px;
+    height: 20px;
+  }
+`;
 interface Archive {
   scheduleId: string | undefined;
+}
+interface DeleteIds {
+  classLogIds: number[];
+  proceedingIds: number[];
+  observationIds: number[];
+  consultationIds: number[];
 }
 const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const navigate = useNavigate();
@@ -123,8 +166,10 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const options = ['전체', '학급일지', '업무일지', '상담기록', '학생관찰기록'];
 
   const [isDelete, setIsDelete] = useState<boolean>(false);
-  const [checkedDeleteId, setCheckedDeleteId] = useState<number | null>(null);
-  const [logType, setLogType] = useState<string>('');
+  const [checkedDeleteIds, setCheckedDeleteIds] = useState<
+    { id: number; logType: string }[]
+  >([]);
+
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalLogs, setTotalLogs] = useState<number>(0);
   const { handleChangeToggle, isToggle } = useToggle();
@@ -136,9 +181,18 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const handleDeleteModeActivate = () => {
     setIsDelete(true);
   };
+
   const handleDeletedCheck = (item: number, logType: string) => {
-    setLogType(logType);
-    setCheckedDeleteId((prev) => (prev === item ? null : item));
+    setCheckedDeleteIds((prev) => {
+      const alreadyChecked = prev.find(
+        (log) => log.id === item && log.logType === logType,
+      );
+      if (alreadyChecked) {
+        return prev.filter((log) => log.id !== item || log.logType !== logType);
+      } else {
+        return [...prev, { id: item, logType: logType }];
+      }
+    });
   };
 
   const handleClickFilter = async (option: string) => {
@@ -187,22 +241,28 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
     }
   }, [currentPage]);
 
-  const handleDelete = () => {
-    let logEndPointMiddle = '';
+  const handleDelete = async () => {
+    const logsDeleteIds: DeleteIds = {
+      classLogIds: [],
+      proceedingIds: [],
+      observationIds: [],
+      consultationIds: [],
+    };
+    if (checkedDeleteIds) {
+      for (const log of checkedDeleteIds) {
+        if (log.logType === 'CLASS_LOG') {
+          logsDeleteIds.classLogIds.push(log.id);
+        } else if (log.logType === 'PROCEEDING') {
+          logsDeleteIds.proceedingIds.push(log.id);
+        } else if (log.logType === 'OBSERVATION') {
+          logsDeleteIds.observationIds.push(log.id);
+        } else if (log.logType === 'CONSULTATION') {
+          logsDeleteIds.consultationIds.push(log.id);
+        }
+      }
+    }
 
-    if (logType === 'CLASS_LOG') {
-      logEndPointMiddle = 'classLog';
-    }
-    if (logType === 'PROCEEDING') {
-      logEndPointMiddle = 'proceeding';
-    }
-    if (logType === 'CONSULTATION') {
-      logEndPointMiddle = 'consultation';
-    }
-    if (logType === 'OBSERVATION') {
-      logEndPointMiddle = 'observation';
-    }
-    if (checkedDeleteId) {
+    if (checkedDeleteIds) {
       Swal.fire({
         title: '항목 삭제',
         text: '정말 삭제하시겠습니까?',
@@ -212,11 +272,9 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
         showCancelButton: true,
       }).then((res) => {
         if (res.isConfirmed) {
-          instanceAxios
-            .delete(`/tnote/${logEndPointMiddle}/${checkedDeleteId}`)
-            .then((res) => {
-              window.location.reload();
-            });
+          logsDelete(logsDeleteIds).then((res) => {
+            window.location.reload();
+          });
         }
       });
     } else {
@@ -227,34 +285,31 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   };
 
   const handleChangePageAtLogs = (id: number, type: string) => {
-    if (type === 'CLASS_LOG') {
-      navigate(`/archive/classLog/${scheduleId}/${id}`);
-    } else if (type === 'PROCEEDING') {
-      navigate(`/archive/proceeding/${scheduleId}/${id}`);
-    } else if (type === 'CONSULTATION') {
-      navigate(`/archive/consultation/${scheduleId}/${id}`);
-    } else if (type === 'OBSERVATION') {
-      navigate(`/archive/observation/${scheduleId}/${id}`);
-    }
+    navigate(`/archive/logDetail/${type}/${id}`);
+    // if (type === 'CLASS_LOG') {
+    //   navigate(`/archive/classLog/${scheduleId}/${id}`);
+    // } else if (type === 'PROCEEDING') {
+    //   navigate(`/archive/proceeding/${scheduleId}/${id}`);
+    // } else if (type === 'CONSULTATION') {
+    //   navigate(`/archive/consultation/${scheduleId}/${id}`);
+    // } else if (type === 'OBSERVATION') {
+    //   navigate(`/archive/observation/${scheduleId}/${id}`);
+    // }
   };
 
   return (
     <>
       <SArchiveButtons>
-        {isDelete ? (
-          <SDelete onClick={handleDelete}>
-            <p>삭제</p>
-            <IcBlackDelete />
-          </SDelete>
-        ) : (
-          <SDelete onClick={handleDeleteModeActivate}>
-            <p>삭제</p>
-            <IcBlackDelete />
-          </SDelete>
-        )}
+        <DeleteButton
+          onClick={isDelete ? handleDelete : handleDeleteModeActivate}
+        />
+
         <SFilter onClick={handleChangeToggle}>
-          필터
-          {isToggle ? <IcCloseDropdownSmall /> : <IcOpenDropdownSmall />}
+          <p className="text">필터</p>
+          <SFilterIcon>
+            {isToggle ? <IcCloseDropdownSmall /> : <IcOpenDropdownSmall />}
+          </SFilterIcon>
+
           {isToggle && (
             <SDropdownList>
               {options.map((option) => (
@@ -271,7 +326,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
           )}
         </SFilter>
       </SArchiveButtons>
-      {/* 일지 전체 조회 */}
+
       <div>
         <SLogContainerHeader>
           <div>이름</div>
@@ -281,11 +336,14 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
         {filteredLogsList &&
           filteredLogsList.map((item, index) => {
             const newTimestamp = item.createdAt.slice(0, 10);
+            const isChecked = checkedDeleteIds.some(
+              (log) => log.id === item.id && log.logType === item.logType,
+            );
             return (
               <SLogContainer key={index}>
                 {isDelete && (
                   <>
-                    {checkedDeleteId === item.id && logType === item.logType ? (
+                    {isChecked ? (
                       <SCheckedBox>
                         <IcCheckedBox
                           onClick={() =>

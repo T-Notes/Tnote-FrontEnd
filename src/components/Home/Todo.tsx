@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent, memo, SetStateAction, useEffect, useState } from 'react';
 import {
   IcAddWhite,
@@ -14,199 +16,323 @@ import {
   updateTodo,
 } from '../../utils/lib/api';
 import { useParams } from 'react-router-dom';
-import Swal from 'sweetalert2';
-import { Task } from './TaskSidebar';
 
 const STodoWrapper = styled.div``;
+const STodoInputWrapper = styled.div`
+  margin-bottom: 26px;
+  padding-left: 10px;
+  @media (max-height: 720px) {
+    margin-bottom: 10px;
+  }
+`;
 const STodoHeader = styled.div`
   display: flex;
+  align-items: center;
+  padding-bottom: 10px;
 `;
 const SInput = styled.input<{ $completed: boolean }>`
-  margin-left: 20px;
-  font-size: 15px;
-  font-weight: 500;
+  margin-left: 1vw;
+  padding: 0px;
   color: #2f2f2f;
   text-decoration: ${(props) => (props.$completed ? 'line-through' : 'none')};
+  font-family: Pretendard;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+  width: 60%;
+  overflow: hidden;
+  white-space: nowrap;
+  &:focus {
+    outline: none;
+    border-bottom: 2px solid #482ee6;
+  }
 `;
 const SFont = styled.div`
-  font-size: 18px;
-  font-weight: 500;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  font-family: Pretendard;
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 27.45px;
+  text-align: left;
+  @media (max-height: 720px) {
+    font-size: 20px;
+  }
 `;
 const STodoTotalNumber = styled.div`
+  display: flex;
+  border-radius: 19px;
+  padding: 2px 10px;
   margin-left: 10px;
   color: white;
   background-color: #2dd4bf;
-  border-radius: 19px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  padding-left: 10px;
-  padding-right: 10px;
+  font-family: Pretendard;
   font-size: 13px;
+  font-weight: 600;
+  line-height: 15.51px;
+  text-align: left;
 `;
 const SAddTodo = styled(Button)`
   background-color: ${({ theme }) => theme.colors.purple100};
-  width: 240px;
+  width: 100%;
   height: 40px;
   color: ${({ theme }) => theme.colors.white};
 `;
 const STodoContainer = styled.div`
   display: flex;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-right: 3px;
-  .icon {
+  align-items: center;
+  padding: 8px 0px;
+  .deleteIcon {
     margin-left: auto;
+    margin-right: 0.5vw;
   }
 `;
 const SCheckbox = styled.div`
-  padding-left: 7px;
+  display: flex;
 `;
 const STodoInputContainer = styled.div`
-  max-height: 80px;
+  display: flex;
+  flex-direction: column;
+  max-height: 210px;
   overflow-y: auto;
   overflow-x: hidden;
+
+  @media (max-height: 1079px) {
+    max-height: 120px;
+  }
+
+  @media (max-height: 720px) {
+    max-height: 80px;
+  }
 `;
+
+const SVirtualInput = styled.input`
+  margin-left: 1vw;
+  padding: 0px;
+  color: #2f2f2f;
+  font-family: Pretendard;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+  width: 60%;
+  overflow: hidden;
+  white-space: nowrap;
+  outline: none;
+
+  &:focus {
+    outline: none;
+    border-bottom: 2px solid #482ee6;
+  }
+`;
+
 interface TodoOutside {
-  todo: Task[];
-  setTodo: React.Dispatch<SetStateAction<Task[]>>;
   clickedDate: string | undefined;
-  setReload: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface Todo {
+interface TodoProps {
   id: number;
   content: string;
   date: string;
   status: boolean;
 }
-const Todo = memo(({ todo, setTodo, clickedDate, setReload }: TodoOutside) => {
-  const { scheduleId } = useParams();
-  const [todoContent, setTodoContent] = useState<string>('');
 
-  const handleChangeTodoInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newContent = e.target.value;
+const Todo = memo(({ clickedDate }: TodoOutside) => {
+  const [content, setContent] = useState<string>('');
+  const [updateContent, setUpdateContent] = useState<{ [key: number]: string }>(
+    {},
+  );
+  const [todoInput, setTodoInput] = useState<boolean>(false);
+  const [isCheckedTodo, setIsCheckedTodo] = useState<boolean>(false);
+  const { scheduleId } = useParams<{ scheduleId?: string | undefined }>();
+  const queryClient = useQueryClient();
+  const date = clickedDate;
 
-    setTodoContent(newContent);
-  };
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['todos', scheduleId || '', date || ''],
+    queryFn: getTodo,
+  });
 
-  const handleToggleCheckBox = async (todoId: number, content: string) => {
-    if (content && content !== '') {
-      try {
-        const updatedTodoList = todo.map((item) =>
-          item.id === todoId ? { ...item, status: !item.status } : item,
-        );
-        setTodo(updatedTodoList);
+  useEffect(() => {
+    setTodoInput(false);
+  }, [clickedDate]);
 
-        const date = clickedDate;
-        const todoItem = todo.find((item) => item.id === todoId);
+  const addTodo = useMutation({
+    mutationFn: createTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+  });
 
-        if (!todoItem) return;
+  const deletedTodo = useMutation({
+    mutationFn: removeTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+  });
 
-        const todoData = {
-          content: content,
-          status: !todoItem.status,
-        };
+  const modifyTodo = useMutation({
+    mutationFn: updateTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+  });
+  const handleAddTodo = () => {
+    setTodoInput(true);
 
-        await updateTodo(scheduleId, todoId, todoData, date);
-        setReload((prev) => !prev);
-      } catch (error) {
-        console.error('Error toggling checkbox:', error);
-      }
-    } else {
-      alert('텍스트를 입력 및 저장하세요');
+    if (scheduleId && content.trim() !== '') {
+      addTodo.mutate({ scheduleId, content, date });
+      setContent('');
     }
   };
 
-  const handleDelete = async (todoId: number | undefined) => {
-    await removeTodo(scheduleId, todoId);
-    setReload((prev) => !prev);
+  const handleOnBlur = (todoId: number | null) => {
+    if (todoId) {
+      if (scheduleId && todoId && updateContent[todoId].trim() !== '') {
+        modifyTodo.mutate({
+          scheduleId,
+          todoId,
+          content: updateContent[todoId],
+          date,
+          status: isCheckedTodo,
+        });
+      }
+    } else if (scheduleId && content.trim() !== '') {
+      addTodo.mutate({ scheduleId, content, date });
+      setContent('');
+    }
   };
 
-  const handleAddTodo = async () => {
-    const isAnyEmpty = todo.some((item) => item.content.trim() === '');
+  const handleOnEnter = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    todoId: number | null,
+  ) => {
+    if (e.key === 'Enter') {
+      if (scheduleId && content.trim() !== '') {
+        addTodo.mutate({ scheduleId, content, date });
+        setContent('');
+        setTodoInput(true);
+      } else if (todoId && scheduleId && updateContent[todoId].trim() !== '') {
+        modifyTodo.mutate({
+          scheduleId,
+          todoId,
+          content: updateContent[todoId],
+          date,
+          status: isCheckedTodo,
+        });
 
-    if (scheduleId) {
-      if (!isAnyEmpty) {
-        const date = clickedDate;
-        const todoData = {
-          content: '',
-        };
-        await createTodo(scheduleId, todoData, date);
-        setReload((prev) => !prev);
-      } else {
-        alert('텍스트를 입력 및 저장하세요');
+        const inputElement = e.target as HTMLInputElement;
+        inputElement.blur();
       }
-    } else {
-      Swal.fire({
-        title: '학기가 있어야 합니다.',
-        text: '학기 추가 혹은 학기 선택을 먼저 해주십시오.',
+    }
+  };
+
+  const handleDelete = (todoId: number) => {
+    if (scheduleId) {
+      deletedTodo.mutate({ scheduleId, todoId });
+    }
+  };
+
+  const handleChangeTodo = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setContent(value);
+  };
+  const handleChangeUpdate = (
+    e: ChangeEvent<HTMLInputElement>,
+    todoId: number,
+  ) => {
+    const value = e.target.value;
+
+    setUpdateContent((prev) => ({
+      ...prev,
+      [todoId]: value,
+    }));
+  };
+
+  const handleToggleCheckBox = (
+    todoId: number,
+    content: string,
+    status: boolean,
+  ) => {
+    if (scheduleId) {
+      modifyTodo.mutate({
+        scheduleId,
+        todoId,
+        content: content,
+        date,
+        status: !status,
       });
     }
   };
 
-  const handleInputBlur = async (todoId: number | undefined) => {
-    if (todoId) {
-      const date = clickedDate;
-      const todoData = {
-        content: todoContent,
-      };
-      await updateTodo(scheduleId, todoId, todoData, date);
-      setReload((prev) => !prev);
-    }
-  };
   return (
-    <div>
-      <STodoWrapper>
+    <STodoWrapper>
+      <STodoInputWrapper>
         <STodoHeader>
           <SFont>To do</SFont>
-          <STodoTotalNumber>{todo.length}</STodoTotalNumber>
+          <STodoTotalNumber>{data?.length}</STodoTotalNumber>
         </STodoHeader>
+
+        {todoInput && (
+          <SCheckbox>
+            <IcUncheckedBox />
+            <SVirtualInput
+              placeholder="할 일 입력"
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleChangeTodo(e)
+              }
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
+                handleOnEnter(e, null)
+              }
+              value={content}
+              onBlur={() => handleOnBlur(null)}
+            />
+          </SCheckbox>
+        )}
+
         <STodoInputContainer>
-          {todo.map((todoItem) => (
-            <STodoContainer className="todo-item" key={todoItem.id}>
+          {data?.map((todo: TodoProps) => (
+            <STodoContainer key={todo.id}>
               <SCheckbox>
-                {todoItem.status ? (
+                {todo.status ? (
                   <IcCheckedBox
                     onClick={() =>
-                      handleToggleCheckBox(todoItem.id, todoItem.content)
+                      handleToggleCheckBox(todo.id, todo.content, todo.status)
                     }
                   />
                 ) : (
                   <IcUncheckedBox
                     onClick={() =>
-                      handleToggleCheckBox(todoItem.id, todoItem.content)
+                      handleToggleCheckBox(todo.id, todo.content, todo.status)
                     }
                   />
                 )}
               </SCheckbox>
 
               <SInput
-                placeholder="todo list 작성하세요"
-                defaultValue={todoItem.content}
-                $completed={todoItem.status}
+                placeholder="할 일 입력"
+                value={updateContent[todo.id] ?? todo.content}
+                $completed={todo.status}
+                onBlur={() => handleOnBlur(todo.id)}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleChangeTodoInput(e)
+                  handleChangeUpdate(e, todo.id)
                 }
-                onBlur={() => handleInputBlur(todoItem.id)}
-                readOnly={todoItem.status}
+                onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) =>
+                  handleOnEnter(e, todo.id)
+                }
+                readOnly={todo.status}
               />
+
               <IcCloseSmall
-                onClick={() => handleDelete(todoItem.id)}
-                className="icon"
+                onClick={() => handleDelete(todo.id)}
+                className="deleteIcon"
               />
             </STodoContainer>
           ))}
         </STodoInputContainer>
-      </STodoWrapper>
+      </STodoInputWrapper>
 
       <SAddTodo onClick={handleAddTodo}>
         <IcAddWhite />
       </SAddTodo>
-    </div>
+    </STodoWrapper>
   );
 });
 

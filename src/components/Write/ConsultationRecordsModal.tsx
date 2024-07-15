@@ -1,22 +1,16 @@
 import axios from 'axios';
 import { ChangeEvent, useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
-
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { IcPen, IcSmallDatePicker, IcTitle } from '../../assets/icons';
 import { convertUrlToFile } from '../../utils/convertUrlToFile';
-import handleChangeLogImgFileUpload from '../../utils/handleChangeLogImgFileUpload';
-
 import { getConsultationDetailData } from '../../utils/lib/api';
-import useRandomColor from '../../utils/useHooks/useRandomColor';
-
 import FileUpload from '../common/FileUpload';
 import { Button } from '../common/styled/Button';
 import { writeFormCustomStyles } from '../common/styled/ModalLayout';
 import { SLogsSubmitBtn } from '../common/styled/SLogsSubmitBtn';
 import { CustomModalProps, DateProps } from './ClassLogModal';
-
 import WriteDropdown from './WriteDropdown';
 import WritingModalTop from './WriteModalTop';
 
@@ -83,20 +77,6 @@ const SContentLine = styled.div`
   padding-bottom: 10px;
 `;
 
-const SType = styled.div`
-  border-bottom: 2.5px solid #0000004d;
-  margin-bottom: 20px;
-`;
-
-const STypeBtn = styled.button`
-  padding: 20px 30px;
-  ${({ theme }) => theme.fonts.caption3}
-`;
-const SContentWrap = styled.div`
-  padding-left: 20px;
-  padding-right: 20px;
-  /* border: 1px solid red; */
-`;
 const SContentIc = styled.div`
   display: flex;
   padding-left: 10px;
@@ -147,7 +127,6 @@ const ConsultationRecordsModal = ({
   const [imgUrl, setImgUrl] = useState<File[]>([]);
   const [fileName, setFileName] = useState<string[]>([]);
   const formData = new FormData();
-  const getRandomColor = useRandomColor();
 
   const handleCounselingButtonClick = (buttonName: string) => {
     setSelectedCounselingButton(buttonName);
@@ -189,7 +168,7 @@ const ConsultationRecordsModal = ({
       if (isEdit) {
         try {
           const editData = {
-            studentName: title,
+            title: title,
             startDate: new Date(
               date.startDate.getTime() -
                 date.startDate.getTimezoneOffset() * 60000,
@@ -239,7 +218,7 @@ const ConsultationRecordsModal = ({
       } else {
         try {
           const logData = {
-            studentName: title,
+            title: title,
             startDate: new Date(
               date.startDate.getTime() -
                 date.startDate.getTimezoneOffset() * 60000,
@@ -252,7 +231,7 @@ const ConsultationRecordsModal = ({
             consultationContents: counselingContent,
             consultationResult: counselingResult,
             isAllDay: parentsIsAllDay,
-            color: getRandomColor(),
+            color: '#0EA5E9',
           };
 
           if (!logData.counselingField || !logData.counselingType) {
@@ -316,7 +295,7 @@ const ConsultationRecordsModal = ({
       getConsultationDetailData(String(logId))
         .then((response) => {
           const data = response.data;
-          setTitle(data.studentName);
+          setTitle(data.title);
           setCounselingContent(data.consultationContents);
           setCounselingResult(data.consultationResult);
           setSelectedCounselingButton(data.counselingField);
