@@ -1,20 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { IcGoBack } from '../assets/icons';
 import { getSemesterData } from '../utils/lib/api';
-import { useCurrentDate } from '../utils/useHooks/useCurrentDate';
 import ArchiveRecentLogs from '../components/Archive/ArchiveRecentLogs';
 import ArchiveFilteredLogs from '../components/Archive/ArchiveFilteredLogs';
-import instanceAxios from '../utils/InstanceAxios';
 
 const SArchiveContainerWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 100px;
+  padding-right: 21.3vw;
   padding-left: 30px;
-  padding-right: 21.25vw;
 `;
 const SArchiveTitle = styled.div`
   display: flex;
@@ -57,7 +55,7 @@ const SGobackIconContainer = styled.div`
 //   padding-bottom: 5px;
 //   margin-right: 15px;
 // `;
-const ArchiveDetail = () => {
+const ArchiveSemester = () => {
   const { scheduleId } = useParams();
   // const navigate = useNavigate();
   const [semesterName, setSemesterName] = useState<string>('');
@@ -119,4 +117,4 @@ const ArchiveDetail = () => {
   );
 };
 
-export default ArchiveDetail;
+export default ArchiveSemester;

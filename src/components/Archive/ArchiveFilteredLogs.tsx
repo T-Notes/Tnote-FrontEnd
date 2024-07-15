@@ -286,15 +286,6 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
 
   const handleChangePageAtLogs = (id: number, type: string) => {
     navigate(`/archive/logDetail/${type}/${id}`);
-    // if (type === 'CLASS_LOG') {
-    //   navigate(`/archive/classLog/${scheduleId}/${id}`);
-    // } else if (type === 'PROCEEDING') {
-    //   navigate(`/archive/proceeding/${scheduleId}/${id}`);
-    // } else if (type === 'CONSULTATION') {
-    //   navigate(`/archive/consultation/${scheduleId}/${id}`);
-    // } else if (type === 'OBSERVATION') {
-    //   navigate(`/archive/observation/${scheduleId}/${id}`);
-    // }
   };
 
   return (

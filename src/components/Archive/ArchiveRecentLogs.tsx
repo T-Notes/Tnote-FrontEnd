@@ -133,22 +133,10 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
     }
   }, [scheduleId]);
 
-  const handleClickRecentLog = (logId: number, logType: string) => {
-    let logEndpointMid = '';
-    if (logType === 'CLASS_LOG') {
-      logEndpointMid = 'classLog';
-    }
-    if (logType === 'PROCEEDING') {
-      logEndpointMid = 'proceeding';
-    }
-    if (logType === 'CONSULTATION') {
-      logEndpointMid = 'consultation';
-    }
-    if (logType === 'OBSERVATION') {
-      logEndpointMid = 'observation';
-    }
-    navigate(`/archive/${logEndpointMid}/${scheduleId}/${logId}`);
+  const handleClickRecentLog = (id: number, type: string) => {
+    navigate(`/archive/logDetail/${type}/${id}`);
   };
+
   return (
     <SArchiveRecentLogsWrapper>
       <STitle>최근 조회</STitle>
