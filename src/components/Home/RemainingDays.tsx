@@ -35,7 +35,7 @@ const SDayBox = styled.div`
   align-items: center;
   justify-content: center;
   width: 19.7vw;
-  height: 13.8vh;
+  height: 100%;
   max-height: 150px;
   flex: 1;
   background-color: #f7f9fc;
@@ -45,6 +45,9 @@ const SDayBox = styled.div`
   }
   @media (max-width: 960px) {
     width: 21vw;
+  }
+  @media (max-width: 820px) {
+    width: 180px;
   }
 `;
 const SRemainingDay = styled.p`
@@ -56,9 +59,6 @@ const SRemainingDay = styled.p`
   color: #0ea5e9;
   @media (max-width: 1439px) {
     font-size: 26px;
-  }
-  @media (max-width: 767px) {
-    font-size: 16px;
   }
 `;
 

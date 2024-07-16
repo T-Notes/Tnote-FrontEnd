@@ -35,6 +35,10 @@ const SFont = styled.div`
   }
   padding: 10px 10px 10px 20px;
   margin-top: 27px;
+
+  @media (max-width: 820px) {
+    padding-left: 5vw;
+  }
 `;
 const SClassContainer = styled.div`
   display: flex;
@@ -50,7 +54,7 @@ const SSchedule = styled.div`
   display: flex;
   width: 39.8vw;
   padding: 15px 23px;
-  height: 13.8vh;
+  height: 100%;
   max-height: 150px;
 
   background-color: #f7f9fc;
@@ -61,6 +65,11 @@ const SSchedule = styled.div`
   }
   @media (max-width: 960px) {
     width: 65vw;
+  }
+  @media (max-width: 820px) {
+    overflow: hidden;
+    width: 600px;
+    margin-left: 5vw;
   }
 `;
 

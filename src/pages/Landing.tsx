@@ -24,8 +24,10 @@ const SLandingWrapper = styled.div`
 `;
 
 const SIcBackgroundIconGroup = styled(IcBackgroundIconGroup)`
-  padding-left: 60px;
+  margin-left: 3.125vw;
   z-index: 5;
+  width: 612px;
+  height: 477px;
 `;
 
 const SBackContent = styled.div`
@@ -39,9 +41,18 @@ const SUnderbar = styled.div`
   border-bottom: 1px solid #d5d5d5;
 `;
 const SPrivacyPolicyText = styled.span`
-  ${({ theme }) => theme.fonts.button1}
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: center;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
 `;
 const SPrivacyPolicyPointText = styled(SPrivacyPolicyText)`
+  display: flex;
+  align-items: center;
   color: ${({ theme }) => theme.colors.purple000};
   margin-left: 12px;
   cursor: pointer;
@@ -51,24 +62,34 @@ const SPrivacyPolicyCheckboxSection = styled.div`
   align-items: center;
 `;
 const SBackgroundCircle = styled.div`
-  position: absolute;
+  position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 0;
+  transform: translateX(0%);
   width: 100%;
   height: 100vh;
   background-color: #c4cdffcc;
-  clip-path: ellipse(40% 70% at 100% 50%);
+  /* clip-path: ellipse(30% 80% at 100% 50%); */
+  clip-path: circle(50% at 100% 50%);
   z-index: 4;
 `;
-const SBackgroundCircle2 = styled(SBackgroundCircle)`
+const SBackgroundCircle2 = styled.div`
   background-color: #dae0ffe5;
-  clip-path: ellipse(50% 80% at 100% 50%);
+  clip-path: ellipse(45% 100% at 100% 50%);
   z-index: 3;
 `;
-const SBackgroundCircle3 = styled(SBackgroundCircle)`
+const SBackgroundCircle3 = styled.div`
+  /* width: 500px;
+  height: 100vh;
   background-color: #eff1ff;
-  clip-path: ellipse(60% 90% at 100% 50%);
+  clip-path: circle(50% at 100% 50%);
+  position: fixed;
+  right: 0;
+  top: 0;
+  transform: translateX(150%);
+  z-index: 2; */
+  background-color: #eff1ff;
+  clip-path: ellipse(50% 100% at 100% 50%);
   z-index: 2;
 `;
 const Landing = () => {
@@ -103,9 +124,9 @@ const Landing = () => {
           </SPrivacyPolicyCheckboxSection>
         </div>
 
-        <SBackgroundCircle></SBackgroundCircle>
+        {/* <SBackgroundCircle></SBackgroundCircle>
         <SBackgroundCircle2></SBackgroundCircle2>
-        <SBackgroundCircle3></SBackgroundCircle3>
+        <SBackgroundCircle3></SBackgroundCircle3> */}
         <SIcBackgroundIconGroup />
       </SBackContent>
     </SLandingWrapper>
