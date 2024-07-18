@@ -54,7 +54,7 @@ const TimetableHeader = () => {
 
       const getData = async () => {
         const res = await instanceAxios.get(
-          `/tnote/schedule/leftClasses/${scheduleId}`,
+          `/tnote/v1/schedule/leftClass/${scheduleId}`,
         );
         setData(res.data.data);
       };
