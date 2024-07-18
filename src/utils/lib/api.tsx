@@ -3,7 +3,7 @@ import instanceAxios from '../InstanceAxios';
 // 회원 추가정보 작성
 export const updateUserInfo = async (userData: object) => {
   try {
-    const response = await instanceAxios.patch(`/tnote/user`, userData);
+    const response = await instanceAxios.patch(`/tnote/v1/user`, userData);
     return response.data;
   } catch (error) {
     console.error('회원 추가정보 작성 에러', error);
@@ -14,7 +14,7 @@ export const updateUserInfo = async (userData: object) => {
 // 회원 정보 조회
 export const getUserInfo = async (userId: string | null) => {
   try {
-    const response = await instanceAxios.get(`/tnote/user/${userId}`);
+    const response = await instanceAxios.get(`/tnote/v1/user/${userId}`);
     return response.data;
   } catch (error) {
     console.log('회원 정보 조회 에러', error);
@@ -25,7 +25,7 @@ export const getUserInfo = async (userId: string | null) => {
 // 추가한 학기 리스트 전체 조회
 export const getAllSemesterNames = async () => {
   try {
-    const response = await instanceAxios.get('/tnote/schedule/list');
+    const response = await instanceAxios.get('/tnote/v1/schedule/list');
     return response.data.data;
   } catch (error) {
     console.log('추가한 학기 리스트 조회 실패', error);
@@ -41,7 +41,7 @@ export const getRemainingDayData = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/schedule/leftClassDays/${scheduleId}`,
+      `/tnote/v1/schedule/leftClassDay/${scheduleId}`,
       {
         params: { date: date },
       },
@@ -64,7 +64,7 @@ export const getSchoolSearchValue = async (
   schoolData: schoolSearchValueProps,
 ) => {
   try {
-    const response = await instanceAxios.get('/tnote/user/school', {
+    const response = await instanceAxios.get('/tnote/v1/user/school', {
       params: schoolData,
     });
     return response.data;
@@ -94,7 +94,7 @@ export const getTodo = async ({ queryKey }: { queryKey: string[] }) => {
   const [_, scheduleId, date] = queryKey;
 
   try {
-    const response = await instanceAxios.get(`/tnote/todos/${scheduleId}`, {
+    const response = await instanceAxios.get(`/tnote/v1/todo/${scheduleId}`, {
       params: { date },
     });
     return response.data.data;
@@ -105,7 +105,7 @@ export const getTodo = async ({ queryKey }: { queryKey: string[] }) => {
 
 export const createTodo = async ({ scheduleId, content, date }: TodoPost) => {
   const { data } = await instanceAxios.post(
-    `/tnote/todos/${scheduleId}`,
+    `/tnote/v1/todo/${scheduleId}`,
     { content },
     {
       params: { date },
@@ -113,6 +113,7 @@ export const createTodo = async ({ scheduleId, content, date }: TodoPost) => {
   );
   return data.data;
 };
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const updateTodo = async ({
   scheduleId,
@@ -121,8 +122,9 @@ export const updateTodo = async ({
   date,
   status,
 }: TodoUpdate) => {
+  // await delay(2000); // 임의로 딜레이
   const { data } = await instanceAxios.patch(
-    `/tnote/todos/${scheduleId}/${todoId}`,
+    `/tnote/v1/todo/${scheduleId}/${todoId}`,
     { content, status },
     {
       params: { date },
@@ -133,7 +135,7 @@ export const updateTodo = async ({
 
 export const removeTodo = async ({ scheduleId, todoId }: TodoDelete) => {
   const { data } = await instanceAxios.delete(
-    `/tnote/todos/${scheduleId}/${todoId}`,
+    `/tnote/v1/todo/${scheduleId}/${todoId}`,
   );
   return data;
 };
@@ -148,7 +150,10 @@ interface CreateSemester {
 // 학기 추가하기
 export const createSemester = async (semesterData: object) => {
   try {
-    const response = await instanceAxios.post('/tnote/schedule', semesterData);
+    const response = await instanceAxios.post(
+      '/tnote/v1/schedule',
+      semesterData,
+    );
     return response.data;
   } catch {
     throw new Error('학기 리스트 생성 에러가 발생했습니다.');
@@ -158,7 +163,9 @@ export const createSemester = async (semesterData: object) => {
 // 특정 학기 전체 정보 조회
 export const getSemesterData = async (scheduleId: string | undefined) => {
   try {
-    const response = await instanceAxios.get(`/tnote/schedule/${scheduleId}`);
+    const response = await instanceAxios.get(
+      `/tnote/v1/schedule/${scheduleId}`,
+    );
 
     return response.data;
   } catch {
@@ -173,7 +180,7 @@ export const updateSemester = async (
 ) => {
   try {
     const response = await instanceAxios.patch(
-      `/tnote/schedule/${scheduleId}`,
+      `/tnote/v1/schedule/${scheduleId}`,
       semesterData,
     );
     return response.data;
@@ -185,7 +192,7 @@ export const updateSemester = async (
 // 학기 삭제
 export const removeSemester = async (scheduleId: string | undefined) => {
   try {
-    await instanceAxios.delete(`/tnote/schedule/${scheduleId}`);
+    await instanceAxios.delete(`/tnote/v1/schedule/${scheduleId}`);
   } catch {
     throw new Error('학기 삭제 에러가 발생했습니다.');
   }
@@ -198,7 +205,7 @@ export const createClassLog = async (
 ) => {
   try {
     const response = instanceAxios.post(
-      `/tnote/classLog/${scheduleId}`,
+      `/tnote/v1/classLog/${scheduleId}`,
       LogData,
     );
     return response;
@@ -257,7 +264,7 @@ export const createConsultationRecords = async (
 // 로그아웃
 export const logout = async () => {
   try {
-    const response = instanceAxios.post('/tnote/user/logout').then((res) => {
+    const response = instanceAxios.post('/tnote/v1/user/logout').then((res) => {
       localStorage.clear();
     });
     return response;
@@ -279,7 +286,7 @@ export const crateSubject = async (
 ) => {
   try {
     const response = await instanceAxios.post(
-      `/tnote/subjects/${scheduleId}`,
+      `/tnote/v1/subject/${scheduleId}`,
       data,
     );
     return response.data;
@@ -294,7 +301,7 @@ export const getSelectedSubjectData = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/subjects/details/${scheduleId}/${subjectsId}`,
+      `/tnote/v1/subject/details/${scheduleId}/${subjectsId}`,
     );
     return response.data;
   } catch {}
@@ -307,7 +314,7 @@ export const editSubject = async (
 ) => {
   try {
     const response = await instanceAxios.patch(
-      `/tnote/subjects/${subjectsId}`,
+      `/tnote/v1/subject/${subjectsId}`,
       data,
     );
     return response.data;
@@ -320,7 +327,7 @@ export const deletedSubject = async (
   subjectsId: string | undefined,
 ) => {
   try {
-    await instanceAxios.delete(`/tnote/subjects/${scheduleId}/${subjectsId}`);
+    await instanceAxios.delete(`/tnote/v1/subject/${scheduleId}/${subjectsId}`);
   } catch {}
 };
 
@@ -329,7 +336,7 @@ export const deletedSubject = async (
 export const getAllClassLog = async (scheduleId: string | undefined) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/classLog/${scheduleId}/classLogs?page=0&size=4`,
+      `/tnote/v1/classLog/${scheduleId}/classLogs?page=0&size=4`,
     );
     return response.data;
   } catch {}
@@ -425,7 +432,7 @@ export const getTodayTimetable = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/subjects/${scheduleId}/${day}`,
+      `/tnote/v1/subject/${scheduleId}/${day}`,
     );
     return response.data;
   } catch {
@@ -458,7 +465,7 @@ export const getClassLogDetailData = async ({
   queryKey: string[];
 }) => {
   const [_, id] = queryKey;
-  const { data } = await instanceAxios.get(`/tnote/classLog/${id}`);
+  const { data } = await instanceAxios.get(`/tnote/v1/classLog/${id}`);
   return data.data;
 };
 
@@ -503,7 +510,7 @@ export const patchClassLog = async (
 ) => {
   try {
     const response = instanceAxios.patch(
-      `/tnote/classLog/${classLogId}`,
+      `/tnote/v1/classLog/${classLogId}`,
       LogData,
     );
     return response;
@@ -522,7 +529,7 @@ export const getAllTaskByDate = async (
     const response = await instanceAxios.get(
       `/tnote/archive/${scheduleId}/dailyLogs`,
       {
-        params: { date: date },
+        params: { date },
       },
     );
     return response.data;
@@ -532,7 +539,7 @@ export const getAllTaskByDate = async (
 //알람 토글 수정
 export const updateAlarmToggle = async (alarm: boolean) => {
   try {
-    const response = await instanceAxios.patch('/tnote/user/alarm', {
+    const response = await instanceAxios.patch('/tnote/v1/user/alarm', {
       alarm,
     });
     return response.data;
@@ -543,7 +550,7 @@ export const updateAlarmToggle = async (alarm: boolean) => {
 export const weekSchedule = async (scheduleId: string | undefined) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/schedule/week/${scheduleId}`,
+      `/tnote/v1/schedule/week/${scheduleId}`,
     );
     return response.data;
   } catch {}
