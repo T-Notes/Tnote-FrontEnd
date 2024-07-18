@@ -22,7 +22,7 @@ const Callback = () => {
 
           const accessToken = localStorage.getItem('accessToken');
           const checkMembership = axios
-            .get('https://j9972.kr/tnote/user', {
+            .get('https://j9972.kr/tnote/v1/user', {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
               },

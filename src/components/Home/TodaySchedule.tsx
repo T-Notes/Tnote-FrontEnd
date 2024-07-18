@@ -6,7 +6,6 @@ import { colorMapping, pointColorMapping } from '../../utils/colorMapping';
 
 const STodayScheduleWrapper = styled.div`
   display: flex;
-
   flex-direction: column;
   margin-left: auto;
   @media (max-width: 710px) {
@@ -54,14 +53,13 @@ const SSchedule = styled.div`
   display: flex;
   width: 39.8vw;
   padding: 15px 23px;
-  height: 100%;
+  height: 150px;
   max-height: 150px;
 
   background-color: #f7f9fc;
 
   @media (max-width: 1080px) {
     width: 60vw;
-    flex: 1;
   }
   @media (max-width: 960px) {
     width: 65vw;

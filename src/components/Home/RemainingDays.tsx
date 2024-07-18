@@ -35,7 +35,7 @@ const SDayBox = styled.div`
   align-items: center;
   justify-content: center;
   width: 19.7vw;
-  height: 100%;
+  height: 150px;
   max-height: 150px;
   flex: 1;
   background-color: #f7f9fc;
