@@ -30,7 +30,7 @@ instanceAxios.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem('refreshToken');
 
-        const response = await axios.get('https://j9972.kr/tnote/refresh', {
+        const response = await axios.get('https://j9972.kr/tnote/v1/refresh', {
           headers: {
             'Content-Type': 'application/json;charset=UTF-8',
             Accept: 'application/json',

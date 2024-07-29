@@ -256,7 +256,7 @@ const ConsultationRecordsModal = ({
           const accessToken = localStorage.getItem('accessToken');
 
           await axios.post(
-            `https://j9972.kr/tnote/consultation/${scheduleId}`,
+            `https://j9972.kr/tnote/v1/consultation/${scheduleId}`,
             formData,
             {
               headers: {

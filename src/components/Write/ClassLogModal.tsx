@@ -195,7 +195,7 @@ const ClassLogModal = ({
     const accessToken = localStorage.getItem('accessToken');
 
     try {
-      const url = `https://j9972.kr/tnote/classLog/${
+      const url = `https://j9972.kr/tnote/v1/classLog/${
         isEdit ? logId : scheduleId
       }`;
       const method = isEdit ? axios.patch : axios.post;
