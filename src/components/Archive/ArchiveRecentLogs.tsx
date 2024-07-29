@@ -107,13 +107,13 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
             const promises = data.map(async (item: RecentLogs) => {
               let recentEndPoint = '';
               if (item.logType === 'CLASS_LOG') {
-                recentEndPoint = `/tnote/classLog/${item.logId}`;
+                recentEndPoint = `/tnote/v1/classLog/${item.logId}`;
               } else if (item.logType === 'PROCEEDING') {
                 recentEndPoint = `/tnote/proceeding/${item.logId}`;
               } else if (item.logType === 'OBSERVATION') {
                 recentEndPoint = `/tnote/observation/${item.logId}`;
               } else if (item.logType === 'CONSULTATION') {
-                recentEndPoint = `/tnote/consultation/${item.logId}`;
+                recentEndPoint = `/tnote/v1/consultation/${item.logId}`;
               }
               if (recentEndPoint) {
                 const response = await instanceAxios.get(recentEndPoint);

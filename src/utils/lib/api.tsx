@@ -252,7 +252,7 @@ export const createConsultationRecords = async (
 ) => {
   try {
     const response = instanceAxios.post(
-      `/tnote/consultation/${scheduleId}`,
+      `/tnote/v1/consultation/${scheduleId}`,
       LogData,
     );
     return response;
@@ -301,7 +301,7 @@ export const getSelectedSubjectData = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/v1/subject/details/${scheduleId}/${subjectsId}`,
+      `/tnote/v1/subject/detail/${scheduleId}/${subjectsId}`,
     );
     return response.data;
   } catch {}
@@ -336,7 +336,7 @@ export const deletedSubject = async (
 export const getAllClassLog = async (scheduleId: string | undefined) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/v1/classLog/${scheduleId}/classLogs?page=0&size=4`,
+      `/tnote/v1/classLog/${scheduleId}/all?page=0&size=4`,
     );
     return response.data;
   } catch {}
@@ -356,7 +356,7 @@ export const getAllProceedings = async (scheduleId: string | undefined) => {
 export const getAllConsultations = async (scheduleId: string | undefined) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/consultation/${scheduleId}/consultations?page=0&size=4`,
+      `/tnote/v1/consultation/${scheduleId}?page=0&size=4`,
     );
     return response.data;
   } catch {}
@@ -487,7 +487,7 @@ export const getConsultationDetailData = async ({
   queryKey: string[];
 }) => {
   const [_, id] = queryKey;
-  const { data } = await instanceAxios.get(`/tnote/consultation/${id}`);
+  const { data } = await instanceAxios.get(`/tnote/v1/consultation/${id}`);
   return data.data;
 };
 
