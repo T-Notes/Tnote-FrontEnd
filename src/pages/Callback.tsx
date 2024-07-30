@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import instanceAxios from '../utils/InstanceAxios';
+import { log } from 'console';
 
 const Callback = () => {
   const navigate = useNavigate();
@@ -15,13 +16,11 @@ const Callback = () => {
         )
         .then((res) => {
           const data = res.data.data;
+          console.log('data', data);
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('refreshToken', data.refreshToken);
           localStorage.setItem('userId', data.userId);
-          localStorage.setItem(
-            'oauthRefreshToken',
-            data.oauthRefreshTokenToken,
-          );
+          localStorage.setItem('oauthRefreshToken', data.oauthRefreshToken);
 
           const accessToken = localStorage.getItem('accessToken');
           const checkMembership = axios
