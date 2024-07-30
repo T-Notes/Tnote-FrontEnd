@@ -96,10 +96,10 @@ const UserSchoolModal = (props: searchModalProps) => {
     setIsRegionDropdownToggle(!isRegionDropdownToggle);
   };
 
-  const handleSelectedRegionOption = (region: string) => {
+  const handleSelectedRegionOption = (code: string) => {
     setSchoolSearchData((prev) => ({
       ...prev,
-      region: region,
+      code: code,
     }));
     handleChangeRegionToggle();
   };
