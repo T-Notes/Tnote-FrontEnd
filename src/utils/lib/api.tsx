@@ -56,7 +56,7 @@ export const getRemainingDayData = async (
 
 // 학교검색 결과 조회
 interface schoolSearchValueProps {
-  region: string;
+  code: string;
   schoolType: string;
   schoolName: string;
 }
