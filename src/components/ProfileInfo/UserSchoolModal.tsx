@@ -68,7 +68,7 @@ interface searchModalProps {
   handleSubmit: (searchInput: string) => void;
 }
 interface ResultsProps {
-  region: string;
+  code: string;
   schoolType: string;
   schoolName: string;
 }
@@ -76,7 +76,7 @@ interface ResultsProps {
 const UserSchoolModal = (props: searchModalProps) => {
   const { isOpen, onClose, handleSubmit } = props;
   const [schoolSearchData, setSchoolSearchData] = useState<ResultsProps>({
-    region: '',
+    code: '',
     schoolType: '',
     schoolName: '',
   });
@@ -151,7 +151,7 @@ const UserSchoolModal = (props: searchModalProps) => {
 
             <CityAndTypeSelection
               label="시/도"
-              value={schoolSearchData.region}
+              value={schoolSearchData.code}
               handleChangeToggle={handleChangeRegionToggle}
               isToggle={isRegionDropdownToggle}
               dropdownList={
