@@ -125,8 +125,9 @@ interface SemesterDataProps {
 interface SetupProps {
   setReload: React.Dispatch<React.SetStateAction<boolean>>;
   reload: boolean;
+  id: string | undefined;
 }
-const SemesterForm = ({ setReload, reload }: SetupProps) => {
+const SemesterForm = ({ setReload, reload, id }: SetupProps) => {
   const { scheduleId } = useParams();
 
   const [isActiveDateColor, setIsActiveDateColor] = useState<boolean>(false);
@@ -159,7 +160,7 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
   };
 
   const getSemesterForm = async () => {
-    const semesterData = await getSemesterData(scheduleId);
+    const semesterData = await getSemesterData(id ? id : scheduleId);
 
     const data = semesterData.data[0];
 
@@ -183,7 +184,7 @@ const SemesterForm = ({ setReload, reload }: SetupProps) => {
     if (scheduleId) {
       getSemesterForm();
     }
-  }, [scheduleId, reload]);
+  }, [scheduleId, reload, id]);
 
   const handleUpdateSemester = async () => {
     if (scheduleId) {

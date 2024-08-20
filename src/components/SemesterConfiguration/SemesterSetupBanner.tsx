@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { IcAddBlack, IcGoBack } from '../../assets/icons';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { createSemester, getAllSemesterNames } from '../../utils/lib/api';
 import { useCurrentDate } from '../../utils/useHooks/useCurrentDate';
 
@@ -78,7 +78,12 @@ interface SemesterListProps {
   semesterName: string;
 }
 
-const SemesterSetupBanner = () => {
+interface SemesterSetupBannerProps {
+  setId: Dispatch<SetStateAction<string | undefined>>;
+  id: string | undefined;
+}
+const SemesterSetupBanner = (props: SemesterSetupBannerProps) => {
+  const { setId, id } = props;
   const { scheduleId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -112,15 +117,8 @@ const SemesterSetupBanner = () => {
         };
         const response = await createSemester(data);
         const newSemesterId = response.data.id;
-
         if (newSemesterId) {
-          if (currentUrl.includes('home')) {
-            navigate(`/semesterSetup/home/${newSemesterId}`);
-            window.location.reload();
-          } else if (currentUrl.includes('timetable')) {
-            navigate(`/semesterSetup/timetable/${newSemesterId}`);
-            window.location.reload();
-          }
+          window.location.reload();
         }
 
         setIsPostSemester((prev) => !prev);
@@ -139,19 +137,15 @@ const SemesterSetupBanner = () => {
   }, [isPostSemester]);
 
   const handleClickBackRoute = () => {
-    if (currentUrl.includes('home')) {
-      navigate('/home');
-    } else if (currentUrl.includes('timetable')) {
-      navigate('/timetable');
-    }
+    navigate(-1);
   };
 
   const handleClickRoute = (scheduleId: number) => {
-    if (currentUrl.includes('home')) {
-      navigate(`/semesterSetup/home/${scheduleId}`);
-    } else if (currentUrl.includes('timetable')) {
-      navigate(`/semesterSetup/timetable/${scheduleId}`);
+    let id;
+    if (scheduleId) {
+      id = String(scheduleId);
     }
+    setId(id);
   };
   return (
     <SWrapper>
@@ -168,7 +162,11 @@ const SemesterSetupBanner = () => {
           {semesterList.map((semester) => (
             <SSemester
               key={semester.id}
-              selected={Number(scheduleId) === semester.id}
+              selected={
+                id
+                  ? Number(id) === semester.id
+                  : Number(scheduleId) === semester.id
+              }
             >
               <ul onClick={() => handleClickRoute(semester.id)}>
                 <li className="pointer">{semester.semesterName}</li>

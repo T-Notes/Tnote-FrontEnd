@@ -22,14 +22,9 @@ const Router = () => {
           <Route path="/home/:scheduleId" element={<Home />} />
 
           <Route
-            path="/semesterSetup/home/:scheduleId"
+            path="/semesterSetup/:scheduleId"
             element={<SemesterSetup />}
           />
-          <Route
-            path="/semesterSetup/timetable/:scheduleId"
-            element={<SemesterSetup />}
-          />
-
           <Route path="/semesterSetup/home" element={<SemesterSetup />} />
           <Route path="/semesterSetup/timetable" element={<SemesterSetup />} />
 
