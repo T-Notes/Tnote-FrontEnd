@@ -238,7 +238,7 @@ const Setting = ({ closeSettingModal }: SettingProps) => {
         const email = result.value;
 
         axios
-          .delete('https://j9972.kr/tnote/user', {
+          .delete('https://j9972.kr/tnote/v1/user', {
             headers: {
               oauthRefreshToken: oauthRefreshToken,
               Authorization: `Bearer ${accessToken}`,
