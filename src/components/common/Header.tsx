@@ -1,18 +1,10 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import {
-  IcArchive,
-  IcHome,
-  IcLogo,
-  IcNavigationClose,
-  IcNavigationOpen,
-  IcProfile,
-  IcTimetable,
-} from '../../assets/icons';
+import { IcLogo, IcProfile } from '../../assets/icons';
 import { getUserInfo } from '../../utils/lib/api';
 import Setting from '../Setting/Setting';
-import WriteDropdownList from '../Write/WriteDropdownList';
+
 import ClassLogModal from '../Write/ClassLogModal';
 import WorkLogModal from '../Write/WorkLogModal';
 import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
@@ -102,29 +94,7 @@ const SUserEmail = styled.div`
   white-space: nowrap;
   overflow: hidden;
 `;
-const SWriteBtn = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  max-width: 116px;
-  height: auto;
-  padding: 8px 20px 8px 20px;
-  gap: 0px;
-  border-radius: 999px;
-  background-color: #632cfa;
-  color: white;
-  .text {
-    font-family: Pretendard;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 19.09px;
-    text-align: left;
-  }
-`;
-const SDropdownIcon = styled.div`
-  margin-left: auto;
-`;
+
 const SProfileContainer = styled.div`
   width: 34px;
   max-height: 34px;
@@ -133,6 +103,7 @@ const SHomeCategoryGroup = styled.div`
   display: flex;
   gap: 16px;
 `;
+
 const Header = () => {
   const { scheduleId } = useParams();
   const userId = localStorage.getItem('userId');
@@ -140,7 +111,6 @@ const Header = () => {
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false);
-  const [isDropdown, setIsDropdown] = useState<boolean>(false);
   const [category, setCategory] = useState<string>('');
 
   const openSettingModal = () => {
@@ -161,10 +131,6 @@ const Header = () => {
     };
     getUserData();
   }, []);
-
-  const dropdownToggle = () => {
-    setIsDropdown((prev) => !prev);
-  };
 
   const handleClickOpenModal = (openModalName: string) => {
     if (openModalName === '학급일지') {
@@ -214,19 +180,15 @@ const Header = () => {
             </SCategory>
           </Link>
         </SHomeCategoryGroup>
-
-        <SWriteBtn onClick={dropdownToggle} className="pointer">
-          <p className="text">글쓰기</p>
-          <SDropdownIcon>
-            {isDropdown ? <IcNavigationClose /> : <IcNavigationOpen />}
-          </SDropdownIcon>
-          {isDropdown && (
-            <WriteDropdownList
-              onClickOpenModal={handleClickOpenModal}
-              toggle={dropdownToggle}
-            />
-          )}
-        </SWriteBtn>
+        <Link
+          to={scheduleId ? `/semesterSetup/${scheduleId}` : '/semesterSetup'}
+        >
+          <SCategory onClick={() => handleClickCategory('semesterSetup')}>
+            <SCategoryText $isCategory={category === 'semesterSetup'}>
+              학기 설정
+            </SCategoryText>
+          </SCategory>
+        </Link>
         <SUserProfileInfoWrapper>
           <SProfileContainer>
             <IcProfile />

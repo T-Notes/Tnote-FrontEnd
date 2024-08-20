@@ -1,7 +1,7 @@
 import HomeNavigationBar from './common/HomeNavigationBar';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
-
+import Header from './common/Header';
 const SLayoutWrapper = styled.div`
   @media (min-width: 1025px) {
     position: fixed;
@@ -21,6 +21,7 @@ const HomeLayout = () => {
     <>
       <SLayoutWrapper>
         <HomeNavigationBar />
+        <Header />
       </SLayoutWrapper>
 
       <SContentWrapper>
