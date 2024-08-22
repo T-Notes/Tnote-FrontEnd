@@ -14,6 +14,7 @@ import {
   getAllConsultations,
   getAllObservation,
   getAllLogsBySchedule,
+  getAllPlan,
   logsDelete,
 } from '../../utils/lib/api';
 import { useToggle } from '../../utils/useHooks/useToggle';
@@ -21,14 +22,17 @@ import DeleteButton from '../common/DeleteButton';
 import Pagination from '../common/Pagination';
 
 const SFilter = styled.button`
+  border: 1px solid #d5d5d5;
+  border-radius: 4px;
   display: flex;
+  justify-content: space-around;
   position: relative;
+  background-color: #f7f9fc;
+  width: 132px;
   align-items: center;
   height: 40px;
-  padding: 10px 12px 10px 12px;
-  gap: 8px;
-  border: 1px solid #a6a6a6;
-  border-radius: 50px;
+  gap: 20px;
+
   margin-left: 24px;
   .text {
     font-family: Pretendard;
@@ -63,12 +67,13 @@ const SArchiveButtons = styled.div`
 `;
 const SDropdownList = styled.ul`
   ${({ theme }) => theme.fonts.caption}
-  width: 10rem;
+  width: 100%;
   border-radius: 8px;
   border: 1px solid #00000033;
   box-shadow: 0px 6px 15px 0px #00000033;
   background-color: white;
-  padding: 4px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
@@ -76,8 +81,7 @@ const SDropdownList = styled.ul`
 `;
 const SDropdownItem = styled.li`
   display: flex;
-  padding: 8px;
-  padding-left: 24px;
+  padding: 10px 26px 10px 10px;
   cursor: pointer;
 
   &:hover {
@@ -163,7 +167,14 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const navigate = useNavigate();
 
   const [filteredLogsList, setFilteredLogsList] = useState<any[]>([]);
-  const options = ['전체', '학급일지', '업무일지', '상담기록', '학생관찰기록'];
+  const options = [
+    '전체',
+    '일정',
+    '학급일지',
+    '업무일지',
+    '상담기록',
+    '학생관찰기록',
+  ];
 
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [checkedDeleteIds, setCheckedDeleteIds] = useState<
@@ -203,6 +214,10 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
           res = await getAllLogsBySchedule(scheduleId, currentPage);
           setFilteredLogsList(res.data.logs);
           break;
+        case '일정':
+          res = await getAllPlan(scheduleId);
+          setFilteredLogsList(res.data.plans);
+          break;
         case '학급일지':
           res = await getAllClassLog(scheduleId);
           setFilteredLogsList(res.data.classLogs);
@@ -241,7 +256,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
     }
   }, [currentPage]);
 
-  const handleDelete = async () => {
+  const handleClickDelete = async () => {
     const logsDeleteIds: DeleteIds = {
       classLogIds: [],
       proceedingIds: [],
@@ -262,7 +277,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
       }
     }
 
-    if (checkedDeleteIds) {
+    if (checkedDeleteIds.length !== 0) {
       Swal.fire({
         title: '항목 삭제',
         text: '정말 삭제하시겠습니까?',
@@ -285,14 +300,15 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   };
 
   const handleChangePageAtLogs = (id: number, type: string) => {
-    navigate(`/archive/logDetail/${type}/${id}`);
+    navigate(`/archive/logDetail/${scheduleId}/${type}/${id}`);
   };
 
   return (
     <>
       <SArchiveButtons>
         <DeleteButton
-          onClick={isDelete ? handleDelete : handleDeleteModeActivate}
+          onClick={handleClickDelete}
+          isDeleteChecked={checkedDeleteIds.length !== 0 ? true : false}
         />
 
         <SFilter onClick={handleChangeToggle}>
@@ -332,28 +348,19 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
             );
             return (
               <SLogContainer key={index}>
-                {isDelete && (
-                  <>
-                    {isChecked ? (
-                      <SCheckedBox>
-                        <IcCheckedBox
-                          onClick={() =>
-                            handleDeletedCheck(item.id, item.logType)
-                          }
-                        />
-                      </SCheckedBox>
-                    ) : (
-                      <SCheckedBox>
-                        <IcUncheckedBox
-                          onClick={() =>
-                            handleDeletedCheck(item.id, item.logType)
-                          }
-                        />
-                      </SCheckedBox>
-                    )}
-                  </>
+                {isChecked ? (
+                  <SCheckedBox>
+                    <IcCheckedBox
+                      onClick={() => handleDeletedCheck(item.id, item.logType)}
+                    />
+                  </SCheckedBox>
+                ) : (
+                  <SCheckedBox>
+                    <IcUncheckedBox
+                      onClick={() => handleDeletedCheck(item.id, item.logType)}
+                    />
+                  </SCheckedBox>
                 )}
-
                 <div>
                   {item.logType === 'CLASS_LOG' && (
                     <SLogType

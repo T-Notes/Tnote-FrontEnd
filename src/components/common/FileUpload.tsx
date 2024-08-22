@@ -7,8 +7,9 @@ import { downloadFile } from '../../utils/downloadFile';
 const SFileWrapper = styled.div`
   display: flex;
   align-items: center;
-  padding-left: 20px;
-  padding-right: 20px;
+  gap: 10px;
+  /* padding-left: 20px; */
+  /* padding-right: 20px; */
   margin-bottom: 25px;
 
   input[type='file'] {
@@ -21,8 +22,8 @@ const SFileWrapper = styled.div`
   }
 `;
 const SFileText = styled.p`
+  white-space: nowrap;
   ${({ theme }) => theme.fonts.caption3}
-  padding-left: 5px;
 `;
 
 const SFileUploadInput = styled.input`
@@ -72,15 +73,20 @@ const SShowInput = styled.div`
   overflow: auto;
   overflow-y: scroll;
   ${({ theme }) => theme.fonts.caption3}
-  margin-left: 20px;
+  /* margin-left: 20px; */
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #e8e8e8;
-  width: 400px;
-
+  width: 100%;
   .placeholder {
     color: #a6a6a6;
   }
+`;
+
+const SfileWrapper = styled.div`
+  gap: 10px;
+  white-space: nowrap;
+  display: flex;
 `;
 const FileUpload = (props: any) => {
   const { imgUrl, setImgUrl } = props;
@@ -134,8 +140,11 @@ const FileUpload = (props: any) => {
   return (
     <>
       <SFileWrapper>
-        <IcClip />
-        <SFileText>파일 첨부</SFileText>
+        <SfileWrapper>
+          <IcClip />
+          <SFileText>파일 첨부</SFileText>
+        </SfileWrapper>
+
         <SFileUploadInput
           placeholder="1GB 이하의 이미지파일(jpg,png), 문서파일(Excel,PPT) 업로드 가능합니다."
           readOnly

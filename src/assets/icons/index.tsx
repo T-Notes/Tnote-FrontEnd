@@ -47,3 +47,6 @@ export { ReactComponent as IcNavigationClose } from './navigationCloseIcon.svg';
 export { ReactComponent as IcEditDisabledDropdown } from './editDisabledDropdown.svg';
 export { ReactComponent as IcImageDelete } from './imageFileDeletedIcon.svg';
 export { ReactComponent as IcImageClip } from './imageFileClip.svg';
+export { ReactComponent as IcSetting } from './settings.svg';
+export { ReactComponent as IcPerson } from './personIcon.svg';
+export { ReactComponent as IcGrayMap } from './mapIconGray.svg';

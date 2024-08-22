@@ -49,8 +49,12 @@ const ArchiveLogPage = () => {
       if (logType === 'OBSERVATION') {
         setLogName('학생 관찰 기록');
       }
+      if (logType === 'PLAN') {
+        setLogName('일정');
+      }
     }
   }, [logType]);
+
   return (
     <SArchiveLogWrapper>
       <SLogHead>

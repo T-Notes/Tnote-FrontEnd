@@ -11,6 +11,8 @@ import { useModals } from '../../utils/useHooks/useModals';
 import WorkLogModal from '../Write/WorkLogModal';
 import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
 import StudentRecordsModal from '../Write/StudentRecordsModal';
+import { log } from 'console';
+import constructWithOptions from 'styled-components/dist/constructors/constructWithOptions';
 
 const STaskSidebarWrapper = styled.div`
   display: flex;

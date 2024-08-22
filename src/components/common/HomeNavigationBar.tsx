@@ -1,22 +1,16 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   IcArchive,
   IcHome,
   IcLogo,
-  IcNavigationClose,
-  IcNavigationOpen,
   IcProfile,
+  IcSetting,
   IcTimetable,
 } from '../../assets/icons';
 import { getUserInfo } from '../../utils/lib/api';
 import Setting from '../Setting/Setting';
-import WriteDropdownList from '../Write/WriteDropdownList';
-import ClassLogModal from '../Write/ClassLogModal';
-import WorkLogModal from '../Write/WorkLogModal';
-import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
-import StudentRecordsModal from '../Write/StudentRecordsModal';
 import { useModals } from '../../utils/useHooks/useModals';
 
 const SLeftSidebar = styled.div`
@@ -45,7 +39,7 @@ const SCategory = styled.div`
   padding-bottom: 12px;
   padding-left: calc(13.5%);
   padding-right: 0px;
-  gap: 14px;
+  gap: 10px;
   opacity: 0px;
 `;
 const SLogo = styled.div`
@@ -68,6 +62,7 @@ const SCategoryText = styled.div`
   line-height: 19.36px;
   text-align: left;
   color: #666666;
+  cursor: pointer;
 `;
 const SUserProfileInfoWrapper = styled.div`
   display: flex;
@@ -112,42 +107,20 @@ const SUserEmail = styled.div`
   white-space: nowrap;
   overflow: hidden;
 `;
-const SWriteBtn = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin-left: 6.5%;
-  justify-content: center;
-  max-width: 116px;
-  height: auto;
-  padding: 8px 20px 8px 20px;
-  gap: 0px;
-  border-radius: 999px;
-  background-color: #632cfa;
-  color: white;
-  .text {
-    font-family: Pretendard;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 19.09px;
-    text-align: left;
-  }
-`;
-const SDropdownIcon = styled.div`
-  margin-left: auto;
-`;
+
 const SProfileContainer = styled.div`
   width: 42px;
   max-height: 42px;
 `;
+
 const HomeNavigationBar = () => {
   const { scheduleId } = useParams();
+  const currentUrl = location.pathname;
+  const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
-  const { openModal } = useModals();
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false);
-  const [isDropdown, setIsDropdown] = useState<boolean>(false);
 
   const openSettingModal = () => {
     setIsOpenSetting(true);
@@ -168,22 +141,24 @@ const HomeNavigationBar = () => {
     getUserData();
   }, []);
 
-  const dropdownToggle = () => {
-    setIsDropdown((prev) => !prev);
-  };
-
-  const handleClickOpenModal = (openModalName: string) => {
-    if (openModalName === '학급일지') {
-      openModal(ClassLogModal, {
-        handleClickOpenModal,
-        scheduleId,
-      });
-    } else if (openModalName === '업무일지') {
-      openModal(WorkLogModal, { handleClickOpenModal, scheduleId });
-    } else if (openModalName === '상담기록') {
-      openModal(ConsultationRecordsModal, { handleClickOpenModal, scheduleId });
-    } else if (openModalName === '학생 관찰 일지') {
-      openModal(StudentRecordsModal, { handleClickOpenModal, scheduleId });
+  const handleClickRoute = () => {
+    if (scheduleId) {
+      if (currentUrl.includes('home')) {
+        navigate(`/semesterSetup/home/${scheduleId}`);
+      } else if (currentUrl.includes('timetable')) {
+        navigate(`/semesterSetup/timetable/${scheduleId}`);
+      } else if (currentUrl.includes('archive')) {
+        navigate(`/semesterSetup/archive/${scheduleId}`);
+      }
+    }
+    if (!scheduleId) {
+      if (currentUrl.includes('home')) {
+        navigate(`/semesterSetup/home`);
+      } else if (currentUrl.includes('timetable')) {
+        navigate(`/semesterSetup/timetable`);
+      } else if (currentUrl.includes('archive')) {
+        navigate(`/semesterSetup/archive`);
+      }
     }
   };
 
@@ -238,18 +213,18 @@ const HomeNavigationBar = () => {
           </>
         </SHomeCategoryGroup>
 
-        <SWriteBtn onClick={dropdownToggle} className="pointer">
-          <p className="text">글쓰기</p>
-          <SDropdownIcon>
-            {isDropdown ? <IcNavigationClose /> : <IcNavigationOpen />}
-          </SDropdownIcon>
-          {isDropdown && (
-            <WriteDropdownList
-              onClickOpenModal={handleClickOpenModal}
-              toggle={dropdownToggle}
-            />
-          )}
-        </SWriteBtn>
+        <SCategory
+          onClick={handleClickRoute}
+          className={
+            location.pathname ===
+            (scheduleId ? `/semesterSetup/${scheduleId}` : '/semesterSetup')
+              ? 'active'
+              : ''
+          }
+        >
+          <IcSetting />
+          <SCategoryText> 학기 설정</SCategoryText>
+        </SCategory>
         <SUserProfileInfoWrapper>
           <SProfileContainer>
             <IcProfile />

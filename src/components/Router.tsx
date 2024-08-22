@@ -22,6 +22,14 @@ const Router = () => {
           <Route path="/home/:scheduleId" element={<Home />} />
 
           <Route
+            path="/semesterSetup/:scheduleId"
+            element={<SemesterSetup />}
+          />
+
+          <Route path="/semesterSetup/home" element={<SemesterSetup />} />
+          <Route path="/semesterSetup/timetable" element={<SemesterSetup />} />
+          <Route path="/semesterSetup/archive" element={<SemesterSetup />} />
+          <Route
             path="/semesterSetup/home/:scheduleId"
             element={<SemesterSetup />}
           />
@@ -29,9 +37,10 @@ const Router = () => {
             path="/semesterSetup/timetable/:scheduleId"
             element={<SemesterSetup />}
           />
-
-          <Route path="/semesterSetup/home" element={<SemesterSetup />} />
-          <Route path="/semesterSetup/timetable" element={<SemesterSetup />} />
+          <Route
+            path="/semesterSetup/archive/:scheduleId"
+            element={<SemesterSetup />}
+          />
 
           <Route path="/timetable/:scheduleId" element={<Timetable />} />
 
@@ -44,7 +53,7 @@ const Router = () => {
             element={<ArchiveSemester />}
           />
           <Route
-            path="archive/logDetail/:logType/:logId"
+            path="archive/logDetail/:scheduleId/:logType/:logId"
             element={<ArchiveLogPage />}
           />
         </Route>

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { useNavigate, useParams } from 'react-router-dom';
 import AllSemesterNamesForm from './AllSemesterNamesForm';
+import { NoteButton } from '../common/NoteButton';
 
 const SSemesterMenuWrapper = styled.div`
   display: flex;
@@ -36,31 +36,15 @@ interface SemesterMenu {
   onClickAddBtn: () => void;
 }
 const SemesterMenu = ({ onClickAddBtn }: SemesterMenu) => {
-  const { scheduleId } = useParams();
-  const navigate = useNavigate();
-
-  const handleClickRoute = () => {
-    if (scheduleId) {
-      if (window.location.pathname.includes('home')) {
-        navigate(`/semesterSetup/home/${scheduleId}`);
-      } else if (window.location.pathname.includes('timetable')) {
-        navigate(`/semesterSetup/timetable/${scheduleId}`);
-      }
-    } else if (!scheduleId) {
-      if (window.location.pathname.includes('home')) {
-        navigate(`/semesterSetup/home`);
-      } else if (window.location.pathname.includes('timetable')) {
-        navigate(`/semesterSetup/timetable`);
-      }
-    }
-  };
-
   return (
     <SSemesterMenuWrapper>
       <AllSemesterNamesForm />
       <SAddAndSetup>
-        <SButton onClick={onClickAddBtn}>추가</SButton>
-        <SButton onClick={handleClickRoute}>설정</SButton>
+        {window.location.pathname.includes('home') ? (
+          <NoteButton />
+        ) : (
+          <SButton onClick={onClickAddBtn}>추가</SButton>
+        )}
       </SAddAndSetup>
     </SSemesterMenuWrapper>
   );

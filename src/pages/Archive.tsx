@@ -113,7 +113,6 @@ const Archive = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchValueList, setSetSearchValueList] = useState<SearchValue[]>([]);
-  const [isDelete, setIsDelete] = useState<boolean>(false);
   const [isDeleteChecked, setIsDeleteChecked] = useState<number | null>(null);
   const [isPeriodToggle, setIsPeriodToggle] = useState<boolean>(false);
   const [isTitleToggle, setIsTitleToggle] = useState<boolean>(false);
@@ -124,9 +123,6 @@ const Archive = () => {
   const [searchType, setSearchType] = useState<string>('');
   const [dateType, setDateType] = useState<string>('');
 
-  const handleDeleteModeActivate = () => {
-    setIsDelete(true);
-  };
   const handleChangePeriodToggle = () => {
     setIsPeriodToggle(!isPeriodToggle);
   };
@@ -280,7 +276,8 @@ const Archive = () => {
             />
           </SSearchInput>
           <DeleteButton
-            onClick={isDelete ? handleClickDelete : handleDeleteModeActivate}
+            onClick={handleClickDelete}
+            isDeleteChecked={isDeleteChecked ? true : false}
           />
         </SSearch>
       </SArchiveHeader>
@@ -299,7 +296,6 @@ const Archive = () => {
       ) : (
         !searchValue && (
           <NotSearchArchive
-            isDelete={isDelete}
             handleDeletedCheck={handleDeletedCheck}
             isDeleteChecked={isDeleteChecked}
           />
