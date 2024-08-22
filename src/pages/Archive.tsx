@@ -277,7 +277,7 @@ const Archive = () => {
           </SSearchInput>
           <DeleteButton
             onClick={handleClickDelete}
-            isDeleteChecked={isDeleteChecked}
+            isDeleteChecked={isDeleteChecked ? true : false}
           />
         </SSearch>
       </SArchiveHeader>

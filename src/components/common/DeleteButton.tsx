@@ -53,7 +53,7 @@ const SDeleteIcon = styled.div`
 `;
 interface DeleteButtonProps {
   onClick: () => void;
-  isDeleteChecked: number | null;
+  isDeleteChecked: boolean;
 }
 export default function DeleteButton(props: DeleteButtonProps) {
   const { onClick, isDeleteChecked } = props;

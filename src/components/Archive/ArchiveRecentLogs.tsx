@@ -109,11 +109,13 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
               if (item.logType === 'CLASS_LOG') {
                 recentEndPoint = `/tnote/v1/classLog/${item.logId}`;
               } else if (item.logType === 'PROCEEDING') {
-                recentEndPoint = `/tnote/proceeding/${item.logId}`;
+                recentEndPoint = `/tnote/v1/proceeding/${item.logId}`;
               } else if (item.logType === 'OBSERVATION') {
-                recentEndPoint = `/tnote/observation/${item.logId}`;
+                recentEndPoint = `/tnote/v1/observation/${item.logId}`;
               } else if (item.logType === 'CONSULTATION') {
                 recentEndPoint = `/tnote/v1/consultation/${item.logId}`;
+              } else if (item.logType === 'PLAN') {
+                recentEndPoint = `/tnote/v1/plan/${item.logId}`;
               }
               if (recentEndPoint) {
                 const response = await instanceAxios.get(recentEndPoint);
