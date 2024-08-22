@@ -221,7 +221,7 @@ export const createWorkLog = async (
 ) => {
   try {
     const response = instanceAxios.post(
-      `/tnote/proceeding/${scheduleId}`,
+      `/tnote/v1/proceeding/${scheduleId}`,
       LogData,
     );
     return response;
@@ -237,7 +237,7 @@ export const createStudentObservation = async (
 ) => {
   try {
     const response = instanceAxios.post(
-      `/tnote/observation/${scheduleId}`,
+      `/tnote/v1/observation/${scheduleId}`,
       LogData,
     );
     return response;
@@ -346,7 +346,7 @@ export const getAllClassLog = async (scheduleId: string | undefined) => {
 export const getAllProceedings = async (scheduleId: string | undefined) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/proceeding/${scheduleId}/proceedings?page=0&size=4`,
+      `/tnote/v1/proceeding/${scheduleId}/all?page=0&size=4`,
     );
     return response.data;
   } catch {}
@@ -356,7 +356,7 @@ export const getAllProceedings = async (scheduleId: string | undefined) => {
 export const getAllConsultations = async (scheduleId: string | undefined) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/v1/consultation/${scheduleId}?page=0&size=4`,
+      `/tnote/v1/consultation/${scheduleId}/all?page=0&size=4`,
     );
     return response.data;
   } catch {}
@@ -366,7 +366,17 @@ export const getAllConsultations = async (scheduleId: string | undefined) => {
 export const getAllObservation = async (scheduleId: string | undefined) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/observation/${scheduleId}/observations?page=0&size=4`,
+      `/tnote/v1/observation/${scheduleId}/all?page=0&size=4`,
+    );
+    return response.data;
+  } catch {}
+};
+
+// 일정 전체 조회
+export const getAllPlan = async (scheduleId: string | undefined) => {
+  try {
+    const response = await instanceAxios.get(
+      `/tnote/v1/plan/${scheduleId}/all?page=0&size=4`,
     );
     return response.data;
   } catch {}
@@ -476,7 +486,7 @@ export const getProceedingDetailData = async ({
   queryKey: string[];
 }) => {
   const [_, id] = queryKey;
-  const { data } = await instanceAxios.get(`/tnote/proceeding/${id}`);
+  const { data } = await instanceAxios.get(`/tnote/v1/proceeding/${id}`);
   return data.data;
 };
 
@@ -509,7 +519,7 @@ export const getObservationDetailData = async ({
   queryKey: string[];
 }) => {
   const [_, id] = queryKey;
-  const { data } = await instanceAxios.get(`/tnote/observation/${id}`);
+  const { data } = await instanceAxios.get(`/tnote/v1/observation/${id}`);
   return data.data;
 };
 

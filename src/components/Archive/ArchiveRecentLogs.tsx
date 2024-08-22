@@ -136,7 +136,7 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
   }, [scheduleId]);
 
   const handleClickRecentLog = (id: number, type: string) => {
-    navigate(`/archive/logDetail/${type}/${id}`);
+    navigate(`/archive/logDetail/${scheduleId}/${type}/${id}`);
   };
 
   return (

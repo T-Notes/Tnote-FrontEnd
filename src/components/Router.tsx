@@ -38,7 +38,7 @@ const Router = () => {
             element={<ArchiveSemester />}
           />
           <Route
-            path="archive/logDetail/:logType/:logId"
+            path="archive/logDetail/:scheduleId/:logType/:logId"
             element={<ArchiveLogPage />}
           />
         </Route>

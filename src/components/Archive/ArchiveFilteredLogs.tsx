@@ -300,7 +300,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   };
 
   const handleChangePageAtLogs = (id: number, type: string) => {
-    navigate(`/archive/logDetail/${type}/${id}`);
+    navigate(`/archive/logDetail/${scheduleId}/${type}/${id}`);
   };
 
   return (
