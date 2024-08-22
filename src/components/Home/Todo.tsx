@@ -148,6 +148,7 @@ const Todo = memo(({ clickedDate }: TodoOutside) => {
   const { data } = useQuery({
     queryKey: ['todos', scheduleId || '', date || ''],
     queryFn: getTodo,
+    enabled: !!scheduleId,
   });
 
   useEffect(() => {
