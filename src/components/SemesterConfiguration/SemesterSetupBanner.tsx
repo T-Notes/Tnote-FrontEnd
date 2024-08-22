@@ -137,7 +137,13 @@ const SemesterSetupBanner = (props: SemesterSetupBannerProps) => {
   }, [isPostSemester]);
 
   const handleClickBackRoute = () => {
-    navigate(-1);
+    if (currentUrl.includes('home')) {
+      navigate('/home');
+    } else if (currentUrl.includes('timetable')) {
+      navigate('/timetable');
+    } else if (currentUrl.includes('archive')) {
+      navigate('/archive');
+    }
   };
 
   const handleClickRoute = (scheduleId: number) => {

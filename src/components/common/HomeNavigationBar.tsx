@@ -115,6 +115,7 @@ const SProfileContainer = styled.div`
 
 const HomeNavigationBar = () => {
   const { scheduleId } = useParams();
+  const currentUrl = location.pathname;
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
   const [email, setEmail] = useState<string>('');
@@ -142,9 +143,22 @@ const HomeNavigationBar = () => {
 
   const handleClickRoute = () => {
     if (scheduleId) {
-      navigate(`/semesterSetup/${scheduleId}`);
-    } else {
-      navigate('/semesterSetup');
+      if (currentUrl.includes('home')) {
+        navigate(`/semesterSetup/home/${scheduleId}`);
+      } else if (currentUrl.includes('timetable')) {
+        navigate(`/semesterSetup/timetable/${scheduleId}`);
+      } else if (currentUrl.includes('archive')) {
+        navigate(`/semesterSetup/archive/${scheduleId}`);
+      }
+    }
+    if (!scheduleId) {
+      if (currentUrl.includes('home')) {
+        navigate(`/semesterSetup/home`);
+      } else if (currentUrl.includes('timetable')) {
+        navigate(`/semesterSetup/timetable`);
+      } else if (currentUrl.includes('archive')) {
+        navigate(`/semesterSetup/archive`);
+      }
     }
   };
 

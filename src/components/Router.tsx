@@ -25,7 +25,22 @@ const Router = () => {
             path="/semesterSetup/:scheduleId"
             element={<SemesterSetup />}
           />
-          <Route path="/semesterSetup" element={<SemesterSetup />} />
+
+          <Route path="/semesterSetup/home" element={<SemesterSetup />} />
+          <Route path="/semesterSetup/timetable" element={<SemesterSetup />} />
+          <Route path="/semesterSetup/archive" element={<SemesterSetup />} />
+          <Route
+            path="/semesterSetup/home/:scheduleId"
+            element={<SemesterSetup />}
+          />
+          <Route
+            path="/semesterSetup/timetable/:scheduleId"
+            element={<SemesterSetup />}
+          />
+          <Route
+            path="/semesterSetup/archive/:scheduleId"
+            element={<SemesterSetup />}
+          />
 
           <Route path="/timetable/:scheduleId" element={<Timetable />} />
 

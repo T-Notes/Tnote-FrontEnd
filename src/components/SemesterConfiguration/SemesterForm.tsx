@@ -129,10 +129,10 @@ interface SetupProps {
 }
 const SemesterForm = ({ setReload, reload, id }: SetupProps) => {
   const { scheduleId } = useParams();
-
   const [isActiveDateColor, setIsActiveDateColor] = useState<boolean>(false);
+  const [url, setUrl] = useState<string>('');
   const { isToggle, setIsToggle, handleChangeToggle } = useToggle();
-  const url = window.location.href;
+  const currentUrl = window.location.pathname;
   const navigate = useNavigate();
   const [semesterData, setSemesterData] = useState<SemesterDataProps>({
     id: null,
@@ -144,6 +144,16 @@ const SemesterForm = ({ setReload, reload, id }: SetupProps) => {
 
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
+
+  useEffect(() => {
+    if (currentUrl.includes('home')) {
+      setUrl('/semesterSetup/home');
+    } else if (currentUrl.includes('timetable')) {
+      setUrl('/semesterSetup/timetable');
+    } else if (currentUrl.includes('archive')) {
+      setUrl('/semesterSetup/archive');
+    }
+  }, [currentUrl]);
 
   const handleChangeSemesterName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const semesterName = e.target.value;
@@ -181,13 +191,13 @@ const SemesterForm = ({ setReload, reload, id }: SetupProps) => {
   };
 
   useEffect(() => {
-    if (scheduleId) {
+    if (scheduleId || id) {
       getSemesterForm();
     }
   }, [scheduleId, reload, id]);
 
   const handleUpdateSemester = async () => {
-    if (scheduleId) {
+    if (scheduleId || id) {
       const patchData = {
         semesterName: semesterData.semesterName,
         lastClass: semesterData.lastClass,
@@ -195,7 +205,10 @@ const SemesterForm = ({ setReload, reload, id }: SetupProps) => {
         endDate: endDate?.toISOString().slice(0, 10),
       };
 
-      const editSemester = await updateSemester(scheduleId, patchData);
+      const editSemester = await updateSemester(
+        id ? id : scheduleId,
+        patchData,
+      );
       const data = editSemester.data;
 
       setSemesterData((prev) => ({
@@ -254,13 +267,8 @@ const SemesterForm = ({ setReload, reload, id }: SetupProps) => {
       cancelButtonText: '취소',
     }).then((res) => {
       if (res.isConfirmed) {
-        removeSemester(scheduleId);
-        if (url.includes('home')) {
-          navigate('/semesterSetup/home');
-        } else if (url.includes('timetable')) {
-          navigate('/semesterSetup/timetable');
-        }
-
+        removeSemester(id ? id : scheduleId);
+        navigate(url);
         setReload((prev) => !prev);
         Swal.fire({
           title: '삭제되었습니다.',
