@@ -44,16 +44,11 @@ interface Semester {
   semesterName: string;
 }
 interface Archive {
-  isDelete: boolean;
   handleDeletedCheck: (item: number) => void;
   isDeleteChecked: number | null;
 }
 
-const NotSearchArchive = ({
-  isDelete,
-  handleDeletedCheck,
-  isDeleteChecked,
-}: Archive) => {
+const NotSearchArchive = ({ handleDeletedCheck, isDeleteChecked }: Archive) => {
   const navigate = useNavigate();
   const [allSemester, setAllSemester] = useState<Semester[]>([]);
 
@@ -73,22 +68,16 @@ const NotSearchArchive = ({
     <>
       {allSemester.map((item) => (
         <SSemesterContainer key={item.id}>
-          {isDelete ? (
-            <SCheckDiv>
-              {isDeleteChecked === item.id ? (
-                <IcCheckedBox onClick={() => handleDeletedCheck(item.id)} />
-              ) : (
-                <IcUncheckedBox onClick={() => handleDeletedCheck(item.id)} />
-              )}
-              <div onClick={() => handleSelectedSemester(item.id)}>
-                {item.semesterName}
-              </div>
-            </SCheckDiv>
-          ) : (
+          <SCheckDiv>
+            {isDeleteChecked === item.id ? (
+              <IcCheckedBox onClick={() => handleDeletedCheck(item.id)} />
+            ) : (
+              <IcUncheckedBox onClick={() => handleDeletedCheck(item.id)} />
+            )}
             <div onClick={() => handleSelectedSemester(item.id)}>
               {item.semesterName}
             </div>
-          )}
+          </SCheckDiv>
         </SSemesterContainer>
       ))}
     </>
