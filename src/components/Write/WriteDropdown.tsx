@@ -44,7 +44,7 @@ const SDropdownToggle = styled.div`
 const SDropdownList = styled.ul`
   ${({ theme }) => theme.fonts.caption}
   width: 10rem;
-  height: 7.3rem;
+
   border-radius: 8px;
   border: 1px solid #00000033;
   box-shadow: 0px 6px 15px 0px #00000033;

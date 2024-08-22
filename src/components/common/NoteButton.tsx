@@ -8,6 +8,7 @@ import WorkLogModal from '../Write/WorkLogModal';
 import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
 import StudentRecordsModal from '../Write/StudentRecordsModal';
 import { useParams } from 'react-router-dom';
+import ScheduleLogModal from '../Write/ScheduleLogModal';
 
 const SWriteBtn = styled.div`
   position: relative;
@@ -60,6 +61,8 @@ export const NoteButton = () => {
       openModal(ConsultationRecordsModal, { handleClickOpenModal, scheduleId });
     } else if (openModalName === '학생 관찰 일지') {
       openModal(StudentRecordsModal, { handleClickOpenModal, scheduleId });
+    } else if (openModalName === '일정') {
+      openModal(ScheduleLogModal, { handleClickOpenModal, scheduleId });
     }
   };
   return (

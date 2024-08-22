@@ -33,7 +33,13 @@ const WriteDropdownList = ({
   onClickOpenModal: (option: string) => void;
   toggle: () => void;
 }) => {
-  const options = ['학급일지', '업무일지', '상담기록', '학생 관찰 일지'];
+  const options = [
+    '일정',
+    '학급일지',
+    '업무일지',
+    '상담기록',
+    '학생 관찰 일지',
+  ];
   const handleClickOpenModal = (option: string) => {
     onClickOpenModal(option);
   };

@@ -57,6 +57,7 @@ export const getRemainingDayData = async (
 // 학교검색 결과 조회
 interface schoolSearchValueProps {
   code: string;
+  region: string;
   schoolType: string;
   schoolName: string;
 }
@@ -69,7 +70,6 @@ export const getSchoolSearchValue = async (
     });
     return response.data;
   } catch (error) {
-    console.log('학교 검색결과 조회 에러');
     throw new Error('학교 검색 결과를 가져오는데 에러가 발생했습니다.');
   }
 };
@@ -488,6 +488,17 @@ export const getConsultationDetailData = async ({
 }) => {
   const [_, id] = queryKey;
   const { data } = await instanceAxios.get(`/tnote/v1/consultation/${id}`);
+  return data.data;
+};
+
+// 일정기록 상세조회
+export const getPlanDetailData = async ({
+  queryKey,
+}: {
+  queryKey: string[];
+}) => {
+  const [_, id] = queryKey;
+  const { data } = await instanceAxios.get(`/tnote/v1/plan/${id}`);
   return data.data;
 };
 

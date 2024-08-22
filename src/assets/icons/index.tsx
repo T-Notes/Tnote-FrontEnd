@@ -48,3 +48,4 @@ export { ReactComponent as IcEditDisabledDropdown } from './editDisabledDropdown
 export { ReactComponent as IcImageDelete } from './imageFileDeletedIcon.svg';
 export { ReactComponent as IcImageClip } from './imageFileClip.svg';
 export { ReactComponent as IcSetting } from './settings.svg';
+export { ReactComponent as IcPerson } from './personIcon.svg';
