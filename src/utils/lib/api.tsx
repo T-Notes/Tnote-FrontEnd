@@ -113,7 +113,6 @@ export const createTodo = async ({ scheduleId, content, date }: TodoPost) => {
   );
   return data.data;
 };
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const updateTodo = async ({
   scheduleId,
@@ -122,7 +121,6 @@ export const updateTodo = async ({
   date,
   status,
 }: TodoUpdate) => {
-  // await delay(2000); // 임의로 딜레이
   const { data } = await instanceAxios.patch(
     `/tnote/v1/todo/${scheduleId}/${todoId}`,
     { content, status },
