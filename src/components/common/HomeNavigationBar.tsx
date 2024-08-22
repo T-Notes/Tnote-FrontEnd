@@ -62,6 +62,7 @@ const SCategoryText = styled.div`
   line-height: 19.36px;
   text-align: left;
   color: #666666;
+  cursor: pointer;
 `;
 const SUserProfileInfoWrapper = styled.div`
   display: flex;
@@ -142,6 +143,8 @@ const HomeNavigationBar = () => {
   const handleClickRoute = () => {
     if (scheduleId) {
       navigate(`/semesterSetup/${scheduleId}`);
+    } else {
+      navigate('/semesterSetup');
     }
   };
 
@@ -196,7 +199,15 @@ const HomeNavigationBar = () => {
           </>
         </SHomeCategoryGroup>
 
-        <SCategory onClick={handleClickRoute}>
+        <SCategory
+          onClick={handleClickRoute}
+          className={
+            location.pathname ===
+            (scheduleId ? `/semesterSetup/${scheduleId}` : '/semesterSetup')
+              ? 'active'
+              : ''
+          }
+        >
           <IcSetting />
           <SCategoryText> 학기 설정</SCategoryText>
         </SCategory>
