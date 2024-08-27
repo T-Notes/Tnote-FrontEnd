@@ -242,13 +242,51 @@ export default function ArchiveLog({ type, id }: LogTypeProps) {
   });
   useEffect(() => {
     if (data) {
-      const imagePromises = data?.images.map((image: any) => {
-        return convertUrlToFile(image.url, image.originalFileName);
-      });
+      if (type === 'PLAN') {
+        const imagePromises = data?.planImageList.map((image: any) => {
+          return convertUrlToFile(image.planImageUrl, image.name);
+        });
 
-      Promise.all(imagePromises).then((files) => {
-        setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
-      });
+        Promise.all(imagePromises).then((files) => {
+          setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
+        });
+      }
+      if (type === 'CLASS_LOG') {
+        const imagePromises = data?.classLogImages.map((image: any) => {
+          return convertUrlToFile(image.classLogImageUrl, image.name);
+        });
+
+        Promise.all(imagePromises).then((files) => {
+          setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
+        });
+      }
+      if (type === 'PROCEEDING') {
+        const imagePromises = data?.proceedingImages.map((image: any) => {
+          return convertUrlToFile(image.proceedingImageUrl, image.name);
+        });
+
+        Promise.all(imagePromises).then((files) => {
+          setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
+        });
+      }
+      if (type === 'OBSERVATION') {
+        const imagePromises = data?.images.map((image: any) => {
+          return convertUrlToFile(image.observationImageUrl, image.name);
+        });
+
+        Promise.all(imagePromises).then((files) => {
+          setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
+        });
+      }
+      if (type === 'CONSULTATION') {
+        const imagePromises = data?.images.map((image: any) => {
+          return convertUrlToFile(image.url, image.originalFileName);
+        });
+
+        Promise.all(imagePromises).then((files) => {
+          setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
+        });
+      }
     }
   }, [data]);
 

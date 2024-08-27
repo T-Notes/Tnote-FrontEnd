@@ -112,7 +112,7 @@ interface SearchValue {
 const Archive = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string>('');
-  const [searchValueList, setSetSearchValueList] = useState<SearchValue[]>([]);
+  const [searchValueList, setSearchValueList] = useState<SearchValue[]>([]);
   const [isDeleteChecked, setIsDeleteChecked] = useState<number | null>(null);
   const [isPeriodToggle, setIsPeriodToggle] = useState<boolean>(false);
   const [isTitleToggle, setIsTitleToggle] = useState<boolean>(false);
@@ -131,8 +131,6 @@ const Archive = () => {
   };
 
   const handleClickPeriodSearchOption = (item: string) => {
-    console.log(item);
-
     let selectedType = '';
     if (item === '전체 기간') {
       selectedType = 'ALL';
@@ -175,7 +173,7 @@ const Archive = () => {
     const value = e.target.value;
     setSearchValue(value);
     if (!value) {
-      setSetSearchValueList([]);
+      setSearchValueList([]);
     }
     setCurrentPage(0);
   };
@@ -192,7 +190,7 @@ const Archive = () => {
       size: 8,
     });
 
-    setSetSearchValueList(getSearchValue.data.logs);
+    setSearchValueList(getSearchValue.data.logs);
     setTotalLogs(getSearchValue.data.totalLog);
   };
   const debouncedSearch = _debounce(handleArchiveLogsSearch, 100);

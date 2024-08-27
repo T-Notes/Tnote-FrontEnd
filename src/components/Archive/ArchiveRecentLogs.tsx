@@ -104,7 +104,7 @@ const ArchiveRecentLogs = ({ scheduleId }: Archive) => {
           const data = response.data;
 
           if (data) {
-            const promises = data.map(async (item: RecentLogs) => {
+            const promises = data.recentLogs.map(async (item: RecentLogs) => {
               let recentEndPoint = '';
               if (item.logType === 'CLASS_LOG') {
                 recentEndPoint = `/tnote/v1/classLog/${item.logId}`;

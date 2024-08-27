@@ -216,10 +216,12 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
           break;
         case '일정':
           res = await getAllPlan(scheduleId);
+
           setFilteredLogsList(res.data.plans);
           break;
         case '학급일지':
           res = await getAllClassLog(scheduleId);
+
           setFilteredLogsList(res.data.classLogs);
           break;
         case '업무일지':
@@ -402,6 +404,17 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
                       }
                     >
                       <p>{item.title || item.studentName}/학생 관찰 기록</p>
+                    </SLogType>
+                  )}
+
+                  {item.logType === 'PLAN' && (
+                    <SLogType
+                      className="pointer"
+                      onClick={() =>
+                        handleChangePageAtLogs(item.id, item.logType)
+                      }
+                    >
+                      <p>{item.title || item.studentName}/일정</p>
                     </SLogType>
                   )}
                 </div>
