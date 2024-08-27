@@ -187,10 +187,7 @@ const ClassLogModal = ({
       type: 'application/json',
     });
 
-    formData.append(
-      isEdit ? 'classLogUpdateRequestDto' : 'classLogRequestDto',
-      jsonDataTypeValue,
-    );
+    formData.append('request', jsonDataTypeValue);
 
     const accessToken = localStorage.getItem('accessToken');
 
@@ -213,7 +210,7 @@ const ClassLogModal = ({
     } catch (err) {
       if (
         (err as any).response?.data?.message ===
-        'ClassLog date must be within the schedule dates'
+        '해당 기간에 일치하는 학급일지가 존재하지 않습니다.'
       ) {
         window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
       }
@@ -260,7 +257,7 @@ const ClassLogModal = ({
       <>
         <WriteDropdown
           label="학급일지"
-          options={['업무일지', '상담기록', '학생 관찰 일지']}
+          options={['일정', '업무일지', '상담기록', '학생 관찰 일지']}
           onClickDropdownOpenModal={handleClickOpenModal}
           onClose={onClose}
           isEdit={isEdit}
