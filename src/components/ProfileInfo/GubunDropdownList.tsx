@@ -40,9 +40,9 @@ interface GubunListProps {
 // 학교 검색 모달 -> 학교 분류
 const GubunDropdownList = ({ onSelectedGubun }: GubunListProps) => {
   const GubunList = [
-    { id: 1, typeCode: 'elem_list', typeValue: '초등학교' },
-    { id: 2, typeCode: 'midd_list', typeValue: '중학교' },
-    { id: 3, typeCode: 'high_list', typeValue: '고등학교' },
+    { id: 1, typeCode: '초등학교', typeValue: '초등학교' },
+    { id: 2, typeCode: '중학교', typeValue: '중학교' },
+    { id: 3, typeCode: '고등학교', typeValue: '고등학교' },
   ];
   return (
     <>

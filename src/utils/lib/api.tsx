@@ -56,7 +56,6 @@ export const getRemainingDayData = async (
 
 // 학교검색 결과 조회
 interface schoolSearchValueProps {
-  code: string;
   region: string;
   schoolType: string;
   schoolName: string;
@@ -71,6 +70,22 @@ export const getSchoolSearchValue = async (
     return response.data;
   } catch (error) {
     throw new Error('학교 검색 결과를 가져오는데 에러가 발생했습니다.');
+  }
+};
+// 행정 표준 코드 제공
+interface schoolCodeProps {
+  code: string;
+  schoolType: string;
+  schoolName: string;
+}
+export const getSchoolCode = async (schoolData: schoolCodeProps) => {
+  try {
+    const response = await instanceAxios.get('/tnote/v1/user/school/info', {
+      params: schoolData,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('행정 표준 코드를 가져오는데 에러가 발생했습니다.');
   }
 };
 
@@ -387,7 +402,7 @@ export const getAllLogsBySchedule = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `tnote/archive/${scheduleId}/LogsByFilter?page=${page}&size=8&logType=ALL`,
+      `tnote/v1/archive/${scheduleId}/LogsByFilter?page=${page}&size=8&logType=ALL`,
     );
     return response.data;
   } catch {}
@@ -401,7 +416,7 @@ export const getAllLogsByMonth = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/archive/${scheduleId}/monthlyLogs?date=${date}`,
+      `/tnote/v1/archive/${scheduleId}/monthly?date=${date}`,
     );
     return response.data;
   } catch {}
@@ -411,7 +426,7 @@ export const getAllLogsByMonth = async (
 export const getRecentLogs = async (scheduleId: string | undefined) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/archive/recentLogs/${scheduleId}`,
+      `/tnote/v1/archive/recentLogs/${scheduleId}`,
     );
     return response.data;
   } catch {}
@@ -424,7 +439,7 @@ export const getSearchLogsValue = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/archive/searching/${scheduleId}`,
+      `/tnote/v1/archive/searching/${scheduleId}`,
       {
         params: { keyword: keyword },
       },
@@ -546,7 +561,7 @@ export const getAllTaskByDate = async (
 ) => {
   try {
     const response = await instanceAxios.get(
-      `/tnote/archive/${scheduleId}/dailyLogs`,
+      `/tnote/v1/archive/${scheduleId}/daily`,
       {
         params: { date },
       },
@@ -585,7 +600,7 @@ interface LogsProps {
 export const logsDelete = async (logs: LogsProps) => {
   try {
     const response = await instanceAxios.post(
-      '/tnote/archive/deleteLogs',
+      '/tnote/v1/archive/deleteLogs',
       logs,
     );
     return response.data;
@@ -611,9 +626,12 @@ export const searchArchiveLog = async (params: SearchParams) => {
   } = params;
 
   try {
-    const response = await instanceAxios.get('/tnote/archive/searching/log', {
-      params: { dateType, searchType, keyword, page, size },
-    });
+    const response = await instanceAxios.get(
+      '/tnote/v1/archive/searching/log',
+      {
+        params: { dateType, searchType, keyword, page, size },
+      },
+    );
     return response.data;
   } catch {}
 };

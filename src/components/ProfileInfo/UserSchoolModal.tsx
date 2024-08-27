@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
 import { searchCustomStyles } from '../common/styled/ModalLayout';
 import styled from 'styled-components';
@@ -65,10 +65,15 @@ const SSearchContainer = styled.div`
 interface searchModalProps {
   isOpen: boolean;
   onClose: () => void;
-  handleSubmit: (searchInput: string) => void;
+  handleSubmit: (
+    schoolName: string,
+    schoolType: string,
+    region: String,
+  ) => void;
 }
 interface ResultsProps {
   code: string;
+  region: string;
   schoolType: string;
   schoolName: string;
 }
@@ -77,9 +82,15 @@ const UserSchoolModal = (props: searchModalProps) => {
   const { isOpen, onClose, handleSubmit } = props;
   const [schoolSearchData, setSchoolSearchData] = useState<ResultsProps>({
     code: '',
+    region: '',
     schoolType: '',
     schoolName: '',
   });
+  useEffect(() => {
+    if (schoolSearchData.code !== '') {
+      localStorage.setItem('code', schoolSearchData.code);
+    }
+  }, [schoolSearchData.code]);
 
   const [showSchoolDataLoader, setShowSchoolDataLoader] =
     useState<boolean>(true);
@@ -96,10 +107,11 @@ const UserSchoolModal = (props: searchModalProps) => {
     setIsRegionDropdownToggle(!isRegionDropdownToggle);
   };
 
-  const handleSelectedRegionOption = (code: string) => {
+  const handleSelectedRegionOption = (code: string, region: string) => {
     setSchoolSearchData((prev) => ({
       ...prev,
       code: code,
+      region: region,
     }));
     handleChangeRegionToggle();
   };
@@ -151,7 +163,7 @@ const UserSchoolModal = (props: searchModalProps) => {
 
             <CityAndTypeSelection
               label="시/도"
-              value={schoolSearchData.code}
+              value={schoolSearchData.region}
               handleChangeToggle={handleChangeRegionToggle}
               isToggle={isRegionDropdownToggle}
               dropdownList={
@@ -197,7 +209,13 @@ const UserSchoolModal = (props: searchModalProps) => {
             </SInputBox>
 
             <SButton
-              onClick={() => handleSubmit(schoolSearchData.schoolName)}
+              onClick={() =>
+                handleSubmit(
+                  schoolSearchData.schoolName,
+                  schoolSearchData.schoolType,
+                  schoolSearchData.code,
+                )
+              }
               style={{
                 backgroundColor: isValid ? '#632CFA' : '#F3F3F3',
                 color: isValid ? '#FFFFFF' : '#A6A6A6',
