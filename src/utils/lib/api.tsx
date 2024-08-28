@@ -278,7 +278,10 @@ export const createConsultationRecords = async (
 export const logout = async () => {
   try {
     const response = instanceAxios.post('/tnote/v1/user/logout').then((res) => {
-      localStorage.clear();
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('oauthRefreshToken');
     });
     return response;
   } catch {}
