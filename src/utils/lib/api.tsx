@@ -596,6 +596,7 @@ interface LogsProps {
   proceedingIds: number[];
   observationIds: number[];
   consultationIds: number[];
+  planIds: number[];
 }
 export const logsDelete = async (logs: LogsProps) => {
   try {

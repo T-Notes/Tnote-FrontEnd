@@ -162,6 +162,7 @@ interface DeleteIds {
   proceedingIds: number[];
   observationIds: number[];
   consultationIds: number[];
+  planIds: number[];
 }
 const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const navigate = useNavigate();
@@ -264,6 +265,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
       proceedingIds: [],
       observationIds: [],
       consultationIds: [],
+      planIds: [],
     };
     if (checkedDeleteIds) {
       for (const log of checkedDeleteIds) {
@@ -275,6 +277,8 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
           logsDeleteIds.observationIds.push(log.id);
         } else if (log.logType === 'CONSULTATION') {
           logsDeleteIds.consultationIds.push(log.id);
+        } else if (log.logType === 'PLAN') {
+          logsDeleteIds.planIds.push(log.id);
         }
       }
     }
