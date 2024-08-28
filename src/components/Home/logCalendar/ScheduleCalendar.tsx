@@ -78,7 +78,7 @@ const SDaysBox = styled.div`
   white-space: nowrap;
   overflow: hidden;
 
-  height: 130px;
+  /* height: 130px; */
   flex: 1;
   flex: 1 0 14%;
   padding-top: 5px;
@@ -196,6 +196,7 @@ const SMySchedule = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: auto;
 `;
 const ScheduleCalendar = ({
   onDayClick,
@@ -407,18 +408,18 @@ const ScheduleCalendar = ({
                     logsForDay.length - visibleLogs.length;
                   return (
                     <SMySchedule>
-                      {visibleLogs.map((item, index) => (
+                      {logsForDay.map((item, index) => (
                         <SLogContainer key={index}>
                           <SLog color={item.color}>
                             <p>{item.title || item.studentName}</p>
                           </SLog>
                         </SLogContainer>
                       ))}
-                      {hiddenLogsCount > 0 && (
+                      {/* {hiddenLogsCount > 0 && (
                         <SMoreLogs
                           onClick={(e: any) => handleClickMoreLogs(e, day)}
                         >{`${hiddenLogsCount}개 더보기`}</SMoreLogs>
-                      )}
+                      )} */}
                     </SMySchedule>
                   );
                 })()}
