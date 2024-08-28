@@ -4,11 +4,11 @@ import SemesterSetupBanner from '../components/SemesterConfiguration/SemesterSet
 
 const SemesterSetup = () => {
   const [reload, setReload] = useState<boolean>(false);
-
+  const [id, setId] = useState<string | undefined>();
   return (
     <>
-      <SemesterSetupBanner />
-      <SemesterForm setReload={setReload} reload={reload} />
+      <SemesterSetupBanner setId={setId} id={id} />
+      <SemesterForm setReload={setReload} reload={reload} id={id} />
     </>
   );
 };

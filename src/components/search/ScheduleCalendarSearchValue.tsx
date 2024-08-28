@@ -5,6 +5,7 @@ import ClassLogModal from '../Write/ClassLogModal';
 import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
 import StudentRecordsModal from '../Write/StudentRecordsModal';
 import WorkLogModal from '../Write/WorkLogModal';
+import ScheduleLogModal from '../Write/ScheduleLogModal';
 
 const SSearchValueWrapper = styled.div`
   cursor: pointer;
@@ -100,6 +101,8 @@ const ScheduleCalendarSearchValue = (props: SearchValueProps) => {
       openModal(ConsultationRecordsModal, { logId, scheduleId, isEdit });
     } else if (logType === 'OBSERVATION') {
       openModal(StudentRecordsModal, { logId, scheduleId, isEdit });
+    } else if (logType === 'PLAN') {
+      openModal(ScheduleLogModal, { logId, scheduleId, isEdit });
     }
   };
 

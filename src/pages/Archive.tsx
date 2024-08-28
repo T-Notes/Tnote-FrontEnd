@@ -112,8 +112,7 @@ interface SearchValue {
 const Archive = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string>('');
-  const [searchValueList, setSetSearchValueList] = useState<SearchValue[]>([]);
-  const [isDelete, setIsDelete] = useState<boolean>(false);
+  const [searchValueList, setSearchValueList] = useState<SearchValue[]>([]);
   const [isDeleteChecked, setIsDeleteChecked] = useState<number | null>(null);
   const [isPeriodToggle, setIsPeriodToggle] = useState<boolean>(false);
   const [isTitleToggle, setIsTitleToggle] = useState<boolean>(false);
@@ -124,9 +123,6 @@ const Archive = () => {
   const [searchType, setSearchType] = useState<string>('');
   const [dateType, setDateType] = useState<string>('');
 
-  const handleDeleteModeActivate = () => {
-    setIsDelete(true);
-  };
   const handleChangePeriodToggle = () => {
     setIsPeriodToggle(!isPeriodToggle);
   };
@@ -135,8 +131,6 @@ const Archive = () => {
   };
 
   const handleClickPeriodSearchOption = (item: string) => {
-    console.log(item);
-
     let selectedType = '';
     if (item === '전체 기간') {
       selectedType = 'ALL';
@@ -179,7 +173,7 @@ const Archive = () => {
     const value = e.target.value;
     setSearchValue(value);
     if (!value) {
-      setSetSearchValueList([]);
+      setSearchValueList([]);
     }
     setCurrentPage(0);
   };
@@ -196,7 +190,7 @@ const Archive = () => {
       size: 8,
     });
 
-    setSetSearchValueList(getSearchValue.data.logs);
+    setSearchValueList(getSearchValue.data.logs);
     setTotalLogs(getSearchValue.data.totalLog);
   };
   const debouncedSearch = _debounce(handleArchiveLogsSearch, 100);
@@ -280,7 +274,8 @@ const Archive = () => {
             />
           </SSearchInput>
           <DeleteButton
-            onClick={isDelete ? handleClickDelete : handleDeleteModeActivate}
+            onClick={handleClickDelete}
+            isDeleteChecked={isDeleteChecked ? true : false}
           />
         </SSearch>
       </SArchiveHeader>
@@ -299,7 +294,6 @@ const Archive = () => {
       ) : (
         !searchValue && (
           <NotSearchArchive
-            isDelete={isDelete}
             handleDeletedCheck={handleDeletedCheck}
             isDeleteChecked={isDeleteChecked}
           />

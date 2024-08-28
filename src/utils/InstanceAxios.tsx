@@ -21,11 +21,11 @@ instanceAxios.interceptors.response.use(
   async (error) => {
     //##응답 오류가 있는 작업 수행
     // 오류 응답에서 상태 코드 및 메시지를 가져옵니다.
-    console.log(2, error.response.data.message);
+
     const errorMessage = error.response.data.message;
 
     // 만료된 토큰인 경우 No message available / expired access token
-    if (errorMessage === 'expired access token') {
+    if (errorMessage === 'access token의 만료 기간이 지났습니다.') {
       // 토큰 갱신 요청 보내기
       try {
         const refreshToken = localStorage.getItem('refreshToken');

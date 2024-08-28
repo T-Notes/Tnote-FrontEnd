@@ -22,6 +22,7 @@ import { getAllLogsByMonth, getSearchLogsValue } from '../../../utils/lib/api';
 import ScheduleCalendarSearchValue from '../../search/ScheduleCalendarSearchValue';
 import MoreLogModal from './MoreLogModal';
 import { useModals } from '../../../utils/useHooks/useModals';
+import instanceAxios from '../../../utils/InstanceAxios';
 
 const SCalendarWrapper = styled.div`
   width: 100%;
@@ -130,7 +131,7 @@ const SLog = styled.div<{ color: string }>`
   font-weight: 600;
   line-height: 15.51px;
   text-align: center;
-  color: #ffffff;
+  color: #2f2f2f;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -202,6 +203,8 @@ const ScheduleCalendar = ({
   onDayClick: (clickedDate: Date) => void;
 }) => {
   const { scheduleId } = useParams();
+  const code = localStorage.getItem('code');
+  const scheduleCode = localStorage.getItem('scheduleCode');
   const [modalPosition, setModalPosition] = useState<{
     top: number;
     left: number;
@@ -212,6 +215,7 @@ const ScheduleCalendar = ({
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchValueList, setSearchValueList] = useState<any[]>([]);
   const [allLogs, setAllLogs] = useState<any[]>([]);
+  const [schoolSchedule, setSchoolSchedule] = useState<any[]>([]);
   const { openModal } = useModals();
   const { currentDate, handlePrevMonth, handleNextMonth, setCurrentDate } =
     useCurrentDate();
@@ -232,28 +236,66 @@ const ScheduleCalendar = ({
     onDayClick(new Date());
   };
 
+  const transformSchoolSchedule = (data: any[]) => {
+    return data.map((item, index) => {
+      const [AA_YMD, EVENT_NM] = item
+        .split(', ')
+        .map((str: string) => str.split(': ')[1]);
+
+      const date = new Date(
+        parseInt(AA_YMD.slice(0, 4)),
+        parseInt(AA_YMD.slice(4, 6)) - 1,
+        parseInt(AA_YMD.slice(6, 8)),
+      );
+
+      return {
+        id: index + 1, // id는 고유하게 부여, 필요시 다른 로직 사용 가능
+        title: EVENT_NM, // 이벤트 이름
+        startDate: date.toISOString(), // 시작 날짜 (ISO 형식)
+        endDate: date.toISOString(), // 종료 날짜 (같은 날)
+        plan: '학사일정', // 고정된 'plan' 값 (필요에 따라 변경 가능)
+        color: '#DCDCDC', // 학사일정에 대한 색상
+      };
+    });
+  };
+
   useEffect(() => {
     if (scheduleId) {
-      try {
-        const getMonthlyLogs = async () => {
+      const fetchData = async () => {
+        try {
+          // 1. 학사일정 데이터를 먼저 가져옵니다.
+          const { data } = await instanceAxios.get(
+            `/tnote/v1/user/school/plan?code=${code}&scheduleCode=${scheduleCode}`,
+          );
+
+          const transformedSchedule = transformSchoolSchedule(data.data);
+          setSchoolSchedule(transformedSchedule); // 학사일정 데이터를 상태에 저장
+
+          // 2. 학사일정 데이터가 업데이트된 후, 나머지 데이터를 가져옵니다.
           const formattedDate = format(currentDate, 'yyyy-MM-dd');
 
           const response = await getAllLogsByMonth(scheduleId, formattedDate);
 
-          const { classLogs, consultations, proceedings, observations } =
+          const { classLogs, consultations, proceedings, observations, plans } =
             response.data;
 
+          // 3. 학사일정 데이터를 가장 먼저 추가한 후 나머지 데이터를 추가합니다.
           const allLogs = [
+            ...transformedSchedule, // 업데이트된 schoolSchedule 값을 사용
             ...classLogs,
             ...consultations,
             ...proceedings,
             ...observations,
+            ...plans,
           ];
 
-          setAllLogs(allLogs);
-        };
-        getMonthlyLogs();
-      } catch {}
+          setAllLogs(allLogs); // 모든 로그 데이터를 상태에 저장
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+
+      fetchData(); // 데이터를 가져오는 함수 호출
     }
   }, [scheduleId, currentDate]);
 

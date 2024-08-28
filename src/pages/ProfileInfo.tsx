@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import Header from '../components/common/Header';
 import { IcLogoHeader } from '../assets/icons';
 import UserInfoForm from '../components/ProfileInfo/UserInfoForm';
 

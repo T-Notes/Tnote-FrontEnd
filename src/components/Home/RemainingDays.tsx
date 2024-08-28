@@ -83,7 +83,7 @@ const SRemainingDayText = styled.p`
 
 const RemainingDays = () => {
   const { scheduleId } = useParams();
-  const [remainingDay, setRemainingDay] = useState<number>();
+  const [remainingDay, setRemainingDay] = useState<number | null>(null);
   const current = new Date();
   const newCurrent = current.toISOString().slice(0, 10);
 
@@ -95,6 +95,7 @@ const RemainingDays = () => {
 
           setRemainingDay(response.data);
         } catch (err) {
+          setRemainingDay(0);
           console.log(err);
         }
       };

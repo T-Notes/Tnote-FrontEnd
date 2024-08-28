@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ChangeEvent, memo, SetStateAction, useEffect, useState } from 'react';
+import { ChangeEvent, memo, useEffect, useState } from 'react';
 import {
   IcAddWhite,
   IcCheckedBox,
@@ -148,6 +148,7 @@ const Todo = memo(({ clickedDate }: TodoOutside) => {
   const { data } = useQuery({
     queryKey: ['todos', scheduleId || '', date || ''],
     queryFn: getTodo,
+    enabled: !!scheduleId,
   });
 
   useEffect(() => {
@@ -204,10 +205,11 @@ const Todo = memo(({ clickedDate }: TodoOutside) => {
     e: React.KeyboardEvent<HTMLInputElement>,
     todoId: number | null,
   ) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
       if (scheduleId && content.trim() !== '') {
         addTodo.mutate({ scheduleId, content, date });
         setContent('');
+
         setTodoInput(true);
       } else if (todoId && scheduleId && updateContent[todoId].trim() !== '') {
         modifyTodo.mutate({
@@ -267,7 +269,7 @@ const Todo = memo(({ clickedDate }: TodoOutside) => {
       <STodoInputWrapper>
         <STodoHeader>
           <SFont>To do</SFont>
-          <STodoTotalNumber>{data?.length}</STodoTotalNumber>
+          <STodoTotalNumber>{data?.length || '0'}</STodoTotalNumber>
         </STodoHeader>
 
         {todoInput && (
@@ -314,7 +316,7 @@ const Todo = memo(({ clickedDate }: TodoOutside) => {
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   handleChangeUpdate(e, todo.id)
                 }
-                onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) =>
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
                   handleOnEnter(e, todo.id)
                 }
                 readOnly={todo.status}

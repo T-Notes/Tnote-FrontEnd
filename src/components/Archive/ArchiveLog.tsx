@@ -7,11 +7,19 @@ import {
   getClassLogDetailData,
   getConsultationDetailData,
   getObservationDetailData,
+  getPlanDetailData,
 } from '../../utils/lib/api';
 import { formatDate } from '../../utils/formatDate';
-import { IcImageClip } from '../../assets/icons';
+import { IcGrayMap, IcImageClip } from '../../assets/icons';
 import { downloadFile } from '../../utils/downloadFile';
 import { Textarea } from '../common/styled/Textarea';
+import { useModals } from '../../utils/useHooks/useModals';
+import ClassLogModal from '../Write/ClassLogModal';
+import { useParams } from 'react-router-dom';
+import WorkLogModal from '../Write/WorkLogModal';
+import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
+import StudentRecordsModal from '../Write/StudentRecordsModal';
+import ScheduleLogModal from '../Write/ScheduleLogModal';
 
 const STitleAndDate = styled.div`
   margin-top: 20px;
@@ -98,6 +106,69 @@ const SFileBox = styled.div`
     flex: 1 1 auto;
   }
 `;
+const SInput = styled.input`
+  display: flex;
+  min-height: 73px;
+  width: 100%;
+  flex-wrap: wrap;
+  color: #a6a6a6;
+  padding-top: 17px;
+  padding-bottom: 17px;
+  padding-left: 10px;
+  border-radius: 8px;
+  border: 1px solid #a6a6a6;
+  background: #ffff;
+  margin-top: 16px;
+  margin-bottom: 30px;
+  font-size: 14px;
+  gap: 10px;
+`;
+const SLocation = styled.div`
+  //styleName: Font/Caption;
+  font-family: Pretendard;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 17.9px;
+  text-align: left;
+
+  display: flex;
+  align-items: center;
+  min-height: 73px;
+  width: 100%;
+  flex-wrap: wrap;
+  color: #a6a6a6;
+  padding-top: 17px;
+  padding-bottom: 17px;
+  padding-left: 10px;
+  border-radius: 8px;
+  border: 1px solid #a6a6a6;
+  background: #ffff;
+  margin-top: 16px;
+  margin-bottom: 30px;
+  font-size: 14px;
+  gap: 10px;
+  > p {
+  }
+`;
+const SLocationItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 8px 10px 8px 10px;
+  gap: 10px;
+  border-radius: 50px;
+  opacity: 0px;
+  background-color: #e8e8e8;
+`;
+const SParticipants = styled(SLocation)`
+  //styleName: Font/Web_Title_3;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 23.87px;
+  text-align: left;
+
+  color: #000000;
+`;
 const SImage = styled.div`
   display: flex;
 
@@ -117,6 +188,20 @@ const SLogContentContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
+const SEdit = styled.button`
+  width: 110px;
+  margin-left: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+  background-color: #632cfa;
+  color: white;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 60px;
+`;
 
 interface LogTypeProps {
   id: string | undefined;
@@ -131,8 +216,9 @@ interface Proceeding {
 }
 
 export default function ArchiveLog({ type, id }: LogTypeProps) {
+  const { scheduleId, logId } = useParams();
   const [imgUrl, setImgUrl] = useState<File[]>([]);
-
+  const { openModal } = useModals();
   const queryFn = (() => {
     switch (type) {
       case 'CLASS_LOG':
@@ -143,6 +229,8 @@ export default function ArchiveLog({ type, id }: LogTypeProps) {
         return getConsultationDetailData;
       case 'OBSERVATION':
         return getObservationDetailData;
+      case 'PLAN':
+        return getPlanDetailData;
       default:
         throw new Error('Unknown type');
     }
@@ -154,13 +242,51 @@ export default function ArchiveLog({ type, id }: LogTypeProps) {
   });
   useEffect(() => {
     if (data) {
-      const imagePromises = data?.images.map((image: any) => {
-        return convertUrlToFile(image.url, image.originalFileName);
-      });
+      if (type === 'PLAN') {
+        const imagePromises = data?.planImageList.map((image: any) => {
+          return convertUrlToFile(image.planImageUrl, image.name);
+        });
 
-      Promise.all(imagePromises).then((files) => {
-        setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
-      });
+        Promise.all(imagePromises).then((files) => {
+          setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
+        });
+      }
+      if (type === 'CLASS_LOG') {
+        const imagePromises = data?.classLogImages.map((image: any) => {
+          return convertUrlToFile(image.classLogImageUrl, image.name);
+        });
+
+        Promise.all(imagePromises).then((files) => {
+          setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
+        });
+      }
+      if (type === 'PROCEEDING') {
+        const imagePromises = data?.proceedingImages.map((image: any) => {
+          return convertUrlToFile(image.proceedingImageUrl, image.name);
+        });
+
+        Promise.all(imagePromises).then((files) => {
+          setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
+        });
+      }
+      if (type === 'OBSERVATION') {
+        const imagePromises = data?.images.map((image: any) => {
+          return convertUrlToFile(image.observationImageUrl, image.name);
+        });
+
+        Promise.all(imagePromises).then((files) => {
+          setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
+        });
+      }
+      if (type === 'CONSULTATION') {
+        const imagePromises = data?.images.map((image: any) => {
+          return convertUrlToFile(image.url, image.originalFileName);
+        });
+
+        Promise.all(imagePromises).then((files) => {
+          setImgUrl((prevFiles: File[]) => [...prevFiles, ...files]);
+        });
+      }
     }
   }, [data]);
 
@@ -168,6 +294,39 @@ export default function ArchiveLog({ type, id }: LogTypeProps) {
     downloadFile(file);
   };
 
+  const handleClickEditLog = () => {
+    if (data) {
+      let type = data?.logType;
+      switch (type) {
+        case 'CLASS_LOG':
+          return openModal(ClassLogModal, { logId, scheduleId, isEdit: true });
+        case 'PROCEEDING':
+          return openModal(WorkLogModal, { logId, scheduleId, isEdit: true });
+        case 'CONSULTATION':
+          return openModal(ConsultationRecordsModal, {
+            logId,
+            scheduleId,
+            isEdit: true,
+          });
+        case 'OBSERVATION':
+          return openModal(StudentRecordsModal, {
+            logId,
+            scheduleId,
+            isEdit: true,
+          });
+        case 'PLAN':
+          return openModal(ScheduleLogModal, {
+            logId,
+            scheduleId,
+            isEdit: true,
+          });
+        default:
+          throw new Error('Unknown type');
+      }
+    } else {
+      window.alert('작성 먼저 해주세요.');
+    }
+  };
   return (
     <div>
       <STitleAndDate>
@@ -177,6 +336,23 @@ export default function ArchiveLog({ type, id }: LogTypeProps) {
         </SDate>
       </STitleAndDate>
       <SLogContentContainer>
+        {data?.logType === 'PLAN' && (
+          <>
+            <SLabel>내용</SLabel>
+            <Textarea logValue={data?.contents} />
+
+            <SLabel>참석자</SLabel>
+            <SParticipants>{data?.participants}</SParticipants>
+
+            <SLabel>장소</SLabel>
+            <SLocation>
+              <SLocationItem>
+                <IcGrayMap />
+                {data?.location}
+              </SLocationItem>
+            </SLocation>
+          </>
+        )}
         {data?.logType === 'CLASS_LOG' && (
           <>
             <SLabel>학급계획</SLabel>
@@ -234,6 +410,7 @@ export default function ArchiveLog({ type, id }: LogTypeProps) {
             </>
           ) : null}
         </SFileBox>
+        <SEdit onClick={handleClickEditLog}>수정</SEdit>
       </SLogContentContainer>
     </div>
   );
