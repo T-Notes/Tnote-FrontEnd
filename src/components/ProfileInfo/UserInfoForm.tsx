@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getUserInfo, updateUserInfo } from '../../utils/lib/api';
+import {
+  getSchoolCode,
+  getUserInfo,
+  updateUserInfo,
+} from '../../utils/lib/api';
 import { IcSearch } from '../../assets/icons';
 import { Input } from '../common/styled/Input';
 import { Button } from '../common/styled/Button';
@@ -39,7 +43,7 @@ const SSubmit = styled(Button)`
   ${({ theme }) => theme.fonts.caption};
 `;
 
-const SSearchWrapper = styled.div`
+const SSearchWrapper = styled.div<{ isEditMode: boolean }>`
   display: flex;
   width: 550px;
   height: 50px;
@@ -50,14 +54,16 @@ const SSearchWrapper = styled.div`
 
   padding: 10px 10px 10px 16px;
   border: 1px solid #d5d5d5;
+  background-color: ${({ isEditMode }) => (isEditMode ? '#F3F3F3' : 'white')};
 `;
-const SSearchInput = styled.input`
+const SSearchInput = styled.input<{ isEditMode: boolean }>`
   width: 200px;
   padding-left: 10px;
   ${({ theme }) => theme.fonts.caption}
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray100};
   }
+  color: ${({ isEditMode }) => (isEditMode ? '#A6A6A6' : '#000000')};
 `;
 
 const SButtonGroup = styled.div`
@@ -94,9 +100,26 @@ const UserInfoForm = ({ isEditMode, closeEditModal }: EditProps) => {
     );
   };
 
-  const handleSubmit = (searchInput: string) => {
+  const handleSubmit = async (
+    schoolName: string,
+    schoolType: string,
+    code: string,
+  ) => {
     closeModal(UserSchoolModal);
-    setUserData((prevData) => ({ ...prevData, schoolName: searchInput }));
+    setUserData((prevData) => ({ ...prevData, schoolName: schoolName }));
+
+    const codeData = {
+      code: code,
+      schoolType: schoolType,
+      schoolName: schoolName,
+    };
+    if (schoolName) {
+      const res = await getSchoolCode(codeData);
+
+      if (res.data) {
+        localStorage.setItem('scheduleCode', res.data);
+      }
+    }
   };
 
   const handleOpenSchoolModal = () => {
@@ -169,11 +192,12 @@ const UserInfoForm = ({ isEditMode, closeEditModal }: EditProps) => {
 
       <SLabel htmlFor="school">학교</SLabel>
       <div>
-        <SSearchWrapper>
+        <SSearchWrapper isEditMode={isEditMode}>
           <IcSearch />
           <SSearchInput
+            isEditMode={isEditMode}
             placeholder="학교를 입력해주세요"
-            onClick={handleOpenSchoolModal}
+            onClick={isEditMode ? () => {} : handleOpenSchoolModal}
             readOnly
             value={userData.schoolName || ''}
           />

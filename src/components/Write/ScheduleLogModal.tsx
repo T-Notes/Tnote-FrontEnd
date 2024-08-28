@@ -213,24 +213,27 @@ const ScheduleLogModal = ({
           const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
             type: 'application/json',
           });
-          formData.append('planSaveRequest', jsonDataTypeValue);
+          formData.append('request', jsonDataTypeValue);
 
           const accessToken = localStorage.getItem('accessToken');
 
-          await axios.patch(
-            `https://j9972.kr/tnote/v1/plan/${logId}`,
-            formData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                Authorization: `Bearer ${accessToken}`,
-                accept: 'application/json',
-              },
+          await axios.put(`https://j9972.kr/tnote/v1/plan/${logId}`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${accessToken}`,
+              accept: 'application/json',
             },
-          );
+          });
           window.location.reload();
           onClose();
-        } catch (err) {}
+        } catch (err) {
+          if (
+            (err as any).response?.data?.message ===
+            '해당 기간에 일치하는 학급일지가 존재하지 않습니다.'
+          ) {
+            window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
+          }
+        }
       } else {
         try {
           const logData = {
@@ -246,7 +249,7 @@ const ScheduleLogModal = ({
             contents: content,
             participants: participants,
             isAllDay: parentsIsAllDay,
-            color: 'green',
+            color: '#48E113',
           };
 
           // 이미지 파일
@@ -259,7 +262,7 @@ const ScheduleLogModal = ({
           const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
             type: 'application/json',
           });
-          formData.append('PlanSaveRequest', jsonDataTypeValue);
+          formData.append('request', jsonDataTypeValue);
 
           const accessToken = localStorage.getItem('accessToken');
 
@@ -276,7 +279,14 @@ const ScheduleLogModal = ({
           );
           window.location.reload();
           onClose();
-        } catch (err) {}
+        } catch (err) {
+          if (
+            (err as any).response?.data?.message ===
+            '해당 기간에 일치하는 학급일지가 존재하지 않습니다.'
+          ) {
+            window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
+          }
+        }
       }
     } else {
       Swal.fire({
@@ -295,7 +305,7 @@ const ScheduleLogModal = ({
           const data = response;
           setTitle(data.title);
           setLocation(data.location);
-          setContent(data.content);
+          setContent(data.contents);
           setParticipants(data.participants);
           setColor(data.color);
           setDate({
@@ -315,9 +325,7 @@ const ScheduleLogModal = ({
               console.error('Failed to convert image URLs to files:', error);
             });
         })
-        .catch((error) => {
-          console.error('Failed to fetch consultation detail:', error);
-        });
+        .catch((error) => {});
     }
   }, [logId, isEdit]);
 
@@ -354,6 +362,7 @@ const ScheduleLogModal = ({
               type="text"
               maxLength={30}
               placeholder="장소를 입력하세요"
+              value={location}
               onChange={handleLocationChange}
             ></SPlaceInput>
             <SPlaceLength>({location.length} / 30)</SPlaceLength>
@@ -365,6 +374,7 @@ const ScheduleLogModal = ({
               type="text"
               maxLength={30}
               placeholder="참석자를 입력하세요"
+              value={participants}
               onChange={handleParticipantsChange}
             ></SPlaceInput>
             <SPlaceLength>({participants.length} / 30)</SPlaceLength>

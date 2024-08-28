@@ -131,12 +131,12 @@ const StudentRecordsModal = ({
           const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
             type: 'application/json',
           });
-          formData.append('observationUpdateRequestDto', jsonDataTypeValue);
+          formData.append('request', jsonDataTypeValue);
 
           const accessToken = localStorage.getItem('accessToken');
 
           await axios.patch(
-            `https://j9972.kr/tnote/observation/${logId}`,
+            `https://j9972.kr/tnote/v1/observation/${logId}`,
             formData,
             {
               headers: {
@@ -149,7 +149,10 @@ const StudentRecordsModal = ({
           window.location.reload();
           onClose();
         } catch (err) {
-          if ((err = 'Observation date must be within the schedule dates')) {
+          if (
+            (err as any).response?.data?.message ===
+            'Observation date must be within the schedule dates'
+          ) {
             window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
           }
         }
@@ -179,12 +182,12 @@ const StudentRecordsModal = ({
           const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
             type: 'application/json',
           });
-          formData.append('observationRequestDto', jsonDataTypeValue);
+          formData.append('request', jsonDataTypeValue);
 
           const accessToken = localStorage.getItem('accessToken');
 
           await axios.post(
-            `https://j9972.kr/tnote/observation/${scheduleId}`,
+            `https://j9972.kr/tnote/v1/observation/${scheduleId}`,
             formData,
             {
               headers: {
@@ -197,7 +200,10 @@ const StudentRecordsModal = ({
           window.location.reload();
           onClose();
         } catch (err) {
-          if ((err = 'Observation date must be within the schedule dates')) {
+          if (
+            (err as any).response?.data?.message ===
+            'Observation date must be within the schedule dates'
+          ) {
             window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
           }
         }
@@ -246,7 +252,7 @@ const StudentRecordsModal = ({
     >
       <WriteDropdown
         label="학생 관찰 일지"
-        options={['학급일지', '업무일지', '상담기록']}
+        options={['일정', '학급일지', '업무일지', '상담기록']}
         onClickDropdownOpenModal={handleClickOpenModal}
         onClose={onClose}
         isEdit={isEdit}

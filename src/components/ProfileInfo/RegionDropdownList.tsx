@@ -33,7 +33,7 @@ const SItemContainer = styled.div`
   margin-top: 4px;
 `;
 interface SchoolCityListProps {
-  onSelectedRegion: (region: string) => void;
+  onSelectedRegion: (region: string, city: string) => void;
 }
 
 const RegionDropdownList = ({ onSelectedRegion }: SchoolCityListProps) => {
@@ -61,7 +61,7 @@ const RegionDropdownList = ({ onSelectedRegion }: SchoolCityListProps) => {
           {regionList.map((region) => (
             <SList
               key={region.code}
-              onClick={() => onSelectedRegion(region.cityName)}
+              onClick={() => onSelectedRegion(region.code, region.cityName)}
             >
               <SItem>{region.cityName}</SItem>
             </SList>

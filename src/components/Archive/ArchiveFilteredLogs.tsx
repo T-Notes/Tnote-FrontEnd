@@ -162,6 +162,7 @@ interface DeleteIds {
   proceedingIds: number[];
   observationIds: number[];
   consultationIds: number[];
+  planIds: number[];
 }
 const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
   const navigate = useNavigate();
@@ -216,10 +217,12 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
           break;
         case '일정':
           res = await getAllPlan(scheduleId);
+
           setFilteredLogsList(res.data.plans);
           break;
         case '학급일지':
           res = await getAllClassLog(scheduleId);
+
           setFilteredLogsList(res.data.classLogs);
           break;
         case '업무일지':
@@ -262,6 +265,7 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
       proceedingIds: [],
       observationIds: [],
       consultationIds: [],
+      planIds: [],
     };
     if (checkedDeleteIds) {
       for (const log of checkedDeleteIds) {
@@ -273,6 +277,8 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
           logsDeleteIds.observationIds.push(log.id);
         } else if (log.logType === 'CONSULTATION') {
           logsDeleteIds.consultationIds.push(log.id);
+        } else if (log.logType === 'PLAN') {
+          logsDeleteIds.planIds.push(log.id);
         }
       }
     }
@@ -402,6 +408,17 @@ const ArchiveFilteredLogs = ({ scheduleId }: Archive) => {
                       }
                     >
                       <p>{item.title || item.studentName}/학생 관찰 기록</p>
+                    </SLogType>
+                  )}
+
+                  {item.logType === 'PLAN' && (
+                    <SLogType
+                      className="pointer"
+                      onClick={() =>
+                        handleChangePageAtLogs(item.id, item.logType)
+                      }
+                    >
+                      <p>{item.title || item.studentName}/일정</p>
                     </SLogType>
                   )}
                 </div>

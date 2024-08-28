@@ -13,10 +13,12 @@ import ConsultationRecordsModal from '../Write/ConsultationRecordsModal';
 import StudentRecordsModal from '../Write/StudentRecordsModal';
 import { log } from 'console';
 import constructWithOptions from 'styled-components/dist/constructors/constructWithOptions';
+import ScheduleLogModal from '../Write/ScheduleLogModal';
 
 const STaskSidebarWrapper = styled.div`
   display: flex;
   flex-direction: column;
+
   background-color: ${({ theme }) => theme.colors.blue400};
   width: 21.25vw;
   height: 100vh;
@@ -25,6 +27,7 @@ const STaskSidebarWrapper = styled.div`
   top: 0;
   padding-left: 20px;
   padding-right: 20px;
+  overflow-y: auto;
 
   @media (max-width: 1080px) {
     display: none;
@@ -152,6 +155,9 @@ const SConsultationsLogLen = styled(SLogLength)`
 const SObservationLogLen = styled(SLogLength)`
   background-color: #f59e0b;
 `;
+const SPlanLogLen = styled(SLogLength)`
+  background-color: #48e113;
+`;
 const STaskLogContainer = styled.div`
   overflow-y: scroll;
   max-height: 9.6vh;
@@ -183,6 +189,7 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
   const [workLogContent, setWorkLogContent] = useState<Task[]>([]);
   const [consultationsContent, setConsultationsContent] = useState<Task[]>([]);
   const [observationContent, setObservationContent] = useState<Task[]>([]);
+  const [planContent, setPlanContent] = useState<Task[]>([]);
   const [todo, setTodo] = useState<TodoProps[]>([]);
   const [reload, setReload] = useState<boolean>(false);
   const [semesterStartDate, setSemesterStartDate] = useState<string>('');
@@ -244,6 +251,7 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
             setWorkLogContent(logData.proceedings);
             setConsultationsContent(logData.consultations);
             setObservationContent(logData.observations);
+            setPlanContent(logData.plans);
           } else {
             const allData = await getAllTaskByDate(scheduleId, currentDate);
             const logData = allData.data;
@@ -251,6 +259,7 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
             setWorkLogContent(logData.proceedings);
             setConsultationsContent(logData.consultations);
             setObservationContent(logData.observations);
+            setPlanContent(logData.plan);
           }
         } catch (error) {
           if (error === 'incorrect date in subject') {
@@ -280,6 +289,9 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
   const handleOpenObservationIdModal = (logId: number) => {
     openModal(StudentRecordsModal, { scheduleId, logId, isEdit });
   };
+  const handleOpenPlanIdModal = (logId: number) => {
+    openModal(ScheduleLogModal, { scheduleId, logId, isEdit });
+  };
 
   return (
     <STaskSidebarWrapper>
@@ -290,6 +302,21 @@ const TaskSidebar = ({ clickedDate }: Reload) => {
         <Todo clickedDate={clickedDate ? clickedDate : ''} />
       </div>
       <SLogGroup>
+        <SFlex>
+          <SFont>일정</SFont>
+          <SPlanLogLen>{planContent.length}</SPlanLogLen>
+        </SFlex>
+        <STaskLogContainer>
+          {planContent.map((plan) => (
+            <SLogs key={plan.id} onClick={() => handleOpenPlanIdModal(plan.id)}>
+              <SLogContent>{plan.title}</SLogContent>
+              <SLogCreatedAt>{`${plan.createdAt.slice(
+                0,
+                10,
+              )} 작성`}</SLogCreatedAt>
+            </SLogs>
+          ))}
+        </STaskLogContainer>
         <SFlex>
           <SFont>학급 일지</SFont>
           <SClassLogLen>{classLogContent.length}</SClassLogLen>

@@ -39,7 +39,7 @@ const SAdress = styled.p`
 `;
 interface ResultsProps {
   schoolData: {
-    code: string;
+    region: string;
     schoolType: string;
     schoolName: string;
   };
@@ -66,7 +66,7 @@ const SchoolDataLoader = ({
   const debouncedSearch = _debounce(handleSchoolSearch, 500);
 
   useEffect(() => {
-    if (schoolData.schoolType && schoolData.code && schoolData.schoolName) {
+    if (schoolData.schoolType && schoolData.schoolName && schoolData.region) {
       debouncedSearch();
 
       return () => {

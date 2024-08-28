@@ -198,7 +198,7 @@ const ConsultationRecordsModal = ({
           const accessToken = localStorage.getItem('accessToken');
 
           await axios.patch(
-            `https://j9972.kr/tnote/consultation/${logId}`,
+            `https://j9972.kr/tnote/v1/consultation/${logId}`,
             formData,
             {
               headers: {
@@ -211,7 +211,10 @@ const ConsultationRecordsModal = ({
           window.location.reload();
           onClose();
         } catch (err) {
-          if ((err = 'Consultation date must be within the schedule dates')) {
+          if (
+            (err as any).response?.data?.message ===
+            'Consultation date must be within the schedule dates'
+          ) {
             window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
           }
         }
@@ -269,7 +272,10 @@ const ConsultationRecordsModal = ({
           window.location.reload();
           onClose();
         } catch (err) {
-          if ((err = 'Consultation date must be within the schedule dates')) {
+          if (
+            (err as any).response?.data?.message ===
+            'Consultation date must be within the schedule dates'
+          ) {
             window.alert('학기에 해당하는 날짜만 선택할 수 있습니다.');
           }
         }
@@ -331,7 +337,7 @@ const ConsultationRecordsModal = ({
     >
       <WriteDropdown
         label="상담기록"
-        options={['학급일지', '업무일지', '학생 관찰 일지']}
+        options={['일정', '학급일지', '업무일지', '학생 관찰 일지']}
         onClickDropdownOpenModal={handleClickOpenModal}
         onClose={onClose}
         isEdit={isEdit}
