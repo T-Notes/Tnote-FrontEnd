@@ -193,7 +193,7 @@ const ConsultationRecordsModal = ({
           const jsonDataTypeValue = new Blob([JSON.stringify(editData)], {
             type: 'application/json',
           });
-          formData.append('requestDto', jsonDataTypeValue);
+          formData.append('request', jsonDataTypeValue);
 
           const accessToken = localStorage.getItem('accessToken');
 
@@ -254,7 +254,7 @@ const ConsultationRecordsModal = ({
           const jsonDataTypeValue = new Blob([JSON.stringify(logData)], {
             type: 'application/json',
           });
-          formData.append('requestDto', jsonDataTypeValue);
+          formData.append('request', jsonDataTypeValue);
 
           const accessToken = localStorage.getItem('accessToken');
 
