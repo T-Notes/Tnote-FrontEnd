@@ -102,7 +102,7 @@ const Landing = () => {
   };
 
   const handleClickLandingModal = () => {
-    openModal(PrivacyPolicyModal, { handleIsCheckedTrue });
+    openModal(PrivacyPolicyModal, { handleIsCheckedTrue, isToggle });
   };
   return (
     <SLandingWrapper>

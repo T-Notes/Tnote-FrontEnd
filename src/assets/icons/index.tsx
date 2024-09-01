@@ -50,3 +50,4 @@ export { ReactComponent as IcImageClip } from './imageFileClip.svg';
 export { ReactComponent as IcSetting } from './settings.svg';
 export { ReactComponent as IcPerson } from './personIcon.svg';
 export { ReactComponent as IcGrayMap } from './mapIconGray.svg';
+export { ReactComponent as IcCancel } from './cancel_icon_L.svg';
