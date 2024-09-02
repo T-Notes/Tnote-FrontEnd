@@ -143,7 +143,7 @@ interface PrivacyPolicyModalProps {
   isToggle: boolean;
 }
 interface SaveContents {
-  개인정보처리정책: string;
+  개인정보처리방침: string;
   이용약관: string;
   빈값: string;
 }
@@ -159,7 +159,7 @@ const PrivacyPolicyModal = ({
   const [isServiceTermsAgreementChecked, setIsServiceTermsAgreementChecked] =
     useState<boolean>(false);
   const [contentType, setContentType] =
-    useState<keyof SaveContents>('개인정보처리정책');
+    useState<keyof SaveContents>('개인정보처리방침');
   const handleContentTypeChange = (type: keyof SaveContents) => {
     setContentType(type);
   };
@@ -227,10 +227,10 @@ const PrivacyPolicyModal = ({
       </SPrivacyPolicyHeader>
       <SType>
         <STypeBtn
-          selected={contentType === '개인정보처리정책'}
-          onClick={() => handleContentTypeChange('개인정보처리정책')}
+          selected={contentType === '개인정보처리방침'}
+          onClick={() => handleContentTypeChange('개인정보처리방침')}
         >
-          개인정보 처리 정책
+          개인정보 처리 방침
         </STypeBtn>
         <STypeBtn
           selected={contentType === '이용약관'}
@@ -242,7 +242,7 @@ const PrivacyPolicyModal = ({
       <SPrivacyPolicyBox>
         <SPolicyContentBox>
           <div>
-            {contentType === '개인정보처리정책'
+            {contentType === '개인정보처리방침'
               ? privacyPolicyContent
               : serviceTermsContent}
           </div>
@@ -255,7 +255,7 @@ const PrivacyPolicyModal = ({
               <IcUncheckedBox onClick={handleChangeAllCheckBox} />
             )}
 
-            <p>모든 약간에 동의합니다.</p>
+            <p>모든 약관에 동의합니다.</p>
           </SAllAgreementBox>
           <SChildAgreementBox>
             <SFlex>
