@@ -7,14 +7,14 @@ import { log } from 'console';
 const Callback = () => {
   const navigate = useNavigate();
   const code = new URL(window.location.href).searchParams.get('code');
-  const state = new URL(window.location.href).searchParams.get('state');
-  console.log('state', state);
+  // const state = new URL(window.location.href).searchParams.get('state');
+
   const getToken = async () => {
     try {
       await instanceAxios
         .get(
-          // `https://j9972.kr/login/oauth2/code/kakao?code=${code}&state=2vmvEBbhSq4ujp1WQbL1eh3VwSSGX6zck1AFq4XAXro%3D`,
-          `https://j9972.kr/login/oauth2/code/kakao?code=${code}&state=${state}`,
+          `https://j9972.kr/login/oauth2/code/kakao?code=${code}&state=2vmvEBbhSq4ujp1WQbL1eh3VwSSGX6zck1AFq4XAXro%3D`,
+          // `https://j9972.kr/login/oauth2/code/kakao?code=${code}&state=${state}`,
         )
         .then((res) => {
           const data = res.data.data;
