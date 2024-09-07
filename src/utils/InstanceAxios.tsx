@@ -61,7 +61,10 @@ instanceAxios.interceptors.response.use(
               text: '정상적으로 로그아웃 되었습니다.',
             }).then((result) => {
               if (result.isConfirmed) {
-                localStorage.clear();
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('oauthRefreshToken');
                 window.location.href = '/';
               }
             });
@@ -84,7 +87,10 @@ instanceAxios.interceptors.response.use(
             text: '정상적으로 로그아웃 되었습니다.',
           }).then((result) => {
             if (result.isConfirmed) {
-              localStorage.clear();
+              localStorage.removeItem('accessToken');
+              localStorage.removeItem('refreshToken');
+              localStorage.removeItem('userId');
+              localStorage.removeItem('oauthRefreshToken');
               window.location.href = '/';
             }
           });
